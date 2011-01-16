@@ -5,7 +5,7 @@
 Player::Player(string filename, int x, int y, int width, int height)
 	:JUMP_HEIGHT(70)
 {
-	playerTexture = gGraphics->loadTexture("mario.bmp");
+	playerTexture = gGraphics->loadTexture("misc\textures\mario.bmp");
 	if(!playerTexture)
 		MessageBox(0, "Error loading player texture", 0, 0);		
 	
