@@ -60,6 +60,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
 
+
 	loadBkgd("cool_background.bmp");
 		
 	mainMenuActive = true;
