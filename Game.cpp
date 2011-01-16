@@ -85,14 +85,14 @@ bool Game::checkDeviceCaps()
 	return true;
 }
 
-// Lägg till onLostDevice() för mLevel, Enemies och Player! 
+// Lï¿½gg till onLostDevice() fï¿½r mLevel, Enemies och Player! 
 void Game::onLostDevice()
 {
 	User->onLostDevice();
 	mGfxStats->onLostDevice();
 }
 
-// lägg till samma sak här >.<
+// lï¿½gg till samma sak hï¿½r >.<
 void Game::onResetDevice()
 {
 	// Call the onResetDevice of other objects.
@@ -152,7 +152,7 @@ void Game::updateScene(float dt)
 	mMouse->updateMouseWIN();
 	static float dtcount = 0;
 	dtcount += dt;
-	if(mainMenuActive && gDInput->keyPressed(DIK_ESCAPE))	{	// ska anpassas så det funkar med editorActive också!!
+	if(mainMenuActive && gDInput->keyPressed(DIK_ESCAPE))	{	// ska anpassas sï¿½ det funkar med editorActive ocksï¿½!!
 		mainMenuActive = false;
 		gameActive = true;
 		dtcount = 0;
@@ -246,7 +246,7 @@ void Game::loadBkgd(char* filename)
 		MessageBox(0, "Eror loading background texture", 0, 0);
 }
 
-// bör vara skärmens storlek
+// bï¿½r vara skï¿½rmens storlek
 void Game::drawBkgd()
 {	
 	RECT r1;
