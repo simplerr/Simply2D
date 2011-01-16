@@ -1,0 +1,6 @@
+if( gDInput->keyDown(DIK_A) )	 mShipRotation += 4.0f * dt;
+if( gDInput->keyDown(DIK_D) )	 mShipRotation -= 4.0f * dt;
+if( gDInput->keyDown(DIK_W) )	 mShipSpeed    += SHIP_ACCEL * dt;
+if( gDInput->keyDown(DIK_S) )	 mShipSpeed    -= SHIP_ACCEL * dt;
+
+^hur man kollar knapptryckningar

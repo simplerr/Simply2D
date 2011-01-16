@@ -1,0 +1,67 @@
+﻿  StaticPlatform.cpp
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(10): error C2504: 'Object' : base class undefined
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2027: use of undefined type 'Player'
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(7) : see declaration of 'Player'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2227: left of '->move' must point to class/struct/union/generic type
+  Player.cpp
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2027: use of undefined type 'Player'
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.h(8) : see declaration of 'Player'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2227: left of '->move' must point to class/struct/union/generic type
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\player.cpp(166): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\player.cpp(167): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\player.cpp(168): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\player.cpp(169): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+  Object.cpp
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(10): error C2504: 'Object' : base class undefined
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2027: use of undefined type 'Player'
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(7) : see declaration of 'Player'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2227: left of '->move' must point to class/struct/union/generic type
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.cpp(36): warning C4244: '=' : conversion from 'float' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.cpp(37): warning C4244: '=' : conversion from 'float' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.cpp(38): warning C4244: '=' : conversion from 'float' to 'LONG', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.cpp(39): warning C4244: '=' : conversion from 'float' to 'LONG', possible loss of data
+  MovingPlatform.cpp
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(10): error C2504: 'Object' : base class undefined
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2027: use of undefined type 'Player'
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(7) : see declaration of 'Player'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\dynamicobject.h(18): error C2227: left of '->move' must point to class/struct/union/generic type
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(28): error C3861: 'getX': identifier not found
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(29): error C2780: '_OutTy *std::move(_InIt,_InIt,_OutTy (&)[_OutSize])' : expects 3 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\xutility(2603) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(29): error C2780: '_OutIt std::move(_InIt,_InIt,_OutIt)' : expects 3 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\xutility(2591) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(29): error C2780: 'tr1::_Remove_reference<_Ty>::_Type &&std::move(_Ty &&)' : expects 1 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\utility(85) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(41): error C3861: 'getX': identifier not found
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(42): error C2780: '_OutTy *std::move(_InIt,_InIt,_OutTy (&)[_OutSize])' : expects 3 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\xutility(2603) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(42): error C2780: '_OutIt std::move(_InIt,_InIt,_OutIt)' : expects 3 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\xutility(2591) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(42): error C2780: 'tr1::_Remove_reference<_Ty>::_Type &&std::move(_Ty &&)' : expects 1 arguments - 2 provided
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\utility(85) : see declaration of 'std::move'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\movingplatform.cpp(62): error C2352: 'Object::draw' : illegal call of non-static member function
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\object.h(16) : see declaration of 'Object::draw'
+  GameWorld.cpp
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(33): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(39): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(73): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(66): warning C4101: 'height' : unreferenced local variable
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(66): warning C4101: 'width' : unreferenced local variable
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(65): warning C4101: 'buffer' : unreferenced local variable
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(120): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(122): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(122): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(91): warning C4101: 'type' : unreferenced local variable
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(150): error C2511: 'void GameWorld::addDynamicObject(DynamicObject *)' : overloaded member function not found in 'GameWorld'
+          c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.h(18) : see declaration of 'GameWorld'
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(165): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(186): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(207): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(209): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(221): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(227): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(248): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(300): warning C4018: '<' : signed/unsigned mismatch
+c:\users\axel\documents\visual studio 2010\projects\simply2d\simply2d\gameworld.cpp(318): warning C4018: '<' : signed/unsigned mismatch
+  Generating Code...
