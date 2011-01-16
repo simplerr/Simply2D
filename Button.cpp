@@ -4,7 +4,7 @@ Button::Button(char* name, string value, int x, int y, int width, int height, D3
 			:Window(name, x, y, width, height, color)
 {
 	mValue = value;
-	// eh inget att göra?:d
+	// eh inget att gï¿½ra?:d
 }
 Button::~Button()
 {
