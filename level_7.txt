@@ -1,8 +1,0 @@
-platforms:
-1 400 524 800 100 grass_platform.bmp
-1 93 420 186 112 grass_platform.bmp
-1 337 436 167 76 brick_platform.bmp
-1 701 439 198 72 grass_platform.bmp
-1 371 348 100 100 grass_platform.bmp
-1 741 353 118 100 brick_platform.bmp
-enemies:
