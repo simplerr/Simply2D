@@ -1,4 +1,4 @@
-#include "DynamicObject.h"
+/*#include "DynamicObject.h"
 
 DynamicObject::DynamicObject(float x, float y, int width, int height, char *textureSource, ObjectType type, Player *player)
 	: Object(x, y, width, height, textureSource, type)
@@ -24,4 +24,4 @@ bool DynamicObject::getPlayerCollision(void)
 		return true;
 	else
 		return false;
-}
+}*/

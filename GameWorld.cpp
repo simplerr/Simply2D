@@ -146,7 +146,7 @@ void GameWorld::addStaticObject(Object *object)
 	else
 		MessageBox(0, "Null object", 0, 0);
 }
-void GameWorld::addDynamicObject(DynamicObject *object)
+void GameWorld::addDynamicObject(Object *object)
 {
 	if(object != NULL)	{
 		object->setID(nextDynamicID);
@@ -182,7 +182,7 @@ void GameWorld::deleteDynamicObject(int ID)
 {	
 	//eh 
 	int i = 0;
-	vector<DynamicObject*>::iterator itr =  mDynamicObjectList.begin();
+	vector<Object*>::iterator itr =  mDynamicObjectList.begin();
 	while(itr !=  mDynamicObjectList.end() && i <  mDynamicObjectList.size())
 	{
 		if(mDynamicObjectList[i]->getID() == ID)

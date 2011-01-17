@@ -1,7 +1,7 @@
 #include "MovingPlatform.h"
 
 MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POINT startPos, POINT endPos, Player *player,  movingType moveType, float speed)
-	:DynamicObject(x, y, width, height, textureSource, MOVING_PLATFORM, player)
+	:Object(x, y, width, height, textureSource, MOVING_PLATFORM)
 {
 	mStartPos = startPos;
 	mEndPos = endPos;
@@ -9,6 +9,8 @@ MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *te
 
 	mGoalDir = END;
 	mMoveType = moveType;
+
+	mPlayer = player;
 
 	// måste ta reda på om endPos är större än startPos
 }
@@ -55,6 +57,18 @@ void MovingPlatform::update(float dt)
 		mPlayer->move(
 	}*/
 }
+
+bool MovingPlatform::getPlayerCollision(void)
+{
+	RECT objectRect = getRect();
+	RECT playerRect = mPlayer->getRect();
+
+	if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
+		return true;
+	else
+		return false;
+}
+
 
 void MovingPlatform::draw(void)
 {

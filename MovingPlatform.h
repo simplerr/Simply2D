@@ -23,7 +23,7 @@ enum movingType
 	VERTICAL
 };
 
-class MovingPlatform : public DynamicObject
+class MovingPlatform : public Object
 {
 public:
 	MovingPlatform(float x, float y, int width, int height, char *textureSource, POINT startPos, POINT endPos, Player *player, movingType moveType = HORIZONTAL, float speed = 0.02f );
@@ -34,6 +34,11 @@ public:
 
 	void setStartPos(POINT pos);
 	void setEndPos(POINT pos);
+
+	bool getPlayerCollision(void);
+	void movePlayer(double dx, double dy)	{mPlayer->move(dx, dy);};
+	Player *getPlayer(void) {return mPlayer;};
+
 private:
 	POINT mStartPos;
 	POINT mEndPos;
@@ -43,6 +48,8 @@ private:
 
 	goal mGoalDir;
 	movingType mMoveType;
+
+	Player *mPlayer;
 };
 
 #endif

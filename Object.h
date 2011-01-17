@@ -35,6 +35,8 @@ public:
 	void setWidth(int width) {mWidth = width;};
 	void setHeight(int height) {mHeight = height;};
 
+	virtual void update(float dt)	{;};
+
 	
 
 private:

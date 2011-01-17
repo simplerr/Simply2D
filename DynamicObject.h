@@ -1,4 +1,4 @@
-#ifndef DYNAMIC_OBJECT
+/*#ifndef DYNAMIC_OBJECT
 #define DYNAMIC_OBJECT
 
 #include "object.h"
@@ -21,4 +21,4 @@ private:
 	Player *mPlayer;
 };
 
-#endif
+#endif*/

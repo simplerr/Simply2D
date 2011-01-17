@@ -44,7 +44,7 @@ public:
 
 private:
 	std::vector<Object*> mStaticObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc..
-	std::vector<DynamicObject*> mDynamicObjectList;	// enemies, power-ups, 
+	std::vector<Object*> mDynamicObjectList;	// enemies, power-ups, 
 
 	char *collisionText;
 
