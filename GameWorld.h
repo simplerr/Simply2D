@@ -18,7 +18,7 @@ class GameWorld
 {
 public:
 	GameWorld(Player *player);
-	GameWorld();
+	//GameWorld();
 	~GameWorld();
 
 	void createLevel(void); // skapa plattformer

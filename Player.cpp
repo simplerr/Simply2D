@@ -5,13 +5,13 @@
 Player::Player(string filename, int x, int y, int width, int height)
 	:JUMP_HEIGHT(70)
 {
-	playerTexture = gGraphics->loadTexture("misc/textures/mario.bmp");
+	playerTexture = gGraphics->loadTexture("misc\\textures\\mario.bmp");
 	if(!playerTexture)
 		MessageBox(0, "Error loading player texture", 0, 0);		
-	
+
 	mWidth = width;
 	mHeight = height;
-	mX = x;
+	mX = (double)x;
 	mY = y;
 
 	frame = 1;
@@ -135,7 +135,8 @@ void Player::update(double dt, GameWorld *Level)
 void Player::draw(void)
 {
 	// updatera kordinaterna 
-	RECT playerRect = getRect();
+	//RECT playerRect = player->getRect();
+	RECT playerRect = {1,1,1,1};
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, frameType);
 
@@ -161,9 +162,10 @@ void Player::setFrameType(void)
 }
 
 RECT Player::getRect(void)
-{
+{	
 	RECT rect;
-	rect.left = mX - mWidth/2;
+
+	rect.left = (int)mX - mWidth/2;
 	rect.right = mX + mWidth/2;
 	rect.top = mY - mHeight/2;
 	rect.bottom = mY + mHeight/2;

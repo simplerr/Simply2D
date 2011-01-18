@@ -54,14 +54,14 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	buildMainMenu();
 	
 	mGfxStats = new GfxStats();
-	User = new Player("misc/textures/player.bmp", 200, 30, 36, 36);
+	User = new Player("misc\\textures\\player.bmp", 200, 30, 36, 36);
 	mLevel = new GameWorld(User);
 	mLevel->loadLevel("level_7.txt");
-	mEditor = new Editor();
-	mEditor->addMouse(mMouse);
+	//mEditor = new Editor();
+	//mEditor->addMouse(mMouse);
 
 
-	loadBkgd("misc/textures/cool_background.bmp");
+	loadBkgd("misc\\textures\\cool_background.bmp");
 		
 	mainMenuActive = true;
 	gameActive = false;
@@ -261,11 +261,11 @@ void Game::drawBkgd()
 
 void Game::buildMainMenu(void)
 {
-	mStartMenu->setMenuBackground("misc/textures/menubackground.bmp", 400, 300, 128, 256);
-	mStartMenu->addMenuItem("Play", "misc/textures/play.bmp", "misc/textures/play_onselect.bmp", "misc/textures/play_onpress.bmp");	
-	mStartMenu->addMenuItem("Editor", "misc/textures/editor.bmp", "misc/textures/editor_onselect.bmp", "misc/textures/options_onpress.bmp");
-	mStartMenu->addMenuItem("Credits", "misc/textures/credits.bmp", "misc/textures/credits_onselect.bmp", "misc/textures/credits_onpress.bmp");
-	mStartMenu->addMenuItem("Quit", "misc/textures/quit.bmp", "misc/textures/quit_onselect.bmp", "misc/textures/quit_onpress.bmp");
+	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 400, 300, 128, 256);
+	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
+	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp", "misc\\textures\\options_onpress.bmp");
+	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp", "misc\\textures\\credits_onpress.bmp");
+	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_onselect.bmp", "misc\\textures\\quit_onpress.bmp");
 	mStartMenu->buildMenu();
 }
 

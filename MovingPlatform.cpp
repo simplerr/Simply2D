@@ -12,6 +12,13 @@ MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *te
 
 	mPlayer = player;
 
+	/*RECT r = player->getRect();
+
+
+	char buffer[256];
+	sprintf(buffer, "aaaaamX2: %i, mY2: %i, mWidth2: %i, mHeight2: %i", r.left, r.top, r.bottom, r.right);
+	MessageBox(0, buffer, 0, 0);*/
+
 	// måste ta reda på om endPos är större än startPos
 }
 
@@ -22,34 +29,37 @@ MovingPlatform::~MovingPlatform()
 
 void MovingPlatform::update(float dt)
 {
-	// flytta plattform
-	if(mMoveType == HORIZONTAL)
+	if(mPlayer != NULL)
 	{
-		if(mGoalDir == END)
+		// flytta plattform
+		if(mMoveType == HORIZONTAL)
 		{
-			if(getX() < mEndPos.x)	{
-				move(mSpeed, 0);
+			if(mGoalDir == END)
+			{
+				if(getX() < mEndPos.x)	{
+					move(mSpeed, 0);
 				
-				if(getPlayer() != NULL)	{
-					if(getPlayerCollision())
-						movePlayer(mSpeed, 0);
+					if(getPlayer() != NULL)	{
+						if(getPlayerCollision())
+							movePlayer(mSpeed, 0);
+					}
 				}
+				else
+					mGoalDir = START;
 			}
-			else
-				mGoalDir = START;
-		}
-		else if(mGoalDir == START)
-		{
-			if(getX() > mStartPos.x)	{
-				move(-mSpeed, 0);
+			else if(mGoalDir == START)
+			{
+				if(getX() > mStartPos.x)	{
+					move(-mSpeed, 0);
 
-				if(getPlayer() != NULL)	{
-					if(getPlayerCollision())
-						movePlayer(-mSpeed, 0);
+					if(getPlayer() != NULL)	{
+						if(getPlayerCollision())
+							movePlayer(-mSpeed, 0);
+					}
 				}
+				else 
+					mGoalDir = END;
 			}
-			else 
-				mGoalDir = END;
 		}
 	}
 
@@ -61,7 +71,7 @@ void MovingPlatform::update(float dt)
 bool MovingPlatform::getPlayerCollision(void)
 {
 	RECT objectRect = getRect();
-	RECT playerRect = mPlayer->getRect();
+	RECT playerRect = mPlayer->getRect();	
 
 	if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
 		return true;

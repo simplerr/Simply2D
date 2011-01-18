@@ -7,7 +7,7 @@
 
 Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 {
-	mLevel = new GameWorld();
+	mLevel = new GameWorld(NULL);
 	gameArea = new Window("gamearea", 400, 300, 800, 600, D3DCOLOR_ARGB(0, 0, 0, 0));
 	sideBar = new Window("sidebar", 900, 300, 200, 600, D3DCOLOR_ARGB(50, 100,0,0));
 

@@ -3,10 +3,10 @@
 #include <string>
 #include "d3dUtil.h"
 
-static const std::string GRASS_PLATFORM_SOURCE = "misc/textures/grass_platform.bmp";
-static const std::string BRICK_PLATFORM_SOURCE = "misc/textures/brick_platform.bmp";
-static const std::string PLAYER_SOURCE = "misc/textures/mario.bmp";
-static const std::string BACKGROUND_SOURCE = "misc/textures/cool_background.bmp";
+static const std::string GRASS_PLATFORM_SOURCE = "misc\\textures\\grass_platform.bmp";
+static const std::string BRICK_PLATFORM_SOURCE = "misc\\textures\\brick_platform.bmp";
+static const std::string PLAYER_SOURCE = "misc\\textures\\mario.bmp";
+static const std::string BACKGROUND_SOURCE = "misc\\textures\\cool_background.bmp";
 
 #define MOUSEPRESS 1
 

@@ -3,7 +3,7 @@
 #include "StaticPlatform.h"
 using namespace std;
 
-GameWorld::GameWorld()
+/*GameWorld::GameWorld()
 {
 	nextStaticID = 0;
 	nextDynamicID = 0;
@@ -13,18 +13,18 @@ GameWorld::GameWorld()
 	collisionText = new char[256];
 
 	mPlayer = NULL;
-}
+}*/
 
 GameWorld::GameWorld(Player *player)
 {
 	nextStaticID = 0;
-	nextDynamicID = 0;
-
-	createLevel();
+	nextDynamicID = 0;	
 
 	collisionText = new char[256];
 
 	mPlayer = player;
+
+	createLevel();
 }
 
 GameWorld::~GameWorld()
@@ -43,21 +43,24 @@ GameWorld::~GameWorld()
 }
 void GameWorld::createLevel(void)
 {
-	// ja vad ska denna vara bra för?
-	POINT start;
-	POINT end;
-	start.x = 100;
-	start.y = 400;
-	end.x = 600;
-	end.y = 400;
-	MovingPlatform *movingPlatform = new MovingPlatform(100, 400, 100, 100, "misc\textures\brick_platform.bmp", start, end, mPlayer);
-	addDynamicObject(movingPlatform);
-	start.x = 100;
-	start.y = 200;
-	end.x = 600;
-	end.y = 200;
-	MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\textures\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
-	addDynamicObject(movingPlatform1);
+	// i editor är player NULL
+	if(mPlayer != NULL)
+	{
+		POINT start;
+		POINT end;
+		start.x = 100;
+		start.y = 400;
+		end.x = 600;
+		end.y = 400;
+		MovingPlatform *movingPlatform = new MovingPlatform(100, 400, 100, 100, "misc\textures\brick_platform.bmp", start, end, mPlayer);
+		addDynamicObject(movingPlatform);
+		start.x = 100;
+		start.y = 200;
+		end.x = 600;
+		end.y = 200;
+		MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\textures\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
+		addDynamicObject(movingPlatform1);
+	}
 }
 
 void GameWorld::saveLevel(char* levelFile)
@@ -242,7 +245,6 @@ CollisionStruct GameWorld::collision(Player *player)
 	RECT tmpRect;
 	bool collision = false;
 	RECT objectRect;
-	// bör vara den nya recten egentligen!
 	RECT playerRect = player->getRect();
 
 	for (int i = 0;i < mStaticObjectList.size();i++)
