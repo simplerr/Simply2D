@@ -11,7 +11,7 @@ Player::Player(string filename, int x, int y, int width, int height)
 
 	mWidth = width;
 	mHeight = height;
-	mX = (double)x;
+	mX = x;
 	mY = y;
 
 	frame = 1;
@@ -135,8 +135,7 @@ void Player::update(double dt, GameWorld *Level)
 void Player::draw(void)
 {
 	// updatera kordinaterna 
-	//RECT playerRect = player->getRect();
-	RECT playerRect = {1,1,1,1};
+	RECT playerRect = getRect();
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, frameType);
 
