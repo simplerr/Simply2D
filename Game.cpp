@@ -57,8 +57,8 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	User = new Player("misc\\textures\\player.bmp", 200, 30, 36, 36);
 	mLevel = new GameWorld(User);
 	mLevel->loadLevel("level_7.txt");
-	//mEditor = new Editor();
-	//mEditor->addMouse(mMouse);
+	mEditor = new Editor();
+	mEditor->addMouse(mMouse);
 
 
 	loadBkgd("misc\\textures\\cool_background.bmp");

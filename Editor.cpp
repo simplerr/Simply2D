@@ -133,12 +133,12 @@ void Editor::updateAll(float dt)
 				{					
 					if(itemToCreate == "Brick Platform")
 					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\textures\brick_platform.bmp");
+						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\brick_platform.bmp");
 						mLevel->addStaticObject(platform);
 					}
 					else if(itemToCreate == "Grass Platform")
 					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\textures\grass_platform.bmp");
+						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\grass_platform.bmp");
 						mLevel->addStaticObject(platform);
 					}
 					// aktiv plattform = den nya?

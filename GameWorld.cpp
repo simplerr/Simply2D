@@ -52,13 +52,13 @@ void GameWorld::createLevel(void)
 		start.y = 400;
 		end.x = 600;
 		end.y = 400;
-		MovingPlatform *movingPlatform = new MovingPlatform(100, 400, 100, 100, "misc\textures\brick_platform.bmp", start, end, mPlayer);
+		MovingPlatform *movingPlatform = new MovingPlatform(100, 400, 100, 100, "misc\\textures\\brick_platform.bmp", start, end, mPlayer);
 		addDynamicObject(movingPlatform);
 		start.x = 100;
 		start.y = 200;
 		end.x = 600;
 		end.y = 200;
-		MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\textures\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
+		MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\\textures\\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
 		addDynamicObject(movingPlatform1);
 	}
 }
