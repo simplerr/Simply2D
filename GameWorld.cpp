@@ -291,6 +291,50 @@ CollisionStruct GameWorld::collision(Player *player)
 
 	}
 
+	for (int i = 0;i < mDynamicObjectList.size();i++)
+	{
+		// hitta kolliderande object
+		objectRect = mDynamicObjectList[i]->getRect();
+
+		// inte på marken -> fall
+		if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom + 1<= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
+		{
+			collisions.vert = true;
+		}
+
+		// spelaren har rört på sig
+		if(player->getDX() < 0)
+		{
+			if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left + player->getDX() >= objectRect.right))
+			{
+				collisions.hori = true;
+			}
+		}
+		else if(player->getDX() > 0)
+		{
+			if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right + player->getDX() <= objectRect.left ||  playerRect.left >= objectRect.right))
+			{
+				collisions.hori = true;
+			}
+		}
+		
+		if(player->getDY() < 0)
+		{
+			if(!(playerRect.top + player->getDY() >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
+			{
+				collisions.vert = true;
+			}
+		}
+		else if(player->getDY() > 0)
+		{
+			if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom  + player->getDY() <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
+			{
+				collisions.vert = true;
+			}
+		}
+
+	}
+
 	return collisions;
 }
 

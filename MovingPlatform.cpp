@@ -73,7 +73,7 @@ bool MovingPlatform::getPlayerCollision(void)
 	RECT objectRect = getRect();
 	RECT playerRect = mPlayer->getRect();	
 
-	if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
+	if(!(playerRect.top -1 >= objectRect.bottom ||  playerRect.bottom +1<= objectRect.top ||  playerRect.right +1<= objectRect.left ||  playerRect.left -1 >= objectRect.right))
 		return true;
 	else
 		return false;
