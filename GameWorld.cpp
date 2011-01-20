@@ -65,25 +65,30 @@ void GameWorld::createLevel(void)
 
 void GameWorld::saveLevel(char* levelFile)
 {
+	ofstream fout;
 	char buffer[256];
 	int width, height;
-
-	ofstream fout;
-	fout.open(levelFile);	// ska egentligen vara levelFile!
+	
+	fout.open(levelFile);
 
 	fout << "platforms:\n";
 
 	for (int i = 0;i < mStaticObjectList.size();i++)
 	{
-		fout << mStaticObjectList[i]->getType() << " " << mStaticObjectList[i]->getX() << " " << mStaticObjectList[i]->getY() << " ";
-		fout << mStaticObjectList[i]->getWidth() << " " << mStaticObjectList[i]->getHeight() << " " << mStaticObjectList[i]->getTextureSource() << endl;
+		mStaticObjectList[i]->saveToFile(&fout);
 	}
 
-	fout << "enemies:\n";
-	// mDynamicList
-	// behöver mType!
+	fout << "dynamic:\n";
+	
+	// dynamic objects
+	//fout.open("testSave.txt");
 
-	fout.close();
+	for (int i = 0;i < mDynamicObjectList.size();i++)
+	{
+		mDynamicObjectList[i]->saveToFile(&fout);
+	}
+
+	fout.close();	
 }
 
 void GameWorld::loadLevel(char* levelFile)

@@ -37,7 +37,7 @@ public:
 
 	virtual void update(float dt)	{;};
 
-	
+	virtual void saveToFile(ofstream *fout);
 
 private:
 	IDirect3DTexture9* mTexture;

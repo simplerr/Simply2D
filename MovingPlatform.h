@@ -34,10 +34,14 @@ public:
 
 	void setStartPos(POINT pos);
 	void setEndPos(POINT pos);
+	POINT getEndPos(void)	{return mEndPos;};
+	float getSpeed(void) {return mSpeed;};
 
 	bool getPlayerCollision(void);
 	void movePlayer(double dx, double dy)	{mPlayer->move(dx, dy);};
 	Player *getPlayer(void) {return mPlayer;};
+
+	void saveToFile(ofstream *fout);
 
 private:
 	POINT mStartPos;

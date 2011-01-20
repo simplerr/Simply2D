@@ -57,7 +57,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 Editor::~Editor()
 {
 	// dtor
-	mLevel->saveLevel("level_7.txt");
+	//mLevel->saveLevel("level_7.txt");
 	delete sideBar;
 	delete gameArea;
 	delete mLevel;

@@ -52,3 +52,12 @@ void Object::scale(int dwidth, int dheight)
 	mWidth += dwidth;
 	mHeight += dheight;
 }
+
+void Object::saveToFile(ofstream *fout)
+{
+	//fout->open(filename);
+
+	*fout << getType() << " " << mX << " " << mY << " " << mWidth << " " << mHeight << " " << getTextureSource() << endl;
+
+	//fout.close();
+}

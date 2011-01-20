@@ -85,3 +85,11 @@ void MovingPlatform::draw(void)
 	// Behöver inte mer avancerad draw
 	Object::draw();
 }
+
+void MovingPlatform::saveToFile(ofstream *fout)
+{
+
+	*fout << getType() << " " << (int)getX() << " " << getY() << " " << mEndPos.x << " " << mEndPos.y << " ";
+	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
+	*fout << getTextureSource() << endl;
+}

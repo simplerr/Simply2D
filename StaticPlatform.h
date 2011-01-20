@@ -11,6 +11,8 @@ public:
 	StaticPlatform(float x, float y, int width, int height, char *textureSource);
 	~StaticPlatform();
 
+	void saveToFile(ofstream *fout);
+
 private:
 };
 

@@ -72,6 +72,8 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 
 Game::~Game()
 {
+	mLevel->saveLevel("level_1.txt");
+
 	delete mStartMenu;
 	delete mGfxStats;
 	delete mLevel;

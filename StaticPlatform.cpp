@@ -10,3 +10,8 @@ StaticPlatform::~StaticPlatform()
 {
 	// nada!
 }
+
+void StaticPlatform::saveToFile(ofstream *fout)
+{
+	*fout << getType() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getTextureSource() << endl;
+}
