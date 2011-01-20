@@ -61,3 +61,7 @@ void Object::saveToFile(ofstream *fout)
 
 	//fout.close();
 }
+void Object::loadFromFile(ofstream *fout)
+{
+
+}

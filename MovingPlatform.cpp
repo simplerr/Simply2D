@@ -3,8 +3,17 @@
 MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POINT startPos, POINT endPos, Player *player,  movingType moveType, float speed)
 	:Object(x, y, width, height, textureSource, MOVING_PLATFORM)
 {
-	mStartPos = startPos;
-	mEndPos = endPos;
+
+	// if horizontal when vertical gets added
+	if(startPos.x > endPos.x)	{
+		mStartPos = endPos;
+		mEndPos = startPos;
+	}
+	else if(startPos.x < endPos.x)	{
+		mStartPos = startPos;
+		mEndPos = endPos;
+	}
+	
 	mSpeed = speed;
 
 	mGoalDir = END;
@@ -29,6 +38,7 @@ MovingPlatform::~MovingPlatform()
 
 void MovingPlatform::update(float dt)
 {
+	
 	if(mPlayer != NULL)
 	{
 		// flytta plattform
@@ -89,7 +99,7 @@ void MovingPlatform::draw(void)
 void MovingPlatform::saveToFile(ofstream *fout)
 {
 
-	*fout << getType() << " " << (int)getX() << " " << getY() << " " << mEndPos.x << " " << mEndPos.y << " ";
+	*fout << getType() << " " << (int)getX() << " " << getY() << " " << mStartPos.x << " " << mStartPos.y << " " << mEndPos.x << " " << mEndPos.y << " ";
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
 	*fout << getTextureSource() << endl;
 }

@@ -46,7 +46,7 @@ void GameWorld::createLevel(void)
 	// i editor är player NULL
 	if(mPlayer != NULL)
 	{
-		POINT start;
+		/*POINT start;
 		POINT end;
 		start.x = 100;
 		start.y = 400;
@@ -59,7 +59,7 @@ void GameWorld::createLevel(void)
 		end.x = 600;
 		end.y = 200;
 		MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\\textures\\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
-		addDynamicObject(movingPlatform1);
+		addDynamicObject(movingPlatform1);*/
 	}
 }
 
@@ -71,20 +71,16 @@ void GameWorld::saveLevel(char* levelFile)
 	
 	fout.open(levelFile);
 
-	fout << "platforms:\n";
+	//fout << "objects:\n";
 
 	for (int i = 0;i < mStaticObjectList.size();i++)
 	{
 		mStaticObjectList[i]->saveToFile(&fout);
 	}
 
-	fout << "dynamic:\n";
-	
-	// dynamic objects
-	//fout.open("testSave.txt");
-
 	for (int i = 0;i < mDynamicObjectList.size();i++)
 	{
+		
 		mDynamicObjectList[i]->saveToFile(&fout);
 	}
 
@@ -104,34 +100,88 @@ void GameWorld::loadLevel(char* levelFile)
 
 	ifstream fin;
 	fin.open(levelFile);
-	int i = 0;
-	
-	// ta reda på antal plattformer
-	fin.getline(text, 256);
-	if(!strcmp(text, "platforms:"))
-	{	
+	int lines = 0;
+
+	while(!fin.eof())	{
+		//MessageBox(0, "sDA", 0, 0);
 		fin.getline(text, 256);
-		while(strcmp(text, "enemies:") != 0)	{
-			fin.getline(text, 256);
-			i++;
-		}
+		lines++;
 	}
-	
-	// hoppa till direkt efter platforms:
-	fin.seekg(10, ios_base::beg);
-
-	for(int j = 0;j<i;j++) {
-
-		fin >> tmpType >> xpos >> ypos >> width >> height >> textureSource;  // ska läsa in texturen också!
-
-		if(tmpType == STATIC_PLATFORMA)	{
-			sprintf(buffer, "source: %s", textureSource);
+	fin.close();
+	fin.open(levelFile);
+	lines -= 1;
+	for(int j = 0; j<lines;j++)
+	{
+		fin >> tmpType;
+		
+		if(tmpType == STATIC_PLATFORMA)	
+		{
+			fin >> xpos >> ypos >> width >> height >> textureSource;	
+			sprintf(buffer, "xpos: %i, ypos: %i, width: %i, height: %i, source: %s", xpos, ypos, width, height, textureSource);
 			//MessageBox(0, buffer, 0, 0);
 			loadedObject = new StaticPlatform(xpos, ypos, width, height, textureSource);
 			addStaticObject(loadedObject);
-		}	
+		}
+		else if(tmpType == MOVING_PLATFORM)
+		{
+			POINT startPos, endPos;
+			float speed;
+			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> textureSource;
+			sprintf(buffer, "xpos: %i, ypos: %i, startPos.x: %i, startPos.y: %i, endPos.x: %i, endPos.y: %i, width: %i, height: %i, speed: %f , source: %s", xpos, ypos, startPos.x,
+				startPos.y, endPos.x, endPos.y, width, height, speed, textureSource);
+			//MessageBox(0, buffer, 0, 0);
+			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer);
+			addDynamicObject(loadedObject);
+		}
+		// else if(tmpType == ENEMY)
+		// ...
 		
 	}
+	
+	// ta reda på antal plattformer
+	/*fin.getline(text, 256);
+	if(!strcmp(text, "objects:"))
+	{	
+		//fin.getline(text, 256);
+		while(strcmp(text, "-end") != 0)	{
+			fin.getline(text, 256);
+			//MessageBox(0, text, 0, 0);
+			i++;
+		}
+		
+	}
+	
+	// hoppa till direkt efter platforms:
+	fin.seekg(8, ios_base::beg);
+
+	for(int j = 0;j<i;j++) {
+
+		fin.getline(text, 256);
+
+		//fin >> tmpType;// >> xpos >> ypos >> width >> height >> textureSource;
+		sprintf(buffer, "type: %c", text);
+		MessageBox(0, buffer, 0, 0);
+
+		/*if(tmpType == STATIC_PLATFORMA)	
+		{
+			MessageBox(0, "STATIC_PLATFORM!", 0, 0);
+			fin >> xpos >> ypos >> width >> height >> textureSource;					
+			loadedObject = new StaticPlatform(xpos, ypos, width, height, textureSource);
+			addStaticObject(loadedObject);
+		}
+		else if(tmpType == MOVING_PLATFORM)
+		{
+			POINT startPos, endPos;
+			float speed;
+			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> textureSource;
+			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer);
+			addDynamicObject(loadedObject);
+		}
+		// else if(tmpType == ENEMY)
+		// ...
+
+		
+	}*/
 	fin.close();
 }
 

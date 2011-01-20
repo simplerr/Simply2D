@@ -45,7 +45,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 	sideBar->addWindow(createButton);
 	sideBar->addWindow(deleteButton);
 
-	mLevel->loadLevel("level_7.txt");
+	//mLevel->loadLevel("level_1.txt");
 	activeObject = NULL;
 	create = "none";
 	itemToCreate = "none";
@@ -57,7 +57,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 Editor::~Editor()
 {
 	// dtor
-	//mLevel->saveLevel("level_7.txt");
+	//mLevel->saveLevel("level_1.txt");
 	delete sideBar;
 	delete gameArea;
 	delete mLevel;
