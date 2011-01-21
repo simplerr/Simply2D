@@ -20,15 +20,6 @@ MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *te
 	mMoveType = moveType;
 
 	mPlayer = player;
-
-	/*RECT r = player->getRect();
-
-
-	char buffer[256];
-	sprintf(buffer, "aaaaamX2: %i, mY2: %i, mWidth2: %i, mHeight2: %i", r.left, r.top, r.bottom, r.right);
-	MessageBox(0, buffer, 0, 0);*/
-
-	// måste ta reda på om endPos är större än startPos
 }
 
 MovingPlatform::~MovingPlatform()

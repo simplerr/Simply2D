@@ -17,6 +17,17 @@ using namespace std;
 // Source Listing 1
 // Window Class
 
+struct ListItem
+{
+	std::string itemName;
+	RECT rect;
+	int x, y, width, height;
+	D3DCOLOR color;
+	// background color
+	// selected color
+};
+
+
 static char buffer[256];
 
 class Window
@@ -48,7 +59,7 @@ public:
 
   void setpos(int x, int y)		{/*icke bråttom*/};
   void setsize(int width, int height)		{/*icke bråttom*/};
-  void updateRectToNewXY(void);
+  virtual void updateRectToNewXY(void);
   bool isActive(void) { return mActive;};
 
   virtual void updateWindow(float dt)	{if(mActiveWin != this)mActiveWin->updateWindow(dt);};
@@ -68,6 +79,9 @@ public:
   void setValue(char *name, string value);
   void setActive(bool state){mActiveWin->mActive = state;};
   void setVisibility(char *name, bool value);
+  string getOwnValue(void)	{return mValue;};
+  RECT getRect(void);
+  void updateRect(void);
 
 protected:
    Window *mParent;

@@ -179,3 +179,22 @@ void Window::setVisibility(char *name, bool value)
 	}
 }
 
+RECT Window::getRect(void)
+{
+	RECT tmpRect;
+	tmpRect.left = mPosition.left;
+	tmpRect.right = mPosition.right;
+	tmpRect.top = mPosition.top;
+	tmpRect.bottom = mPosition.bottom;
+
+	return tmpRect;
+}
+
+void Window::updateRect(void)
+{
+	mPosition.left = mPosition.x-(mPosition.width/2);
+	mPosition.right = mPosition.x+(mPosition.width/2);
+	mPosition.top = mPosition.y-(mPosition.height/2);
+	mPosition.bottom = mPosition.y+(mPosition.height/2);
+}
+

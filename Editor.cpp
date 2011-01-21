@@ -1,3 +1,4 @@
+#include "DropBox.h"
 #include "Editor.h"
 #include "StaticPlatform.h"
 #include "MovingPlatform.h"
@@ -22,11 +23,12 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 	InputBox *iWidth = new InputBox("iwidth", 110, 100, 60, 20);
 	InputBox *iHeight = new InputBox("iheight", 110, 130, 60, 20);
 
-	ListBox *listBox = new ListBox("listbox", 66, 260, 110, 150);
+	ListBox *listBox = new ListBox("listbox", 66, 260, 110, 40);
 
-	Button *createButton = new Button("Create", "createobject", 40, 165, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
-	Button *deleteButton = new Button("Delete", "deleteobject", 112, 165, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
-	
+	Button *createButton = new Button("Create", "createobject", 40, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
+	Button *deleteButton = new Button("Delete", "deleteobject", 112, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
+
+	DropBox *textureDropBox = new DropBox("texturedropbox", 66, 165, 110, 20, 20);
 
 	sideBar->addWindow(tPositionX);
 	sideBar->addWindow(tPositionY);
@@ -44,6 +46,12 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 
 	sideBar->addWindow(createButton);
 	sideBar->addWindow(deleteButton);
+
+	sideBar->addWindow(textureDropBox);
+	textureDropBox->addItem("grass_platform");
+	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB(255, 0, 255, 150));
+	textureDropBox->addItem("stone_platform");
+	textureDropBox->addItem("gold_platform", D3DCOLOR_ARGB(255, 0, 255, 150));
 
 	//mLevel->loadLevel("level_1.txt");
 	activeObject = NULL;

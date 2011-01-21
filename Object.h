@@ -37,8 +37,8 @@ public:
 
 	virtual void update(float dt)	{;};
 
-	virtual void saveToFile(ofstream *fout);
-	virtual void loadFromFile(ofstream *fout);
+	virtual void saveToFile(std::ofstream *fout);
+	virtual void loadFromFile(std::ofstream *fout);
 
 private:
 	IDirect3DTexture9* mTexture;

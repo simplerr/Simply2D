@@ -1,18 +1,9 @@
-#ifndef _LISTBOX_H
-#define _LISTBOX_H
+#ifndef LISTBOX_H
+#define LISTBOX_H
 
 #include "Window.h"
+#include "constants.h"
 #include "d3dUtil.h"
-
-struct ListItem
-{
-	string itemName;		// = value också
-	RECT rect;
-	int x, y, width, height;
-	D3DCOLOR color;
-	// background color
-	// selected color
-};
 
 class ListBox : public Window
 {
