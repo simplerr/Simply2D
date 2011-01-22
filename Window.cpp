@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "Graphics.h"
 
-Window::Window(char* name, int x, int y, int width, int height, D3DCOLOR color)
+Window::Window(WindowID id, int x, int y, int width, int height, D3DCOLOR color)
 {
 	mPosition.x = x;
 	mPosition.y = y;
@@ -10,8 +10,8 @@ Window::Window(char* name, int x, int y, int width, int height, D3DCOLOR color)
 	updateRectToNewXY();	// fixa top,left,right,bottom ..
 
 	mColor = color;
-	mName = name;
-	activeWin = " ";
+	mID = id;
+	mActiveWinID = NOT_SET;
 	mActive = false;
 	mActiveWin = this;
 	inputState = true;
@@ -38,9 +38,9 @@ int Window::addWindow(Window *w)
 	w->mPosition.x = this->mPosition.left + w->mPosition.x;
 	w->mPosition.y = this->mPosition.top + w->mPosition.y;
 	w->updateRectToNewXY();
+	w->setParent(this);
 
 	mSubWins.push_back(w);
-	w->setParent(this);
 
 	// updatera childs?
 
@@ -50,7 +50,7 @@ int Window::addWindow(Window *w)
 // ska ta argument
 // string msg
 // #defines?
-void Window::handleMessages(int msg, int mx, int my)	// bra namn? har ju bara med musen att göra >_>
+void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen att göra >_>
 {
 		// ta reda på vilket window som ska köra wm_lbuttondown()!
 		Window *found;
@@ -61,10 +61,10 @@ void Window::handleMessages(int msg, int mx, int my)	// bra namn? har ju bara me
 			mActiveWin = found;
 			mActiveWin->mActive = true;
 			mActiveWin->wm_lbuttondown(mx, my);
-			activeWin = mActiveWin->getName();
+			mActiveWinID = mActiveWin->getID();
 		}
 		else	{
-			activeWin = "none";
+			mActiveWinID = NOT_SET;
 			mActiveWin->mActive = false;
 		}
 }
@@ -145,36 +145,33 @@ void Window::keyPressed(WPARAM wParam)
 		mActiveWin->wm_keydown(wParam);
 }
 
-string Window::getValue(char *name)
+string Window::getValue(WindowID id)
  {
 	for (int i = 0;i < mSubWins.size();i++)
 	{
-		if(mSubWins[i]->mName == name)		// kanske strcmp() istället?
+		if(mSubWins[i]->getID() == id)		// kanske strcmp() istället?
 			return mSubWins[i]->mValue;
 	}
 
 	return "nothing";
  }
-void Window::setValue(char *name, string value)
+void Window::setValue(WindowID id, string value)
  {
 	for (int i = 0;i < mSubWins.size();i++)
 	{		
 		
-		if(mSubWins[i]->mName == name)
+		if(mSubWins[i]->getID() == id)	// getID();
 		{
-			char buffer[256];
-			sprintf(buffer, "name: %s, value: %s, mName: %s", name, value.c_str(), mSubWins[i]->mName);
-			//MessageBox(0,buffer, 0, 0);
 			mSubWins[i]->mValue = value;
 		}
 	}
  }
 
-void Window::setVisibility(char *name, bool value)
+void Window::setVisibility(WindowID id, bool value)
 {
 	for (int i = 0;i < mSubWins.size();i++)
 	{
-		if(mSubWins[i]->mName == name)
+		if(mSubWins[i]->getID() == id)
 			mSubWins[i]->mVisible = value;
 	}
 }

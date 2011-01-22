@@ -1,7 +1,7 @@
 #include "InputBox.h"
 
-InputBox::InputBox(char* name, int x, int y, int width, int height, D3DCOLOR color)
-		: Window(name, x, y, width, height, color)
+InputBox::InputBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+		: Window(id, x, y, width, height, color)
 {
 	showCaret = false;
 }
@@ -59,7 +59,7 @@ int InputBox::wm_keydown(WPARAM wParam)
 		{
 		// enter
 		case '\r':		{
-							// används inte och lär inte göra det!
+							mParent->messageHandler(getID(), mValue);
 							break;
 						}
 		// backspace

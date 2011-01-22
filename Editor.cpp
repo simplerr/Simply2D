@@ -6,48 +6,53 @@
 // Window behöver ingen mus längre
 // Editor ska ha den 
 
-Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : Window(EDITOR, 900, 300, 200, 600), SNAP_SENSE(30), SNAP_DIST(10)
 {
 	mLevel = new GameWorld(NULL);
-	gameArea = new Window("gamearea", 400, 300, 800, 600, D3DCOLOR_ARGB(0, 0, 0, 0));
-	sideBar = new Window("sidebar", 900, 300, 200, 600, D3DCOLOR_ARGB(50, 100,0,0));
+	
+	gameArea.top = 0;
+	gameArea.bottom = 600;
+	gameArea.left = 0;
+	gameArea.right = 800;
 
 	// kanske inte behöver ta name som arg?
-	TextBox *tPositionX = new TextBox("posx", "X:", 40, 40, 60, 20);
-	TextBox *tPositionY = new TextBox("posy", "Y:", 40, 70, 60, 20);
-	TextBox *tWidth = new TextBox("width", "Width:", 40, 100, 60, 20);
-	TextBox *tHeight = new TextBox("height", "Height:", 40, 130, 60, 20);
+	TextBox *tPositionX = new TextBox(TEXT_XPOS, "X:", 40, 40, 60, 20);
+	TextBox *tPositionY = new TextBox(TEXT_YPOS, "Y:", 40, 70, 60, 20);
+	TextBox *tWidth = new TextBox(TEXT_WIDTH, "Width:", 40, 100, 60, 20);
+	TextBox *tHeight = new TextBox(TEXT_HEIGHT, "Height:", 40, 130, 60, 20);
 
-	InputBox *iPositionX = new InputBox("iposx", 110, 40, 60, 20);
-	InputBox *iPositionY = new InputBox("iposy", 110, 70, 60, 20);
-	InputBox *iWidth = new InputBox("iwidth", 110, 100, 60, 20);
-	InputBox *iHeight = new InputBox("iheight", 110, 130, 60, 20);
+	InputBox *iPositionX = new InputBox(INPUT_XPOS, 110, 40, 60, 20);
+	InputBox *iPositionY = new InputBox(INPUT_YPOS, 110, 70, 60, 20);
+	InputBox *iWidth = new InputBox(INPUT_WIDTH, 110, 100, 60, 20);
+	InputBox *iHeight = new InputBox(INPUT_HEIGHT, 110, 130, 60, 20);
 
-	ListBox *listBox = new ListBox("listbox", 66, 260, 110, 40);
+	ListBox *listBox = new ListBox(LISTBOX_OBJECTTYPE, 66, 260, 110, 40);
 
-	Button *createButton = new Button("Create", "createobject", 40, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
-	Button *deleteButton = new Button("Delete", "deleteobject", 112, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
+	Button *createButton = new Button(BUTTON_CREATE, "createobject", 40, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
+	Button *deleteButton = new Button(BUTTON_DELETE, "deleteobject", 112, 210, 60, 20, D3DCOLOR_ARGB(255, 0, 150, 150));
 
-	DropBox *textureDropBox = new DropBox("texturedropbox", 66, 165, 110, 20, 20);
+	DropBox *textureDropBox = new DropBox(DROPBOX_TEXTURE, 66, 165, 110, 20, 20);
 
-	sideBar->addWindow(tPositionX);
-	sideBar->addWindow(tPositionY);
-	sideBar->addWindow(tWidth);
-	sideBar->addWindow(tHeight);
+	addWindow(tPositionX);
+	addWindow(tPositionY);
+	addWindow(tWidth);
+	addWindow(tHeight);
 
-	sideBar->addWindow(iPositionX);
-	sideBar->addWindow(iPositionY);
-	sideBar->addWindow(iWidth);
-	sideBar->addWindow(iHeight);
+	addWindow(iPositionX);
+	addWindow(iPositionY);
+	addWindow(iWidth);
+	addWindow(iHeight);
 
-	sideBar->addWindow(listBox);
-	listBox->addItem("Grass Platform", 22, D3DCOLOR_ARGB(255, 30, 120, 150));
-	listBox->addItem("Brick Platform", 22, D3DCOLOR_ARGB(255, 200, 0, 150));
+	addWindow(listBox);
+	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB(255, 30, 120, 150));
+	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB(255, 200, 0, 150));
 
-	sideBar->addWindow(createButton);
-	sideBar->addWindow(deleteButton);
+	addWindow(createButton);
+	addWindow(deleteButton);
 
-	sideBar->addWindow(textureDropBox);
+	setVisibility(BUTTON_DELETE, false);
+
+	addWindow(textureDropBox);
 	textureDropBox->addItem("grass_platform");
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB(255, 0, 255, 150));
 	textureDropBox->addItem("stone_platform");
@@ -55,24 +60,24 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 
 	//mLevel->loadLevel("level_1.txt");
 	activeObject = NULL;
-	create = "none";
-	itemToCreate = "none";
+	// weird!
+	//create = "none";
+	objectToCreate = NO_OBJECT;
+	//changeTexture = "none";
+
 	snapCount = SNAP_SENSE;
 	snapDir = ALL;
 	snappedObject = NULL;
-	//buildBaseLevel();
 }
 Editor::~Editor()
 {
-	// dtor
 	//mLevel->saveLevel("level_1.txt");
-	delete sideBar;
-	delete gameArea;
 	delete mLevel;
 }
 
 void Editor::updateAll(float dt)
 {
+	Window::updateWindow(dt);
 	mousePos = mMouse->getPos();
 	
 	// mousewheel scaling
@@ -81,24 +86,21 @@ void Editor::updateAll(float dt)
 		if(gDInput->mouseDZ() > 0)	{
 			activeObject->scale(8, 8);
 
-			updateInputBoxes();
-			updateDragRects();
+			// messageHandler(OBJECT_SCALED)
+			messageHandler(ACTIVE_OBJECT);
 		}
 		else if(gDInput->mouseDZ() < 0)	{
 			if(activeObject->getHeight() > 58 && activeObject->getWidth() > 58)	{
 
 				activeObject->scale(-8, -8);
-				updateInputBoxes();
-				updateDragRects();
+				messageHandler(ACTIVE_OBJECT);
 			}
 		}
 	}
 		
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
-			
-		WindowRect areaInfo = gameArea->getInfo();
-		if(mousePos.x > areaInfo.left && mousePos.x < areaInfo.right && mousePos.y > areaInfo.top && mousePos.y < areaInfo.bottom)	// gameArea == true
+		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)	// gameArea == true
 		{			
 			// get selectedPlatform
 			activeObject = mLevel->getObjectAt(mousePos);
@@ -109,23 +111,31 @@ void Editor::updateAll(float dt)
 				snapCount = SNAP_SENSE;
 
 				// update inputboxes - med activPlatforms värden ;d
-				updateInputBoxes();
-				sideBar->setVisibility("Delete", true);
+				messageHandler(ACTIVE_OBJECT);
+				setVisibility(BUTTON_DELETE, true);
 			}		
 			else
 			{
 				// reset inputboxes
 				resetInputBoxes();
-				sideBar->setVisibility("Delete", false);
+				setVisibility(BUTTON_DELETE, false);
 			}
-			sideBar->setActive(false);
+			setActive(false);
 		}
 		else
 		{
-			sideBar->handleMessages(MOUSEPRESS, mousePos.x, mousePos.y);
-			itemToCreate = sideBar->getValue("listbox");
-			create = sideBar->getValue("Create");			
-			delet = sideBar->getValue("Delete");
+			sendMousePress(mousePos.x, mousePos.y);
+			/*itemToCreate = getValue("listbox");
+			create = getValue("Create");			
+			delet = getValue("Delete");
+			changeTexture = getValue("texturedropbox");
+
+			if(changeTexture == "grass_platform")
+				changeTexture = "misc\\textures\\grass_platform.bmp";
+			else if(changeTexture == "brick_platform")
+				changeTexture = "misc\\textures\\grass_platform.bmp";
+			else
+				changeTexture = "none";
 
 			if(delet == "pressed")	{
 				if(activeObject != NULL)	{
@@ -152,11 +162,18 @@ void Editor::updateAll(float dt)
 					// aktiv plattform = den nya?
 				}
 			}
+			if(changeTexture != "none")
+			{
+				strcpy(buffer, changeTexture.c_str());
+				activeObject->setTextureSource(buffer);
+				changeTexture = "none";
+			}
+			*/
 		}
 		// initiera/updatera dragAreas
 		if(activeObject != NULL)
 		{
-			updateDragRects();
+			updateDragRects();						////////////////////// HMMMMMMMMMMMMM?
 		}
 	}
 	// flytta/resize markerad plattform
@@ -165,8 +182,7 @@ void Editor::updateAll(float dt)
 		// if mousedown
 		if(gDInput->mouseButtonDown(LEFTBUTTON))
 		{
-			WindowRect areaInfo = gameArea->getInfo();
-			if(mousePos.x > areaInfo.left && mousePos.x < areaInfo.right && mousePos.y > areaInfo.top && mousePos.y < areaInfo.bottom)
+			if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
 			{			
 				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom)
 					resizePlatform(DRAGLEFT);
@@ -182,7 +198,7 @@ void Editor::updateAll(float dt)
 			}
 		}	
 	}
-	sideBar->updateWindow(dt);
+	updateWindow(dt);
 }
 // körs när man tar tag i markerad plattform
 void Editor::movePlatform(void)
@@ -241,7 +257,7 @@ void Editor::movePlatform(void)
 					// musens ska inte röra på sig!
 					mMouse->setMousePos(mousePos.x, mousePos.y - dy);
 				}
-				sideBar->setVisibility("Delete", true);		
+				setVisibility(BUTTON_DELETE, true);		
 			}			
 			
 		}	
@@ -278,15 +294,15 @@ void Editor::movePlatform(void)
 				activeObject->ypos = activeObject->rect.top + activeObject->height/2;*/
 			}
 		}
-		updateInputBoxes();
-		updateDragRects();
+		messageHandler(ACTIVE_OBJECT);
+		//updateInputBoxes();
+		//updateDragRects();
 }
 
-void Editor::renderAll()
+int Editor::renderAll()
 {
-	//gameArea->renderAll();
 	mLevel->drawLevel();
-	sideBar->renderAll();
+	Window::renderAll();
 
 	if(activeObject != NULL)	{
 		// orange markering
@@ -302,14 +318,15 @@ void Editor::renderAll()
 		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
 
 	}
+	return 1;
 }
 
-void Editor::keyPressed(WPARAM wParam)
+/*void Editor::keyPressed(WPARAM wParam)
 {
 	if(activeObject != NULL)
 	{
 		RECT activeObjectRect = activeObject->getRect();
-		sideBar->keyPressed(wParam);
+		keyPressed(wParam);
 		
 		char *tmp = new char;		// mem leak
 		string tmp2;
@@ -319,7 +336,7 @@ void Editor::keyPressed(WPARAM wParam)
 		//// * x ska sättas till gameAreaWIDTH + platformWIDHT/2 etc.....
 		////
 		//////////////////////////////////
-		tmp2 = sideBar->getValue("iposx");
+		tmp2 = getValue("iposx");
 		sprintf(tmp, "%s", tmp2.c_str());
 		x = atoi(tmp);
 		if(x <= 800 && x >= 0)
@@ -327,7 +344,7 @@ void Editor::keyPressed(WPARAM wParam)
 		else
 			activeObject->setXY(800, activeObject->getY());
 
-		tmp2 = sideBar->getValue("iposy");
+		tmp2 = getValue("iposy");
 		sprintf(tmp, "%s", tmp2.c_str());
 		y = atoi(tmp);
 		if(y <= 600 && y >= 0)
@@ -335,19 +352,19 @@ void Editor::keyPressed(WPARAM wParam)
 		else
 			activeObject->setXY(activeObject->getX(), 600);
 
-		tmp2 = sideBar->getValue("iwidth");
+		tmp2 = getValue("iwidth");
 		sprintf(tmp, "%s", tmp2.c_str());
 		width = atoi(tmp);
 		activeObject->setWidth(width);
 
-		tmp2 = sideBar->getValue("iheight");
+		tmp2 = getValue("iheight");
 		sprintf(tmp, "%s", tmp2.c_str());
 		height = atoi(tmp);
 		activeObject->setHeight(height);
 
 		updateDragRects();
 	}	
-}
+}*/
 
 void Editor::buildBaseLevel(void)
 {	
@@ -357,30 +374,38 @@ void Editor::buildBaseLevel(void)
 	
 }
 
-void Editor::updateInputBoxes(void)
+/*void Editor::updateInputBoxes(void)
 {
 	// updatera inputboxarna 
 	char buffer[256];
 
 	sprintf(buffer, "%i", (int)activeObject->getX());
-	sideBar->setValue("iposx", buffer); 
+	setValue("iposx", buffer); 
 
 	sprintf(buffer, "%i", (int)activeObject->getY());
-	sideBar->setValue("iposy", buffer); 
+	setValue("iposy", buffer); 
 
 	sprintf(buffer, "%i", activeObject->getWidth());
-	sideBar->setValue("iwidth", buffer); 
+	setValue("iwidth", buffer); 
 
 	sprintf(buffer, "%i", activeObject->getHeight());
-	sideBar->setValue("iheight", buffer);	
-}
+	setValue("iheight", buffer);
+
+	// update texture source
+	sprintf(buffer, "%s", activeObject->getTextureSource());
+	if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
+		setValue("texturedropbox", "grass_platform");
+	else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
+		setValue("texturedropbox", "brick_platform");
+
+}*/
 void Editor::resetInputBoxes(void)
 {
 	char buffer[10] = " ";				
-	sideBar->setValue("iposx", buffer); 				
-	sideBar->setValue("iposy", buffer); 				
-	sideBar->setValue("iwidth", buffer); 				
-	sideBar->setValue("iheight", buffer);
+	setValue(INPUT_XPOS, buffer); 				
+	setValue(INPUT_YPOS, buffer); 				
+	setValue(INPUT_WIDTH, buffer); 				
+	setValue(INPUT_HEIGHT, buffer);
 }
 
 // de ska vara en procentuell del av activeObject
@@ -409,26 +434,6 @@ void Editor::updateDragRects(void)
 	dragBottom.top = dragBottom.bottom - 20;
 	dragBottom.left = activeObjectRect.left + 20;
 	dragBottom.right = activeObjectRect.right - 20;
-
-	/*dragLeft.left = activeObject->rect.left;
-	dragLeft.right = dragLeft.left + .2*activeObject->width;
-	dragLeft.top = activeObject->rect.top + .2*activeObject->height;
-	dragLeft.bottom = activeObject->rect.bottom - .2*activeObject->height;
-
-	dragRight.right = activeObject->rect.right;
-	dragRight.left = dragRight.right - .2*activeObject->width;
-	dragRight.top = activeObject->rect.top + .2*activeObject->height;
-	dragRight.bottom = activeObject->rect.bottom - .2*activeObject->height;
-
-	dragTop.top = activeObject->rect.top;
-	dragTop.bottom = dragTop.top + .2*activeObject->height;
-	dragTop.left = activeObject->rect.left + .2*activeObject->width;
-	dragTop.right = activeObject->rect.right - .2*activeObject->width;
-
-	dragBottom.bottom = activeObject->rect.bottom;
-	dragBottom.top = dragBottom.bottom - .2*activeObject->height;
-	dragBottom.left = activeObject->rect.left + .2*activeObject->width;
-	dragBottom.right = activeObject->rect.right - .2*activeObject->width;*/
 }
 
 void Editor::resizePlatform(DragRect drag)
@@ -474,8 +479,7 @@ void Editor::resizePlatform(DragRect drag)
 			activeObject->setXY(activeObject->getX(), activeObjectRect.top + activeObject->getHeight()/2);
 		}
 	}
-	updateDragRects();
-	updateInputBoxes();
+	messageHandler(ACTIVE_OBJECT);
 }
 
 bool Editor::objectSnapping(Object *object, float dx, float dy)
@@ -586,4 +590,140 @@ bool Editor::stillSnapped(void)
 	}
 
 	return false;
+}
+
+void Editor::messageHandler(WindowID sender, string data)
+{
+	char temp[256];
+
+	switch(sender)
+	{
+	case INPUT_XPOS:
+		{
+			int x;
+
+			sprintf(temp, "%s", data.c_str());
+			x = atoi(temp);
+			if(x <= 800 && x >= 0)
+				activeObject->setXY(x, activeObject->getY());
+			else
+				activeObject->setXY(800, activeObject->getY());
+
+			updateDragRects();
+			break;
+		}
+	case INPUT_YPOS:
+		{
+			int y;
+
+			sprintf(temp, "%s", data.c_str());
+			y = atoi(temp);
+			if(y <= 600 && y >= 0)
+				activeObject->setXY(activeObject->getX(), y);
+			else
+				activeObject->setXY(activeObject->getX(), 600);
+
+			updateDragRects();
+			break;
+		}
+	case INPUT_WIDTH:
+		{
+			int width;
+
+			sprintf(temp, "%s", data.c_str());
+			width = atoi(temp);
+			activeObject->setWidth(width);
+
+			updateDragRects();
+			break;
+		}
+	case INPUT_HEIGHT:
+		{	
+			int height;
+
+			sprintf(temp, "%s", data.c_str());
+			height = atoi(temp);
+			activeObject->setHeight(height);
+
+			updateDragRects();
+			break;
+		}
+	case DROPBOX_TEXTURE:
+		{
+			strcpy(temp, data.c_str());
+			if(strcmp(buffer, "grass_platform") == 0)
+				activeObject->setTextureSource("misc\\textures\\grass_platform.bmp");
+			if(strcmp(buffer, "brick_platform") == 0)
+				activeObject->setTextureSource("misc\\textures\\brick_platform.bmp");
+			break;
+		}
+	case BUTTON_CREATE:
+		{
+			MessageBox(0, "CREATE!", 0, 0);
+			// listbox item vald
+			if(objectToCreate != NO_OBJECT)
+			{								
+					if(objectToCreate == STATIC_PLATFORMA)
+					{
+						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\brick_platform.bmp");
+						mLevel->addStaticObject(platform);
+						objectToCreate = NO_OBJECT;
+					}
+					else if(objectToCreate == MOVING_PLATFORM)
+					{
+						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\grass_platform.bmp");
+						mLevel->addStaticObject(platform);
+						objectToCreate = NO_OBJECT;
+					}
+					// aktiv plattform = den nya?
+			}
+			break;
+		}
+	case BUTTON_DELETE:
+		{		
+			if(activeObject != NULL)	{			
+				sprintf(buffer, "id: %i, texture: %s", activeObject->getID(), activeObject->getTextureSource());
+				MessageBox(0, buffer, 0, 0);
+				mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!		
+				resetInputBoxes();
+			}
+			break;
+		}
+	case ACTIVE_OBJECT:
+		{
+			// updatera inputboxarna 
+			char buffer[256];
+
+			sprintf(buffer, "%i", (int)activeObject->getX());
+			setValue(INPUT_XPOS, buffer); 
+
+			sprintf(buffer, "%i", (int)activeObject->getY());
+			setValue(INPUT_YPOS, buffer); 
+
+			sprintf(buffer, "%i", activeObject->getWidth());
+			setValue(INPUT_WIDTH, buffer); 
+
+			sprintf(buffer, "%i", activeObject->getHeight());
+			setValue(INPUT_HEIGHT, buffer);
+
+			// update texture source
+			sprintf(buffer, "%s", activeObject->getTextureSource());
+			if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
+				setValue(DROPBOX_TEXTURE, "grass_platform");
+			else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
+				setValue(DROPBOX_TEXTURE, "brick_platform");
+			break;
+		}
+		case LISTBOX_OBJECTTYPE:
+		{
+			if(data == "Static Platform")
+				objectToCreate = STATIC_PLATFORMA;
+			else if(data == "Moving Platform")
+				objectToCreate = MOVING_PLATFORM;
+			else
+				objectToCreate = NO_OBJECT;
+			break;
+		}
+	}
+	
 }

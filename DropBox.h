@@ -7,7 +7,7 @@
 class DropBox : public Window
 {
 public:
-	DropBox(char* name, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
+	DropBox(WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
 	~DropBox();
 
 	void updateWindow(float dt);

@@ -10,6 +10,25 @@ static const std::string BACKGROUND_SOURCE = "misc\\textures\\cool_background.bm
 
 #define MOUSEPRESS 1
 
+enum WindowID
+{
+	EDITOR,
+	INPUT_XPOS,
+	INPUT_YPOS,
+	INPUT_WIDTH,
+	INPUT_HEIGHT,
+	TEXT_XPOS,
+	TEXT_YPOS,
+	TEXT_WIDTH,
+	TEXT_HEIGHT,
+	LISTBOX_OBJECTTYPE,
+	BUTTON_CREATE,
+	BUTTON_DELETE,
+	DROPBOX_TEXTURE,
+	ACTIVE_OBJECT,
+	NOT_SET
+};
+
 struct CollisionStruct
 {
 	bool hori;

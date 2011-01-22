@@ -6,7 +6,7 @@
 class Button : public Window
 {
 public:
-	Button(char* name, string value, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
+	Button(WindowID id, string value, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
 	~Button();
 
 	int wm_lbuttondown(int x, int y); 

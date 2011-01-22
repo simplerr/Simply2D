@@ -1,7 +1,7 @@
 #include "TextBox.h"
 
-TextBox::TextBox(char* name, string value, int x, int y, int width, int height, D3DCOLOR color)
-	:Window(name, x, y, width, height, color)
+TextBox::TextBox(WindowID id, string value, int x, int y, int width, int height, D3DCOLOR color)
+	:Window(id, x, y, width, height, color)
 {
 	
 	mValue = value;

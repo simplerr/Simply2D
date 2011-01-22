@@ -26,7 +26,7 @@ public:
 
 	void setID(int ID) {mID = ID;};
 	void setTexture(IDirect3DTexture9* texture)	{mTexture = texture;};
-	void setTextureSource(char *source) {mTextureSource = source;};
+	void setTextureSource(char *source);
 
 	void move(float dx, float dy);
 	void scale(int dwidth, int dheight);

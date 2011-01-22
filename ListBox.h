@@ -8,7 +8,7 @@
 class ListBox : public Window
 {
 public:
-	ListBox(char* name, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	ListBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~ListBox();
 
 	void updateWindow(float dt);

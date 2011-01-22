@@ -65,3 +65,9 @@ void Object::loadFromFile(ofstream *fout)
 {
 
 }
+
+void Object::setTextureSource(char *source)
+{
+	memcpy(mTextureSource, source, 255);
+	mTexture = gGraphics->loadTexture(mTextureSource);
+}

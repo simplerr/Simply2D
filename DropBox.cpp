@@ -1,7 +1,7 @@
 #include "DropBox.h"
 
-DropBox::DropBox(char* name, int x, int y, int width, int height, int itemHeight, D3DCOLOR color)
-	: Window(name, x, y, width, height, color)
+DropBox::DropBox(WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color)
+	: Window(id, x, y, width, height, color)
 {
 	mItems = 0;
 	mValue = "none";
@@ -48,6 +48,7 @@ int DropBox::wm_lbuttondown(int x, int y)
 				mPosition.bottom = mActivationRect.bottom;
 				mExpanded = false;
 				mValue = mItemList[i].itemName;	
+				mParent->messageHandler(getID(), mValue);
 			}
 		}
 		

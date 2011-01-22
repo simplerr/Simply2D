@@ -1,7 +1,7 @@
 #include "ListBox.h"
 
-ListBox::ListBox(char* name, int x, int y, int width, int height, D3DCOLOR color)
-				: Window(name, x, y, width, height, color)
+ListBox::ListBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+				: Window(id, x, y, width, height, color)
 {
 	// ingen vald vid start!
 	//activeItemName = NULL;
@@ -30,6 +30,7 @@ int ListBox::wm_lbuttondown(int x, int y)
 		if(x > itemList[i].rect.left && x < itemList[i].rect.right && y > itemList[i].rect.top && y < itemList[i].rect.bottom)
 		{		
 			mValue = itemList[i].itemName;			// Button ska bara köra vald item!
+			mParent->messageHandler(getID(), mValue);
 			return 1;
 		}
 		else

@@ -13,7 +13,7 @@
 class TextBox : public Window
 {
 public:
-	TextBox(char* name, string value, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
+	TextBox(WindowID id, string value, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
 	~TextBox();
 
 	int wm_lbuttondown(int x, int y); 

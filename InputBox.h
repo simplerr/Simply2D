@@ -9,7 +9,7 @@
 class InputBox : public Window
 {
 public:
-	InputBox(char* name, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	InputBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~InputBox();
 
 	void updateWindow(float dt);

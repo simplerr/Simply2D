@@ -18,15 +18,15 @@ enum DragRect
 	DRAGDOWN
 };
 
-class Editor	
+class Editor : public Window	
 {
 public:
 	Editor();
 	~Editor();
 
 	void updateAll(float dt);
-	void renderAll(void);
-	void keyPressed(WPARAM wParam);
+	int renderAll(void);
+	//void keyPressed(WPARAM wParam);
 
 	void addMouse(Mouse *a_mouse){mMouse = a_mouse;};
 
@@ -41,9 +41,10 @@ public:
 
 	bool objectSnapping(Object *object, float dx, float dy);
 	bool stillSnapped(void);
+
+	void messageHandler(WindowID sender, string data = "nothing");
 private:
-	Window *sideBar;
-	Window *gameArea;
+	RECT gameArea;
 	// alla andra windows?:O
 
 	Mouse *mMouse;
@@ -53,9 +54,8 @@ private:
 	Object *activeObject;
 	Object *snappedObject;
 
-	string itemToCreate;
-	string create;
-	string delet;
+	ObjectType objectToCreate;
+	string changeTexture;
 
 	RECT dragLeft, dragTop, dragBottom, dragRight;
 
