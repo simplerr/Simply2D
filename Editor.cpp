@@ -118,55 +118,11 @@ void Editor::updateAll(float dt)
 		else
 		{
 			sendMousePress(mousePos.x, mousePos.y);
-			/*itemToCreate = getValue("listbox");
-			create = getValue("Create");			
-			delet = getValue("Delete");
-			changeTexture = getValue("texturedropbox");
-
-			if(changeTexture == "grass_platform")
-				changeTexture = "misc\\textures\\grass_platform.bmp";
-			else if(changeTexture == "brick_platform")
-				changeTexture = "misc\\textures\\grass_platform.bmp";
-			else
-				changeTexture = "none";
-
-			if(delet == "pressed")	{
-				if(activeObject != NULL)	{
-					mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!		
-					resetInputBoxes();
-				}
-			}
-			
-			// listbox item vald
-			if(itemToCreate != "none")
-			{
-				if(create == "pressed")	
-				{					
-					if(itemToCreate == "Brick Platform")
-					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\brick_platform.bmp");
-						mLevel->addStaticObject(platform);
-					}
-					else if(itemToCreate == "Grass Platform")
-					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\grass_platform.bmp");
-						mLevel->addStaticObject(platform);
-					}
-					// aktiv plattform = den nya?
-				}
-			}
-			if(changeTexture != "none")
-			{
-				strcpy(buffer, changeTexture.c_str());
-				activeObject->setTextureSource(buffer);
-				changeTexture = "none";
-			}
-			*/
 		}
 		// initiera/updatera dragAreas
 		if(activeObject != NULL)
 		{
-			updateDragRects();						////////////////////// HMMMMMMMMMMMMM?
+			updateDragRects();
 		}
 	}
 	// flytta/resize markerad plattform
@@ -259,36 +215,21 @@ void Editor::movePlatform(void)
 			if(activeObjectRect.left < 0)
 			{
 				activeObject->setXY(activeObject->getWidth()/2, activeObject->getY());
-
-				/*activeObject->rect.left = 0;
-				activeObject->rect.right = activeObject->rect.left + activeObject->width;
-				activeObject->xpos = activeObject->rect.left + activeObject->width/2;*/
 			}
 			else if(activeObjectRect.right > 800)
 			{
 				activeObject->setXY(800 - activeObject->getWidth()/2, activeObject->getY());
-				/*activeObject->rect.right = 800;
-				activeObject->rect.left = activeObject->rect.right - activeObject->width;
-				activeObject->xpos = activeObject->rect.left + activeObject->width/2;*/
 			}
 			else if(activeObjectRect.top < 0)
 			{
 				activeObject->setXY(activeObject->getX(), activeObject->getHeight()/2);
-				/*activeObject->rect.top = 0;
-				activeObject->rect.bottom = activeObject->rect.top + activeObject->height;
-				activeObject->ypos = activeObject->rect.top + activeObject->height/2;*/
 			}
 			else if(activeObjectRect.bottom > 600)
 			{
 				activeObject->setXY(activeObject->getX(), 600 - activeObject->getHeight()/2);
-				/*activeObject->rect.bottom = 600;
-				activeObject->rect.top = activeObject->rect.bottom - activeObject->height;
-				activeObject->ypos = activeObject->rect.top + activeObject->height/2;*/
 			}
 		}
 		messageHandler(ACTIVE_OBJECT);
-		//updateInputBoxes();
-		//updateDragRects();
 }
 
 int Editor::renderAll()
@@ -300,10 +241,6 @@ int Editor::renderAll()
 	gGraphics->drawText("Create object:", 810, 220);
 
 	if(activeObject != NULL)	{
-		// orange markering
-		//gGraphics->BlitRect(activeObject->xpos, activeObject->ypos, activeObject->rect.right - activeObject->rect.left+7,
-		//activeObject->rect.bottom - activeObject->rect.top+7, D3DCOLOR_ARGB(150, 255, 166, 0));
-
 		gGraphics->BlitRect(activeObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 
 		//drag areas
@@ -316,84 +253,6 @@ int Editor::renderAll()
 	return 1;
 }
 
-/*void Editor::keyPressed(WPARAM wParam)
-{
-	if(activeObject != NULL)
-	{
-		RECT activeObjectRect = activeObject->getRect();
-		keyPressed(wParam);
-		
-		char *tmp = new char;		// mem leak
-		string tmp2;
-		int x, y, width, height;
-
-		//////////////////////////////////
-		//// * x ska sättas till gameAreaWIDTH + platformWIDHT/2 etc.....
-		////
-		//////////////////////////////////
-		tmp2 = getValue("iposx");
-		sprintf(tmp, "%s", tmp2.c_str());
-		x = atoi(tmp);
-		if(x <= 800 && x >= 0)
-			activeObject->setXY(x, activeObject->getY());
-		else
-			activeObject->setXY(800, activeObject->getY());
-
-		tmp2 = getValue("iposy");
-		sprintf(tmp, "%s", tmp2.c_str());
-		y = atoi(tmp);
-		if(y <= 600 && y >= 0)
-			activeObject->setXY(activeObject->getX(), y);
-		else
-			activeObject->setXY(activeObject->getX(), 600);
-
-		tmp2 = getValue("iwidth");
-		sprintf(tmp, "%s", tmp2.c_str());
-		width = atoi(tmp);
-		activeObject->setWidth(width);
-
-		tmp2 = getValue("iheight");
-		sprintf(tmp, "%s", tmp2.c_str());
-		height = atoi(tmp);
-		activeObject->setHeight(height);
-
-		updateDragRects();
-	}	
-}*/
-
-void Editor::buildBaseLevel(void)
-{	
-	/*mLevel->addPlatform(400, 520, 800, 100, GRASS_PLATFORM);
-	mLevel->addPlatform(600, 300, 100, 100, GRASS_PLATFORM);
-	mLevel->addPlatform(250, 300, 100, 100, BRICK_PLATFORM);*/
-	
-}
-
-/*void Editor::updateInputBoxes(void)
-{
-	// updatera inputboxarna 
-	char buffer[256];
-
-	sprintf(buffer, "%i", (int)activeObject->getX());
-	setValue("iposx", buffer); 
-
-	sprintf(buffer, "%i", (int)activeObject->getY());
-	setValue("iposy", buffer); 
-
-	sprintf(buffer, "%i", activeObject->getWidth());
-	setValue("iwidth", buffer); 
-
-	sprintf(buffer, "%i", activeObject->getHeight());
-	setValue("iheight", buffer);
-
-	// update texture source
-	sprintf(buffer, "%s", activeObject->getTextureSource());
-	if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
-		setValue("texturedropbox", "grass_platform");
-	else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
-		setValue("texturedropbox", "brick_platform");
-
-}*/
 void Editor::resetInputBoxes(void)
 {
 	char buffer[10] = " ";				
@@ -733,16 +592,6 @@ void Editor::messageHandler(WindowID sender, string data)
 			updateDragRects();
 			break;
 		}
-		/*case LISTBOX_OBJECTTYPE:
-		{
-			if(data == "Static Platform")
-				objectToCreate = STATIC_PLATFORMA;
-			else if(data == "Moving Platform")
-				objectToCreate = MOVING_PLATFORM;
-			else
-				objectToCreate = NO_OBJECT;
-			break;
-		}*/
 	}
 	
 }

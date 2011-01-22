@@ -359,6 +359,18 @@ Object* GameWorld::getObjectAt(POINT mpos)
 			mpos.y > objectRect.top && mpos.y < objectRect.bottom)
 			tmp = mStaticObjectList[i];
 	}
+	// tröck inte på nått statiskt, prova dynamiskt!
+	if(tmp == NULL)
+	{
+		for (int i = 0;i < mDynamicObjectList.size();i++)
+		{
+			objectRect = mDynamicObjectList[i]->getRect();
+
+			if(mpos.x > objectRect.left && mpos.x < objectRect.right && 
+				mpos.y > objectRect.top && mpos.y < objectRect.bottom)
+				tmp = mDynamicObjectList[i];
+		}
+	}
 
 	// samma sak för dynamic listan!
 	return tmp;
