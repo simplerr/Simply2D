@@ -66,7 +66,7 @@ Editor::Editor() : Window(EDITOR, 900, 300, 200, 600), SNAP_SENSE(30), SNAP_DIST
 }
 Editor::~Editor()
 {
-	//mLevel->saveLevel("level_1.txt");
+	//mLevel->saveLevel("level_1.txt")
 	delete mLevel;
 }
 
