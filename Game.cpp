@@ -261,8 +261,8 @@ void Game::drawBkgd()
 	RECT r1;
 	r1.top = 0;
 	r1.left = 0;
-	r1.right = 800;
-	r1.bottom = 600;
+	r1.right = 1000;
+	r1.bottom = 800;
 
 	gGraphics->BlitTexture(mBkgdTex, r1, 0xFFFFFFFF, 0.0f);
 }

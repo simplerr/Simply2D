@@ -76,7 +76,7 @@ void D3DApp::initMainWindow()
 
 	// Default to a window with a client area rectangle of 800x600.
 
-	RECT R = {0, 0, 1000, 600};
+	RECT R = {0, 0, 1200, 800};
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
 	mhMainWnd = CreateWindow("D3DWndClassName", mMainWndCaption.c_str(), 
 		WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN)/2-(R.right/2),

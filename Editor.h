@@ -33,8 +33,6 @@ public:
 	void movePlatform(void);
 	void resizePlatform(DragRect drag);
 
-	void buildBaseLevel(void);
-
 	void updateInputBoxes(void);
 	void resetInputBoxes(void);
 	void updateDragRects(void);

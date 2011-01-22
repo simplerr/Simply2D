@@ -114,7 +114,8 @@ Window *Window::findChildAtCoord(int x, int y)
 
   for (int i = 0;i < mSubWins.size();i++)
   {
-	  if(x > mSubWins[i]->mPosition.left && x < mSubWins[i]->mPosition.right && y > mSubWins[i]->mPosition.top && y < mSubWins[i]->mPosition.bottom)	{
+	  // kollar om windowet är synligt nu också!
+	  if(x > mSubWins[i]->mPosition.left && x < mSubWins[i]->mPosition.right && y > mSubWins[i]->mPosition.top && y < mSubWins[i]->mPosition.bottom && mSubWins[i]->mVisible)	{
 		    child = i;
 			break; // viktigt med break, annars kommer child att skrivas över med -1
 	  }
@@ -132,8 +133,9 @@ Window *Window::findChildAtCoord(int x, int y)
   // inget child!
   else	{
 	  // ett window
-	  if(x > mPosition.left && x < mPosition.right && y > mPosition.top && y < mPosition.bottom)
+	  if(x > mPosition.left && x < mPosition.right && y > mPosition.top && y < mPosition.bottom)	{
 			found = this;
+	  }
 	  // else -> inget window
   }
   return found;

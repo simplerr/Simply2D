@@ -6,14 +6,14 @@
 // Window behöver ingen mus längre
 // Editor ska ha den 
 
-Editor::Editor() : Window(EDITOR, 900, 300, 200, 600), SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : Window(EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
 {
 	mLevel = new GameWorld(NULL);
 	
 	gameArea.top = 0;
-	gameArea.bottom = 600;
+	gameArea.bottom = GAME_HEIGHT;
 	gameArea.left = 0;
-	gameArea.right = 800;
+	gameArea.right = GAME_WIDTH;
 
 	// kanske inte behöver ta name som arg?
 	TextBox *tPositionX = new TextBox(TEXT_XPOS, "X:", 40, 40, 60, 20);
@@ -107,6 +107,18 @@ void Editor::updateAll(float dt)
 
 				// update inputboxes - med activPlatforms värden ;d
 				messageHandler(ACTIVE_OBJECT);
+
+				// static eller dynamic platform?
+				if(activeObject->getType() == MOVING_PLATFORM)	{
+					// Visibility(true)
+					// flytta ned create sakerna!
+					// startPos
+					// endPos
+					// speed
+				}	
+				else if(activeObject->getType() == STATIC_PLATFORMA)	{
+					// standard
+				}
 			}		
 			else
 			{
@@ -157,13 +169,13 @@ void Editor::movePlatform(void)
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
 
-		if(activeObjectRect.left <= 0 || activeObjectRect.right >= 800)
+		if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
 				mMouse->setMousePos(mousePos.x - dx, mousePos.y);
-			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= 600)
+			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= GAME_HEIGHT)
 				mMouse->setMousePos(mousePos.x, mousePos.y - dy);
 
 		// kolla begränsningar - true -> gameArea + ingen krock med annan plattform!
-		if(activeObjectRect.left >= 0 && activeObjectRect.right <= 800 && activeObjectRect.top >= 0 && activeObjectRect.bottom <= 600)
+		if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
 		{
 			// så musen inte rör sig vid kanten
 			
@@ -216,17 +228,17 @@ void Editor::movePlatform(void)
 			{
 				activeObject->setXY(activeObject->getWidth()/2, activeObject->getY());
 			}
-			else if(activeObjectRect.right > 800)
+			else if(activeObjectRect.right > GAME_WIDTH)
 			{
-				activeObject->setXY(800 - activeObject->getWidth()/2, activeObject->getY());
+				activeObject->setXY(GAME_WIDTH - activeObject->getWidth()/2, activeObject->getY());
 			}
 			else if(activeObjectRect.top < 0)
 			{
 				activeObject->setXY(activeObject->getX(), activeObject->getHeight()/2);
 			}
-			else if(activeObjectRect.bottom > 600)
+			else if(activeObjectRect.bottom > GAME_HEIGHT)
 			{
-				activeObject->setXY(activeObject->getX(), 600 - activeObject->getHeight()/2);
+				activeObject->setXY(activeObject->getX(), GAME_HEIGHT - activeObject->getHeight()/2);
 			}
 		}
 		messageHandler(ACTIVE_OBJECT);
@@ -237,8 +249,8 @@ int Editor::renderAll()
 	mLevel->drawLevel();
 	Window::renderAll();
 
-	gGraphics->drawText("Active object:", 810, 7);
-	gGraphics->drawText("Create object:", 810, 220);
+	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 220);
 
 	if(activeObject != NULL)	{
 		gGraphics->BlitRect(activeObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
@@ -248,7 +260,6 @@ int Editor::renderAll()
 		gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
 		gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
 		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
-
 	}
 	return 1;
 }
@@ -459,10 +470,10 @@ void Editor::messageHandler(WindowID sender, string data)
 
 				sprintf(temp, "%s", data.c_str());
 				x = atoi(temp);
-				if(x <= 800 && x >= 0)
+				if(x <= GAME_WIDTH && x >= 0)
 					activeObject->setXY(x, activeObject->getY());
 				else
-					activeObject->setXY(800, activeObject->getY());
+					activeObject->setXY(GAME_WIDTH, activeObject->getY());
 
 				updateDragRects();
 			}
@@ -476,10 +487,10 @@ void Editor::messageHandler(WindowID sender, string data)
 
 				sprintf(temp, "%s", data.c_str());
 				y = atoi(temp);
-				if(y <= 600 && y >= 0)
+				if(y <= GAME_HEIGHT && y >= 0)
 					activeObject->setXY(activeObject->getX(), y);
 				else
-					activeObject->setXY(activeObject->getX(), 600);
+					activeObject->setXY(activeObject->getX(), GAME_HEIGHT);
 
 				updateDragRects();
 			}
