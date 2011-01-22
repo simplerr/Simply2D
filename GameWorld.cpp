@@ -89,6 +89,13 @@ void GameWorld::saveLevel(char* levelFile)
 
 void GameWorld::loadLevel(char* levelFile)
 {	
+	// rensa upp så leveln är tom innan man laddar in nya object!
+	if(mStaticObjectList.size() > 0)	
+		mStaticObjectList.clear();
+
+	// samma för dynamic listan!
+	if(mDynamicObjectList.size() > 0)
+		mDynamicObjectList.clear();
 	char buffer[256];
 
 	Object *loadedObject;
@@ -138,61 +145,9 @@ void GameWorld::loadLevel(char* levelFile)
 		
 	}
 	
-	// ta reda på antal plattformer
-	/*fin.getline(text, 256);
-	if(!strcmp(text, "objects:"))
-	{	
-		//fin.getline(text, 256);
-		while(strcmp(text, "-end") != 0)	{
-			fin.getline(text, 256);
-			//MessageBox(0, text, 0, 0);
-			i++;
-		}
-		
-	}
 	
-	// hoppa till direkt efter platforms:
-	fin.seekg(8, ios_base::beg);
-
-	for(int j = 0;j<i;j++) {
-
-		fin.getline(text, 256);
-
-		//fin >> tmpType;// >> xpos >> ypos >> width >> height >> textureSource;
-		sprintf(buffer, "type: %c", text);
-		MessageBox(0, buffer, 0, 0);
-
-		/*if(tmpType == STATIC_PLATFORMA)	
-		{
-			MessageBox(0, "STATIC_PLATFORM!", 0, 0);
-			fin >> xpos >> ypos >> width >> height >> textureSource;					
-			loadedObject = new StaticPlatform(xpos, ypos, width, height, textureSource);
-			addStaticObject(loadedObject);
-		}
-		else if(tmpType == MOVING_PLATFORM)
-		{
-			POINT startPos, endPos;
-			float speed;
-			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> textureSource;
-			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer);
-			addDynamicObject(loadedObject);
-		}
-		// else if(tmpType == ENEMY)
-		// ...
-
-		
-	}*/
 	fin.close();
 }
-
-/*void GameWorld::addStaticObject(int x, int y, int width, int height)
-{
-
-}
-void GameWorld::addDynamicObject(int x, int y, int width, int height)
-{
-	// to be done!
-}*/
 
 void GameWorld::addStaticObject(Object *object)
 {
@@ -272,8 +227,6 @@ void GameWorld::drawLevel(void)
 {
 	if(!gGraphics)
 		MessageBox(0, "NULL PTR", 0, 0);
-
-	gGraphics->drawText(collisionText, 810 , 100);
 
 	// statiska
 	for (int i = 0;i < mStaticObjectList.size();i++)

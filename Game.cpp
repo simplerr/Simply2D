@@ -56,7 +56,9 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mGfxStats = new GfxStats();
 	User = new Player("misc\\textures\\player.bmp", 200, 30, 36, 36);
 	mLevel = new GameWorld(User);
-	mLevel->loadLevel("level_1.txt");
+	char buffer[256];
+	strcpy(buffer, ACTIVE_LEVEL.c_str());
+	mLevel->loadLevel(buffer);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
 
@@ -179,11 +181,15 @@ void Game::updateScene(float dt)
 			gameActive = true;
 			mainMenuActive = false;
 			editorActive = false;
+			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
+			mLevel->loadLevel(buffer);
 		}
 		else if(menuResult == "Editor")	{
 			editorActive = true;
 			mainMenuActive = false;
-			gameActive = false;					
+			gameActive = false;	
+			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
+			mEditor->loadLevel(buffer);
 		}
 		// else if menuResult == "Options"
 		// showOptions() ...

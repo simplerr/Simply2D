@@ -73,7 +73,7 @@ int DropBox::renderAll(void)
 	if(!mExpanded)
 	{	
 		// bakgrund + text för mValue
-		gGraphics->BlitRect(mActivationRect, D3DCOLOR_ARGB(255, 70, 166, 150));
+		gGraphics->BlitRect(mActivationRect, mColor);
 		string tmpValue = getOwnValue();
 		strcpy(buffer, tmpValue.c_str());
 		//WindowRect tmpRect = getInfo();

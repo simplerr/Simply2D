@@ -7,6 +7,7 @@ static const std::string GRASS_PLATFORM_SOURCE = "misc\\textures\\grass_platform
 static const std::string BRICK_PLATFORM_SOURCE = "misc\\textures\\brick_platform.bmp";
 static const std::string PLAYER_SOURCE = "misc\\textures\\mario.bmp";
 static const std::string BACKGROUND_SOURCE = "misc\\textures\\cool_background.bmp";
+static const std::string ACTIVE_LEVEL = "levels\\level_1.txt";
 
 #define MOUSEPRESS 1
 
@@ -24,6 +25,7 @@ enum WindowID
 	LISTBOX_OBJECTTYPE,
 	BUTTON_CREATE,
 	BUTTON_DELETE,
+	BUTTON_SAVE,
 	DROPBOX_TEXTURE,
 	ACTIVE_OBJECT,
 	NOT_SET

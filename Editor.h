@@ -43,6 +43,8 @@ public:
 	bool stillSnapped(void);
 
 	void messageHandler(WindowID sender, string data = "nothing");
+
+	void loadLevel(char *source) {mLevel->loadLevel(source);};
 private:
 	RECT gameArea;
 	// alla andra windows?:O
@@ -54,7 +56,6 @@ private:
 	Object *activeObject;
 	Object *snappedObject;
 
-	ObjectType objectToCreate;
 	string changeTexture;
 
 	RECT dragLeft, dragTop, dragBottom, dragRight;
