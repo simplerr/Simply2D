@@ -11,6 +11,8 @@
 #include "DropBox.h"
 #include "Button.h"
 
+static const int ADD = 150;
+
 enum DragRect
 {
 	DRAGLEFT,
@@ -64,6 +66,8 @@ private:
 	direction snapDir;
 
 	ObjectType mPrevActiveObjectType;
+
+	int createObjectTextPos;
 
 	const int SNAP_SENSE;
 	const int SNAP_DIST;

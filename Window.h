@@ -20,13 +20,23 @@ using namespace std;
 struct ListItem
 {
 	std::string itemName;
-	RECT rect;
+	//RECT rect;
 	int x, y, width, height;
 	D3DCOLOR color;
+
+	RECT getRect()
+	{
+		RECT tmpRect;
+		tmpRect.left = x - width/2;
+		tmpRect.right = x + width/2;
+		tmpRect.top = y - height/2;
+		tmpRect.bottom = y + height/2;
+
+		return tmpRect;
+	}
 	// background color
 	// selected color
 };
-
 
 static char buffer[256];
 
@@ -46,7 +56,8 @@ public:
 	int addWindow(Window *w);
 	int removewindow(Window *w){};
 
-	
+	virtual void onDeactive(void);
+
 	//virtual void updateRectToNewXY(void);
 	bool isActive(void) { return mActive;};
 
@@ -58,8 +69,9 @@ public:
 	void setActive(bool state){mActiveWin->mActive = state;};
 	void setVisibility(bool value) {mVisible = value;};
 	void setParent(Window* parent)	{mParent = parent;};
-	virtual void setPos(int x, int y) {mX = x; mY = y;};
 	void setsize(int width, int height)		{};
+	virtual void move(int dx, int dy) {mX += dx; mY += dy;};
+	virtual void setPos(int x, int y) {mX = x; mY = y;};
 	
 	void updateRect(void);
 

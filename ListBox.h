@@ -15,6 +15,8 @@ public:
 	int wm_lbuttondown(int x, int y); 
 	int wm_keydown(WPARAM wParam);
     int renderAll(void);
+	//void setPos(int x, int y);
+	void move(int dx, int dy);
 
 	void addItem(string name, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));		// ska få autokordinater!, OBS måste ha samma på alla items!
 	//void addItem(char *name, int x, int y, int width, int height);  den ovan ska användas istället!

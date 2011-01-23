@@ -51,6 +51,7 @@ void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen a
 
 		if(found != NULL)	{
 			mActiveWin->mActive = false;
+			//mActiveWin->onDeactive();
 			mActiveWin = found;
 			mActiveWin->mActive = true;
 			mActiveWin->wm_lbuttondown(mx, my);
@@ -59,6 +60,7 @@ void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen a
 		else	{
 			mActiveWinID = NOT_SET;
 			mActiveWin->mActive = false;
+			//mActiveWin->onDeactive();
 		}
 }
 
@@ -147,3 +149,7 @@ RECT Window::getRect(void)
 	return rect;
 }
 
+void Window::onDeactive(void)
+{
+	// to be overwritten
+}

@@ -24,7 +24,7 @@ int ListBox::wm_lbuttondown(int x, int y)
 
 	for(int i = 0; i<itemList.size();i++)
 	{
-		if(x > itemList[i].rect.left && x < itemList[i].rect.right && y > itemList[i].rect.top && y < itemList[i].rect.bottom)
+		if(x > itemList[i].getRect().left && x < itemList[i].getRect().right && y > itemList[i].getRect().top && y < itemList[i].getRect().bottom)
 		{		
 			mValue = itemList[i].itemName;			// Button ska bara köra vald item!
 			mParent->messageHandler(getID(), mValue);
@@ -81,12 +81,34 @@ void ListBox::addItem(string name, int height, D3DCOLOR color)
 	tmpItem.width = mWidth;
 	tmpItem.height = height;
 	
-	tmpItem.rect.left = tmpItem.x - tmpItem.width/2;
+	/*tmpItem.left = tmpItem.x - tmpItem.width/2;
 	tmpItem.rect.right = tmpItem.x + tmpItem.width/2;
 	tmpItem.rect.top = tmpItem.y - tmpItem.height/2;
-	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;
+	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;*/
 	tmpItem.color = color;
 
 	items++;
 	itemList.push_back(tmpItem);
+}
+
+/*void ListBox::setPos(int x, int y)
+{
+	Window::setPos(x, y);
+
+	for(int i = 0; i<itemList.size();i++)
+	{
+		itemList[i].
+	}
+
+}*/
+
+void ListBox::move(int dx, int dy)
+{
+	Window::move(dx, dy);
+
+	for(int i = 0; i<itemList.size();i++)
+	{
+		itemList[i].x += dx;
+		itemList[i].y += dy;
+	}
 }

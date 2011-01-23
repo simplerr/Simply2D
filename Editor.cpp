@@ -50,6 +50,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	snapDir = ALL;
 	snappedObject = NULL;
 
+	createObjectTextPos = 220;
 	mPrevActiveObjectType = NO_OBJECT;
 }
 Editor::~Editor()
@@ -170,10 +171,12 @@ void Editor::updateAll(float dt)
 					iEndY->setVisibility(true);
 					iSpeed->setVisibility(true);
 
-					if(mPrevActiveObjectType != NO_OBJECT)
-					{
-						textureDropBox->setPos(textureDropBox->getX(), textureDropBox->getY() + 100);
-					}
+					textureDropBox->move(0, +150);
+					deleteButton->move(0, +150);
+					createButton->move(0, +150);
+					listBox->move(0, +150);
+					saveButton->move(0, +150);
+					createObjectTextPos += 150;
 
 					mPrevActiveObjectType = MOVING_PLATFORM;				
 				}	
@@ -192,7 +195,12 @@ void Editor::updateAll(float dt)
 
 					if(mPrevActiveObjectType != NO_OBJECT)
 					{
-						textureDropBox->setPos(textureDropBox->getX(), textureDropBox->getY() - 100);
+						textureDropBox->move(0, -150);
+						deleteButton->move(0, -150);
+						createButton->move(0, -150);
+						listBox->move(0, -150);
+						saveButton->move(0, -150);
+						createObjectTextPos -= 150;
 					}
 
 					mPrevActiveObjectType = STATIC_PLATFORMA;
@@ -328,7 +336,7 @@ int Editor::renderAll()
 	Window::renderAll();
 
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 220);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
 
 	if(activeObject != NULL)	{
 		gGraphics->BlitRect(activeObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
@@ -652,6 +660,7 @@ void Editor::messageHandler(WindowID sender, string data)
 			if(activeObject != NULL)	{			
 				mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!		
 				resetInputBoxes();
+				activeObject = NULL;
 			}
 			break;
 		}

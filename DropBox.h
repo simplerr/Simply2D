@@ -15,8 +15,10 @@ public:
 	int wm_keydown(WPARAM wParam);
     int renderAll(void);
 	void addItem(string name, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));
+	void move(int dx, int dy);
 	void setPos(int x, int y);
 	void fixSize(void);
+	void onDeactive(void);
 private:
 	vector<ListItem> mItemList;
 	RECT mActivationRect;

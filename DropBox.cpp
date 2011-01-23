@@ -46,12 +46,14 @@ int DropBox::wm_lbuttondown(int x, int y)
 		{
 			mExpanded = false;
 			mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
+			mHeight -= (mItems * mItemHeight) - mItemHeight;
 		}
 		for(int i = 0; i<mItemList.size();i++)
 		{
-			if(x > mItemList[i].rect.left && x < mItemList[i].rect.right && y > mItemList[i].rect.top && y < mItemList[i].rect.bottom)
+			if(x > mItemList[i].getRect().left && x < mItemList[i].getRect().right && y > mItemList[i].getRect().top && y < mItemList[i].getRect().bottom)
 			{	
 				mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;// mPosition.bottom = mActivationRect.bottom;
+				mHeight -= (mItems * mItemHeight) - mItemHeight;
 				mExpanded = false;
 				mValue = mItemList[i].itemName;	
 				mParent->messageHandler(mID, mValue);			
@@ -68,18 +70,14 @@ int DropBox::wm_keydown(WPARAM wParam)
 }
 int DropBox::renderAll(void)
 {
-	if(!mActive)	{
-		mExpanded = false;
-		mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;	
-	}
 	// sign pilen
 	gGraphics->BlitRect(mActivationRect.right + mSignSide/2, mActivationRect.top + mSignSide/2, mSignSide, mSignSide, D3DCOLOR_ARGB(255, 255, 166, 0));
 	gGraphics->drawText("V", mActivationRect.right + 4, mActivationRect.top + 2);
 
-	gGraphics->BlitRect(mActivationRect, mColor);
-		string tmpValue = getValue();
-		strcpy(buffer, tmpValue.c_str());
-		gGraphics->drawText(buffer, mActivationRect.left, mActivationRect.top);
+	gGraphics->BlitRect(mActivationRect, D3DCOLOR_ARGB(255, 255, 255, 0));
+	string tmpValue = getValue();
+	strcpy(buffer, tmpValue.c_str());
+	gGraphics->drawText(buffer, mActivationRect.left, mActivationRect.top);
 	
 	if(mExpanded)
 	{
@@ -115,10 +113,10 @@ void DropBox::addItem(string name, D3DCOLOR color)
 	tmpItem.width = mActivationRect.right - mActivationRect.left;//mWidth;
 	tmpItem.height = mItemHeight;
 	
-	tmpItem.rect.left = tmpItem.x - tmpItem.width/2;
+	/*tmpItem.rect.left = tmpItem.x - tmpItem.width/2;
 	tmpItem.rect.right = tmpItem.x + tmpItem.width/2;
 	tmpItem.rect.top = tmpItem.y - tmpItem.height/2;
-	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;
+	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;*/
 	tmpItem.color = color;
 
 	//mY += mItemHeight/2;
@@ -134,6 +132,27 @@ void DropBox::setPos(int x, int y)
 	RECT tmpRect = getRect();
 
 	mActivationRect = tmpRect;
+}
+
+void DropBox::move(int dx, int dy)
+{
+	Window::move(dx, dy);
+	RECT tmpRect = getRect();
+
+	mActivationRect = tmpRect;
+
+	for(int i = 0; i<mItemList.size();i++)
+	{
+		mItemList[i].x += dx;
+		mItemList[i].y += dy;
+	}
+}
+
+void DropBox::onDeactive(void)
+{
+	mExpanded = false;
+	mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
+	mHeight -= (mItems * mItemHeight) - mItemHeight;
 }
 /*void DropBox::fixSize(void)
 {
