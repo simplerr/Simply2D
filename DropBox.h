@@ -7,7 +7,7 @@
 class DropBox : public Window
 {
 public:
-	DropBox(WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
+	DropBox(Window *parent, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
 	~DropBox();
 
 	void updateWindow(float dt);
@@ -15,7 +15,8 @@ public:
 	int wm_keydown(WPARAM wParam);
     int renderAll(void);
 	void addItem(string name, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));
-	void updateRectToNewXY(void);
+	void setPos(int x, int y);
+	void fixSize(void);
 private:
 	vector<ListItem> mItemList;
 	RECT mActivationRect;

@@ -8,6 +8,7 @@
 #include "TextBox.h"
 #include "GameWorld.h"
 #include "ListBox.h"
+#include "DropBox.h"
 #include "Button.h"
 
 enum DragRect
@@ -29,6 +30,7 @@ public:
 	//void keyPressed(WPARAM wParam);
 
 	void addMouse(Mouse *a_mouse){mMouse = a_mouse;};
+	void buildGUI(void);
 
 	void movePlatform(void);
 	void resizePlatform(DragRect drag);
@@ -61,8 +63,41 @@ private:
 	int snapCount;
 	direction snapDir;
 
+	ObjectType mPrevActiveObjectType;
+
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
+	// window controls
+private:
+	TextBox *tPositionX; 
+	TextBox *tPositionY;
+	TextBox *tWidth;
+	TextBox *tHeight;
+
+	TextBox *tStartX;
+	TextBox *tStartY;
+	TextBox *tEndX;
+	TextBox *tEndY;
+	TextBox *tSpeed;
+
+	InputBox *iPositionX;
+	InputBox *iPositionY;
+	InputBox *iWidth;
+	InputBox *iHeight;
+
+	InputBox *iStartX;
+	InputBox *iStartY;
+	InputBox *iEndX;
+	InputBox *iEndY;
+	InputBox *iSpeed;
+
+	ListBox *listBox;
+
+	Button *createButton;
+	Button *deleteButton;
+	Button *saveButton;
+
+	DropBox *textureDropBox;
 };
 
 #endif

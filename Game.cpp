@@ -61,6 +61,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mLevel->loadLevel(buffer);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
+	mEditor->buildGUI();
 
 
 	loadBkgd("misc\\textures\\cool_background.bmp");

@@ -1,10 +1,9 @@
 #include "TextBox.h"
 
-TextBox::TextBox(WindowID id, string value, int x, int y, int width, int height, D3DCOLOR color)
-	:Window(id, x, y, width, height, color)
+TextBox::TextBox(Window *parent, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color)
+	:Window(parent, id, x, y, width, height, color)
 {
-	
-	mValue = value;
+	mDisplayText = display;
 }
 
 TextBox::~TextBox()
@@ -14,11 +13,14 @@ TextBox::~TextBox()
 
 int TextBox::renderAll()
 {	
-	//char tmp[256];
-	strcpy(buffer, mValue.c_str());
+	if(mVisible)
+	{
+		//char tmp[256];
+		strcpy(buffer, mDisplayText.c_str());
 
-	gGraphics->BlitRect(mPosition.x, mPosition.y, mPosition.width, mPosition.height, mColor);
-	gGraphics->drawText(buffer, mPosition.x-mPosition.width/2+5, mPosition.y-mPosition.height/2, D3DCOLOR_ARGB(255,0,0,0));
+		gGraphics->BlitRect(mX, mY, mWidth, mHeight, mColor);
+		gGraphics->drawText(buffer, mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
+	}
 
 	return 1;
 }

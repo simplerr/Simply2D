@@ -1,12 +1,9 @@
 #include "ListBox.h"
 
-ListBox::ListBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color)
-				: Window(id, x, y, width, height, color)
+ListBox::ListBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+				: Window(parent, id, x, y, width, height, color)
 {
-	// ingen vald vid start!
-	//activeItemName = NULL;
 	items = 0;
-	mValue = "none";
 }
 
 ListBox::~ListBox()
@@ -54,7 +51,7 @@ int ListBox::renderAll(void)
 		mValue = "none";
 
 	// rita ut "bakgrunden"
-	gGraphics->BlitRect(mPosition.x, mPosition.y, mPosition.width, mPosition.height, D3DCOLOR_ARGB (255, 30, 200, 150));
+	gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB (255, 30, 200, 150));
 	// rita ut alla items
 	for(int i = 0; i<itemList.size();i++)
 	{
@@ -76,12 +73,12 @@ void ListBox::addItem(string name, int height, D3DCOLOR color)
 	tmpItem.itemName = name;
 	
 	if(items == 0)
-		tmpItem.y = mPosition.top + height/2;
+		tmpItem.y = mY - (mHeight/2) + height/2;//mPosition.top + height/2;
 	else
-		tmpItem.y = mPosition.top + height/2 + items *height;
+		tmpItem.y = mY - (mHeight/2) + height/2 + items *height;
 	
-	tmpItem.x = mPosition.x;
-	tmpItem.width = mPosition.width;
+	tmpItem.x = mX;
+	tmpItem.width = mWidth;
 	tmpItem.height = height;
 	
 	tmpItem.rect.left = tmpItem.x - tmpItem.width/2;

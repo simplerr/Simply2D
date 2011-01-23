@@ -1,7 +1,7 @@
 #include "InputBox.h"
 
-InputBox::InputBox(WindowID id, int x, int y, int width, int height, D3DCOLOR color)
-		: Window(id, x, y, width, height, color)
+InputBox::InputBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+		: Window(parent, id, x, y, width, height, color)
 {
 	showCaret = false;
 }
@@ -27,17 +27,20 @@ void InputBox::updateWindow(float dt)
 
 int InputBox::renderAll()
 {
-	//static char tmp [256];
-	strcpy(buffer, mValue.c_str());
-
-	gGraphics->BlitFullRectBordered(mPosition.x, mPosition.y, mPosition.width, mPosition.height, mColor);
-	gGraphics->drawText(">", mPosition.x-mPosition.width/2+5, mPosition.y-mPosition.height/2, D3DCOLOR_ARGB(255,255,165,0));
-	gGraphics->drawText(buffer, mPosition.x-mPosition.width/2+15, mPosition.y-mPosition.height/2, D3DCOLOR_ARGB(255,0,0,0));
-
-	if(mActive)
+	if(mVisible)
 	{
-		if(showCaret)
-			gGraphics->drawText("|", mPosition.x-mPosition.width/2+(14+caretPos*9), mPosition.y-mPosition.height/2, D3DCOLOR_ARGB(255,0,0,0));	
+		//static char tmp [256];
+		strcpy(buffer, mValue.c_str());
+
+		gGraphics->BlitFullRectBordered(mX, mY, mWidth, mHeight, mColor);
+		gGraphics->drawText(">", mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,255,165,0));
+		gGraphics->drawText(buffer, mX-mWidth/2+15, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
+
+		if(mActive)
+		{
+			if(showCaret)
+				gGraphics->drawText("|", mX-mWidth/2+(14+caretPos*9), mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));	
+		}
 	}
 
 	return 1;
@@ -45,7 +48,7 @@ int InputBox::renderAll()
 
 int InputBox::wm_lbuttondown(int x, int y)
 {
-	caretPos = mValue.size();
+	caretPos = mValue.size()-1;
 	return 1;
 }
 

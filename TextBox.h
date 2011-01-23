@@ -13,12 +13,13 @@
 class TextBox : public Window
 {
 public:
-	TextBox(WindowID id, string value, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
+	TextBox(Window *parent, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
 	~TextBox();
 
 	int wm_lbuttondown(int x, int y); 
     int renderAll(void);
 private:
+	string mDisplayText;
 	//string mValue;
 	// font color
 	// background color

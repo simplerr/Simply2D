@@ -33,39 +33,46 @@ static char buffer[256];
 class Window
 {
 public:
-	Window(WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 155, 155, 200, 000 ));
+	Window(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 155, 155, 200, 000));
 	virtual ~Window();
 	virtual void init(void) {};
-	void setParent(Window* parent)	{mParent = parent;};
-	Window *getParent(void)	{return(mParent);};
-	Window *getWindow(void) {return(this);};
-	WindowID getID(void) {return mID;};
+	
+	
 	Window *findChildAtCoord(int x, int y);
 	int windowCount(void) {return mSubWins.size();};
 
-	WindowRect getInfo(void)	{return mPosition;};
+	//WindowRect getInfo(void)	{return mPosition;};
 
 	int addWindow(Window *w);
 	int removewindow(Window *w){};
 
-	void setpos(int x, int y)		{};
-	void setsize(int width, int height)		{};
-	virtual void updateRectToNewXY(void);
+	
+	//virtual void updateRectToNewXY(void);
 	bool isActive(void) { return mActive;};
 
 	virtual void updateWindow(float dt)	{if(mActiveWin != this)mActiveWin->updateWindow(dt);};
-
- 
 	virtual int renderAll(void);
   
 	//void setName(char *name) {mName = name;};
-	string getValue(WindowID id);
-	void setValue(WindowID id, string value);
+	void setValue(string value) {mValue = value;};
 	void setActive(bool state){mActiveWin->mActive = state;};
-	void setVisibility(WindowID id, bool value);
-	string getOwnValue(void)	{return mValue;};
-	RECT getRect(void);
+	void setVisibility(bool value) {mVisible = value;};
+	void setParent(Window* parent)	{mParent = parent;};
+	virtual void setPos(int x, int y) {mX = x; mY = y;};
+	void setsize(int width, int height)		{};
+	
 	void updateRect(void);
+
+	Window *getParent(void)	{return(mParent);};
+	Window *getWindow(void) {return(this);};
+	WindowID getID(void) {return mID;};
+	int getX(void) { return mX;};
+	int getY(void) { return mY;};
+	int getWidth(void) { return mWidth;};
+	int getHeight(void) { return mHeight;};
+	string getValue(void)	{return mValue;};
+	bool getVisible(void) {return mVisible;};
+	RECT getRect(void);
 
 	virtual void messageHandler(WindowID sender, string data = "nothing") {};
 	void keyPressed(WPARAM wParam);
@@ -77,16 +84,21 @@ protected:
 	Window *mParent;
 	Window *mActiveWin;
 	vector<Window*> mSubWins;
-	WindowRect mPosition;
+	//WindowRect mPosition;
 	D3DCOLOR mColor;
 
 	WindowID mID;
 	string mValue;
 	WindowID mActiveWinID;
 
+	int mX;
+	int mY;
+	int mWidth;
+	int mHeight;
+
 	bool mVisible;
 	bool mActive;
-	bool inputState;
+	bool mInputState;
 };
 
 

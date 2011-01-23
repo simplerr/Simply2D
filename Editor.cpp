@@ -6,8 +6,9 @@
 // Window behöver ingen mus längre
 // Editor ska ha den 
 
-Editor::Editor() : Window(EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
 {
+	
 	mLevel = new GameWorld(NULL);
 	
 	gameArea.top = 0;
@@ -15,46 +16,31 @@ Editor::Editor() : Window(EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIS
 	gameArea.left = 0;
 	gameArea.right = GAME_WIDTH;
 
-	// kanske inte behöver ta name som arg?
-	TextBox *tPositionX = new TextBox(TEXT_XPOS, "X:", 40, 40, 60, 20);
-	TextBox *tPositionY = new TextBox(TEXT_YPOS, "Y:", 40, 70, 60, 20);
-	TextBox *tWidth = new TextBox(TEXT_WIDTH, "Width:", 40, 100, 60, 20);
-	TextBox *tHeight = new TextBox(TEXT_HEIGHT, "Height:", 40, 130, 60, 20);
-
-	InputBox *iPositionX = new InputBox(INPUT_XPOS, 110, 40, 60, 20);
-	InputBox *iPositionY = new InputBox(INPUT_YPOS, 110, 70, 60, 20);
-	InputBox *iWidth = new InputBox(INPUT_WIDTH, 110, 100, 60, 20);
-	InputBox *iHeight = new InputBox(INPUT_HEIGHT, 110, 130, 60, 20);
-
-	ListBox *listBox = new ListBox(LISTBOX_OBJECTTYPE, 66, 260, 110, 40);
-
-	Button *createButton = new Button(BUTTON_CREATE, "Create", 40, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	Button *deleteButton = new Button(BUTTON_DELETE, "Delete", 40, 194, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	Button *saveButton = new Button(BUTTON_SAVE, "Save", 110, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-
-	DropBox *textureDropBox = new DropBox(DROPBOX_TEXTURE, 66, 165, 110, 20, 20);
-
+	/*
 	addWindow(tPositionX);
 	addWindow(tPositionY);
 	addWindow(tWidth);
 	addWindow(tHeight);
-
+	addWindow(tStartX);
+	addWindow(tStartY);
+	addWindow(tEndX);
+	addWindow(tEndY);
+	addWindow(tSpeed);
 	addWindow(iPositionX);
 	addWindow(iPositionY);
 	addWindow(iWidth);
 	addWindow(iHeight);
-
-	addWindow(listBox);
-	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
-	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
-
+	addWindow(iStartX);
+	addWindow(iStartY);
+	addWindow(iEndX);
+	addWindow(iEndY);
+	addWindow(iSpeed);
 	addWindow(createButton);
 	addWindow(deleteButton);
 	addWindow(saveButton);
-
 	addWindow(textureDropBox);
-	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
-	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
+	addWindow(listBox);
+	*/
 
 	strcpy(buffer, ACTIVE_LEVEL.c_str());
 	mLevel->loadLevel(buffer);
@@ -63,11 +49,67 @@ Editor::Editor() : Window(EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIS
 	snapCount = SNAP_SENSE;
 	snapDir = ALL;
 	snappedObject = NULL;
+
+	mPrevActiveObjectType = NO_OBJECT;
 }
 Editor::~Editor()
 {
 	//mLevel->saveLevel("level_1.txt")
 	delete mLevel;
+}
+
+void Editor::buildGUI(void)
+{
+	
+	// kanske inte behöver ta name som arg?
+	tPositionX = new TextBox(this, TEXT_XPOS, "X:", 40, 40, 60, 20);
+	tPositionY = new TextBox(this, TEXT_YPOS, "Y:", 40, 70, 60, 20);
+	tWidth = new TextBox(this, TEXT_WIDTH, "Width:", 40, 100, 60, 20);
+	tHeight = new TextBox(this, TEXT_HEIGHT, "Height:", 40, 130, 60, 20);
+
+	tStartX = new TextBox(this, TEXT_STARTX, "Start X:", 40, 160, 60, 20);
+	tStartY = new TextBox(this, TEXT_STARTY, "Start Y:", 40, 190, 60, 20);
+	tEndX = new TextBox(this, TEXT_ENDX, "End X:", 40, 220, 60, 20);
+	tEndY = new TextBox(this, TEXT_ENDY, "End Y:", 40, 250, 60, 20);
+	tSpeed = new TextBox(this, TEXT_SPEED, "Speed:", 40, 280, 60, 20);
+
+	iPositionX = new InputBox(this, INPUT_XPOS, 110, 40, 60, 20);
+	iPositionY = new InputBox(this, INPUT_YPOS, 110, 70, 60, 20);
+	iWidth = new InputBox(this, INPUT_WIDTH, 110, 100, 60, 20);
+	iHeight = new InputBox(this, INPUT_HEIGHT, 110, 130, 60, 20);
+
+	iStartX = new InputBox(this, INPUT_STARTX, 110, 160, 60, 20);
+	iStartY = new InputBox(this, INPUT_STARTY, 110, 190, 60, 20);
+	iEndX = new InputBox(this, INPUT_ENDX, 110, 220, 60, 20);
+	iEndY = new InputBox(this, INPUT_ENDY, 110, 250, 60, 20);
+	iSpeed = new InputBox(this, INPUT_SPEED, 110, 280, 60, 20);
+
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 260, 110, 40);
+
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 194, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 165, 130, 20, 20);
+
+	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
+
+	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
+	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+
+	tStartX->setVisibility(false);
+	tStartY->setVisibility(false);
+	tEndX->setVisibility(false);
+	tEndY->setVisibility(false);
+	tSpeed->setVisibility(false);
+	iStartX->setVisibility(false);
+	iStartY->setVisibility(false);
+	iEndX->setVisibility(false);
+	iEndY->setVisibility(false);
+	iSpeed->setVisibility(false);
+
+	resetInputBoxes();
 }
 
 void Editor::updateAll(float dt)
@@ -95,7 +137,7 @@ void Editor::updateAll(float dt)
 		
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
-		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)	// gameArea == true
+		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
 		{			
 			// get selectedPlatform
 			activeObject = mLevel->getObjectAt(mousePos);
@@ -109,15 +151,51 @@ void Editor::updateAll(float dt)
 				messageHandler(ACTIVE_OBJECT);
 
 				// static eller dynamic platform?
-				if(activeObject->getType() == MOVING_PLATFORM)	{
+				if(activeObject->getType() == MOVING_PLATFORM && mPrevActiveObjectType != MOVING_PLATFORM)
+				{
 					// Visibility(true)
 					// flytta ned create sakerna!
 					// startPos
 					// endPos
 					// speed
+
+					tStartX->setVisibility(true);
+					tStartY->setVisibility(true);
+					tEndX->setVisibility(true);
+					tEndY->setVisibility(true);
+					tSpeed->setVisibility(true);
+					iStartX->setVisibility(true);
+					iStartY->setVisibility(true);
+					iEndX->setVisibility(true);
+					iEndY->setVisibility(true);
+					iSpeed->setVisibility(true);
+
+					if(mPrevActiveObjectType != NO_OBJECT)
+					{
+						textureDropBox->setPos(textureDropBox->getX(), textureDropBox->getY() + 100);
+					}
+
+					mPrevActiveObjectType = MOVING_PLATFORM;				
 				}	
-				else if(activeObject->getType() == STATIC_PLATFORMA)	{
-					// standard
+				else if(activeObject->getType() == STATIC_PLATFORMA && mPrevActiveObjectType != STATIC_PLATFORMA)	
+				{
+					tStartX->setVisibility(false);
+					tStartY->setVisibility(false);
+					tEndX->setVisibility(false);
+					tEndY->setVisibility(false);
+					tSpeed->setVisibility(false);
+					iStartX->setVisibility(false);
+					iStartY->setVisibility(false);
+					iEndX->setVisibility(false);
+					iEndY->setVisibility(false);
+					iSpeed->setVisibility(false);
+
+					if(mPrevActiveObjectType != NO_OBJECT)
+					{
+						textureDropBox->setPos(textureDropBox->getX(), textureDropBox->getY() - 100);
+					}
+
+					mPrevActiveObjectType = STATIC_PLATFORMA;
 				}
 			}		
 			else
@@ -267,10 +345,17 @@ int Editor::renderAll()
 void Editor::resetInputBoxes(void)
 {
 	char buffer[10] = " ";				
-	setValue(INPUT_XPOS, buffer); 				
-	setValue(INPUT_YPOS, buffer); 				
-	setValue(INPUT_WIDTH, buffer); 				
-	setValue(INPUT_HEIGHT, buffer);
+	iPositionX->setValue(buffer); 				
+	iPositionY->setValue(buffer); 				
+	iWidth->setValue(buffer); 				
+	iHeight->setValue(buffer);
+
+	iStartX->setValue(buffer); 				
+	iStartY->setValue(buffer); 				
+	iEndX->setValue(buffer); 				
+	iEndY->setValue(buffer);
+	iSpeed->setValue(buffer);
+
 }
 
 // de ska vara en procentuell del av activeObject
@@ -539,7 +624,7 @@ void Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_CREATE:
 		{
 			// listbox item vald
-			string value = getValue(LISTBOX_OBJECTTYPE);
+			string value = listBox->getValue();
 			if(value != "none")
 			{								
 					if(value == "Static Platform")
@@ -582,23 +667,23 @@ void Editor::messageHandler(WindowID sender, string data)
 			char buffer[256];
 
 			sprintf(buffer, "%i", (int)activeObject->getX());
-			setValue(INPUT_XPOS, buffer); 
+			iPositionX->setValue(buffer); 
 
 			sprintf(buffer, "%i", (int)activeObject->getY());
-			setValue(INPUT_YPOS, buffer); 
+			iPositionY->setValue(buffer); 
 
 			sprintf(buffer, "%i", activeObject->getWidth());
-			setValue(INPUT_WIDTH, buffer); 
+			iWidth->setValue(buffer); 
 
 			sprintf(buffer, "%i", activeObject->getHeight());
-			setValue(INPUT_HEIGHT, buffer);
+			iHeight->setValue(buffer);
 
 			// update texture source
 			sprintf(buffer, "%s", activeObject->getTextureSource());
 			if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
-				setValue(DROPBOX_TEXTURE, "grass_platform");
+				textureDropBox->setValue("grass_platform");
 			else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
-				setValue(DROPBOX_TEXTURE, "brick_platform");
+				textureDropBox->setValue("brick_platform");
 
 			updateDragRects();
 			break;

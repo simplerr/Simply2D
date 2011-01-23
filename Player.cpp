@@ -164,7 +164,7 @@ RECT Player::getRect(void)
 {	
 	RECT rect;
 
-	rect.left = (int)mX - mWidth/2;
+	rect.left = mX - mWidth/2;
 	rect.right = mX + mWidth/2;
 	rect.top = mY - mHeight/2;
 	rect.bottom = mY + mHeight/2;
