@@ -657,8 +657,11 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_DELETE:
 		{		
-			if(activeObject != NULL)	{			
-				mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!		
+			if(activeObject != NULL)	{
+				if(activeObject->getType() == STATIC_PLATFORMA)
+					mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!
+				else if(activeObject->getType() == MOVING_PLATFORM)
+					mLevel->deleteDynamicObject(activeObject->getID());
 				resetInputBoxes();
 				activeObject = NULL;
 			}
