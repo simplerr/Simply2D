@@ -97,5 +97,13 @@ void MovingPlatform::saveToFile(ofstream *fout)
 
 void MovingPlatform::move(float dx, float dy)
 {
+	Object::move(dx, dy);
+
+	mStartPos.x += dx;
+	mStartPos.y += dy;
+	mEndPos.x += dx;
+	mEndPos.y += dy;
+
+
 	// updatera start och end rects!
 }
