@@ -352,10 +352,20 @@ int Editor::renderAll()
 			POINT endPos = tmpPlatform->getEndPos();
 
 			RECT pathRect;
-			pathRect.left = activeObjectRect.right;
-			pathRect.right = endPos.x - tmpPlatform->getWidth()/2;
-			pathRect.top = tmpPlatform->getY() - 5;
-			pathRect.bottom = tmpPlatform->getY() + 5;
+			if(endPos.x > tmpPlatform->getX())
+			{
+				pathRect.left = activeObjectRect.right;
+				pathRect.right = endPos.x - tmpPlatform->getWidth()/2;
+				pathRect.top = tmpPlatform->getY() - 5;
+				pathRect.bottom = tmpPlatform->getY() + 5;
+			}
+			else if(endPos.x < tmpPlatform->getX())
+			{
+				pathRect.left = endPos.x + tmpPlatform->getWidth()/2;
+				pathRect.right = activeObjectRect.left;
+				pathRect.top = tmpPlatform->getY() - 5;
+				pathRect.bottom = tmpPlatform->getY() + 5;
+			}
 
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
@@ -633,6 +643,32 @@ void Editor::messageHandler(WindowID sender, string data)
 			}
 			break;
 		}
+	case INPUT_ENDX:
+		{
+			if(activeObject != NULL)
+			{
+				POINT endPos;
+				int tmp;
+				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+				endPos = tmpPlatform->getEndPos();
+
+				sprintf(temp, "%s", data.c_str());
+				tmp = atoi(temp);
+				endPos.x = atoi(temp);
+				tmpPlatform->setEndPos(endPos);
+
+				updateMovingPath();
+			}
+			break;
+		}
+	case INPUT_SPEED:
+		{
+			if(activeObject != NULL)
+			{
+
+			}
+			break;
+		}
 	case DROPBOX_TEXTURE:
 		{
 			if(activeObject != NULL)
@@ -739,10 +775,7 @@ void Editor::messageHandler(WindowID sender, string data)
 				iSpeed->setValue(buffer);
 
 				// tmpPoint = endPos
-				movingObjectPathRect.left = tmpPoint.x - tmpPlatform->getWidth()/2;
-				movingObjectPathRect.right = tmpPoint.x + tmpPlatform->getWidth()/2;
-				movingObjectPathRect.top = tmpPoint.y - tmpPlatform->getHeight()/2;
-				movingObjectPathRect.bottom = tmpPoint.y + tmpPlatform->getHeight()/2;
+				updateMovingPath();
 			}
 
 			updateDragRects();
@@ -750,4 +783,15 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	}
 	
+}
+
+void Editor::updateMovingPath(void)
+{
+	MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+	POINT endPos = tmpPlatform->getEndPos();
+
+	movingObjectPathRect.left = endPos.x - tmpPlatform->getWidth()/2;
+	movingObjectPathRect.right = endPos.x + tmpPlatform->getWidth()/2;
+	movingObjectPathRect.top = endPos.y - tmpPlatform->getHeight()/2;
+	movingObjectPathRect.bottom = endPos.y + tmpPlatform->getHeight()/2;
 }

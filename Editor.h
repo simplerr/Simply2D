@@ -47,6 +47,8 @@ public:
 	void messageHandler(WindowID sender, string data = "nothing");
 
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
+
+	void updateMovingPath(void);
 private:
 	RECT gameArea;
 	RECT movingObjectPathRect;

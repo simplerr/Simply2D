@@ -107,3 +107,14 @@ void MovingPlatform::move(float dx, float dy)
 
 	// updatera start och end rects!
 }
+
+void MovingPlatform::setStartPos(POINT pos)
+{
+	mStartPos.x = pos.x;
+	mStartPos.y = pos.y;
+}
+void MovingPlatform::setEndPos(POINT pos)
+{
+	mEndPos.x = pos.x;
+	mEndPos.y = pos.y;
+}
