@@ -34,12 +34,15 @@ public:
 
 	void setStartPos(POINT pos);
 	void setEndPos(POINT pos);
+	POINT getStartPos(void) { return mStartPos;};
 	POINT getEndPos(void)	{return mEndPos;};
 	float getSpeed(void) {return mSpeed;};
 
 	bool getPlayerCollision(void);
 	void movePlayer(double dx, double dy)	{mPlayer->move(dx, dy);};
 	Player *getPlayer(void) {return mPlayer;};
+
+	void move(float dx, float dy);
 
 	void saveToFile(ofstream *fout);
 

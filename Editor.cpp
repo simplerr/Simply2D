@@ -154,11 +154,7 @@ void Editor::updateAll(float dt)
 				// static eller dynamic platform?
 				if(activeObject->getType() == MOVING_PLATFORM && mPrevActiveObjectType != MOVING_PLATFORM)
 				{
-					// Visibility(true)
-					// flytta ned create sakerna!
-					// startPos
-					// endPos
-					// speed
+					
 
 					tStartX->setVisibility(true);
 					tStartY->setVisibility(true);
@@ -696,6 +692,32 @@ void Editor::messageHandler(WindowID sender, string data)
 				textureDropBox->setValue("grass_platform");
 			else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
 				textureDropBox->setValue("brick_platform");
+
+			// if moving platform
+			// updatera start, end och speed
+
+			if(activeObject->getType() == MOVING_PLATFORM)
+			{
+				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+				
+				POINT tmpPoint = tmpPlatform->getStartPos();
+				sprintf(buffer, "%i", tmpPoint.x);
+				iStartX->setValue(buffer);
+
+				sprintf(buffer, "%i", tmpPoint.y);
+				iStartY->setValue(buffer);
+
+				tmpPoint = tmpPlatform->getEndPos();
+
+				sprintf(buffer, "%i", tmpPoint.x);
+				iEndX->setValue(buffer);
+
+				sprintf(buffer, "%i", tmpPoint.y);
+				iEndY->setValue(buffer);
+
+				sprintf(buffer, "%.2f", tmpPlatform->getSpeed());
+				iSpeed->setValue(buffer);
+			}
 
 			updateDragRects();
 			break;

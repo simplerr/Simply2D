@@ -94,3 +94,8 @@ void MovingPlatform::saveToFile(ofstream *fout)
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
 	*fout << getTextureSource() << endl;
 }
+
+void MovingPlatform::move(float dx, float dy)
+{
+	// updatera start och end rects!
+}
