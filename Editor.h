@@ -49,7 +49,7 @@ public:
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
 private:
 	RECT gameArea;
-	// alla andra windows?:O
+	RECT movingObjectPathRect;
 
 	Mouse *mMouse;
 	POINT mousePos;

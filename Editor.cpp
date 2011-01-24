@@ -334,14 +334,34 @@ int Editor::renderAll()
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
 
+	// displays the orange effect
 	if(activeObject != NULL)	{
 		gGraphics->BlitRect(activeObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 
-		//drag areas
+		// diplays the drag areas in different colours
 		gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
 		gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
 		gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
 		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
+
+		// displays the path of the moving object
+		if(activeObject->getType() == MOVING_PLATFORM)
+		{
+			MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+			RECT activeObjectRect = tmpPlatform->getRect();
+			POINT endPos = tmpPlatform->getEndPos();
+
+			RECT pathRect;
+			pathRect.left = activeObjectRect.right;
+			pathRect.right = endPos.x - tmpPlatform->getWidth()/2;
+			pathRect.top = tmpPlatform->getY() - 5;
+			pathRect.bottom = tmpPlatform->getY() + 5;
+
+			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
+
+			// displays the end pos, and the drag rect
+			gGraphics->BlitRect(movingObjectPathRect, D3DCOLOR_ARGB(150, 255, 166, 0));
+		}
 	}
 	return 1;
 }
@@ -717,6 +737,12 @@ void Editor::messageHandler(WindowID sender, string data)
 
 				sprintf(buffer, "%.2f", tmpPlatform->getSpeed());
 				iSpeed->setValue(buffer);
+
+				// tmpPoint = endPos
+				movingObjectPathRect.left = tmpPoint.x - tmpPlatform->getWidth()/2;
+				movingObjectPathRect.right = tmpPoint.x + tmpPlatform->getWidth()/2;
+				movingObjectPathRect.top = tmpPoint.y - tmpPlatform->getHeight()/2;
+				movingObjectPathRect.bottom = tmpPoint.y + tmpPlatform->getHeight()/2;
 			}
 
 			updateDragRects();
