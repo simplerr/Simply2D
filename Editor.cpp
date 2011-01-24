@@ -139,9 +139,12 @@ void Editor::updateAll(float dt)
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
 		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
-		{			
-			// get selectedPlatform
-			activeObject = mLevel->getObjectAt(mousePos);
+		{		
+			// if not pathDragRect
+			if(activeObject == NULL || !(activeObject->getType() == MOVING_PLATFORM && mousePos.x > movingObjectPathRect.left && mousePos.x < movingObjectPathRect.right
+				&& mousePos.y > movingObjectPathRect.top && mousePos.y < movingObjectPathRect.bottom))	{
+					activeObject = mLevel->getObjectAt(mousePos);
+			}
 			if(activeObject != NULL)	
 			{
 				// nollställ
@@ -219,14 +222,16 @@ void Editor::updateAll(float dt)
 			updateDragRects();
 		}
 	}
-	// flytta/resize markerad plattform
+	// move, resize and change endPos of active object
 	if(activeObject != NULL)
 	{
 		// if mousedown
 		if(gDInput->mouseButtonDown(LEFTBUTTON))
 		{
+			RECT activeObjectRect = activeObject->getRect();
 			if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
-			{			
+			{	
+				// resize
 				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom)
 					resizePlatform(DRAGLEFT);
 				else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom)
@@ -235,8 +240,14 @@ void Editor::updateAll(float dt)
 					resizePlatform(DRAGUP);
 				else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom)
 					resizePlatform(DRAGDOWN);
-				else
+				// change end pos
+				else if(activeObject->getType() == MOVING_PLATFORM && mousePos.x > movingObjectPathRect.left && mousePos.x < movingObjectPathRect.right
+						&& mousePos.y > movingObjectPathRect.top && mousePos.y < movingObjectPathRect.bottom)
+					updateEndPos();
+				// move
+				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom)	{
 					movePlatform();
+				}
 				// dragRects och inputBoxes updateras i funktionerna
 			}
 		}	
@@ -794,4 +805,19 @@ void Editor::updateMovingPath(void)
 	movingObjectPathRect.right = endPos.x + tmpPlatform->getWidth()/2;
 	movingObjectPathRect.top = endPos.y - tmpPlatform->getHeight()/2;
 	movingObjectPathRect.bottom = endPos.y + tmpPlatform->getHeight()/2;
+}
+
+void Editor::updateEndPos(void)
+{
+	float dx = gDInput->mouseDX();
+	float dy = gDInput->mouseDY();
+	POINT endPos;
+
+	MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+	endPos = tmpPlatform->getEndPos();
+
+	endPos.x += dx;
+	tmpPlatform->setEndPos(endPos);
+	updateMovingPath();
+	messageHandler(ACTIVE_OBJECT);
 }

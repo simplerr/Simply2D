@@ -58,8 +58,10 @@ void MovingPlatform::update(float dt)
 							movePlayer(-mSpeed, 0);
 					}
 				}
-				else 
+				else {
 					mGoalDir = END;
+					MessageBox(0, "to end!", 0, 0);
+				}
 			}
 		}
 	}
@@ -99,6 +101,7 @@ void MovingPlatform::move(float dx, float dy)
 {
 	Object::move(dx, dy);
 
+	// start pos ska inte följa med ..
 	mStartPos.x += dx;
 	mStartPos.y += dy;
 	mEndPos.x += dx;

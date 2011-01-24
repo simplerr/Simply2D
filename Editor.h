@@ -48,7 +48,9 @@ public:
 
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
 
-	void updateMovingPath(void);
+	void updateEndPos(void);
+
+	void updateMovingPath(void);	// ta arg?
 private:
 	RECT gameArea;
 	RECT movingObjectPathRect;
