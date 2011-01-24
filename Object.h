@@ -29,9 +29,9 @@ public:
 	void setTextureSource(char *source);
 
 	virtual void move(float dx, float dy);
-	void scale(int dwidth, int dheight);
-
+	virtual void scale(int dwidth, int dheight);
 	void setXY(float x, float y) {mX = x; mY = y;};
+
 	void setWidth(int width) {mWidth = width;};
 	void setHeight(int height) {mHeight = height;};
 

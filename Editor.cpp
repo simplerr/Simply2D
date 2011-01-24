@@ -16,32 +16,6 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	gameArea.left = 0;
 	gameArea.right = GAME_WIDTH;
 
-	/*
-	addWindow(tPositionX);
-	addWindow(tPositionY);
-	addWindow(tWidth);
-	addWindow(tHeight);
-	addWindow(tStartX);
-	addWindow(tStartY);
-	addWindow(tEndX);
-	addWindow(tEndY);
-	addWindow(tSpeed);
-	addWindow(iPositionX);
-	addWindow(iPositionY);
-	addWindow(iWidth);
-	addWindow(iHeight);
-	addWindow(iStartX);
-	addWindow(iStartY);
-	addWindow(iEndX);
-	addWindow(iEndY);
-	addWindow(iSpeed);
-	addWindow(createButton);
-	addWindow(deleteButton);
-	addWindow(saveButton);
-	addWindow(textureDropBox);
-	addWindow(listBox);
-	*/
-
 	strcpy(buffer, ACTIVE_LEVEL.c_str());
 	mLevel->loadLevel(buffer);
 	activeObject = NULL;
@@ -139,10 +113,11 @@ void Editor::updateAll(float dt)
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
 		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
-		{		
+		{	
+			MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 			// if not pathDragRect
-			if(activeObject == NULL || !(activeObject->getType() == MOVING_PLATFORM && mousePos.x > movingObjectPathRect.left && mousePos.x < movingObjectPathRect.right
-				&& mousePos.y > movingObjectPathRect.top && mousePos.y < movingObjectPathRect.bottom))	{
+			if(activeObject == NULL || !(activeObject->getType() == MOVING_PLATFORM && mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
+				&& mousePos.y > tmpPlatform->getEndPosRect().top && mousePos.y < tmpPlatform->getEndPosRect().bottom))	{
 					activeObject = mLevel->getObjectAt(mousePos);
 			}
 			if(activeObject != NULL)	
@@ -240,13 +215,16 @@ void Editor::updateAll(float dt)
 					resizePlatform(DRAGUP);
 				else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom)
 					resizePlatform(DRAGDOWN);
-				// change end pos
-				else if(activeObject->getType() == MOVING_PLATFORM && mousePos.x > movingObjectPathRect.left && mousePos.x < movingObjectPathRect.right
-						&& mousePos.y > movingObjectPathRect.top && mousePos.y < movingObjectPathRect.bottom)
-					updateEndPos();
 				// move
-				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom)	{
+				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom)	
 					movePlatform();
+					// change end pos
+				else if(activeObject->getType() == MOVING_PLATFORM)
+				{
+					MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+					if(mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
+						&& mousePos.y > tmpPlatform->getEndPosRect().top && mousePos.y < tmpPlatform->getEndPosRect().bottom)
+						moveEndPos();
 				}
 				// dragRects och inputBoxes updateras i funktionerna
 			}
@@ -360,7 +338,7 @@ int Editor::renderAll()
 		{
 			MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 			RECT activeObjectRect = tmpPlatform->getRect();
-			POINT endPos = tmpPlatform->getEndPos();
+			POS endPos = tmpPlatform->getEndPos();
 
 			RECT pathRect;
 			if(endPos.x > tmpPlatform->getX())
@@ -381,7 +359,8 @@ int Editor::renderAll()
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
 			// displays the end pos, and the drag rect
-			gGraphics->BlitRect(movingObjectPathRect, D3DCOLOR_ARGB(150, 255, 166, 0));
+
+			gGraphics->BlitRect(tmpPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 		}
 	}
 	return 1;
@@ -658,7 +637,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			if(activeObject != NULL)
 			{
-				POINT endPos;
+				POS endPos;
 				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 				endPos = tmpPlatform->getEndPos();
 
@@ -666,7 +645,7 @@ void Editor::messageHandler(WindowID sender, string data)
 				endPos.x = atoi(temp);
 				tmpPlatform->setEndPos(endPos);
 
-				updateMovingPath();
+				//updateMovingPath();
 			}
 			break;
 		}
@@ -710,8 +689,8 @@ void Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Moving Platform")
 					{				
-						POINT start;
-						POINT end;
+						POS start;
+						POS end;
 						start.x = 200;
 						start.y = 300;
 						end.x = 600;
@@ -772,26 +751,26 @@ void Editor::messageHandler(WindowID sender, string data)
 			{
 				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 				
-				POINT tmpPoint = tmpPlatform->getStartPos();
-				sprintf(buffer, "%i", tmpPoint.x);
+				POS tmpPoint = tmpPlatform->getStartPos();
+				sprintf(buffer, "%i", (int)tmpPoint.x);
 				iStartX->setValue(buffer);
 
-				sprintf(buffer, "%i", tmpPoint.y);
+				sprintf(buffer, "%i", (int)tmpPoint.y);
 				iStartY->setValue(buffer);
 
 				tmpPoint = tmpPlatform->getEndPos();
 
-				sprintf(buffer, "%i", tmpPoint.x);
+				sprintf(buffer, "%i", (int)tmpPoint.x);
 				iEndX->setValue(buffer);
 
-				sprintf(buffer, "%i", tmpPoint.y);
+				sprintf(buffer, "%i", (int)tmpPoint.y);
 				iEndY->setValue(buffer);
 
 				sprintf(buffer, "%.2f", tmpPlatform->getSpeed());
 				iSpeed->setValue(buffer);
 
 				// tmpPoint = endPos
-				updateMovingPath();
+				//updateMovingPath();
 			}
 
 			updateDragRects();
@@ -801,28 +780,20 @@ void Editor::messageHandler(WindowID sender, string data)
 	
 }
 
-void Editor::updateMovingPath(void)
-{
-	MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-	POINT endPos = tmpPlatform->getEndPos();
 
-	movingObjectPathRect.left = endPos.x - tmpPlatform->getWidth()/2;
-	movingObjectPathRect.right = endPos.x + tmpPlatform->getWidth()/2;
-	movingObjectPathRect.top = endPos.y - tmpPlatform->getHeight()/2;
-	movingObjectPathRect.bottom = endPos.y + tmpPlatform->getHeight()/2;
-}
-
-void Editor::updateEndPos(void)
+void Editor::moveEndPos(void)
 {
 	float dx = gDInput->mouseDX();
 	float dy = gDInput->mouseDY();
-	POINT endPos;
+	POS endPos;
 
 	MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 	endPos = tmpPlatform->getEndPos();
 
 	endPos.x += dx;
 	tmpPlatform->setEndPos(endPos);
-	updateMovingPath();
+	//updateMovingPath();
 	messageHandler(ACTIVE_OBJECT);
 }
+
+

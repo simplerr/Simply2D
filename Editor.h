@@ -48,12 +48,11 @@ public:
 
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
 
-	void updateEndPos(void);
+	void moveEndPos(void);
 
 	void updateMovingPath(void);	// ta arg?
 private:
 	RECT gameArea;
-	RECT movingObjectPathRect;
 
 	Mouse *mMouse;
 	POINT mousePos;

@@ -26,33 +26,37 @@ enum movingType
 class MovingPlatform : public Object
 {
 public:
-	MovingPlatform(float x, float y, int width, int height, char *textureSource, POINT startPos, POINT endPos, Player *player, movingType moveType = HORIZONTAL, float speed = 0.02f );
+	MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player, movingType moveType = HORIZONTAL, float speed = 0.02f );
 	~MovingPlatform();
 
 	void update(float dt);
 	void draw(void);
 
-	void setStartPos(POINT pos);
-	void setEndPos(POINT pos);
+	void setStartPos(POS pos);
+	void setEndPos(POS pos);
 	void setSpeed(float speed) { mSpeed = speed;};
-	POINT getStartPos(void) { return mStartPos;};
-	POINT getEndPos(void)	{return mEndPos;};
+	POS getStartPos(void) { return mStartPos;};
+	POS getEndPos(void)	{return mEndPos;};
 	float getSpeed(void) {return mSpeed;};
+	RECT getEndPosRect(void);
 
 	bool getPlayerCollision(void);
 	void movePlayer(double dx, double dy)	{mPlayer->move(dx, dy);};
 	Player *getPlayer(void) {return mPlayer;};
 
 	void move(float dx, float dy);
+	void scale(int dwidth, int dheight);
 
 	void saveToFile(ofstream *fout);
 
 private:
-	POINT mStartPos;
-	POINT mEndPos;
+	POS mStartPos;
+	POS mEndPos;
 	float mSpeed;
-
 	float mDX;
+
+	int mTravelX;
+	int mTravelY;
 
 	goal mGoalDir;
 	movingType mMoveType;

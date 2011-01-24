@@ -15,6 +15,12 @@ static const int GAME_HEIGHT = 800;
 
 #define MOUSEPRESS 1
 
+struct POS
+{
+	float x;
+	float y;
+};
+
 enum WindowID
 {
 	EDITOR,

@@ -1,6 +1,7 @@
 #include "MovingPlatform.h"
+#include <fstream>
 
-MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POINT startPos, POINT endPos, Player *player,  movingType moveType, float speed)
+MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
 	:Object(x, y, width, height, textureSource, MOVING_PLATFORM)
 {
 
@@ -15,11 +16,11 @@ MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *te
 	}
 	
 	mSpeed = speed;
-
 	mGoalDir = END;
 	mMoveType = moveType;
-
 	mPlayer = player;
+	mTravelX = mEndPos.x - mStartPos.x;
+	mTravelY = mEndPos.y - mStartPos.y;
 }
 
 MovingPlatform::~MovingPlatform()
@@ -91,7 +92,7 @@ void MovingPlatform::draw(void)
 void MovingPlatform::saveToFile(ofstream *fout)
 {
 
-	*fout << getType() << " " << (int)getX() << " " << getY() << " " << mStartPos.x << " " << mStartPos.y << " " << mEndPos.x << " " << mEndPos.y << " ";
+	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " " << (int)mStartPos.x << " " << (int)mStartPos.y << " " << (int)mEndPos.x << " " << (int)mEndPos.y << " ";
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
 	*fout << getTextureSource() << endl;
 }
@@ -110,13 +111,44 @@ void MovingPlatform::move(float dx, float dy)
 	// updatera start och end rects!
 }
 
-void MovingPlatform::setStartPos(POINT pos)
+void MovingPlatform::setStartPos(POS pos)
 {
 	mStartPos.x = pos.x;
 	mStartPos.y = pos.y;
+
+	mTravelX = mEndPos.x - mStartPos.x;
+	mTravelY = mEndPos.y - mStartPos.y;
 }
-void MovingPlatform::setEndPos(POINT pos)
+void MovingPlatform::setEndPos(POS pos)
 {
 	mEndPos.x = pos.x;
 	mEndPos.y = pos.y;
+
+	mTravelX = mEndPos.x - mStartPos.x;
+	mTravelY = mEndPos.y - mStartPos.y;
+}
+
+void MovingPlatform::scale(int dwidth, int dheight)
+{
+	//activeObject->setXY(activeObjectRect.left + activeObject->getWidth()/2, activeObject->getY());
+
+	Object::scale(dwidth, dheight);
+
+	mStartPos.x = getX();
+	mStartPos.y = getY();
+
+	mEndPos.y = mStartPos.y + mTravelY;
+	mEndPos.x = mStartPos.x + mTravelX;
+	
+}
+
+RECT MovingPlatform::getEndPosRect(void)
+{
+	RECT tmpRect;
+	tmpRect.left = mEndPos.x - getWidth()/2;
+	tmpRect.right = mEndPos.x + getWidth()/2;
+	tmpRect.top = mEndPos.y - getHeight()/2;
+	tmpRect.bottom = mEndPos.y + getHeight()/2;
+
+	return tmpRect;
 }
