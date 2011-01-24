@@ -10,6 +10,7 @@
 #include "ListBox.h"
 #include "DropBox.h"
 #include "Button.h"
+#include "ActiveObject.h"
 
 static const int ADD = 150;
 
@@ -58,7 +59,7 @@ private:
 	POINT mousePos;
 
 	GameWorld *mLevel;
-	Object *activeObject;
+	ActiveObject *activeObject;
 	Object *snappedObject;
 
 	string changeTexture;

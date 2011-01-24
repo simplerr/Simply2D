@@ -18,7 +18,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 
 	strcpy(buffer, ACTIVE_LEVEL.c_str());
 	mLevel->loadLevel(buffer);
-	activeObject = NULL;
+	activeObject = new ActiveObject();
 
 	snapCount = SNAP_SENSE;
 	snapDir = ALL;
@@ -92,19 +92,21 @@ void Editor::updateAll(float dt)
 	Window::updateWindow(dt);
 	mousePos = mMouse->getPos();
 	
+	MovingPlatform *tmpPlatform;
+
 	// mousewheel scaling
-	if(activeObject != NULL)
+	if(activeObject->mObject != NULL)
 	{
 		if(gDInput->mouseDZ() > 0)	{
-			activeObject->scale(8, 8);
+			activeObject->mObject->scale(8, 8);
 
 			// messageHandler(OBJECT_SCALED)
 			messageHandler(ACTIVE_OBJECT);
 		}
 		else if(gDInput->mouseDZ() < 0)	{
-			if(activeObject->getHeight() > 58 && activeObject->getWidth() > 58)	{
+			if(activeObject->mObject->getHeight() > 58 && activeObject->mObject->getWidth() > 58)	{
 
-				activeObject->scale(-8, -8);
+				activeObject->mObject->scale(-8, -8);
 				messageHandler(ACTIVE_OBJECT);
 			}
 		}
@@ -114,13 +116,34 @@ void Editor::updateAll(float dt)
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
 		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
 		{	
-			MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+			Object *tmpObject;
+			tmpObject = NULL;
+			//if(!activeObject->mObject->getActive())
+			//	tmpObject = mLevel->getObjectAt(mousePos);
+			if(activeObject->mMovingPlatform)	{
+				if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+				&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+				tmpObject = mLevel->getObjectAt(mousePos);
+			}
+			else	{
+				tmpObject = mLevel->getObjectAt(mousePos);
+				//MessageBox(0, "hh", 0, 0);
+			}
+
+			if(tmpObject != NULL)
+			{
+				activeObject->setObject((tmpObject));
+				tmpObject = NULL;
+			}
+
+
+			/*tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 			// if not pathDragRect
-			if(activeObject == NULL || !(activeObject->getType() == MOVING_PLATFORM && mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
+			if(activeObject == NULL || !(activeObject->mObject->getType() == MOVING_PLATFORM && mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
 				&& mousePos.y > tmpPlatform->getEndPosRect().top && mousePos.y < tmpPlatform->getEndPosRect().bottom))	{
 					activeObject = mLevel->getObjectAt(mousePos);
-			}
-			if(activeObject != NULL)	
+			}*/
+			if(activeObject->mObject != NULL)	
 			{
 				// nollställ
 				snapDir = ALL;
@@ -130,10 +153,8 @@ void Editor::updateAll(float dt)
 				messageHandler(ACTIVE_OBJECT);
 
 				// static eller dynamic platform?
-				if(activeObject->getType() == MOVING_PLATFORM && mPrevActiveObjectType != MOVING_PLATFORM)
-				{
-					
-
+				if(activeObject->mObject->getType() == MOVING_PLATFORM && mPrevActiveObjectType != MOVING_PLATFORM)
+				{		
 					tStartX->setVisibility(true);
 					tStartY->setVisibility(true);
 					tEndX->setVisibility(true);
@@ -154,7 +175,7 @@ void Editor::updateAll(float dt)
 
 					mPrevActiveObjectType = MOVING_PLATFORM;				
 				}	
-				else if(activeObject->getType() == STATIC_PLATFORMA && mPrevActiveObjectType != STATIC_PLATFORMA)	
+				else if(activeObject->mObject->getType() == STATIC_PLATFORMA && mPrevActiveObjectType != STATIC_PLATFORMA)	
 				{
 					tStartX->setVisibility(false);
 					tStartY->setVisibility(false);
@@ -192,20 +213,27 @@ void Editor::updateAll(float dt)
 			sendMousePress(mousePos.x, mousePos.y);
 		}
 		// initiera/updatera dragAreas
-		if(activeObject != NULL)
+		if(activeObject->mObject != NULL)
 		{
 			updateDragRects();
 		}
 	}
 	// move, resize and change endPos of active object
-	if(activeObject != NULL)
+	if(activeObject->mObject != NULL)
 	{
 		// if mousedown
 		if(gDInput->mouseButtonDown(LEFTBUTTON))
 		{
-			RECT activeObjectRect = activeObject->getRect();
+			RECT activeObjectRect = activeObject->mObject->getRect();
 			if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
 			{	
+				// change end-pos
+				if(activeObject->mObject->getType() == MOVING_PLATFORM)
+				{
+					if(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+						&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)
+						moveEndPos();
+				}
 				// resize
 				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom)
 					resizePlatform(DRAGLEFT);
@@ -218,14 +246,8 @@ void Editor::updateAll(float dt)
 				// move
 				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom)	
 					movePlatform();
-					// change end pos
-				else if(activeObject->getType() == MOVING_PLATFORM)
-				{
-					MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-					if(mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
-						&& mousePos.y > tmpPlatform->getEndPosRect().top && mousePos.y < tmpPlatform->getEndPosRect().bottom)
-						moveEndPos();
-				}
+					
+				
 				// dragRects och inputBoxes updateras i funktionerna
 			}
 		}	
@@ -235,7 +257,7 @@ void Editor::updateAll(float dt)
 // körs när man tar tag i markerad plattform
 void Editor::movePlatform(void)
 {		
-	RECT activeObjectRect = activeObject->getRect();
+	RECT activeObjectRect = activeObject->mObject->getRect();
 		// updatera koordinater
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
@@ -251,18 +273,18 @@ void Editor::movePlatform(void)
 			// så musen inte rör sig vid kanten
 			
 		
-			if(!objectSnapping(activeObject, dx, dy))
+			if(!objectSnapping(activeObject->mObject, dx, dy))
 			{
 				if(snapDir == ALL)	// skulle kännas bättre med NONE
 				{
-					activeObject->move(dx, dy);							
+					activeObject->mObject->move(dx, dy);							
 				}
 				else if(snapDir == LEFT || snapDir == RIGHT)
 				{
 					// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE  || stillSnapped() == false)	// temporär, gäller alla platformer
 					{		
-						activeObject->move(dx, dy);
+						activeObject->mObject->move(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
@@ -270,7 +292,7 @@ void Editor::movePlatform(void)
 					}					
 
 					// ska kunna röra plattformen lodrätt
-					activeObject->move(0, dy);	
+					activeObject->mObject->move(0, dy);	
 					// musens ska inte röra på sig!
 					mMouse->setMousePos(mousePos.x - dx, mousePos.y);
 				}
@@ -278,14 +300,14 @@ void Editor::movePlatform(void)
 				{
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE || stillSnapped() == false)
 					{
-						activeObject->move(dx, dy);
+						activeObject->mObject->move(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
 						snapCount += dy;
 					}
 
-					activeObject->move(dx, 0);
+					activeObject->mObject->move(dx, 0);
 					// musens ska inte röra på sig!
 					mMouse->setMousePos(mousePos.x, mousePos.y - dy);
 				}	
@@ -297,19 +319,19 @@ void Editor::movePlatform(void)
 		{
 			if(activeObjectRect.left < 0)
 			{
-				activeObject->setXY(activeObject->getWidth()/2, activeObject->getY());
+				activeObject->mObject->setXY(activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 			}
 			else if(activeObjectRect.right > GAME_WIDTH)
 			{
-				activeObject->setXY(GAME_WIDTH - activeObject->getWidth()/2, activeObject->getY());
+				activeObject->mObject->setXY(GAME_WIDTH - activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 			}
 			else if(activeObjectRect.top < 0)
 			{
-				activeObject->setXY(activeObject->getX(), activeObject->getHeight()/2);
+				activeObject->mObject->setXY(activeObject->mObject->getX(), activeObject->mObject->getHeight()/2);
 			}
 			else if(activeObjectRect.bottom > GAME_HEIGHT)
 			{
-				activeObject->setXY(activeObject->getX(), GAME_HEIGHT - activeObject->getHeight()/2);
+				activeObject->mObject->setXY(activeObject->mObject->getX(), GAME_HEIGHT - activeObject->mObject->getHeight()/2);
 			}
 		}
 		messageHandler(ACTIVE_OBJECT);
@@ -324,8 +346,8 @@ int Editor::renderAll()
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
 
 	// displays the orange effect
-	if(activeObject != NULL)	{
-		gGraphics->BlitRect(activeObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+	if(activeObject->mObject != NULL)	{
+		gGraphics->BlitRect(activeObject->mObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 
 		// diplays the drag areas in different colours
 		gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
@@ -334,33 +356,32 @@ int Editor::renderAll()
 		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
 
 		// displays the path of the moving object
-		if(activeObject->getType() == MOVING_PLATFORM)
+		if(activeObject->mObject->getType() == MOVING_PLATFORM)
 		{
-			MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-			RECT activeObjectRect = tmpPlatform->getRect();
-			POS endPos = tmpPlatform->getEndPos();
+			RECT activeObjectRect = activeObject->mObject->getRect();
+			POS endPos = activeObject->mMovingPlatform->getEndPos();
 
 			RECT pathRect;
-			if(endPos.x > tmpPlatform->getX())
+			if(endPos.x > activeObject->mObject->getX())
 			{
 				pathRect.left = activeObjectRect.right;
-				pathRect.right = endPos.x - tmpPlatform->getWidth()/2;
-				pathRect.top = tmpPlatform->getY() - 5;
-				pathRect.bottom = tmpPlatform->getY() + 5;
+				pathRect.right = endPos.x - activeObject->mObject->getWidth()/2;
+				pathRect.top = activeObject->mObject->getY() - 5;
+				pathRect.bottom = activeObject->mObject->getY() + 5;
 			}
-			else if(endPos.x < tmpPlatform->getX())
+			else if(endPos.x < activeObject->mObject->getX())
 			{
-				pathRect.left = endPos.x + tmpPlatform->getWidth()/2;
+				pathRect.left = endPos.x + activeObject->mObject->getWidth()/2;
 				pathRect.right = activeObjectRect.left;
-				pathRect.top = tmpPlatform->getY() - 5;
-				pathRect.bottom = tmpPlatform->getY() + 5;
+				pathRect.top = activeObject->mObject->getY() - 5;
+				pathRect.bottom = activeObject->mObject->getY() + 5;
 			}
 
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
 			// displays the end pos, and the drag rect
 
-			gGraphics->BlitRect(tmpPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 		}
 	}
 	return 1;
@@ -387,7 +408,7 @@ void Editor::resetInputBoxes(void)
 // hoovrar man över dem ska cursor bytas
 void Editor::updateDragRects(void)
 {
-	RECT activeObjectRect = activeObject->getRect();
+	RECT activeObjectRect = activeObject->mObject->getRect();
 
 	dragLeft.left = activeObjectRect.left;
 	dragLeft.right = dragLeft.left + 20;
@@ -416,41 +437,42 @@ void Editor::resizePlatform(DragRect drag)
 	float dx = gDInput->mouseDX();
 	float dy = gDInput->mouseDY();
 
-	RECT activeObjectRect = activeObject->getRect();
+	RECT activeObjectRect = activeObject->mObject->getRect();
 
 	// när man förminskar så borde dragRecten förminskas från andra håller
 	// dvs att right ska sättas först och sedan ska left vara relativ till den
 
 	if(drag == DRAGLEFT)
 	{
-		if(activeObject->getWidth() >= 50)	{
+		if(activeObject->mObject->getWidth() >= 50)	{
 			activeObjectRect.left += dx;
-			activeObject->scale(-dx, 0);
-			activeObject->setXY(activeObjectRect.left + activeObject->getWidth()/2, activeObject->getY());
+			activeObject->mObject->scale(-dx, 0);
+			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
+			
 		}
 	}	
 	else if(drag == DRAGRIGHT)
 	{
-		if(activeObject->getWidth() >= 50)	{
+		if(activeObject->mObject->getWidth() >= 50)	{
 			activeObjectRect.right += dx;
-			activeObject->scale(dx, 0);		// drar man musen åt höger ökar bredden
-			activeObject->setXY(activeObjectRect.left + activeObject->getWidth()/2, activeObject->getY());
+			activeObject->mObject->scale(dx, 0);		// drar man musen åt höger ökar bredden
+			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 		}
 	}
 	else if(drag == DRAGUP)
 	{
-		if(activeObject->getHeight() >= 50)	{
+		if(activeObject->mObject->getHeight() >= 50)	{
 			activeObjectRect.top += dy;
-			activeObject->scale(0, -dy);
-			activeObject->setXY(activeObject->getX(), activeObjectRect.top + activeObject->getHeight()/2);
+			activeObject->mObject->scale(0, -dy);
+			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 	}
 	else if(drag == DRAGDOWN)
 	{	
-		if(activeObject->getHeight() >= 50)	{
+		if(activeObject->mObject->getHeight() >= 50)	{
 			activeObjectRect.bottom += dy;
-			activeObject->scale(0, dy);
-			activeObject->setXY(activeObject->getX(), activeObjectRect.top + activeObject->getHeight()/2);
+			activeObject->mObject->scale(0, dy);
+			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 	}
 	messageHandler(ACTIVE_OBJECT);
@@ -458,14 +480,14 @@ void Editor::resizePlatform(DragRect drag)
 
 bool Editor::objectSnapping(Object *object, float dx, float dy)
 {
-	Object testObject = *activeObject;
-	RECT activeObjectRect = activeObject->getRect();
+	Object testObject = *activeObject->mObject;
+	RECT activeObjectRect = activeObject->mObject->getRect();
 	RECT snapObjectRect;
 	bool toReturn = false;
 	int snapDist;
 
 	// om aktiv plattform inte är i någon annan plattform
-	if(mLevel->objectIntersection(activeObject) == NULL)
+	if(mLevel->objectIntersection(activeObject->mObject) == NULL)
 	{	
 		// till höger
 		//testPlatform.rect.right += SNAP_DIST;
@@ -480,7 +502,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
 				mMouse->setMousePos(mousePos.x+snapDist, mousePos.y);
-				activeObject->move(snapDist, 0);
+				activeObject->mObject->move(snapDist, 0);
 
 				snapCount = 0;
 				snapDir = LEFT;
@@ -489,7 +511,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 		}
 
 		// till vänster
-		testObject = *activeObject;
+		testObject = *activeObject->mObject;
 		testObject.move(-SNAP_DIST, 0);
 		snappedObject = mLevel->objectIntersection(&testObject);
 		if(snappedObject != NULL)
@@ -500,7 +522,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
 				mMouse->setMousePos(mousePos.x-snapDist, mousePos.y);
-				activeObject->move(-snapDist, 0);
+				activeObject->mObject->move(-snapDist, 0);
 
 				snapCount = 0;
 				snapDir = RIGHT;
@@ -509,7 +531,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 		}
 
 		// under
-		testObject = *activeObject;
+		testObject = *activeObject->mObject;
 		testObject.move(0, SNAP_DIST);
 		snappedObject = mLevel->objectIntersection(&testObject);
 		if(snappedObject != NULL)
@@ -520,7 +542,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
 				mMouse->setMousePos(mousePos.x, mousePos.y + snapDist);
-				activeObject->move(0, snapDist);
+				activeObject->mObject->move(0, snapDist);
 
 				snapCount = 0;
 				snapDir = DOWN;
@@ -529,7 +551,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 		}
 
 		// över
-		testObject = *activeObject;
+		testObject = *activeObject->mObject;
 		testObject.move(0, -SNAP_DIST);
 		snappedObject = mLevel->objectIntersection(&testObject);
 		if(mLevel->objectIntersection(&testObject))
@@ -540,7 +562,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
 				mMouse->setMousePos(mousePos.x, mousePos.y - snapDist);
-				activeObject->move(0, -snapDist);
+				activeObject->mObject->move(0, -snapDist);
 
 				snapCount = 0;
 				snapDir = UP;
@@ -556,10 +578,10 @@ bool Editor::stillSnapped(void)
 {		
 	if(snappedObject != NULL)
 	{
-		RECT activeObjectRect = activeObject->getRect();
+		RECT activeObjectRect = activeObject->mObject->getRect();
 		RECT snappedObjectRect = snappedObject->getRect();
 		if(activeObjectRect.top <= snappedObjectRect.bottom && activeObjectRect.bottom >= snappedObjectRect.top && activeObjectRect.right >= snappedObjectRect.left &&
-			activeObjectRect.left <= snappedObjectRect.right && activeObject->getID() != snappedObject->getID())
+			activeObjectRect.left <= snappedObjectRect.right && activeObject->mObject->getID() != snappedObject->getID())
 			return true;
 	}
 
@@ -574,15 +596,15 @@ void Editor::messageHandler(WindowID sender, string data)
 	{
 	case INPUT_XPOS:
 		{
-			if(activeObject != NULL)	{
+			if(activeObject->mObject != NULL)	{
 				int x;
 
 				sprintf(temp, "%s", data.c_str());
 				x = atoi(temp);
 				if(x <= GAME_WIDTH && x >= 0)
-					activeObject->setXY(x, activeObject->getY());
+					activeObject->mObject->setXY(x, activeObject->mObject->getY());
 				else
-					activeObject->setXY(GAME_WIDTH, activeObject->getY());
+					activeObject->mObject->setXY(GAME_WIDTH, activeObject->mObject->getY());
 
 				updateDragRects();
 			}
@@ -590,16 +612,16 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case INPUT_YPOS:
 		{
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				int y;
 
 				sprintf(temp, "%s", data.c_str());
 				y = atoi(temp);
 				if(y <= GAME_HEIGHT && y >= 0)
-					activeObject->setXY(activeObject->getX(), y);
+					activeObject->mObject->setXY(activeObject->mObject->getX(), y);
 				else
-					activeObject->setXY(activeObject->getX(), GAME_HEIGHT);
+					activeObject->mObject->setXY(activeObject->mObject->getX(), GAME_HEIGHT);
 
 				updateDragRects();
 			}
@@ -607,13 +629,13 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case INPUT_WIDTH:
 		{
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				int width;
 
 				sprintf(temp, "%s", data.c_str());
 				width = atoi(temp);
-				activeObject->setWidth(width);
+				activeObject->mObject->setWidth(width);
 
 				updateDragRects();
 			}
@@ -621,13 +643,13 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case INPUT_HEIGHT:
 		{	
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				int height;
 
 				sprintf(temp, "%s", data.c_str());
 				height = atoi(temp);
-				activeObject->setHeight(height);
+				activeObject->mObject->setHeight(height);
 
 				updateDragRects();
 			}
@@ -635,15 +657,14 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case INPUT_ENDX:
 		{
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				POS endPos;
-				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-				endPos = tmpPlatform->getEndPos();
+				endPos = activeObject->mMovingPlatform->getEndPos();
 
 				sprintf(temp, "%s", data.c_str());
 				endPos.x = atoi(temp);
-				tmpPlatform->setEndPos(endPos);
+				activeObject->mMovingPlatform->setEndPos(endPos);
 
 				//updateMovingPath();
 			}
@@ -651,28 +672,26 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case INPUT_SPEED:
 		{
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				float speed;
-
-				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 
 				sprintf(temp, "%s", data.c_str());
 				speed = atof(temp);
 
-				tmpPlatform->setSpeed(speed);
+				activeObject->mMovingPlatform->setSpeed(speed);
 			}
 			break;
 		}
 	case DROPBOX_TEXTURE:
 		{
-			if(activeObject != NULL)
+			if(activeObject->mObject != NULL)
 			{
 				strcpy(buffer, data.c_str());
 				if(strcmp(buffer, "grass_platform") == 0)
-					activeObject->setTextureSource("misc\\textures\\grass_platform.bmp");
+					activeObject->mObject->setTextureSource("misc\\textures\\grass_platform.bmp");
 				if(strcmp(buffer, "brick_platform") == 0)
-					activeObject->setTextureSource("misc\\textures\\brick_platform.bmp");
+					activeObject->mObject->setTextureSource("misc\\textures\\brick_platform.bmp");
 			}
 			break;
 		}
@@ -704,13 +723,13 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_DELETE:
 		{		
-			if(activeObject != NULL)	{
-				if(activeObject->getType() == STATIC_PLATFORMA)
-					mLevel->deleteStaticObject(activeObject->getID());	// ska lägga till för dynamic också!
-				else if(activeObject->getType() == MOVING_PLATFORM)
-					mLevel->deleteDynamicObject(activeObject->getID());
+			if(activeObject->mObject != NULL)	{
+				if(activeObject->mObject->getType() == STATIC_PLATFORMA)
+					mLevel->deleteStaticObject(activeObject->mObject->getID());	// ska lägga till för dynamic också!
+				else if(activeObject->mObject->getType() == MOVING_PLATFORM)
+					mLevel->deleteDynamicObject(activeObject->mObject->getID());
 				resetInputBoxes();
-				activeObject = NULL;
+				activeObject->clear();
 			}
 			break;
 		}
@@ -725,20 +744,20 @@ void Editor::messageHandler(WindowID sender, string data)
 			// updatera inputboxarna 
 			char buffer[256];
 
-			sprintf(buffer, "%i", (int)activeObject->getX());
+			sprintf(buffer, "%i", (int)activeObject->mObject->getX());
 			iPositionX->setValue(buffer); 
 
-			sprintf(buffer, "%i", (int)activeObject->getY());
+			sprintf(buffer, "%i", (int)activeObject->mObject->getY());
 			iPositionY->setValue(buffer); 
 
-			sprintf(buffer, "%i", activeObject->getWidth());
+			sprintf(buffer, "%i", activeObject->mObject->getWidth());
 			iWidth->setValue(buffer); 
 
-			sprintf(buffer, "%i", activeObject->getHeight());
+			sprintf(buffer, "%i", activeObject->mObject->getHeight());
 			iHeight->setValue(buffer);
 
 			// update texture source
-			sprintf(buffer, "%s", activeObject->getTextureSource());
+			sprintf(buffer, "%s", activeObject->mObject->getTextureSource());
 			if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
 				textureDropBox->setValue("grass_platform");
 			else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
@@ -747,18 +766,16 @@ void Editor::messageHandler(WindowID sender, string data)
 			// if moving platform
 			// updatera start, end och speed
 
-			if(activeObject->getType() == MOVING_PLATFORM)
-			{
-				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-				
-				POS tmpPoint = tmpPlatform->getStartPos();
+			if(activeObject->mObject->getType() == MOVING_PLATFORM)
+			{			
+				POS tmpPoint = activeObject->mMovingPlatform->getStartPos();
 				sprintf(buffer, "%i", (int)tmpPoint.x);
 				iStartX->setValue(buffer);
 
 				sprintf(buffer, "%i", (int)tmpPoint.y);
 				iStartY->setValue(buffer);
 
-				tmpPoint = tmpPlatform->getEndPos();
+				tmpPoint = activeObject->mMovingPlatform->getEndPos();
 
 				sprintf(buffer, "%i", (int)tmpPoint.x);
 				iEndX->setValue(buffer);
@@ -766,7 +783,7 @@ void Editor::messageHandler(WindowID sender, string data)
 				sprintf(buffer, "%i", (int)tmpPoint.y);
 				iEndY->setValue(buffer);
 
-				sprintf(buffer, "%.2f", tmpPlatform->getSpeed());
+				sprintf(buffer, "%.2f", activeObject->mMovingPlatform->getSpeed());
 				iSpeed->setValue(buffer);
 
 				// tmpPoint = endPos
@@ -787,11 +804,10 @@ void Editor::moveEndPos(void)
 	float dy = gDInput->mouseDY();
 	POS endPos;
 
-	MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-	endPos = tmpPlatform->getEndPos();
+	endPos = activeObject->mMovingPlatform->getEndPos();
 
 	endPos.x += dx;
-	tmpPlatform->setEndPos(endPos);
+	activeObject->mMovingPlatform->setEndPos(endPos);
 	//updateMovingPath();
 	messageHandler(ACTIVE_OBJECT);
 }
