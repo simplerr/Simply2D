@@ -34,6 +34,7 @@ public:
 
 	void setStartPos(POINT pos);
 	void setEndPos(POINT pos);
+	void setSpeed(float speed) { mSpeed = speed;};
 	POINT getStartPos(void) { return mStartPos;};
 	POINT getEndPos(void)	{return mEndPos;};
 	float getSpeed(void) {return mSpeed;};

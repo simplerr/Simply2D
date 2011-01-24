@@ -659,12 +659,10 @@ void Editor::messageHandler(WindowID sender, string data)
 			if(activeObject != NULL)
 			{
 				POINT endPos;
-				int tmp;
 				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 				endPos = tmpPlatform->getEndPos();
 
 				sprintf(temp, "%s", data.c_str());
-				tmp = atoi(temp);
 				endPos.x = atoi(temp);
 				tmpPlatform->setEndPos(endPos);
 
@@ -676,7 +674,14 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			if(activeObject != NULL)
 			{
+				float speed;
 
+				MovingPlatform *tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
+
+				sprintf(temp, "%s", data.c_str());
+				speed = atof(temp);
+
+				tmpPlatform->setSpeed(speed);
 			}
 			break;
 		}

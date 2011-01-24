@@ -60,7 +60,6 @@ void MovingPlatform::update(float dt)
 				}
 				else {
 					mGoalDir = END;
-					MessageBox(0, "to end!", 0, 0);
 				}
 			}
 		}

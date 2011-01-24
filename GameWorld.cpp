@@ -136,8 +136,7 @@ void GameWorld::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> textureSource;
 			sprintf(buffer, "xpos: %i, ypos: %i, startPos.x: %i, startPos.y: %i, endPos.x: %i, endPos.y: %i, width: %i, height: %i, speed: %f , source: %s", xpos, ypos, startPos.x,
 				startPos.y, endPos.x, endPos.y, width, height, speed, textureSource);
-			//MessageBox(0, buffer, 0, 0);
-			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer);
+			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer, HORIZONTAL, speed);
 			addDynamicObject(loadedObject);
 		}
 		// else if(tmpType == ENEMY)
