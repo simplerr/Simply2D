@@ -518,7 +518,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
 				mMouse->setMousePos(mousePos.x+snapDist, mousePos.y);
-				activeObject->mObject->move(snapDist, 0);
+				activeObject->move(snapDist, 0);
 
 				snapCount = 0;
 				snapDir = LEFT;
@@ -538,7 +538,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
 				mMouse->setMousePos(mousePos.x-snapDist, mousePos.y);
-				activeObject->mObject->move(-snapDist, 0);
+				activeObject->move(-snapDist, 0);
 
 				snapCount = 0;
 				snapDir = RIGHT;
@@ -558,7 +558,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
 				mMouse->setMousePos(mousePos.x, mousePos.y + snapDist);
-				activeObject->mObject->move(0, snapDist);
+				activeObject->move(0, snapDist);
 
 				snapCount = 0;
 				snapDir = DOWN;
@@ -578,7 +578,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
 				mMouse->setMousePos(mousePos.x, mousePos.y - snapDist);
-				activeObject->mObject->move(0, -snapDist);
+				activeObject->move(0, -snapDist);
 
 				snapCount = 0;
 				snapDir = UP;
