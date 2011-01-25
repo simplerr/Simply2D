@@ -407,3 +407,15 @@ void GameWorld::spawnPlayer(void)
 {
 	mPlayer->setXY(spawnPos.x, spawnPos.y);
 }
+
+RECT GameWorld::getSpawnRect(void)
+{
+	RECT tmpRect;
+
+	tmpRect.left = spawnPos.x - USER_WIDTH/2;
+	tmpRect.right = spawnPos.x + USER_WIDTH/2;
+	tmpRect.top = spawnPos.y - USER_HEIGHT/2;
+	tmpRect.bottom = spawnPos.y + USER_HEIGHT/2;
+
+	return tmpRect;
+}

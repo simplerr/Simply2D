@@ -54,7 +54,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	buildMainMenu();
 	
 	mGfxStats = new GfxStats();
-	User = new Player("misc\\textures\\player.bmp", 36, 36);
+	User = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
 	mLevel = new GameWorld(User);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);

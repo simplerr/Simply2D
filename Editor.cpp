@@ -154,6 +154,7 @@ void Editor::updateAll(float dt)
 			}*/
 			if(activeObject->mObject != NULL)	
 			{
+				movingSpawnPos = false;
 				// nollställ
 				snapDir = ALL;
 				snapCount = SNAP_SENSE;
@@ -211,7 +212,15 @@ void Editor::updateAll(float dt)
 				}
 			}		
 			else
-			{
+			{	
+				// spawn kod
+				RECT spawnRect = mLevel->getSpawnRect();
+				if(mousePos.x > spawnRect.left && mousePos.x < spawnRect.right && mousePos.y > spawnRect.top && mousePos.y < spawnRect.bottom)	{
+					movingSpawnPos = true;
+				}
+				else
+					movingSpawnPos = false;
+				
 				// reset inputboxes
 				resetInputBoxes();
 			}
@@ -228,10 +237,10 @@ void Editor::updateAll(float dt)
 		}
 	}
 	// move, resize and change endPos of active object
-	if(activeObject->mObject != NULL)
+	if(gDInput->mouseButtonDown(LEFTBUTTON))
 	{
 		// if mousedown
-		if(gDInput->mouseButtonDown(LEFTBUTTON))
+		if(activeObject->mObject != NULL)
 		{
 			RECT activeObjectRect = activeObject->mObject->getRect();
 			if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
@@ -260,13 +269,13 @@ void Editor::updateAll(float dt)
 					resizePlatform(DRAGDOWN);
 				// move
 				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
-					movePlatform();
-					
-				
-				// dragRects och inputBoxes updateras i funktionerna
+					movePlatform();			
 			}
 		}	
+		if(movingSpawnPos)
+			moveSpawnPos();
 	}
+
 	updateWindow(dt);
 }
 // körs när man tar tag i markerad plattform
@@ -292,7 +301,7 @@ void Editor::movePlatform(void)
 			{
 				if(snapDir == ALL)	// skulle kännas bättre med NONE
 				{
-					activeObject->move(dx, dy);							
+					activeObject->move(dx, dy);						
 				}
 				else if(snapDir == LEFT || snapDir == RIGHT)
 				{
@@ -362,7 +371,7 @@ int Editor::renderAll()
 
 	POS spawnPos = mLevel->getSpawn();
 
-	gGraphics->BlitRect(spawnPos.x, spawnPos.y, 36, 36, D3DCOLOR_ARGB(220, 220, 40, 0));
+	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
 
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
@@ -828,7 +837,6 @@ void Editor::messageHandler(WindowID sender, string data)
 	
 }
 
-
 void Editor::moveEndPos(void)
 {
 	float dx = gDInput->mouseDX();
@@ -841,6 +849,19 @@ void Editor::moveEndPos(void)
 	activeObject->mMovingPlatform->setEndPos(endPos);
 	//updateMovingPath();
 	messageHandler(ACTIVE_OBJECT);
+}
+
+void Editor::moveSpawnPos(void)
+{
+	float dx = gDInput->mouseDX();
+	float dy = gDInput->mouseDY();
+
+	POS spawnPos = mLevel->getSpawn();
+
+	spawnPos.x += dx;
+	spawnPos.y += dy;
+
+	mLevel->setSpawn(spawnPos);
 }
 
 

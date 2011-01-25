@@ -24,4 +24,8 @@ public:
 	Object *mObject;
 	MovingPlatform *mMovingPlatform;
 	StaticPlatform *mStaticPlatform;
+
+	// ?? //
+	//POS mSpawnPos;
+	//bool movingSpawnPos;
 };

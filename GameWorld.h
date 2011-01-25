@@ -36,6 +36,8 @@ public:
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);
 	POS getSpawn(void)  {return spawnPos;};
+	RECT getSpawnRect(void);
+	void setSpawn(POS pos)	{spawnPos = pos;};
 	void spawnPlayer(void);
 
 	//void addStaticObject(int x, int y, int width, int height);

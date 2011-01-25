@@ -12,8 +12,13 @@ static const int WINDOW_WIDTH = 1200;
 static const int WINDOW_HEIGHT = 800;
 static const int GAME_WIDTH = 1000;
 static const int GAME_HEIGHT = 800;
+static const int USER_WIDTH = 36;
+static const int USER_HEIGHT = 36;
+
 
 #define MOUSEPRESS 1
+
+
 
 struct POS
 {

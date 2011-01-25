@@ -38,6 +38,7 @@ public:
 
 	void movePlatform(void);
 	void resizePlatform(DragRect drag);
+	void moveSpawnPos(void);
 
 	void updateInputBoxes(void);
 	void resetInputBoxes(void);
@@ -55,28 +56,20 @@ public:
 	void updateMovingPath(void);	// ta arg?
 private:
 	RECT gameArea;
-
 	Mouse *mMouse;
 	POINT mousePos;
-
 	GameWorld *mLevel;
 	ActiveObject *activeObject;
 	Object *snappedObject;
-
 	string changeTexture;
-
 	RECT dragLeft, dragTop, dragBottom, dragRight;
-
 	int snapCount;
 	direction snapDir;
-
 	ObjectType mPrevActiveObjectType;
-
 	int createObjectTextPos;
-
 	bool movingEndPos;
+	bool movingSpawnPos;
 	bool showPaths;
-
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
 	// window controls
