@@ -11,10 +11,10 @@ public:
 	void setObject(Object *object);
 	void clear(void);
 
-	/*RECT getRect(void);
-	void move(float dx, float dy);
-	void setXY(float x, float y);
+	void move(float dx, float dy)	{mObject->editorMove(dx, dy);};
 
+	/*RECT getRect(void);	
+	void setXY(float x, float y);
 	float getX(void);
 	float getY(void);
 	int getHeight(void);

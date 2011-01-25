@@ -28,6 +28,7 @@ public:
 	void setTexture(IDirect3DTexture9* texture)	{mTexture = texture;};
 	void setTextureSource(char *source);
 
+	virtual void editorMove(float dx, float dy)	{mX += dx; mY += dy;};
 	virtual void move(float dx, float dy);
 	virtual void scale(int dwidth, int dheight);
 	void setXY(float x, float y) {mX = x; mY = y;};

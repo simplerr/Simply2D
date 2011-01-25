@@ -291,14 +291,14 @@ void Editor::movePlatform(void)
 			{
 				if(snapDir == ALL)	// skulle kännas bättre med NONE
 				{
-					activeObject->mObject->move(dx, dy);							
+					activeObject->move(dx, dy);							
 				}
 				else if(snapDir == LEFT || snapDir == RIGHT)
 				{
 					// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE  || stillSnapped() == false)	// temporär, gäller alla platformer
 					{		
-						activeObject->mObject->move(dx, dy);
+						activeObject->move(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
@@ -306,7 +306,7 @@ void Editor::movePlatform(void)
 					}					
 
 					// ska kunna röra plattformen lodrätt
-					activeObject->mObject->move(0, dy);	
+					activeObject->move(0, dy);	
 					// musens ska inte röra på sig!
 					mMouse->setMousePos(mousePos.x - dx, mousePos.y);
 				}
@@ -314,14 +314,14 @@ void Editor::movePlatform(void)
 				{
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE || stillSnapped() == false)
 					{
-						activeObject->mObject->move(dx, dy);
+						activeObject->move(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
 						snapCount += dy;
 					}
 
-					activeObject->mObject->move(dx, 0);
+					activeObject->move(dx, 0);
 					// musens ska inte röra på sig!
 					mMouse->setMousePos(mousePos.x, mousePos.y - dy);
 				}	

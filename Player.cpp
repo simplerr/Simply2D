@@ -3,7 +3,7 @@
 //#include <fstream>
 
 Player::Player(string filename, int x, int y, int width, int height)
-	:JUMP_HEIGHT(70)
+	:JUMP_HEIGHT(80)
 {
 	playerTexture = gGraphics->loadTexture("misc\\textures\\mario.bmp");
 	if(!playerTexture)

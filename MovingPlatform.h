@@ -44,6 +44,7 @@ public:
 	void movePlayer(double dx, double dy)	{mPlayer->move(dx, dy);};
 	Player *getPlayer(void) {return mPlayer;};
 
+	void editorMove(float dx, float dy);
 	void move(float dx, float dy);
 	void scale(int dwidth, int dheight);
 

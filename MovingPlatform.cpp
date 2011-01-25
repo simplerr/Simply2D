@@ -102,10 +102,10 @@ void MovingPlatform::move(float dx, float dy)
 	Object::move(dx, dy);
 
 	// start pos ska inte följa med ..
-	mStartPos.x += dx;
+	/*mStartPos.x += dx;
 	mStartPos.y += dy;
 	mEndPos.x += dx;
-	mEndPos.y += dy;
+	mEndPos.y += dy;*/
 
 
 	// updatera start och end rects!
@@ -151,4 +151,15 @@ RECT MovingPlatform::getEndPosRect(void)
 	tmpRect.bottom = mEndPos.y + getHeight()/2;
 
 	return tmpRect;
+}
+
+void MovingPlatform::editorMove(float dx, float dy)
+{
+	Object::move(dx, dy);
+
+	// start pos ska inte följa med ..
+	mStartPos.x += dx;
+	mStartPos.y += dy;
+	mEndPos.x += dx;
+	mEndPos.y += dy;
 }
