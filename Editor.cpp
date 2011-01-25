@@ -22,9 +22,10 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	snapDir = ALL;
 	snappedObject = NULL;
 	movingEndPos = false;
+	movingSpawnPos = false;
 	showPaths = false;
 
-	createObjectTextPos = 220;
+	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
 }
 Editor::~Editor()
@@ -37,37 +38,46 @@ void Editor::buildGUI(void)
 {
 	
 	// kanske inte behöver ta name som arg?
-	tPositionX = new TextBox(this, TEXT_XPOS, "X:", 40, 40, 60, 20);
-	tPositionY = new TextBox(this, TEXT_YPOS, "Y:", 40, 70, 60, 20);
-	tWidth = new TextBox(this, TEXT_WIDTH, "Width:", 40, 100, 60, 20);
-	tHeight = new TextBox(this, TEXT_HEIGHT, "Height:", 40, 130, 60, 20);
+	tPositionX = new TextBox(this, TEXT_XPOS, "X:", 40, 120, 60, 20);
+	tPositionY = new TextBox(this, TEXT_YPOS, "Y:", 40, 150, 60, 20);
+	tWidth = new TextBox(this, TEXT_WIDTH, "Width:", 40, 180, 60, 20);
+	tHeight = new TextBox(this, TEXT_HEIGHT, "Height:", 40, 210, 60, 20);
+	tStartX = new TextBox(this, TEXT_STARTX, "Start X:", 40, 240, 60, 20);
+	tStartY = new TextBox(this, TEXT_STARTY, "Start Y:", 40, 270, 60, 20);
+	tEndX = new TextBox(this, TEXT_ENDX, "End X:", 40, 300, 60, 20);
+	tEndY = new TextBox(this, TEXT_ENDY, "End Y:", 40, 330, 60, 20);
+	tSpeed = new TextBox(this, TEXT_SPEED, "Speed:", 40, 360, 60, 20);
+	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 40, 60, 20);
+	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 70, 60, 20);
 
-	tStartX = new TextBox(this, TEXT_STARTX, "Start X:", 40, 160, 60, 20);
-	tStartY = new TextBox(this, TEXT_STARTY, "Start Y:", 40, 190, 60, 20);
-	tEndX = new TextBox(this, TEXT_ENDX, "End X:", 40, 220, 60, 20);
-	tEndY = new TextBox(this, TEXT_ENDY, "End Y:", 40, 250, 60, 20);
-	tSpeed = new TextBox(this, TEXT_SPEED, "Speed:", 40, 280, 60, 20);
+	iPositionX = new InputBox(this, INPUT_XPOS, 110, 120, 60, 20);
+	iPositionY = new InputBox(this, INPUT_YPOS, 110, 150, 60, 20);
+	iWidth = new InputBox(this, INPUT_WIDTH, 110, 180, 60, 20);
+	iHeight = new InputBox(this, INPUT_HEIGHT, 110, 210, 60, 20);
+	iStartX = new InputBox(this, INPUT_STARTX, 110, 240, 60, 20);
+	iStartY = new InputBox(this, INPUT_STARTY, 110, 270, 60, 20);
+	iEndX = new InputBox(this, INPUT_ENDX, 110, 300, 60, 20);
+	iEndY = new InputBox(this, INPUT_ENDY, 110, 330, 60, 20);
+	iSpeed = new InputBox(this, INPUT_SPEED, 110, 360, 60, 20);
+	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 40, 60, 20);
+	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 70, 60, 20);
 
-	iPositionX = new InputBox(this, INPUT_XPOS, 110, 40, 60, 20);
-	iPositionY = new InputBox(this, INPUT_YPOS, 110, 70, 60, 20);
-	iWidth = new InputBox(this, INPUT_WIDTH, 110, 100, 60, 20);
-	iHeight = new InputBox(this, INPUT_HEIGHT, 110, 130, 60, 20);
+	// sets the values to the spawnPos!
+	POS spawnPos = mLevel->getSpawn();
+	sprintf(buffer, "%i", (int)mLevel->getSpawn().x);
+	iSpawnX->setValue(buffer);
+	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
+	iSpawnY->setValue(buffer);
 
-	iStartX = new InputBox(this, INPUT_STARTX, 110, 160, 60, 20);
-	iStartY = new InputBox(this, INPUT_STARTY, 110, 190, 60, 20);
-	iEndX = new InputBox(this, INPUT_ENDX, 110, 220, 60, 20);
-	iEndY = new InputBox(this, INPUT_ENDY, 110, 250, 60, 20);
-	iSpeed = new InputBox(this, INPUT_SPEED, 110, 280, 60, 20);
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 340, 110, 40);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 260, 110, 40);
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 270, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 194, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 320, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 240, 130, 20, 20);
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 165, 130, 20, 20);
-
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 500, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 575, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -228,6 +238,7 @@ void Editor::updateAll(float dt)
 		}
 		else
 		{
+			movingSpawnPos = false;
 			sendMousePress(mousePos.x, mousePos.y);
 		}
 		// initiera/updatera dragAreas
@@ -269,11 +280,14 @@ void Editor::updateAll(float dt)
 					resizePlatform(DRAGDOWN);
 				// move
 				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
-					movePlatform();			
+					movePlatform();
 			}
 		}	
-		if(movingSpawnPos)
+		if(movingSpawnPos)	{
 			moveSpawnPos();
+			messageHandler(MOVE_SPAWNPOS);
+				
+		}
 	}
 
 	updateWindow(dt);
@@ -373,7 +387,8 @@ int Editor::renderAll()
 
 	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
 
-	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
+	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
+	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
 
 	// displays the orange effect
@@ -715,6 +730,26 @@ void Editor::messageHandler(WindowID sender, string data)
 			}
 			break;
 		}
+	case INPUT_SPAWNX:
+		{
+			POS spawn = mLevel->getSpawn();
+
+			sprintf(temp, "%s", data.c_str());
+			spawn.x = atoi(temp);
+
+			mLevel->setSpawn(spawn);
+			break;
+		}
+	case INPUT_SPAWNY:
+		{
+			POS spawn = mLevel->getSpawn();
+
+			sprintf(temp, "%s", data.c_str());
+			spawn.y = atoi(temp);
+
+			mLevel->setSpawn(spawn);
+			break;
+		}
 	case DROPBOX_TEXTURE:
 		{
 			if(activeObject->mObject != NULL)
@@ -774,8 +809,8 @@ void Editor::messageHandler(WindowID sender, string data)
 	case ACTIVE_OBJECT:
 		{
 			// updatera inputboxarna 
-			char buffer[256];
 
+			// coords
 			sprintf(buffer, "%i", (int)activeObject->mObject->getX());
 			iPositionX->setValue(buffer); 
 
@@ -832,6 +867,17 @@ void Editor::messageHandler(WindowID sender, string data)
 				showPaths = true;
 			else if(strcmp(buffer, "False") == 0)
 				showPaths = false;
+			break;
+		}
+	case MOVE_SPAWNPOS:
+		{
+			// spawnPos 
+
+			POS spawnPos = mLevel->getSpawn();
+			sprintf(buffer, "%i", (int)mLevel->getSpawn().x);
+			iSpawnX->setValue(buffer);
+			sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
+			iSpawnY->setValue(buffer);
 		}
 	}
 	

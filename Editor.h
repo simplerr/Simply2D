@@ -84,11 +84,15 @@ private:
 	TextBox *tEndX;
 	TextBox *tEndY;
 	TextBox *tSpeed;
+	TextBox *tSpawnX;
+	TextBox *tSpawnY;
 
 	InputBox *iPositionX;
 	InputBox *iPositionY;
 	InputBox *iWidth;
 	InputBox *iHeight;
+	InputBox *iSpawnX;
+	InputBox *iSpawnY;
 
 	InputBox *iStartX;
 	InputBox *iStartY;
