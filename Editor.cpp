@@ -135,6 +135,8 @@ void Editor::updateAll(float dt)
 				activeObject->setObject((tmpObject));
 				tmpObject = NULL;
 			}
+			else
+				activeObject->clear();
 
 
 			/*tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
@@ -376,6 +378,8 @@ int Editor::renderAll()
 				pathRect.top = activeObject->mObject->getY() - 5;
 				pathRect.bottom = activeObject->mObject->getY() + 5;
 			}
+			else
+				pathRect = activeObjectRect;
 
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
