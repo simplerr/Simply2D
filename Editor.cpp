@@ -23,6 +23,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	snapCount = SNAP_SENSE;
 	snapDir = ALL;
 	snappedObject = NULL;
+	movingEndPos = false;
 
 	createObjectTextPos = 220;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -135,6 +136,11 @@ void Editor::updateAll(float dt)
 				activeObject->setObject((tmpObject));
 				tmpObject = NULL;
 			}
+			else if(activeObject->mMovingPlatform)	{
+				if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+				&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+					activeObject->clear();
+			}
 			else
 				activeObject->clear();
 
@@ -233,20 +239,26 @@ void Editor::updateAll(float dt)
 				if(activeObject->mObject->getType() == MOVING_PLATFORM)
 				{
 					if(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-						&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)
-						moveEndPos();
+						&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)	{						
+							moveEndPos();
+							movingEndPos = true;
+					}
+					else 
+							movingEndPos = false;
 				}
+				else
+					movingEndPos = false;
 				// resize
-				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom)
+				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
 					resizePlatform(DRAGLEFT);
-				else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom)
+				else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom && !movingEndPos)
 					resizePlatform(DRAGRIGHT);
-				else if(mousePos.x > dragTop.left && mousePos.x < dragTop.right && mousePos.y > dragTop.top && mousePos.y < dragTop.bottom)
+				else if(mousePos.x > dragTop.left && mousePos.x < dragTop.right && mousePos.y > dragTop.top && mousePos.y < dragTop.bottom && !movingEndPos)
 					resizePlatform(DRAGUP);
-				else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom)
+				else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom && !movingEndPos)
 					resizePlatform(DRAGDOWN);
 				// move
-				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom)	
+				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
 					movePlatform();
 					
 				

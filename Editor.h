@@ -73,6 +73,8 @@ private:
 
 	int createObjectTextPos;
 
+	bool movingEndPos;
+
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
 	// window controls
