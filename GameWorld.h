@@ -31,6 +31,7 @@ public:
 
 	void updateLevel(double dt);	
 	void drawLevel(void);
+	void drawEditorLevel(void);
 
 	CollisionStruct collision(Player *player);
 	Object* objectIntersection(Object *activeObject);

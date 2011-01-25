@@ -392,3 +392,22 @@ Object* GameWorld::objectIntersection(Object *activeObject)
 	
 	return NULL;
 }
+
+void GameWorld::drawEditorLevel(void)
+{
+	if(!gGraphics)
+		MessageBox(0, "NULL PTR", 0, 0);
+
+	// statiska
+	for (int i = 0;i < mStaticObjectList.size();i++)
+	{
+		mStaticObjectList[i]->draw();
+	}
+
+	// dynamiska
+	for (int i = 0;i < mDynamicObjectList.size();i++)
+	{
+		mDynamicObjectList[i]->draw();
+		mDynamicObjectList[i]->drawPath();
+	}
+}

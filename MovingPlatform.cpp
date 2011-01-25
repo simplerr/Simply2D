@@ -89,6 +89,35 @@ void MovingPlatform::draw(void)
 	Object::draw();
 }
 
+void MovingPlatform::drawPath(void)
+{
+	RECT activeObjectRect = getRect();
+	POS endPos = getEndPos();
+
+	RECT pathRect;
+	if(endPos.x > getX())
+		{
+			pathRect.left = activeObjectRect.right;
+			pathRect.right = endPos.x - getWidth()/2;
+			pathRect.top = getY() - 5;
+			pathRect.bottom = getY() + 5;
+		}
+	else if(endPos.x < getX())
+		{
+			pathRect.left = endPos.x + getWidth()/2;
+			pathRect.right = activeObjectRect.left;
+			pathRect.top = getY() - 5;
+			pathRect.bottom = getY() + 5;
+		}
+		else
+			pathRect = activeObjectRect;
+
+	gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
+
+	// displays the end pos, and the drag rect of the active object
+	gGraphics->BlitRect(getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+}
+
 void MovingPlatform::saveToFile(ofstream *fout)
 {
 

@@ -75,6 +75,7 @@ private:
 	int createObjectTextPos;
 
 	bool movingEndPos;
+	bool showPaths;
 
 	const int SNAP_SENSE;
 	const int SNAP_DIST;

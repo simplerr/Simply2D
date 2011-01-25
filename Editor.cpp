@@ -24,6 +24,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	snapDir = ALL;
 	snappedObject = NULL;
 	movingEndPos = false;
+	showPaths = false;
 
 	createObjectTextPos = 220;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -355,7 +356,10 @@ void Editor::movePlatform(void)
 
 int Editor::renderAll()
 {
-	mLevel->drawLevel();
+	if(showPaths)
+		mLevel->drawEditorLevel();
+	else if(!showPaths)
+		mLevel->drawLevel();
 	Window::renderAll();
 
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
@@ -372,7 +376,7 @@ int Editor::renderAll()
 		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
 
 		// displays the path of the moving object
-		if(activeObject->mObject->getType() == MOVING_PLATFORM)
+		if(activeObject->mObject->getType() == MOVING_PLATFORM && !showPaths)
 		{
 			RECT activeObjectRect = activeObject->mObject->getRect();
 			POS endPos = activeObject->mMovingPlatform->getEndPos();
@@ -397,8 +401,7 @@ int Editor::renderAll()
 
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
-			// displays the end pos, and the drag rect
-
+			// displays the end pos, and the drag rect of the active object
 			gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 		}
 	}
@@ -810,6 +813,14 @@ void Editor::messageHandler(WindowID sender, string data)
 
 			updateDragRects();
 			break;
+		}
+	case CHECKBOX_SHOWPATH:
+		{
+			strcpy(buffer, data.c_str());
+			if(strcmp(buffer, "True") == 0)
+				showPaths = true;
+			else if(strcmp(buffer, "False") == 0)
+				showPaths = false;
 		}
 	}
 	

@@ -14,6 +14,7 @@ public:
 	virtual ~Object();
 
 	virtual void draw(void);
+	virtual void drawPath(void)	{};
 
 	float getX(void) {return mX;};
 	float getY(void) {return mY;};

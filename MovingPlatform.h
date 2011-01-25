@@ -31,6 +31,7 @@ public:
 
 	void update(float dt);
 	void draw(void);
+	void drawPath(void);
 
 	void setStartPos(POS pos);
 	void setEndPos(POS pos);
