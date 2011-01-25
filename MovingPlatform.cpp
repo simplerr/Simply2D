@@ -163,3 +163,13 @@ void MovingPlatform::editorMove(float dx, float dy)
 	mEndPos.x += dx;
 	mEndPos.y += dy;
 }
+
+void MovingPlatform::setXY(float x, float y)
+{
+	Object::setXY(x, y);
+
+	mStartPos.x = getX();
+	mStartPos.y = getY();
+	mEndPos.x = mStartPos.x + mTravelX;
+	mEndPos.y = mStartPos.y + mTravelY;
+}

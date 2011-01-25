@@ -47,6 +47,7 @@ public:
 	void editorMove(float dx, float dy);
 	void move(float dx, float dy);
 	void scale(int dwidth, int dheight);
+	void setXY(float x, float y);
 
 	void saveToFile(ofstream *fout);
 
