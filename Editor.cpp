@@ -8,7 +8,6 @@
 
 Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
 {
-	
 	mLevel = new GameWorld(NULL);
 	
 	gameArea.top = 0;
@@ -24,6 +23,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	movingEndPos = false;
 	movingSpawnPos = false;
 	showPaths = false;
+	tryLevel = false;
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -74,6 +74,7 @@ void Editor::buildGUI(void)
 	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 270, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 600, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
 	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 240, 130, 20, 20);
 
@@ -99,10 +100,15 @@ void Editor::buildGUI(void)
 	resetInputBoxes();
 }
 
-void Editor::updateAll(float dt)
+int Editor::updateAll(float dt)
 {
+	if(tryLevel)
+		return -1;
+
 	Window::updateWindow(dt);
 	mousePos = mMouse->getPos();
+
+	//mLevel->updateLevel(dt);
 	
 	MovingPlatform *tmpPlatform;
 
@@ -289,8 +295,7 @@ void Editor::updateAll(float dt)
 				
 		}
 	}
-
-	updateWindow(dt);
+	return 1;
 }
 // körs när man tar tag i markerad plattform
 void Editor::movePlatform(void)
@@ -804,6 +809,13 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			strcpy(buffer, ACTIVE_LEVEL.c_str());
 			mLevel->saveLevel(buffer);
+			break;
+		}
+	case BUTTON_TRYLEVEL:
+		{
+			strcpy(buffer, ACTIVE_LEVEL.c_str());
+			mLevel->saveLevel(buffer);
+			tryLevel = true;
 			break;
 		}
 	case ACTIVE_OBJECT:

@@ -202,6 +202,8 @@ void GameWorld::deleteDynamicObject(int ID)
 
 void GameWorld::updateLevel(double dt)	
 {
+	// update player
+	mPlayer->update(dt, this);
 	// update enemies
 	// update entities
 	for (int i = 0;i < mDynamicObjectList.size();i++)

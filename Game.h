@@ -47,7 +47,7 @@ private:
 	Menu *mStartMenu;
 	Mouse *mMouse;
 
-	bool mainMenuActive, gameActive, editorActive;
+	bool mainMenuActive, gameActive, editorActive, testActive;
 private:
 	
 };

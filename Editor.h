@@ -29,7 +29,7 @@ public:
 	Editor();
 	~Editor();
 
-	void updateAll(float dt);
+	int updateAll(float dt);
 	int renderAll(void);
 	//void keyPressed(WPARAM wParam);
 
@@ -54,6 +54,8 @@ public:
 	void moveEndPos(void);
 
 	void updateMovingPath(void);	// ta arg?
+
+	void setTest(bool arg) { tryLevel = arg;};
 private:
 	RECT gameArea;
 	Mouse *mMouse;
@@ -70,6 +72,7 @@ private:
 	bool movingEndPos;
 	bool movingSpawnPos;
 	bool showPaths;
+	bool tryLevel;
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
 	// window controls
@@ -105,6 +108,8 @@ private:
 	Button *createButton;
 	Button *deleteButton;
 	Button *saveButton;
+	Button *bTryLevel;
+	Button *bQuitTrying;
 
 	DropBox *textureDropBox;
 	

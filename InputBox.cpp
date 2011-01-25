@@ -48,7 +48,7 @@ int InputBox::renderAll()
 
 int InputBox::wm_lbuttondown(int x, int y)
 {
-	caretPos = mValue.size()-1;
+	caretPos = mValue.size();
 	return 1;
 }
 

@@ -66,6 +66,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mainMenuActive = true;
 	gameActive = false;
 	editorActive = false;
+	testActive = false;
 
 	onResetDevice();
 }
@@ -170,6 +171,12 @@ void Game::updateScene(float dt)
 		editorActive = false;
 		dtcount = 0;
 	}
+	else if(testActive && gDInput->keyPressed(DIK_ESCAPE))	{
+		mEditor->setTest(false);
+		testActive = false;
+		editorActive = true;
+		dtcount = 0;
+	}
 	string menuResult;
 	if(mainMenuActive)
 	{
@@ -181,6 +188,7 @@ void Game::updateScene(float dt)
 			editorActive = false;
 			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
 			mLevel->loadLevel(buffer);
+			mLevel->spawnPlayer();
 		}
 		else if(menuResult == "Editor")	{
 			editorActive = true;
@@ -188,24 +196,40 @@ void Game::updateScene(float dt)
 			gameActive = false;	
 			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
 			mEditor->loadLevel(buffer);
+			// gameActive = true
 		}
 		// else if menuResult == "Options"
 		// showOptions() ...
 
 	}
-	else if(gameActive)
+	else if(gameActive || testActive)
 	{										
 		mGfxStats->setTriCount(8 *2);
 		mGfxStats->setVertexCount(16 *4);
 		mGfxStats->update(dt);
 		
-		User->update(dt, mLevel);
+		//User->update(dt, mLevel);
 		mLevel->updateLevel(dt);
 	}
 	else if(editorActive)
 	{
-		mEditor->updateAll(dt);
+		// returnera TEST_LEVEL 
+		if(mEditor->updateAll(dt) < 0)	{
+			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
+			mLevel->loadLevel(buffer);
+			mLevel->spawnPlayer();
+			testActive = true;
+			editorActive = false;
+		}
 	}
+	/*else if(testActive)
+	{
+		mGfxStats->setTriCount(8 *2);
+		mGfxStats->setVertexCount(16 *4);
+		mGfxStats->update(dt);
+
+		mLevel->updateLevel(dt);
+	}*/
 }
 
 void Game::drawScene()
@@ -222,13 +246,15 @@ void Game::drawScene()
 
 	if(mainMenuActive)
 	{
+		gGraphics->BlitRect(600, 400, 1200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
 		mStartMenu->drawMenu();	
 	}
-	else if(gameActive)
+	else if(gameActive || testActive)
 	{
 		drawBkgd();
 		mLevel->drawLevel();
-		mGfxStats->display();	
+		mGfxStats->display();
+		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	}
 	else if(editorActive)
 	{	
@@ -236,6 +262,9 @@ void Game::drawScene()
 		mEditor->renderAll();		// renders ui + mLevel
 		mGfxStats->display();			
 	}
+
+	if(testActive)
+		gGraphics->drawText("Press ESC to return", 1020, 20);
 	mMouse->drawMousePos();
 	
 	HR(gd3dDevice->EndScene());
@@ -265,7 +294,7 @@ void Game::drawBkgd()
 
 void Game::buildMainMenu(void)
 {
-	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 400, 300, 128, 256);
+	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 600, 400, 128, 256);
 	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp", "misc\\textures\\options_onpress.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp", "misc\\textures\\credits_onpress.bmp");
