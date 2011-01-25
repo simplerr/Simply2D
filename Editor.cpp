@@ -68,6 +68,8 @@ void Editor::buildGUI(void)
 
 	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 165, 130, 20, 20);
 
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 500, 16, 16);
+
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 

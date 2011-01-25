@@ -11,6 +11,7 @@
 #include "DropBox.h"
 #include "Button.h"
 #include "ActiveObject.h"
+#include "CheckBox.h"
 
 static const int ADD = 150;
 
@@ -108,6 +109,8 @@ private:
 	Button *saveButton;
 
 	DropBox *textureDropBox;
+	
+	CheckBox *pathCheckBox;
 };
 
 #endif
