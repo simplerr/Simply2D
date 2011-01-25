@@ -21,7 +21,6 @@ public:
 	//GameWorld();
 	~GameWorld();
 
-	void createLevel(void); // skapa plattformer
 	void saveLevel(char* levelFile);
 	void loadLevel(char* levelFile);
 
@@ -36,6 +35,8 @@ public:
 	CollisionStruct collision(Player *player);
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);
+	POS getSpawn(void)  {return spawnPos;};
+	void spawnPlayer(void);
 
 	//void addStaticObject(int x, int y, int width, int height);
 	//void addDynamicObject(int x, int y, int width, int height);
@@ -51,6 +52,8 @@ private:
 
 	int nextStaticID;
 	int nextDynamicID;
+
+	POS spawnPos;
 
 	Player *mPlayer;
 };

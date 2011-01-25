@@ -2,7 +2,7 @@
 #include "Object.h"
 //#include <fstream>
 
-Player::Player(string filename, int x, int y, int width, int height)
+Player::Player(string filename, int width, int height)
 	:JUMP_HEIGHT(80)
 {
 	playerTexture = gGraphics->loadTexture("misc\\textures\\mario.bmp");
@@ -11,8 +11,6 @@ Player::Player(string filename, int x, int y, int width, int height)
 
 	mWidth = width;
 	mHeight = height;
-	mX = x;
-	mY = y;
 
 	frame = 1;
 	frameType = NADA;
@@ -139,7 +137,7 @@ void Player::draw(void)
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, frameType);
 
-	gGraphics->drawText(errorText, 850, 300);
+
 }
 
 void Player::setFrameType(void)

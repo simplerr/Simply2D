@@ -16,8 +16,6 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	gameArea.left = 0;
 	gameArea.right = GAME_WIDTH;
 
-	strcpy(buffer, ACTIVE_LEVEL.c_str());
-	mLevel->loadLevel(buffer);
 	activeObject = new ActiveObject();
 
 	snapCount = SNAP_SENSE;
@@ -361,6 +359,10 @@ int Editor::renderAll()
 	else if(!showPaths)
 		mLevel->drawLevel();
 	Window::renderAll();
+
+	POS spawnPos = mLevel->getSpawn();
+
+	gGraphics->BlitRect(spawnPos.x, spawnPos.y, 36, 36, D3DCOLOR_ARGB(220, 220, 40, 0));
 
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);

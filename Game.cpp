@@ -54,11 +54,8 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	buildMainMenu();
 	
 	mGfxStats = new GfxStats();
-	User = new Player("misc\\textures\\player.bmp", 200, 30, 36, 36);
+	User = new Player("misc\\textures\\player.bmp", 36, 36);
 	mLevel = new GameWorld(User);
-	char buffer[256];
-	strcpy(buffer, ACTIVE_LEVEL.c_str());
-	mLevel->loadLevel(buffer);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
 	mEditor->buildGUI();
@@ -230,11 +227,9 @@ void Game::drawScene()
 	else if(gameActive)
 	{
 		drawBkgd();
-		User->draw();
 		mLevel->drawLevel();
 		mGfxStats->display();	
 	}
-	// if (Builder) ->
 	else if(editorActive)
 	{	
 		drawBkgd();

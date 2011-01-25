@@ -24,7 +24,12 @@ GameWorld::GameWorld(Player *player)
 
 	mPlayer = player;
 
-	createLevel();
+	char buffer[256];
+	strcpy(buffer, ACTIVE_LEVEL.c_str());
+	loadLevel(buffer);
+
+	if(mPlayer != NULL)
+		spawnPlayer();
 }
 
 GameWorld::~GameWorld()
@@ -41,27 +46,6 @@ GameWorld::~GameWorld()
 		delete mDynamicObjectList[i];
 	}
 }
-void GameWorld::createLevel(void)
-{
-	// i editor är player NULL
-	if(mPlayer != NULL)
-	{
-		/*POINT start;
-		POINT end;
-		start.x = 100;
-		start.y = 400;
-		end.x = 600;
-		end.y = 400;
-		MovingPlatform *movingPlatform = new MovingPlatform(100, 400, 100, 100, "misc\\textures\\brick_platform.bmp", start, end, mPlayer);
-		addDynamicObject(movingPlatform);
-		start.x = 100;
-		start.y = 200;
-		end.x = 600;
-		end.y = 200;
-		MovingPlatform *movingPlatform1 = new MovingPlatform(100, 200, 100, 100, "misc\\textures\\grass_platform.bmp", start, end, mPlayer, HORIZONTAL, 0.04f);
-		addDynamicObject(movingPlatform1);*/
-	}
-}
 
 void GameWorld::saveLevel(char* levelFile)
 {
@@ -71,7 +55,8 @@ void GameWorld::saveLevel(char* levelFile)
 	
 	fout.open(levelFile);
 
-	//fout << "objects:\n";
+	
+	fout << (int)spawnPos.x << " " << (int)spawnPos.y << endl;
 
 	for (int i = 0;i < mStaticObjectList.size();i++)
 	{
@@ -116,7 +101,10 @@ void GameWorld::loadLevel(char* levelFile)
 	}
 	fin.close();
 	fin.open(levelFile);
-	lines -= 1;
+	lines -= 2;
+
+	fin >> spawnPos.x >> spawnPos.y;
+
 	for(int j = 0; j<lines;j++)
 	{
 		fin >> tmpType;
@@ -226,6 +214,9 @@ void GameWorld::drawLevel(void)
 {
 	if(!gGraphics)
 		MessageBox(0, "NULL PTR", 0, 0);
+
+	if(mPlayer != NULL)
+		mPlayer->draw();
 
 	// statiska
 	for (int i = 0;i < mStaticObjectList.size();i++)
@@ -410,4 +401,9 @@ void GameWorld::drawEditorLevel(void)
 		mDynamicObjectList[i]->draw();
 		mDynamicObjectList[i]->drawPath();
 	}
+}
+
+void GameWorld::spawnPlayer(void)
+{
+	mPlayer->setXY(spawnPos.x, spawnPos.y);
 }

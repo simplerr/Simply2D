@@ -21,7 +21,7 @@ class GameWorld;
 class Player
 {
 public:
-	Player(string filename, int x, int y, int width, int height);
+	Player(string filename, int width, int height);
 	~Player();
 	void update(double dt, GameWorld *Level);
 	void draw(void);
@@ -36,6 +36,7 @@ public:
 
 	void setFalling(bool b) {mFalling = b;};
 
+	void setXY(float x, float y) { mX = x; mY = y;};
 	RECT getRect(void);
 	bool getFalling(void) {return mFalling;};
 	double getDY(void) {return mDY;};
