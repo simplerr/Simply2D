@@ -147,7 +147,6 @@ int Editor::updateAll(float dt)
 				tmpObject = mLevel->getObjectAt(mousePos);
 				//MessageBox(0, "hh", 0, 0);
 			}
-
 			if(tmpObject != NULL)
 			{
 				activeObject->setObject((tmpObject));
@@ -295,6 +294,11 @@ int Editor::updateAll(float dt)
 				
 		}
 	}
+
+	// check keyboard inputs
+	if(gDInput->keyPressed(DIK_P))
+		messageHandler(BUTTON_DELETE);
+
 	return 1;
 }
 // körs när man tar tag i markerad plattform
