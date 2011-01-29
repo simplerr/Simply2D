@@ -1,6 +1,7 @@
 #include "GameWorld.h"
-#include "MovingPlatform.h"
 #include "StaticPlatform.h"
+#include "Object.h"
+#include "MovingPlatform.h"
 using namespace std;
 
 /*GameWorld::GameWorld()
@@ -41,9 +42,9 @@ GameWorld::~GameWorld()
 	}
 
 	// samma för dynamic listan!
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
-		delete mDynamicObjectList[i];
+		delete mMovingObjectList[i];
 	}
 }
 
@@ -63,10 +64,10 @@ void GameWorld::saveLevel(char* levelFile)
 		mStaticObjectList[i]->saveToFile(&fout);
 	}
 
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
 		
-		mDynamicObjectList[i]->saveToFile(&fout);
+		mMovingObjectList[i]->saveToFile(&fout);
 	}
 
 	fout.close();	
@@ -79,8 +80,8 @@ void GameWorld::loadLevel(char* levelFile)
 		mStaticObjectList.clear();
 
 	// samma för dynamic listan!
-	if(mDynamicObjectList.size() > 0)
-		mDynamicObjectList.clear();
+	if(mMovingObjectList.size() > 0)
+		mMovingObjectList.clear();
 	char buffer[256];
 
 	Object *loadedObject;
@@ -125,14 +126,12 @@ void GameWorld::loadLevel(char* levelFile)
 			//sprintf(buffer, "xpos: %i, ypos: %i, startPos.x: %i, startPos.y: %i, endPos.x: %i, endPos.y: %i, width: %i, height: %i, speed: %f , source: %s", xpos, ypos, startPos.x,
 				//startPos.y, endPos.x, endPos.y, width, height, speed, textureSource);
 			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer, HORIZONTAL, speed);
-			addDynamicObject(loadedObject);
+			addDynamicObject(dynamic_cast<MovingObject*>(loadedObject));
 		}
 		// else if(tmpType == ENEMY)
-		// ...
-		
+		// ...		
 	}
-	
-	
+
 	fin.close();
 }
 
@@ -146,11 +145,11 @@ void GameWorld::addStaticObject(Object *object)
 	else
 		MessageBox(0, "Null object", 0, 0);
 }
-void GameWorld::addDynamicObject(Object *object)
+void GameWorld::addDynamicObject(MovingObject *object)
 {
 	if(object != NULL)	{
 		object->setID(nextDynamicID);
-		mDynamicObjectList.push_back(object);
+		mMovingObjectList.push_back(object);
 		nextDynamicID++;
 	}
 	else
@@ -182,13 +181,13 @@ void GameWorld::deleteDynamicObject(int ID)
 {	
 	//eh 
 	int i = 0;
-	vector<Object*>::iterator itr =  mDynamicObjectList.begin();
-	while(itr !=  mDynamicObjectList.end() && i <  mDynamicObjectList.size())
+	vector<MovingObject*>::iterator itr =  mMovingObjectList.begin();
+	while(itr !=  mMovingObjectList.end() && i <  mMovingObjectList.size())
 	{
-		if(mDynamicObjectList[i]->getID() == ID)
+		if(mMovingObjectList[i]->getID() == ID)
 		{
-			delete  mDynamicObjectList[i];		// viktigt att deleta innan!
-			itr =  mDynamicObjectList.erase(itr);			
+			delete  mMovingObjectList[i];		// viktigt att deleta innan!
+			itr =  mMovingObjectList.erase(itr);			
 			break;
 		}
 		else	{
@@ -206,9 +205,9 @@ void GameWorld::updateLevel(double dt)
 	mPlayer->update(dt, this);
 	// update enemies
 	// update entities
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
-		mDynamicObjectList[i]->update(dt);
+		mMovingObjectList[i]->update(dt);
 	}
 }
 
@@ -227,9 +226,9 @@ void GameWorld::drawLevel(void)
 	}
 
 	// dynamiska
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
-		mDynamicObjectList[i]->draw();
+		mMovingObjectList[i]->draw();
 	}
 
 	// drawEnemies
@@ -291,10 +290,10 @@ CollisionStruct GameWorld::collision(Player *player)
 
 	}
 
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
 		// hitta kolliderande object
-		objectRect = mDynamicObjectList[i]->getRect();
+		objectRect = mMovingObjectList[i]->getRect();
 
 		// inte på marken -> fall
 		if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom + 1<= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
@@ -354,13 +353,13 @@ Object* GameWorld::getObjectAt(POINT mpos)
 	// tröck inte på nått statiskt, prova dynamiskt!
 	if(tmp == NULL)
 	{
-		for (int i = 0;i < mDynamicObjectList.size();i++)
+		for (int i = 0;i < mMovingObjectList.size();i++)
 		{
-			objectRect = mDynamicObjectList[i]->getRect();
+			objectRect = mMovingObjectList[i]->getRect();
 
 			if(mpos.x > objectRect.left && mpos.x < objectRect.right && 
 				mpos.y > objectRect.top && mpos.y < objectRect.bottom)
-				tmp = mDynamicObjectList[i];
+				tmp = mMovingObjectList[i];
 		}
 	}
 
@@ -398,10 +397,10 @@ void GameWorld::drawEditorLevel(void)
 	}
 
 	// dynamiska
-	for (int i = 0;i < mDynamicObjectList.size();i++)
+	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
-		mDynamicObjectList[i]->draw();
-		mDynamicObjectList[i]->drawPath();
+		mMovingObjectList[i]->draw();
+		mMovingObjectList[i]->drawPath();
 	}
 }
 

@@ -2,16 +2,17 @@
 #define GAME_WORLD_H
 
 #include "constants.h"
-#include "Object.h"
-#include "DynamicObject.h"
+/*#include "Object.h"
+#include "MovingObject.h"
 #include "Player.h"
+*/
 #include <list>
 #include <fstream>
 #include <string>
 #include <vector>
 
 class Object;
-class DynamicObject;
+class MovingObject;
 class Player;
 
 class GameWorld
@@ -44,11 +45,11 @@ public:
 	//void addDynamicObject(int x, int y, int width, int height);
 
 	void addStaticObject(Object *object);
-	void addDynamicObject(Object *object);
+	void addDynamicObject(MovingObject *object);
 
 private:
 	std::vector<Object*> mStaticObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc..
-	std::vector<Object*> mDynamicObjectList;	// enemies, power-ups, 
+	std::vector<MovingObject*> mMovingObjectList;	// enemies, power-ups, 
 
 	char *collisionText;
 
