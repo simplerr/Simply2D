@@ -235,13 +235,13 @@ void GameWorld::drawLevel(void)
 	if(mPlayer != NULL)
 		mPlayer->draw();
 
-	// statiska
+	// static
 	for (int i = 0;i < mStaticObjectList.size();i++)
 	{
 		mStaticObjectList[i]->draw();
 	}
 
-	// dynamiska
+	// moving
 	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
 		mMovingObjectList[i]->draw();

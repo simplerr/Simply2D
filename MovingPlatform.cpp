@@ -7,6 +7,7 @@ MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *te
 	:MovingObject(MOVING_PLATFORM, x, y, width, height, textureSource,  startPos, endPos, player, moveType, speed)
 {
 	// ctor
+	setResizeable(true);
 }
 
 MovingPlatform::~MovingPlatform()

@@ -10,6 +10,9 @@ Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS s
 	alive = true;
 	deathAnim = false;
 	faceDir = RIGHT;
+	dtsum = 0;
+	cooldown = 0;
+	setResizeable(false);
 }
 
 Enemy::~Enemy()
@@ -19,8 +22,6 @@ Enemy::~Enemy()
 
 void Enemy::update(float dt)
 {
-	static double dtsum = 0;
-	static double dtsum2 = 0;
 	// do normal update for a moving object
 	MovingObject::update(dt);
 
@@ -40,12 +41,12 @@ void Enemy::update(float dt)
 	// update attack cooldown
 	if(!attackReady)
 	{
-		if(dtsum2 >= 1)	{
+		if(cooldown >= 1)	{
 			attackReady = true;
-			dtsum2 = 0;
+			cooldown = 0;
 		}
 		else 
-			dtsum2 += dt;
+			cooldown += dt;
 	}
 
 	// checks health, sets deathanim

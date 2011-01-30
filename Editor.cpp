@@ -117,17 +117,20 @@ int Editor::updateAll(float dt)
 	// mousewheel scaling
 	if(activeObject->mObject != NULL)
 	{
-		if(gDInput->mouseDZ() > 0)	{
-			activeObject->mObject->scale(8, 8);
+		if(activeObject->mObject->getResizeable())
+		{
+			if(gDInput->mouseDZ() > 0)	{
+				activeObject->mObject->scale(8, 8);
 
-			// messageHandler(OBJECT_SCALED)
-			messageHandler(ACTIVE_OBJECT);
-		}
-		else if(gDInput->mouseDZ() < 0)	{
-			if(activeObject->mObject->getHeight() > 58 && activeObject->mObject->getWidth() > 58)	{
-
-				activeObject->mObject->scale(-8, -8);
+				// messageHandler(OBJECT_SCALED)
 				messageHandler(ACTIVE_OBJECT);
+			}
+			else if(gDInput->mouseDZ() < 0)	{
+				if(activeObject->mObject->getHeight() > 58 && activeObject->mObject->getWidth() > 58)	{
+
+					activeObject->mObject->scale(-8, -8);
+					messageHandler(ACTIVE_OBJECT);
+				}
 			}
 		}
 	}
@@ -140,10 +143,18 @@ int Editor::updateAll(float dt)
 			tmpObject = NULL;
 			//if(!activeObject->mObject->getActive())
 			//	tmpObject = mLevel->getObjectAt(mousePos);
-			if(activeObject->mMovingPlatform)	{
-				if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-				&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
-				tmpObject = mLevel->getObjectAt(mousePos);
+			if(activeObject->mMovingPlatform || activeObject->mEnemy)
+			{
+				if(activeObject->mMovingPlatform)	{
+					if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+					&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+						tmpObject = mLevel->getObjectAt(mousePos);
+				}
+				else if(activeObject->mEnemy)	{
+					if(!(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
+					&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+						tmpObject = mLevel->getObjectAt(mousePos);
+				}
 			}
 			else	{
 				tmpObject = mLevel->getObjectAt(mousePos);
@@ -154,10 +165,18 @@ int Editor::updateAll(float dt)
 				activeObject->setObject((tmpObject));
 				tmpObject = NULL;
 			}
-			else if(activeObject->mMovingPlatform)	{
-				if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-				&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
-					activeObject->clear();
+			else if(activeObject->mMovingPlatform || activeObject->mEnemy)	
+			{
+				if(activeObject->mMovingPlatform)	{
+					if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+					&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+						activeObject->clear();
+				}
+				else if(activeObject->mEnemy)	{
+					if(!(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
+					&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+						activeObject->clear();
+				}
 			}
 			else
 				activeObject->clear();
@@ -276,18 +295,38 @@ int Editor::updateAll(float dt)
 				}
 				else
 					movingEndPos = false;
+
+				if(activeObject->mObject->getType() == NORMAL_ENEMY)
+				{
+					if(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
+						&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom)	{						
+							moveEndPos();
+							movingEndPos = true;
+					}
+					else 
+							movingEndPos = false;
+				}
+				else
+					movingEndPos = false;
+
 				// resize
-				if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
-					resizePlatform(DRAGLEFT);
-				else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom && !movingEndPos)
-					resizePlatform(DRAGRIGHT);
-				else if(mousePos.x > dragTop.left && mousePos.x < dragTop.right && mousePos.y > dragTop.top && mousePos.y < dragTop.bottom && !movingEndPos)
-					resizePlatform(DRAGUP);
-				else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom && !movingEndPos)
-					resizePlatform(DRAGDOWN);
-				// move
+				if(activeObject->mObject->getResizeable())
+				{
+					if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
+						resizePlatform(DRAGLEFT);
+					else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom && !movingEndPos)
+						resizePlatform(DRAGRIGHT);
+					else if(mousePos.x > dragTop.left && mousePos.x < dragTop.right && mousePos.y > dragTop.top && mousePos.y < dragTop.bottom && !movingEndPos)
+						resizePlatform(DRAGUP);
+					else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom && !movingEndPos)
+						resizePlatform(DRAGDOWN);
+					// move
+					else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
+						movePlatform();
+				}
+
 				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
-					movePlatform();
+						movePlatform();
 			}
 		}	
 		if(movingSpawnPos)	{
@@ -407,16 +446,23 @@ int Editor::renderAll()
 		gGraphics->BlitRect(activeObject->mObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 
 		// diplays the drag areas in different colours
-		gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
-		gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
-		gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
-		gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
+		if(activeObject->mObject->getResizeable())
+		{
+			gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
+		}
 
 		// displays the path of the moving object
-		if(activeObject->mObject->getType() == MOVING_PLATFORM && !showPaths)
+		if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)&& !showPaths)
 		{
 			RECT activeObjectRect = activeObject->mObject->getRect();
-			POS endPos = activeObject->mMovingPlatform->getEndPos();
+			POS endPos;
+			if(activeObject->mMovingPlatform)
+				endPos = activeObject->mMovingPlatform->getEndPos();
+			else if(activeObject->mEnemy)
+				endPos = activeObject->mEnemy->getEndPos();
 
 			RECT pathRect;
 			if(endPos.x > activeObject->mObject->getX())
@@ -439,7 +485,11 @@ int Editor::renderAll()
 			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
 			// displays the end pos, and the drag rect of the active object
-			gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			if(activeObject->mMovingPlatform)
+				gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			else if(activeObject->mEnemy)
+				gGraphics->BlitRect(activeObject->mEnemy->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			
 		}
 	}
 	return 1;
@@ -815,7 +865,7 @@ void Editor::messageHandler(WindowID sender, string data)
 			if(activeObject->mObject != NULL)	{
 				if(activeObject->mObject->getType() == STATIC_PLATFORMA)
 					mLevel->deleteStaticObject(activeObject->mObject->getID());	// ska lägga till för dynamic också!
-				else if(activeObject->mObject->getType() == MOVING_PLATFORM)
+				else if(activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)
 					mLevel->deleteDynamicObject(activeObject->mObject->getID());
 				resetInputBoxes();
 				activeObject->clear();
@@ -918,11 +968,20 @@ void Editor::moveEndPos(void)
 	float dy = gDInput->mouseDY();
 	POS endPos;
 
-	endPos = activeObject->mMovingPlatform->getEndPos();
+	if(activeObject->mMovingPlatform)
+	{
+		endPos = activeObject->mMovingPlatform->getEndPos();
 
-	endPos.x += dx;
-	activeObject->mMovingPlatform->setEndPos(endPos);
-	//updateMovingPath();
+		endPos.x += dx;
+		activeObject->mMovingPlatform->setEndPos(endPos);
+	}
+	else if(activeObject->mEnemy)
+	{
+		endPos = activeObject->mEnemy->getEndPos();
+
+		endPos.x += dx;
+		activeObject->mEnemy->setEndPos(endPos);
+	}
 	messageHandler(ACTIVE_OBJECT);
 }
 

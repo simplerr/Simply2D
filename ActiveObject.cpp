@@ -1,4 +1,5 @@
 #include "ActiveObject.h"
+#include "Enemy.h"
 
 ActiveObject::ActiveObject()
 {
@@ -22,6 +23,8 @@ void ActiveObject::setObject(Object *object)
 		mMovingPlatform = dynamic_cast<MovingPlatform*>(object);
 	else if(mObject->getType() == STATIC_PLATFORMA)
 		mStaticPlatform = dynamic_cast<StaticPlatform*>(object);
+	else if(mObject->getType() == NORMAL_ENEMY)
+		mEnemy = dynamic_cast<Enemy*>(object);
 }
 
 void ActiveObject::clear()
@@ -29,4 +32,5 @@ void ActiveObject::clear()
 	mObject = NULL;
 	mStaticPlatform = NULL;
 	mMovingPlatform = NULL;
+	mEnemy = NULL;
 }

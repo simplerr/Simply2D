@@ -4,6 +4,7 @@ StaticPlatform::StaticPlatform(float x, float y, int width, int height, char *te
 	:Object(x, y, width, height, textureSource, STATIC_PLATFORMA)
 {
 	// nada
+	setResizeable(true);
 }
 
 StaticPlatform::~StaticPlatform()

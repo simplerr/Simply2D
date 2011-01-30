@@ -134,8 +134,8 @@ void Player::update(double dt, GameWorld *Level)
 		frame = 4;
 
 	// check health
-	if(mHealth <= 0)
-		MessageBox(0, "Game Over!", 0, 0);
+	//if(mHealth <= 0)
+	//	MessageBox(0, "Game Over!", 0, 0);
 }
 
 void Player::draw(void)

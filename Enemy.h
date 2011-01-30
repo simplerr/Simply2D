@@ -1,3 +1,6 @@
+#ifndef ENEMY_H
+#define ENEMY_H
+
 #include "MovingObject.h"
 
 class Enemy : public MovingObject
@@ -24,7 +27,11 @@ private:
 	bool attackReady;
 	bool deathAnim;
 	bool alive;
+	double cooldown;
+	double dtsum;
 private:
 	int frame;	// maybe local static?
 	direction faceDir;
 };
+
+#endif

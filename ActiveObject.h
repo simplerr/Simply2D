@@ -1,6 +1,7 @@
 #include "Object.h"
 #include "MovingPlatform.h"
 #include "StaticPlatform.h"
+#include "Enemy.h"
 
 class ActiveObject
 {
@@ -24,6 +25,7 @@ public:
 	Object *mObject;
 	MovingPlatform *mMovingPlatform;
 	StaticPlatform *mStaticPlatform;
+	Enemy *mEnemy;
 
 	// ?? //
 	//POS mSpawnPos;

@@ -42,6 +42,8 @@ public:
 
 	virtual void saveToFile(std::ofstream *fout);
 	virtual void loadFromFile(std::ofstream *fout);
+	bool getResizeable(void)	{ return resizeable;};
+	void setResizeable(bool b)	{ resizeable = b;};
 
 private:
 	IDirect3DTexture9* mTexture;
@@ -53,6 +55,7 @@ private:
 	int mHeight;
 	int mID;
 	ObjectType mType;
+	bool resizeable;
 };
 
 #endif
