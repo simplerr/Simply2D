@@ -1,7 +1,7 @@
 #include "MovingObject.h"
 
-MovingObject::MovingObject(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
-	:Object(x, y, width, height, textureSource, MOVING_PLATFORM)
+MovingObject::MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
+	:Object(x, y, width, height, textureSource, type)
 {
 
 	// if horizontal when vertical gets added
@@ -17,8 +17,14 @@ MovingObject::MovingObject(float x, float y, int width, int height, char *textur
 	mStartPos = startPos;
 	mEndPos = endPos;
 
+	if(mStartPos.x < mEndPos.x)
+		mMovingDir = RIGHT;
+	else if(mStartPos.x > mEndPos.x)
+		mMovingDir = LEFT;
+	else
+		mMovingDir = LEFT; // if ==
+
 	mSpeed = speed;
-	mGoalDir = END;
 	mMoveType = moveType;
 	mPlayer = player;
 	mTravelX = mEndPos.x - mStartPos.x;
@@ -38,68 +44,50 @@ void MovingObject::update(float dt)
 		// flytta plattform
 		if(mMoveType == HORIZONTAL)
 		{
-			if(mGoalDir == END)
-			{				
-				if(mStartPos.x < mEndPos.x)	{					
-					if(getX() < mEndPos.x)	{
-						move(mSpeed, 0);
-				
-						if(getPlayer() != NULL)	{
-							if(getPlayerCollision())
-								movePlayer(mSpeed, 0);
-						}
-					}
-					else
-						mGoalDir = START;
-				}
-				else if(mStartPos.x > mEndPos.x)	{
-					if(getX() > mEndPos.x)	{
+			if(mMovingDir == LEFT)
+			{
+				if(mStartPos.x < mEndPos.x)
+				{
+					if(getX() > mStartPos.x)
 						move(-mSpeed, 0);
-				
-						if(getPlayer() != NULL)	{
-							if(getPlayerCollision())
-								movePlayer(-mSpeed, 0);
-						}
-					}
 					else
-						mGoalDir = START;
+						mMovingDir = RIGHT;
+				}
+				else if(mStartPos.x > mEndPos.x)
+				{
+					if(getX() > mEndPos.x)	{
+						move(-mSpeed, 0);					
+					}
+					else mMovingDir = RIGHT;
+				}
+
+				// move player
+				if(getPlayer() != NULL)	{
+					if(getPlayerCollision())
+						onPlayerCollision();
 				}
 			}
-			else if(mGoalDir == START)
+			else if(mMovingDir == RIGHT)
 			{
 				if(mStartPos.x < mEndPos.x)	{
-					if(getX() > mStartPos.x)	{
-						move(-mSpeed, 0);
-
-						if(getPlayer() != NULL)	{
-							if(getPlayerCollision())
-								movePlayer(-mSpeed, 0);
-						}
-					}
-					else {
-						mGoalDir = END;
-					}
+					if(getX() < mEndPos.x)	
+						move(mSpeed, 0);
+					else
+						mMovingDir = LEFT;
 				}
 				else if(mStartPos.x > mEndPos.x)	{
-					if(getX() < mStartPos.x)	{
+					if(getX() < mStartPos.x)
 						move(mSpeed, 0);
+					else mMovingDir = LEFT;
+				}
 
-						if(getPlayer() != NULL)	{
-							if(getPlayerCollision())
-								movePlayer(mSpeed, 0);
-						}
-					}
-					else {
-						mGoalDir = END;
-					}
+				if(getPlayer() != NULL)	{
+					if(getPlayerCollision())
+						onPlayerCollision();
 				}
 			}
 		}
 	}
-
-	/*if(getPlayerCollision())	{
-		mPlayer->move(
-	}*/
 }
 
 bool MovingObject::getPlayerCollision(void)
@@ -232,4 +220,12 @@ void MovingObject::setXY(float x, float y)
 	mStartPos.y = getY();
 	mEndPos.x = mStartPos.x + mTravelX;
 	mEndPos.y = mStartPos.y + mTravelY;
+}
+
+void MovingObject::onPlayerCollision(void)
+{
+	if(getMoveDir() == LEFT)
+		movePlayer(-mSpeed, 0);
+	else if(getMoveDir() == RIGHT)
+		movePlayer(mSpeed, 0);
 }

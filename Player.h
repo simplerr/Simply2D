@@ -15,6 +15,8 @@ using namespace std;
 #define MOVESPEED 280
 #define FALLSPEED 300
 #define JUMPSPEED 350
+#define HEALTH 100
+#define DAMAGE 50
 
 class GameWorld;
 
@@ -25,7 +27,7 @@ public:
 	~Player();
 	void update(double dt, GameWorld *Level);
 	void draw(void);
-	void setFrameType(void);
+	//void setFrameType(void);
 
 	void onLostDevice(void);
 	void onResetDevice(void);
@@ -42,12 +44,16 @@ public:
 	double getDY(void) {return mDY;};
 	double getDX(void) {return mDX;};
 
+	void damage(int dmg)	{ mHealth-= dmg;};
 private:
 	double mX;
 	double mY;
 	int mWidth;
 	int mHeight;
 	bool mFalling;
+
+	int mHealth;
+	int mDamage;
 
 	const int JUMP_HEIGHT;
 
@@ -57,7 +63,6 @@ private:
 	IDirect3DTexture9* playerTexture;
 private:
 	int frame;
-	playerFrameType frameType;
 	direction faceDir;
 	bool inair;
 

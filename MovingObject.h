@@ -6,7 +6,7 @@
 class MovingObject : public Object
 {
 public:
-	MovingObject(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed);
+	MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed);
 	virtual ~MovingObject();
 
 	virtual void update(float dt);
@@ -28,6 +28,10 @@ public:
 	Player *getPlayer(void) {return mPlayer;};
 	void editorMove(float dx, float dy);	
 	void setXY(float x, float y);
+
+	virtual void onPlayerCollision(void);
+
+	direction getMoveDir()	{return mMovingDir;};
 	
 private:
 	POS mStartPos;
@@ -38,7 +42,7 @@ private:
 	int mTravelX;
 	int mTravelY;
 
-	goal mGoalDir;
+	direction mMovingDir;
 	movingType mMoveType;
 
 	Player *mPlayer;

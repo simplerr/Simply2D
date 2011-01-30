@@ -18,6 +18,7 @@
 #include "Window.h"
 #include "TextBox.h"
 #include "InputBox.h"
+#include "Enemy.h"
 
 using namespace std;
 
@@ -60,6 +61,14 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mEditor->addMouse(mMouse);
 	mEditor->buildGUI();
 
+	POS start;
+	start.x = 300;
+	start.y = 400;
+	POS end;
+	end.x = 800;
+	end.y = 400;
+	Enemy *enemy = new Enemy(300, 630, 36, 36, "misc\\textures\\bad_mario.bmp", start, end, User);
+	mLevel->addDynamicObject(enemy);
 
 	loadBkgd("misc\\textures\\cool_background.bmp");
 		
@@ -167,6 +176,7 @@ void Game::updateScene(float dt)
 		dtcount = 0;
 	}
 	else if(editorActive && gDInput->keyPressed(DIK_ESCAPE))	{
+		mEditor->resetActive();
 		mainMenuActive = true;
 		editorActive = false;
 		dtcount = 0;
@@ -187,7 +197,7 @@ void Game::updateScene(float dt)
 			mainMenuActive = false;
 			editorActive = false;
 			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
-			mLevel->loadLevel(buffer);
+			//mLevel->loadLevel(buffer);
 			mLevel->spawnPlayer();
 		}
 		else if(menuResult == "Editor")	{

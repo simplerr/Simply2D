@@ -16,6 +16,7 @@ private:
 	IDirect3DTexture9* grassPlatform;
 	IDirect3DTexture9* brickPlatform;
 	IDirect3DTexture9* playerTexture;
+	IDirect3DTexture9* enemyTexture;
 	IDirect3DTexture9* backgroundTexture;
 
 	// angryEnemyTexture

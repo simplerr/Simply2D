@@ -7,6 +7,7 @@ static const std::string GRASS_PLATFORM_SOURCE = "misc\\textures\\grass_platform
 static const std::string BRICK_PLATFORM_SOURCE = "misc\\textures\\brick_platform.bmp";
 static const std::string PLAYER_SOURCE = "misc\\textures\\mario.bmp";
 static const std::string BACKGROUND_SOURCE = "misc\\textures\\cool_background.bmp";
+static const std::string ENEMY_SOURCE = "misc\\textures\\bad_mario.bmp";
 static const std::string ACTIVE_LEVEL = "levels\\level_1.txt";
 static const int WINDOW_WIDTH = 1200;
 static const int WINDOW_HEIGHT = 800;

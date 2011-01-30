@@ -48,6 +48,7 @@ public:
 	bool stillSnapped(void);
 
 	void messageHandler(WindowID sender, string data = "nothing");
+	void resetActive(void) { activeObject->clear();};
 
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
 

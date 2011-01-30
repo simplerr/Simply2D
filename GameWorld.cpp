@@ -2,6 +2,7 @@
 #include "StaticPlatform.h"
 #include "Object.h"
 #include "MovingPlatform.h"
+#include "Enemy.h"
 using namespace std;
 
 /*GameWorld::GameWorld()
@@ -208,6 +209,13 @@ void GameWorld::updateLevel(double dt)
 	for (int i = 0;i < mMovingObjectList.size();i++)
 	{
 		mMovingObjectList[i]->update(dt);
+
+		// remove killed enemies from the list
+		if(mMovingObjectList[i]->getType() == NORMAL_ENEMY)	{
+			Enemy *tmpEnemy = dynamic_cast<Enemy*>(mMovingObjectList[i]);
+			if(!tmpEnemy->getAlive())
+				deleteDynamicObject(tmpEnemy->getID());
+		}
 	}
 }
 
@@ -230,7 +238,6 @@ void GameWorld::drawLevel(void)
 	{
 		mMovingObjectList[i]->draw();
 	}
-
 	// drawEnemies
 }
 

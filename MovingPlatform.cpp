@@ -4,7 +4,7 @@
 #include <fstream>
 
 MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
-	:MovingObject(x, y, width, height, textureSource,  startPos, endPos, player, moveType, speed)
+	:MovingObject(MOVING_PLATFORM, x, y, width, height, textureSource,  startPos, endPos, player, moveType, speed)
 {
 	// ctor
 }

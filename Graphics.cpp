@@ -162,11 +162,35 @@ void Graphics::BlitTexture(IDirect3DTexture9 *texture, RECT rDest,
 
 // TEXTUREN MÅSTE VARA HA ^2 I WIDTH OCH HEIGHT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void Graphics::BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,
-    D3DCOLOR vertexColour, int width, int height, int frame, float rotate, playerFrameType frameType) // height & width onödigt?
+    D3DCOLOR vertexColour, int width, int height, int frame, float rotate, direction frameDir) // height & width onödigt?
 {
   gd3dDevice->SetFVF(D3DFVF_TLVERTEX);
   gd3dDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(TLVERTEX));
-  float constWidth = 0.25f;
+
+  int i = frame / 4;
+  int j = frame % 4;
+
+  char buffer[256];
+  
+  //RECT R = {j*0.25, i*0.25, (j+1)*0.25, (i+1)*0.25};
+  float left = j*0.25;
+  float top = i*0.5;
+  float right = (j+1)*0.25;
+  float bottom = (i+1)*0.5;
+  
+  /*RECT R;
+  left = 0;
+  top = 0;
+  right = 1;
+  bottom = 1;*/
+
+  // facing dir is left
+  if(frameDir == LEFT)	{
+	float tmp = left;
+	left = right;
+	right = tmp;
+  }
+  /*float constWidth = 0.25f;
   float left, right, top, bottom;
 	
   right = (frame*constWidth);
@@ -191,7 +215,7 @@ void Graphics::BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,
 	  right = 0.0f;
 	  top = 0.5f;
 	  bottom = 1.0f;
-  }
+  }*/
 
   TLVERTEX *vertices;
   vertexBuffer->Lock(0, 0, (void**)&vertices, 0);
@@ -217,7 +241,7 @@ void Graphics::BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,
   vertices[2].y = (float) rDest.bottom ;
   vertices[2].z = 0.0f;
   vertices[2].rhw = 1.0f;
-  vertices[2].u =   right;
+  vertices[2].u =  right;
   vertices[2].v = bottom;
 
   vertices[3].colour = vertexColour;
@@ -307,7 +331,7 @@ void Graphics::drawText(char *text, int x, int y, D3DCOLOR textColor)
 
 void Graphics::BlitRect(float x, float y, int width, int height, D3DCOLOR fillColor)
 {
-	  // så den inte påverkas av andra texturer...
+	  // så den inte påverkas av andra texture..
 	  gd3dDevice->SetTexture (0, NULL);
 
 	  gd3dDevice->SetFVF(D3DFVF_RECTVERTEX);
@@ -357,7 +381,7 @@ void Graphics::BlitRect(float x, float y, int width, int height, D3DCOLOR fillCo
 
 void Graphics::BlitFullRectBordered(float x, float y, int width, int height, D3DCOLOR fillColor, int borderThickness, D3DCOLOR borderColor)
 { 
-	  // så den inte påverkas av andra texturer...
+	  // så den inte påverkas av andra texture..
 	  gd3dDevice->SetTexture (0, NULL);
 
 	  gd3dDevice->SetFVF(D3DFVF_RECTVERTEX);
@@ -442,7 +466,7 @@ void Graphics::BlitFullRectBordered(float x, float y, int width, int height, D3D
 
 void Graphics::BlitRect(RECT rect, D3DCOLOR fillColor)
 {
-	// så den inte påverkas av andra texturer...
+	// så den inte påverkas av andra texture..
 	  gd3dDevice->SetTexture (0, NULL);
 	  gd3dDevice->SetFVF(D3DFVF_RECTVERTEX);
 	  gd3dDevice->SetStreamSource(0, vertexBuffer2, 0, sizeof(RECTVERTEX));

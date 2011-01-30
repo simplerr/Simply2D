@@ -28,6 +28,7 @@ public:
 	void setID(int ID) {mID = ID;};
 	void setTexture(IDirect3DTexture9* texture)	{mTexture = texture;};
 	void setTextureSource(char *source);
+	IDirect3DTexture9 *getTexture(void)	{ return mTexture;};
 
 	virtual void editorMove(float dx, float dy)	{mX += dx; mY += dy;};
 	virtual void move(float dx, float dy);

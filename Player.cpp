@@ -12,8 +12,11 @@ Player::Player(string filename, int width, int height)
 	mWidth = width;
 	mHeight = height;
 
-	frame = 1;
-	frameType = NADA;
+	mHealth = HEALTH;
+	mDamage = DAMAGE;
+
+	faceDir = RIGHT;
+	frame = 0;
 	inair = true;
 	mFalling = true;
 
@@ -51,15 +54,15 @@ void Player::update(double dt, GameWorld *Level)
 	double tmpY = mY;
 
 	// update frame
-	if(dtsum >= .08)	{
+	if(dtsum >= .12)	{
 		frame++;
 		dtsum = 0;
 	}
 	else
 		dtsum += dt;
 
-	if(frame > 4 || !moving)
-		frame = 1;
+	if(frame > 3 || !moving)
+		frame = 0;
 
 	moving = false;
 
@@ -127,20 +130,27 @@ void Player::update(double dt, GameWorld *Level)
 		mFalling = true;
 	}
 
-	setFrameType();
+	if(jumped || mFalling)
+		frame = 4;
+
+	// check health
+	if(mHealth <= 0)
+		MessageBox(0, "Game Over!", 0, 0);
 }
 
 void Player::draw(void)
 {
-	// updatera kordinaterna 
-	RECT playerRect = getRect();
-	
-	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, frameType);
+	// draw animation
+	RECT playerRect = getRect();	
+	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
 
-
+	// draw health
+	char buffer[256];
+	sprintf(buffer, "Health: %i", mHealth);
+	gGraphics->drawText(buffer, 1050, 200);
 }
 
-void Player::setFrameType(void)
+/*void Player::setFrameType(void)
 {
 	if(!mFalling)
 	{
@@ -156,7 +166,7 @@ void Player::setFrameType(void)
 		else if(faceDir == LEFT)
 			frameType = AIRLEFT;
 	}
-}
+}*/
 
 RECT Player::getRect(void)
 {	

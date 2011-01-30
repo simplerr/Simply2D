@@ -7,7 +7,7 @@
 #include "TextureHandler.h"
 #include "constants.h"
 
-enum playerFrameType
+enum FrameType
 {
 	GROUNDLEFT,
 	GROUNDRIGHT,
@@ -16,6 +16,7 @@ enum playerFrameType
 	NADA
 };
 
+enum direction;
 
 class TextureHandler;
 
@@ -32,7 +33,7 @@ public:
     D3DCOLOR vertexColour, float rotate);
 
 	void BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,		// med animation
-		D3DCOLOR vertexColour, int width, int height, int frame, float rotate, playerFrameType frameType);
+		D3DCOLOR vertexColour, int width, int height, int frame, float rotate, direction frameDir);
 
 	void loadFont(void);
 	void drawText(char *text, int x, int y, D3DCOLOR textColor = D3DCOLOR_ARGB(255,0,0,0));
