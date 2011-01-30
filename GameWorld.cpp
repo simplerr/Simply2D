@@ -129,8 +129,16 @@ void GameWorld::loadLevel(char* levelFile)
 			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer, HORIZONTAL, speed);
 			addDynamicObject(dynamic_cast<MovingObject*>(loadedObject));
 		}
-		// else if(tmpType == ENEMY)
-		// ...		
+		else if(tmpType == NORMAL_ENEMY)
+		{
+			POS startPos, endPos;
+			float speed;
+			int health, damage;
+
+			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> health >> damage >> textureSource;
+			loadedObject = new Enemy(xpos, ypos, width, height, textureSource, startPos, endPos, mPlayer, HORIZONTAL, speed, health, damage);
+			addDynamicObject(dynamic_cast<Enemy*>(loadedObject));
+		}		
 	}
 
 	fin.close();

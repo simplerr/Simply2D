@@ -197,7 +197,7 @@ void Game::updateScene(float dt)
 			mainMenuActive = false;
 			editorActive = false;
 			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
-			//mLevel->loadLevel(buffer);
+			mLevel->loadLevel(buffer);
 			mLevel->spawnPlayer();
 		}
 		else if(menuResult == "Editor")	{
