@@ -2,6 +2,7 @@
 #include "Editor.h"
 #include "StaticPlatform.h"
 #include "MovingPlatform.h"
+#include "Enemy.h"
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
@@ -69,19 +70,20 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue(buffer);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 340, 110, 40);
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 340, 110, 60);	// shouldn't take height, should expand on addItem
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 420, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 270, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 390, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 600, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 420, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 630, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
 	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 240, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 575, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 605, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
+	listBox->addItem("Enemy", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -792,6 +794,17 @@ void Editor::messageHandler(WindowID sender, string data)
 						end.y = 300;
 						MovingPlatform *platform = new MovingPlatform(200, 300, 100, 100, "misc\\textures\\grass_platform.bmp", start, end, NULL);
 						mLevel->addDynamicObject(platform);
+					}
+					else if(value == "Enemy")
+					{
+						POS start;
+						POS end;
+						start.x = 200;
+						start.y = 500;
+						end.x = 600;
+						end.y = 500;
+						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end, NULL);
+						mLevel->addDynamicObject(enemy);
 					}
 					// aktiv plattform = den nya?
 			}
