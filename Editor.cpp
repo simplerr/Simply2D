@@ -181,7 +181,6 @@ int Editor::updateAll(float dt)
 			else
 				activeObject->clear();
 
-
 			/*tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
 			// if not pathDragRect
 			if(activeObject == NULL || !(activeObject->mObject->getType() == MOVING_PLATFORM && mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
@@ -199,7 +198,7 @@ int Editor::updateAll(float dt)
 				messageHandler(ACTIVE_OBJECT);
 
 				// static eller dynamic platform?
-				if(activeObject->mObject->getType() == MOVING_PLATFORM && mPrevActiveObjectType != MOVING_PLATFORM)
+				if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY) && (mPrevActiveObjectType != MOVING_PLATFORM && mPrevActiveObjectType != NORMAL_ENEMY))
 				{		
 					tStartX->setVisibility(true);
 					tStartY->setVisibility(true);
@@ -219,7 +218,10 @@ int Editor::updateAll(float dt)
 					saveButton->move(0, +150);
 					createObjectTextPos += 150;
 
-					mPrevActiveObjectType = MOVING_PLATFORM;				
+					if(activeObject->mObject->getType() == MOVING_PLATFORM)
+						mPrevActiveObjectType = MOVING_PLATFORM;			
+					else if(activeObject->mObject->getType() == NORMAL_ENEMY)
+						mPrevActiveObjectType = NORMAL_ENEMY;
 				}	
 				else if(activeObject->mObject->getType() == STATIC_PLATFORMA && mPrevActiveObjectType != STATIC_PLATFORMA)	
 				{
