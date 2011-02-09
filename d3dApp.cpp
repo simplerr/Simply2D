@@ -5,10 +5,13 @@
 #include "d3dApp.h"
 #include "constants.h"
 #include "DirectInput.h"
+#include "Camera.h"
 
+Camera* gGameCamera			 = 0;
+Camera* gGuiCamera			 = 0;
 D3DApp* gd3dApp              = 0;
 IDirect3DDevice9* gd3dDevice = 0;
-Graphics* gGraphics = 0;
+Graphics* gGraphics			 = 0;
 
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)

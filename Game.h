@@ -14,6 +14,8 @@
 #include "Mouse.h"
 #include "Editor.h"
 
+class Camera;
+
 class Game : public D3DApp
 {
 public:
@@ -25,6 +27,9 @@ public:
 	void onResetDevice();
 	void updateScene(float dt);
 	void drawScene();
+
+	void renderGame(void);
+	void renderGUI(void);
 
 	void loadBkgd(char* filename);
 	void drawBkgd();

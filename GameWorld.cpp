@@ -435,3 +435,24 @@ RECT GameWorld::getSpawnRect(void)
 
 	return tmpRect;
 }
+
+void GameWorld::moveWorld(float dx, float dy)
+{	
+	// should also have one for dY, but not needed right now. only scrolls sidways currently
+
+	if(mPlayer->getPos().x > 520)
+		{
+			// statiska
+			for (int i = 0;i < mStaticObjectList.size();i++)
+			{
+				mStaticObjectList[i]->move(dx, dy);
+			}
+
+			// dynamiska
+			for (int i = 0;i < mMovingObjectList.size();i++)
+			{
+				mMovingObjectList[i]->move(dx, dy);
+			}
+		}
+}
+

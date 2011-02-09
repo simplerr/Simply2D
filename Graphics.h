@@ -42,12 +42,11 @@ public:
 		int borderThickness = 2, D3DCOLOR borderColor = D3DCOLOR_ARGB( 255, 000, 000, 000 ));
 
 	void BlitRect(float x, float y, int width, int height, D3DCOLOR fillColor = D3DCOLOR_ARGB( 155, 155, 000, 000 ));
-	void BlitRect(RECT rect, D3DCOLOR fillColor = D3DCOLOR_ARGB( 155, 155, 000, 000 ));
-	
+	void BlitRect(RECT rect, D3DCOLOR fillColor = D3DCOLOR_ARGB( 155, 155, 000, 000 ));	
 
 private:
-	IDirect3DVertexBuffer9* vertexBuffer;
-	IDirect3DVertexBuffer9* vertexBuffer2;
+	IDirect3DVertexBuffer9* mVB_texture;//mVB_texture;
+	IDirect3DVertexBuffer9* mVB_rect;
 	ID3DXFont* mFont;
 
 	TextureHandler* mTextureHandler;

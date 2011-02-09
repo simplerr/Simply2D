@@ -19,8 +19,14 @@
 #include "TextBox.h"
 #include "InputBox.h"
 #include "Enemy.h"
+#include "Camera.h"
 
 using namespace std;
+
+extern Camera* gGameCamera;
+extern Camera* gGuiCamera;
+
+// couldn't lie in d3dApp.cpp, no reason why not
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -48,27 +54,24 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 		PostQuitMessage(0);
 	}
 
+	mGfxStats = new GfxStats();
+	onResetDevice();
+
 	mMouse = new Mouse(mhMainWnd);
 	mStartMenu = new Menu(mhMainWnd, "StartMenu", MOUSE, 4, 4);
 	gGraphics = new Graphics("bulle");
 
+	// game and gui cameras!
+	gGameCamera = new Camera(500, 400, 1000, 800);
+	gGuiCamera = new Camera(1100, 400, 200, 800);
+
 	buildMainMenu();
 	
-	mGfxStats = new GfxStats();
 	User = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
 	mLevel = new GameWorld(User);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
 	mEditor->buildGUI();
-
-	POS start;
-	start.x = 300;
-	start.y = 400;
-	POS end;
-	end.x = 800;
-	end.y = 400;
-	Enemy *enemy = new Enemy(300, 630, 36, 36, "misc\\textures\\bad_mario.bmp", start, end, User);
-	mLevel->addDynamicObject(enemy);
 
 	loadBkgd("misc\\textures\\cool_background.bmp");
 		
@@ -77,7 +80,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	editorActive = false;
 	testActive = false;
 
-	onResetDevice();
+	//gGameCamera->activate();
 }
 
 Game::~Game()
@@ -112,22 +115,9 @@ void Game::onResetDevice()
 	mGfxStats->onResetDevice();
 	User->onResetDevice();
 
-	// Sets up the camera 1000 units back looking at the origin.
-	D3DXMATRIX V;
-	D3DXVECTOR3 pos(0.0f, 0.0f, -1000.0f);
-	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
-	D3DXMatrixLookAtLH(&V, &pos, &target, &up);
-	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &V));
-
-	// The following code defines the volume of space the camera sees.
-	D3DXMATRIX P;
-	RECT R;
-	GetClientRect(mhMainWnd, &R);
-	float width  = (float)R.right;
-	float height = (float)R.bottom;
-	D3DXMatrixPerspectiveFovLH(&P, D3DX_PI*0.25f, width/height, 1.0f, 5000.0f);
-	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &P));
+	D3DXMATRIX W;
+	D3DXMatrixIdentity(&W);
+	HR(gd3dDevice->SetTransform(D3DTS_WORLD, &W));
 
 	// This code sets texture filters, which helps to smooth out distortions
 	// when you scale a texture.  
@@ -244,19 +234,107 @@ void Game::updateScene(float dt)
 
 void Game::drawScene()
 {
-	// ----- Draw background	- DONE
-	// ----- Draw player		- DONE
-	// ----- Draw enemies
-	// ----- Draw mLevel			- DONE
+
+	HR(gd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE));
+
+	//renderGame();
+	//renderGUI();
 
 	// Clear the backbuffer and depth buffer.
-	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
-	HR(gd3dDevice->BeginScene());
+	// maybe unnecessary test, check it later..
+	if(!gGameCamera->getActive())	{
+			gGameCamera->activate(true);
+			gGuiCamera->activate(false);
+		}
 
+	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));	
+
+		if(!gGuiCamera->getActive())	{
+			gGuiCamera->activate(true);
+			gGameCamera->activate(false);
+		}
+
+	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
+
+	HR(gd3dDevice->BeginScene());
 
 	if(mainMenuActive)
 	{
+		if(!gGameCamera->getActive())	{
+			gGameCamera->activate(true);
+			gGuiCamera->activate(false);
+		}
+
 		gGraphics->BlitRect(600, 400, 1200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+		mStartMenu->drawMenu();	
+
+		if(!gGuiCamera->getActive())	{
+			gGuiCamera->activate(true);
+			gGameCamera->activate(false);
+		}
+
+		HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
+		gGraphics->BlitRect(1000, 400, 200, 800, D3DCOLOR_ARGB( 255, 255, 0, 0));
+		
+	}
+	else if(gameActive || testActive)
+	{
+		if(!gGameCamera->getActive())	{
+			gGameCamera->activate(true);
+			gGuiCamera->activate(false);
+		}
+		drawBkgd();
+		mLevel->drawLevel();
+		mGfxStats->display();
+
+		if(!gGuiCamera->getActive())	{
+			gGuiCamera->activate(true);
+			gGameCamera->activate(false);
+		}
+		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	}
+	else if(editorActive)
+	{	
+		// render level
+		if(!gGameCamera->getActive())	{
+			gGameCamera->activate(true);
+			gGuiCamera->activate(false);
+		}
+
+		drawBkgd();
+		mGfxStats->display();
+		mEditor->renderLevel();	
+
+		// renders ui
+		if(!gGuiCamera->getActive())	{
+			gGuiCamera->activate(true);
+			gGameCamera->activate(false);
+		}
+		mEditor->renderGui();				
+	}
+
+	if(testActive)
+		gGraphics->drawText("Press ESC to return", 1020, 20);
+	mMouse->drawMousePos();
+	
+	HR(gd3dDevice->EndScene());
+	// Present the backbuffer.
+	HR(gd3dDevice->Present(0, 0, 0, 0));
+}
+
+// render all the game content - not the gui
+void Game::renderGame(void)
+{
+	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0));
+
+	HR(gd3dDevice->BeginScene());
+
+	//	TEST
+	//gGraphics->BlitRect(500, 400, 1000, 600, D3DCOLOR_ARGB(255, 255, 0, 0));
+
+	if(mainMenuActive)
+	{
+		//gGraphics->BlitRect(500, 400, 200, 300, D3DCOLOR_ARGB( 255, 155, 200, 255));
 		mStartMenu->drawMenu();	
 	}
 	else if(gameActive || testActive)
@@ -269,14 +347,33 @@ void Game::drawScene()
 	else if(editorActive)
 	{	
 		drawBkgd();
-		mEditor->renderAll();		// renders ui + mLevel
+		mEditor->renderLevel();
 		mGfxStats->display();			
 	}
 
 	if(testActive)
 		gGraphics->drawText("Press ESC to return", 1020, 20);
 	mMouse->drawMousePos();
+
+	HR(gd3dDevice->EndScene());
+	HR(gd3dDevice->Present(0, 0, 0, 0));
+}
+
+// render all the GUI content
+void Game::renderGUI(void)
+{
+	gd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(255,255,0,255), 1.0f, 0 );
+
+	HR(gd3dDevice->BeginScene());
 	
+	if(editorActive)
+		mEditor->renderAll();	// renders ui + mLevel
+	
+	if(gameActive || testActive)
+	{
+		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	}
+
 	HR(gd3dDevice->EndScene());
 	// Present the backbuffer.
 	HR(gd3dDevice->Present(0, 0, 0, 0));

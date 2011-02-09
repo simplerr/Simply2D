@@ -82,6 +82,7 @@ void Enemy::scale(int dwidth, int dheight)
 
 void Enemy::onPlayerCollision(void)
 {
+	MovingObject::onPlayerCollision();
 	if(getPlayer()->getDY() > 0)
 	{
 		// player hit enemy on the head -> enemy = dead

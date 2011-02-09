@@ -30,8 +30,9 @@ public:
 	~Editor();
 
 	int updateAll(float dt);
-	int renderAll(void);
-	//void keyPressed(WPARAM wParam);
+	int renderAll(void)	{ return 1;};
+	int renderLevel(void);
+	int renderGui(void);
 
 	void addMouse(Mouse *a_mouse){mMouse = a_mouse;};
 	void buildGUI(void);

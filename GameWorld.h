@@ -47,6 +47,8 @@ public:
 	void addStaticObject(Object *object);
 	void addDynamicObject(MovingObject *object);
 
+	void moveWorld(float dx, float dy);
+
 private:
 	std::vector<Object*> mStaticObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc..
 	std::vector<MovingObject*> mMovingObjectList;	// enemies, power-ups, 

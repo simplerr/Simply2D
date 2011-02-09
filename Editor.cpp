@@ -427,73 +427,15 @@ void Editor::movePlatform(void)
 		messageHandler(ACTIVE_OBJECT);
 }
 
-int Editor::renderAll()
+// just renders the GUI to the left
+int Editor::renderGui()
 {
-	if(showPaths)
-		mLevel->drawEditorLevel();
-	else if(!showPaths)
-		mLevel->drawLevel();
 	Window::renderAll();
-
-	POS spawnPos = mLevel->getSpawn();
-
-	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
 	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
 
-	// displays the orange effect
-	if(activeObject->mObject != NULL)	{
-		gGraphics->BlitRect(activeObject->mObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
-
-		// diplays the drag areas in different colours
-		if(activeObject->mObject->getResizeable())
-		{
-			gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
-			gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
-			gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
-			gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
-		}
-
-		// displays the path of the moving object
-		if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)&& !showPaths)
-		{
-			RECT activeObjectRect = activeObject->mObject->getRect();
-			POS endPos;
-			if(activeObject->mMovingPlatform)
-				endPos = activeObject->mMovingPlatform->getEndPos();
-			else if(activeObject->mEnemy)
-				endPos = activeObject->mEnemy->getEndPos();
-
-			RECT pathRect;
-			if(endPos.x > activeObject->mObject->getX())
-			{
-				pathRect.left = activeObjectRect.right;
-				pathRect.right = endPos.x - activeObject->mObject->getWidth()/2;
-				pathRect.top = activeObject->mObject->getY() - 5;
-				pathRect.bottom = activeObject->mObject->getY() + 5;
-			}
-			else if(endPos.x < activeObject->mObject->getX())
-			{
-				pathRect.left = endPos.x + activeObject->mObject->getWidth()/2;
-				pathRect.right = activeObjectRect.left;
-				pathRect.top = activeObject->mObject->getY() - 5;
-				pathRect.bottom = activeObject->mObject->getY() + 5;
-			}
-			else
-				pathRect = activeObjectRect;
-
-			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
-
-			// displays the end pos, and the drag rect of the active object
-			if(activeObject->mMovingPlatform)
-				gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
-			else if(activeObject->mEnemy)
-				gGraphics->BlitRect(activeObject->mEnemy->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
-			
-		}
-	}
 	return 1;
 }
 
@@ -998,6 +940,74 @@ void Editor::moveSpawnPos(void)
 	spawnPos.y += dy;
 
 	mLevel->setSpawn(spawnPos);
+}
+
+int Editor::renderLevel(void)
+{
+	if(showPaths)
+		mLevel->drawEditorLevel();
+	else if(!showPaths)
+		mLevel->drawLevel();
+
+	POS spawnPos = mLevel->getSpawn();
+	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
+
+	// displays the orange effect
+	if(activeObject->mObject != NULL)	{
+		gGraphics->BlitRect(activeObject->mObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+
+		// diplays the drag areas in different colours
+		if(activeObject->mObject->getResizeable())
+		{
+			sprintf(buffer, "drag: %i", dragLeft.right);
+			//MessageBox(0, buffer, 0, 0);
+			
+
+			gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
+			gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
+		}
+
+		// displays the path of the moving object
+		if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)&& !showPaths)
+		{
+			RECT activeObjectRect = activeObject->mObject->getRect();
+			POS endPos;
+			if(activeObject->mMovingPlatform)
+				endPos = activeObject->mMovingPlatform->getEndPos();
+			else if(activeObject->mEnemy)
+				endPos = activeObject->mEnemy->getEndPos();
+
+			RECT pathRect;
+			if(endPos.x > activeObject->mObject->getX())
+			{
+				pathRect.left = activeObjectRect.right;
+				pathRect.right = endPos.x - activeObject->mObject->getWidth()/2;
+				pathRect.top = activeObject->mObject->getY() - 5;
+				pathRect.bottom = activeObject->mObject->getY() + 5;
+			}
+			else if(endPos.x < activeObject->mObject->getX())
+			{
+				pathRect.left = endPos.x + activeObject->mObject->getWidth()/2;
+				pathRect.right = activeObjectRect.left;
+				pathRect.top = activeObject->mObject->getY() - 5;
+				pathRect.bottom = activeObject->mObject->getY() + 5;
+			}
+			else
+				pathRect = activeObjectRect;
+
+			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
+
+			// displays the end pos, and the drag rect of the active object
+			if(activeObject->mMovingPlatform)
+				gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			else if(activeObject->mEnemy)
+				gGraphics->BlitRect(activeObject->mEnemy->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+			
+		}
+	}
+	return 1;
 }
 
 

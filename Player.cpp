@@ -1,6 +1,10 @@
-#include "player.h"
+ï»¿#include "player.h"
 #include "Object.h"
+#include "Game.h"
+#include "Camera.h"
 //#include <fstream>
+
+extern Camera* gCamera;
 
 Player::Player(string filename, int width, int height)
 	:JUMP_HEIGHT(80)
@@ -31,12 +35,12 @@ Player::~Player()
 
 void Player::onLostDevice()
 {
-	// inget att göra?
+	// inget att gï¿½ra?
 }
 
 void Player::onResetDevice(void)
 {
-	// inget att göra?
+	// inget att gï¿½ra?
 }
 
 
@@ -69,7 +73,7 @@ void Player::update(double dt, GameWorld *Level)
 	mDX = 0;
 	mDY = 0;
 
-	// Y kordinat updateras och beräknas!
+	// Y kordinat updateras och berï¿½knas!
 
 	if(mFalling)	{
 		mDY = dt*FALLSPEED;
@@ -79,7 +83,7 @@ void Player::update(double dt, GameWorld *Level)
 
 	if(jumped)
 	{
-		// faller när han nått maxhöjd
+		// faller nï¿½r han nï¿½tt maxhï¿½jd
 		if(dJump <= -JUMP_HEIGHT)	{
 			mFalling = true;
 			jumped = false;
@@ -108,14 +112,19 @@ void Player::update(double dt, GameWorld *Level)
 
 	if(collisions.vert == false && collisions.hori == false)	{
 		errorText = "no collision!";
-		move(mDX, mDY);	
+		//Level->moveWorld(-mDX, 0);
+		move(mDX, mDY);
+		//gCamera->moveGameVP(mDX, mDY);
 	}
 	else if(collisions.vert == false || (collisions.vert && jumped)){
-		move(0, mDY);
+		move(0, mDY);//Level->moveWorld(0, -mDY);//move(0, mDY);
+		//gCamera->moveGameVP(0, mDY);
 		errorText = "right or left!";
 	}
 	else if(collisions.hori == false)	{
-		move(mDX, 0);	
+		//Level->moveWorld(-mDX, 0);
+		move(mDX, 0);
+		//gCamera->moveGameVP(mDX, 0);
 	}
 
 	// updatera mFalling
@@ -141,7 +150,12 @@ void Player::update(double dt, GameWorld *Level)
 void Player::draw(void)
 {
 	// draw animation
-	RECT playerRect = getRect();	
+	RECT playerRect;//= getRect();	
+	playerRect.left = mDrawX - mWidth/2;
+	playerRect.right = mDrawX + mWidth/2;
+	playerRect.top = mDrawY - mHeight/2;
+	playerRect.bottom = mDrawY + mHeight/2;
+	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
 
 	// draw health
@@ -184,4 +198,24 @@ void Player::move(double dx, double dy)
 {
 	mX += dx;
 	mY += dy;
+
+	mDrawX = mX;
+	mDrawY = mY;
+}
+
+POS Player::getPos(void)
+{
+	POS tmp;
+	tmp.x = mX;
+	tmp.y = mY;
+
+	return tmp;
+}
+
+void Player::setXY(float x, float y)
+{
+	mX = x;
+	mY = y;
+	mDrawX = mX;
+	mDrawY = mY;
 }
