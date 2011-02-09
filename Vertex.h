@@ -14,7 +14,7 @@
 void InitAllVertexDeclarations();
 void DestroyAllVertexDeclarations();
 
-//===============================================================
+//==============================================================
 struct RectVertex
 {
 	RectVertex():pos(0.0f, 0.0f, 0.0f), color(0x00000000){}

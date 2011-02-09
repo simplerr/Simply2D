@@ -13,7 +13,7 @@ IDirect3DVertexDeclaration9* VertexPos::Decl = 0;
 
 void InitAllVertexDeclarations()
 {
-	//===============================================================
+	//==============================================================
 	// VertexPos
 
 	D3DVERTEXELEMENT9 RectVertexElements[] = 
