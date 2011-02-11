@@ -15,6 +15,8 @@ Camera::Camera(int x, int y, int width, int height)
 	// middle of game area
 	mPos.x = x;
 	mPos.y = y;
+	mViewportPos.x = x;
+	mViewportPos.y = y;
 	mWidth = width;
 	mHeight = height;
 
@@ -36,10 +38,6 @@ void Camera::activate(bool b)
 		buildViewport();
 
 		mActive = true;
-
-		char buffer[256];
-		sprintf(buffer, "x: %i, y: %i, width: %i, height: %i", mPos.x, mPos.y, mWidth, mHeight);
-		//MessageBox(0, buffer, 0, 0);
 	}
 	else if(!b)
 		mActive = false;

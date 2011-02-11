@@ -32,6 +32,7 @@ private:
 	D3DXMATRIX mProj;
 	
 	D3DXVECTOR2 mPos;
+	D3DXVECTOR2 mViewportPos;
 	int mWidth;
 	int mHeight;
 

@@ -4,7 +4,7 @@
 #include "Camera.h"
 //#include <fstream>
 
-extern Camera* gCamera;
+extern Camera* gGameCamera;
 
 Player::Player(string filename, int width, int height)
 	:JUMP_HEIGHT(80)
@@ -111,20 +111,19 @@ void Player::update(double dt, GameWorld *Level)
 	collisions = Level->collision(this);	
 
 	if(collisions.vert == false && collisions.hori == false)	{
-		errorText = "no collision!";
-		//Level->moveWorld(-mDX, 0);
 		move(mDX, mDY);
-		//gCamera->moveGameVP(mDX, mDY);
+		if(mX >= 600)
+			gGameCamera->move(mDX, 0);
 	}
 	else if(collisions.vert == false || (collisions.vert && jumped)){
-		move(0, mDY);//Level->moveWorld(0, -mDY);//move(0, mDY);
-		//gCamera->moveGameVP(0, mDY);
-		errorText = "right or left!";
+		move(0, mDY);
 	}
 	else if(collisions.hori == false)	{
 		//Level->moveWorld(-mDX, 0);
 		move(mDX, 0);
 		//gCamera->moveGameVP(mDX, 0);
+		if(mX >= 600)
+			gGameCamera->move(mDX, 0);
 	}
 
 	// updatera mFalling
