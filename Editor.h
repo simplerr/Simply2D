@@ -71,6 +71,7 @@ private:
 	direction snapDir;
 	ObjectType mPrevActiveObjectType;
 	int createObjectTextPos;
+	bool movingObject;
 	bool movingEndPos;
 	bool movingSpawnPos;
 	bool showPaths;

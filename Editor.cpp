@@ -24,6 +24,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	snapCount = SNAP_SENSE;
 	snapDir = ALL;
 	snappedObject = NULL;
+	movingObject = false;
 	movingEndPos = false;
 	movingSpawnPos = false;
 	showPaths = false;
@@ -147,24 +148,36 @@ int Editor::updateAll(float dt)
 		{	
 			Object *tmpObject;
 			tmpObject = NULL;
-			//if(!activeObject->mObject->getActive())
-			//	tmpObject = mLevel->getObjectAt(mousePos);
-			if(activeObject->mMovingPlatform || activeObject->mEnemy)
+			
+			if(activeObject->mObject != NULL)
 			{
-				if(activeObject->mMovingPlatform)	{
-					if(!(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-					&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
-						tmpObject = mLevel->getObjectAt(tmpMousePos);//tmpObject = mLevel->getObjectAt(mousePos);
-				}
-				else if(activeObject->mEnemy)	{
-					if(!(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
-					&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+				// if not marked the activeObject
+				if(!(tmpMousePos.x > activeObject->mObject->getRect().left && tmpMousePos.x < activeObject->mObject->getRect().right
+					&& tmpMousePos.y > activeObject->mObject->getRect().top && tmpMousePos.y < activeObject->mObject->getRect().bottom))
+				{
+					if(activeObject->mMovingPlatform || activeObject->mEnemy)
+					{
+						if(activeObject->mMovingPlatform)	{
+							if(!(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+							&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+								tmpObject = mLevel->getObjectAt(tmpMousePos);
+						}
+						else if(activeObject->mEnemy)	{
+							if(!(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+							&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+								tmpObject = mLevel->getObjectAt(tmpMousePos);
+						}
+					}
+					else	{
 						tmpObject = mLevel->getObjectAt(tmpMousePos);
+					}
 				}
+				else	// if the active object is pressed
+					tmpObject = activeObject->mObject;
 			}
-			else	{
+			else if(activeObject->mObject == NULL)
 				tmpObject = mLevel->getObjectAt(tmpMousePos);
-			}
+
 			if(tmpObject != NULL)
 			{
 				activeObject->setObject((tmpObject));
@@ -186,12 +199,6 @@ int Editor::updateAll(float dt)
 			else
 				activeObject->clear();
 
-			/*tmpPlatform = dynamic_cast<MovingPlatform*>(activeObject);
-			// if not pathDragRect
-			if(activeObject == NULL || !(activeObject->mObject->getType() == MOVING_PLATFORM && mousePos.x > tmpPlatform->getEndPosRect().left && mousePos.x < tmpPlatform->getEndPosRect().right
-				&& mousePos.y > tmpPlatform->getEndPosRect().top && mousePos.y < tmpPlatform->getEndPosRect().bottom))	{
-					activeObject = mLevel->getObjectAt(mousePos);
-			}*/
 			if(activeObject->mObject != NULL)	
 			{
 				movingSpawnPos = false;
@@ -272,7 +279,6 @@ int Editor::updateAll(float dt)
 		else
 		{
 			movingSpawnPos = false;
-			//sendMousePress(mousePos.x - (gGameCamera->getX() - 500), mousePos.y);
 			sendMousePress(mMouse->getScreenPos().x, mMouse->getScreenPos().y);
 		}
 		// initiera/updatera dragAreas
@@ -294,6 +300,7 @@ int Editor::updateAll(float dt)
 				// change end-pos
 				if(activeObject->mObject->getType() == MOVING_PLATFORM)
 				{
+					// moves the end pos
 					if(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
 						&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)	{						
 							moveEndPos();
@@ -319,7 +326,7 @@ int Editor::updateAll(float dt)
 					movingEndPos = false;
 
 				// resize
-				if(activeObject->mObject->getResizeable())
+				if(activeObject->mObject->getResizeable() && !movingObject)
 				{
 					if(tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
 						resizePlatform(DRAGLEFT);
@@ -330,12 +337,19 @@ int Editor::updateAll(float dt)
 					else if(tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom && !movingEndPos)
 						resizePlatform(DRAGDOWN);
 					// move
-					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	
+					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	{
 						movePlatform();
+						movingObject = true;
+					}
+					else
+						movingObject = false;
 				}
-
-				else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	
-						movePlatform();
+				else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)		{
+					movePlatform();
+					movingObject = true;
+				}
+				else if(!(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && movingEndPos))
+					movingObject = false;
 			//}
 		}
 		// moving the camera
