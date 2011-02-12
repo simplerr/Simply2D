@@ -50,8 +50,13 @@ void Mouse::updateMouseWIN(void)
 
 void Mouse::updateMouseDX(void)
 {
+	POINT tmpPos;
+	RECT windowRect;
+
+	// right now the position can be negative, if the players moves outside the screen
 	mPos.x += gDInput->mouseDX();
 	mPos.y += gDInput->mouseDY();
+
 }
 
 bool Mouse::buttonDown(MouseButton button)
@@ -73,12 +78,9 @@ void Mouse::setMousePos(int x, int y)
 	RECT windowRect;	
 	GetWindowRect(mMainWnd, &windowRect);
 
-	//char buffer[256];
-	//sprintf(buffer, "x: %i", x);
-	//MessageBox(0, buffer, 0, 0);
-
-	// client area istället!
 	SetCursorPos(windowRect.left + 8 + x, windowRect.top + 30 + y);
+	mPos.x = x;
+	mPos.y = y;
 }
 
 void Mouse::setX(int x)

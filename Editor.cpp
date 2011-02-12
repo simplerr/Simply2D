@@ -341,7 +341,7 @@ int Editor::updateAll(float dt)
 			if(gDInput->keyDown(DIK_LCONTROL))	{
 				// shouldn't be able to move outside to the left
 				gGameCamera->move(-gDInput->mouseDX(), 0);
-				mMouse->setVX(1);//mMouse->getPos().x - gDInput->mouseDX());
+				mMouse->setVX(mMouse->getPos().x - gDInput->mouseDX());
 			}
 		}
 		if(movingSpawnPos)	{
