@@ -112,6 +112,7 @@ int Editor::updateAll(float dt)
 
 	Window::updateWindow(dt);
 	mousePos = mMouse->getPos();
+	mOffset = gGameCamera->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
 
 	//mLevel->updateLevel(dt);
 	
@@ -270,7 +271,7 @@ int Editor::updateAll(float dt)
 		else
 		{
 			movingSpawnPos = false;
-			sendMousePress(mousePos.x, mousePos.y);
+			sendMousePress(mousePos.x - (gGameCamera->getX() - 500), mousePos.y);
 		}
 		// initiera/updatera dragAreas
 		if(activeObject->mObject != NULL)
@@ -340,8 +341,12 @@ int Editor::updateAll(float dt)
 		{
 			if(gDInput->keyDown(DIK_LCONTROL))	{
 				// shouldn't be able to move outside to the left
-				gGameCamera->move(-gDInput->mouseDX(), 0);
-				mMouse->setVX(mMouse->getPos().x - gDInput->mouseDX());
+				if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
+					gGameCamera->move(-gDInput->mouseDX(), 0);
+					mMouse->setVX(mMouse->getPos().x - gDInput->mouseDX());
+				}
+				//else if(gGameCamera->getX() < 500)
+				//	gGameCamera->setX(500);
 			}
 		}
 		if(movingSpawnPos)	{
@@ -366,9 +371,9 @@ void Editor::movePlatform(void)
 		float dy = gDInput->mouseDY();
 
 		if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
-				mMouse->setMousePos(mousePos.x - dx, mousePos.y);
+				mMouse->setMousePos(mousePos.x - dx , mousePos.y);
 			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= GAME_HEIGHT)
-				mMouse->setMousePos(mousePos.x, mousePos.y - dy);
+				mMouse->setMousePos(mousePos.x , mousePos.y - dy);
 
 		// kolla begränsningar - true -> gameArea + ingen krock med annan plattform!
 		if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
@@ -397,7 +402,7 @@ void Editor::movePlatform(void)
 					// ska kunna röra plattformen lodrätt
 					activeObject->move(0, dy);	
 					// musens ska inte röra på sig!
-					mMouse->setMousePos(mousePos.x - dx, mousePos.y);
+					mMouse->setMousePos(mousePos.x - dx  , mousePos.y);
 				}
 				else if(snapDir == UP || snapDir == DOWN)
 				{
@@ -412,7 +417,7 @@ void Editor::movePlatform(void)
 
 					activeObject->move(dx, 0);
 					// musens ska inte röra på sig!
-					mMouse->setMousePos(mousePos.x, mousePos.y - dy);
+					mMouse->setMousePos(mousePos.x , mousePos.y - dy);
 				}	
 			}			
 			
@@ -566,7 +571,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				// ta reda på hur långt den ska snappa
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
-				mMouse->setMousePos(mousePos.x+snapDist, mousePos.y);
+				mMouse->setMousePos(mMouse->getPos().x + snapDist, mousePos.y);
 				activeObject->move(snapDist, 0);
 
 				snapCount = 0;
@@ -586,7 +591,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
-				mMouse->setMousePos(mousePos.x-snapDist, mousePos.y);
+				mMouse->setMousePos(mMouse->getPos().x - snapDist, mousePos.y);
 				activeObject->move(-snapDist, 0);
 
 				snapCount = 0;
@@ -606,7 +611,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				mMouse->setMousePos(mousePos.x, mousePos.y + snapDist);
+				mMouse->setMousePos(mMouse->getPos().x , mousePos.y + snapDist);
 				activeObject->move(0, snapDist);
 
 				snapCount = 0;
@@ -626,7 +631,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				mMouse->setMousePos(mousePos.x, mousePos.y - snapDist);
+				mMouse->setMousePos(mMouse->getPos().x, mousePos.y - snapDist);
 				activeObject->move(0, -snapDist);
 
 				snapCount = 0;

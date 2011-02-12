@@ -67,7 +67,11 @@ void Camera::buildViewport(void)
 void Camera::move(float dx, float dy)
 {
 	// move the camera position
-	mPos.x += dx;
+	if(getX() >= 500)
+		mPos.x += dx;
+	else
+		mPos.x = 500;
+
 	mPos.y += dy;
 
 	// update the view transform matrix

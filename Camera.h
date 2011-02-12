@@ -17,6 +17,10 @@ public:
 	int getY(void)					{return mPos.y;};
 	int getWidth(void)				{return mWidth;};
 	int getHeight(void)				{return mHeight;};
+	int getOffset(void)				{return mPos.x - 500;};
+
+	void setX(int x)				{mPos.x = x;};
+	void setY(int y)				{mPos.y = y;};
 
 	void activate(bool b);
 	bool getActive(void)	{ return mActive;};

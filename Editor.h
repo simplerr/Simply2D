@@ -77,6 +77,8 @@ private:
 	bool tryLevel;
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
+
+	int mOffset;
 	// window controls
 private:
 	TextBox *tPositionX; 
