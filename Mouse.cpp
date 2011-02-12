@@ -35,8 +35,8 @@ void Mouse::updateMouseWIN(void)
 	// så det inte blir negativa värden
 	if(tmpPos.x <= windowRect.left)
 		mPos.x = windowRect.left;
-	else if(tmpPos.x >= windowRect.right) 
-		mPos.x = windowRect.right;
+	//else if(tmpPos.x >= windowRect.right) 
+	//	mPos.x = windowRect.right;
 	else if(tmpPos.y <= windowRect.top)
 		mPos.y = windowRect.top;
 	else if(tmpPos.y >= windowRect.bottom)
@@ -85,6 +85,10 @@ void Mouse::setMousePos(int x, int y)
 	mPos.y = y;
 
 	SetCursorPos(windowRect.left + 8 + x - gGameCamera->getOffset(), windowRect.top + 30 + y);	
+
+	char buffer[256];
+	sprintf(buffer, "x: %i, y: %i", mPos.x, mPos.y);
+	//MessageBox(0, buffer, 0, 0);
 }
 
 void Mouse::setX(int x)
@@ -101,6 +105,25 @@ void Mouse::setY(int y)
 
 }
 
+POINT Mouse::getScreenPos(void)
+{
+	POINT tmpPos;
+	POINT returnPos;
+	RECT windowRect;
+
+	GetCursorPos(&tmpPos);
+	GetWindowRect(mMainWnd, &windowRect);
+
+	returnPos.x = tmpPos.x - windowRect.left - 8;
+	returnPos.y = tmpPos.y - windowRect.top - 30;
+
+	return returnPos;
+}
+
+void Mouse::restore(void)
+{
+	mPos = getScreenPos();
+}
 /* DIRECT INPUT STYLISHH
 static int screenWidth = GetSystemMetrics(SM_CXFULLSCREEN);
 	static int screenHeight = GetSystemMetrics(SM_CYFULLSCREEN);

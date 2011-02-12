@@ -55,7 +55,6 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	}
 
 	mGfxStats = new GfxStats();
-	onResetDevice();
 
 	mMouse = new Mouse(mhMainWnd);
 	mStartMenu = new Menu(mhMainWnd, "StartMenu", MOUSE, 4, 4);
@@ -81,6 +80,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	testActive = false;
 
 	//gGameCamera->activate();
+	onResetDevice();
 }
 
 Game::~Game()
@@ -125,7 +125,7 @@ void Game::onResetDevice()
 	HR(gd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
 	HR(gd3dDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
 
-	// This line of code disables Direct3D lighting.
+	// This line of code disables Direct3D lighting
 	//HR(gd3dDevice->SetRenderState(D3DRS_LIGHTING, false));
 	
 	// The following code specifies an alpha test and reference value.
@@ -162,17 +162,24 @@ void Game::updateScene(float dt)
 		dtcount = 0;
 	}
 	else if(gameActive && gDInput->keyPressed(DIK_ESCAPE))	{
+		// restores if the camera have been moved
+		mMouse->restore();
+		gGameCamera->restore();
 		mainMenuActive = true;
 		gameActive = false;
 		dtcount = 0;
 	}
 	else if(editorActive && gDInput->keyPressed(DIK_ESCAPE))	{
+		mMouse->restore();
+		gGameCamera->restore();
 		mEditor->resetActive();
 		mainMenuActive = true;
 		editorActive = false;
 		dtcount = 0;
 	}
 	else if(testActive && gDInput->keyPressed(DIK_ESCAPE))	{
+		mMouse->restore();
+		gGameCamera->restore();
 		mEditor->setTest(false);
 		testActive = false;
 		editorActive = true;
@@ -275,7 +282,7 @@ void Game::drawScene()
 		}
 
 		HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
-		gGraphics->BlitRect(1000, 400, 200, 800, D3DCOLOR_ARGB( 255, 255, 0, 0));
+		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
 		
 	}
 	else if(gameActive || testActive)

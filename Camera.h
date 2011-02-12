@@ -29,6 +29,7 @@ public:
 	void buildProjectionMatrix(void);
 	void buildViewport(void);
 
+	void restore(void);
 	void move(float dx, float dy);
 private:
 	D3DVIEWPORT9 mViewport;

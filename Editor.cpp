@@ -111,7 +111,8 @@ int Editor::updateAll(float dt)
 		return -1;
 
 	Window::updateWindow(dt);
-	mousePos = mMouse->getPos();
+	//screenMousePos = mMouse->getPos();
+	POINT tmpMousePos = mMouse->getPos();
 	mOffset = gGameCamera->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
 
 	//mLevel->updateLevel(dt);
@@ -141,7 +142,8 @@ int Editor::updateAll(float dt)
 		
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
-		if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
+		//if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top)	// gameArea == true
+		if(mMouse->getScreenPos().x > gameArea.left && mMouse->getScreenPos().x < gameArea.right && mMouse->getScreenPos().y > gameArea.top)	// just 3, works though
 		{	
 			Object *tmpObject;
 			tmpObject = NULL;
@@ -150,19 +152,18 @@ int Editor::updateAll(float dt)
 			if(activeObject->mMovingPlatform || activeObject->mEnemy)
 			{
 				if(activeObject->mMovingPlatform)	{
-					if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-					&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
-						tmpObject = mLevel->getObjectAt(mousePos);
+					if(!(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+					&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+						tmpObject = mLevel->getObjectAt(tmpMousePos);//tmpObject = mLevel->getObjectAt(mousePos);
 				}
 				else if(activeObject->mEnemy)	{
-					if(!(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
-					&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
-						tmpObject = mLevel->getObjectAt(mousePos);
+					if(!(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+					&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+						tmpObject = mLevel->getObjectAt(tmpMousePos);
 				}
 			}
 			else	{
-				tmpObject = mLevel->getObjectAt(mousePos);
-				//MessageBox(0, "hh", 0, 0);
+				tmpObject = mLevel->getObjectAt(tmpMousePos);
 			}
 			if(tmpObject != NULL)
 			{
@@ -172,13 +173,13 @@ int Editor::updateAll(float dt)
 			else if(activeObject->mMovingPlatform || activeObject->mEnemy)	
 			{
 				if(activeObject->mMovingPlatform)	{
-					if(!(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-					&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
+					if(!(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+					&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
 						activeObject->clear();
 				}
 				else if(activeObject->mEnemy)	{
-					if(!(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
-					&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
+					if(!(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+					&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
 						activeObject->clear();
 				}
 			}
@@ -257,7 +258,7 @@ int Editor::updateAll(float dt)
 			{	
 				// spawn kod
 				RECT spawnRect = mLevel->getSpawnRect();
-				if(mousePos.x > spawnRect.left && mousePos.x < spawnRect.right && mousePos.y > spawnRect.top && mousePos.y < spawnRect.bottom)	{
+				if(tmpMousePos.x > spawnRect.left && tmpMousePos.x < spawnRect.right && tmpMousePos.y > spawnRect.top && tmpMousePos.y < spawnRect.bottom)	{
 					movingSpawnPos = true;
 				}
 				else
@@ -271,7 +272,8 @@ int Editor::updateAll(float dt)
 		else
 		{
 			movingSpawnPos = false;
-			sendMousePress(mousePos.x - (gGameCamera->getX() - 500), mousePos.y);
+			//sendMousePress(mousePos.x - (gGameCamera->getX() - 500), mousePos.y);
+			sendMousePress(mMouse->getScreenPos().x, mMouse->getScreenPos().y);
 		}
 		// initiera/updatera dragAreas
 		if(activeObject->mObject != NULL)
@@ -287,13 +289,13 @@ int Editor::updateAll(float dt)
 		if(activeObject->mObject != NULL)
 		{
 			RECT activeObjectRect = activeObject->mObject->getRect();
-			if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
-			{	
+			//if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
+			//{	
 				// change end-pos
 				if(activeObject->mObject->getType() == MOVING_PLATFORM)
 				{
-					if(mousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && mousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-						&& mousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && mousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)	{						
+					if(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+						&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)	{						
 							moveEndPos();
 							movingEndPos = true;
 					}
@@ -305,8 +307,8 @@ int Editor::updateAll(float dt)
 
 				if(activeObject->mObject->getType() == NORMAL_ENEMY)
 				{
-					if(mousePos.x > activeObject->mEnemy->getEndPosRect().left && mousePos.x < activeObject->mEnemy->getEndPosRect().right
-						&& mousePos.y > activeObject->mEnemy->getEndPosRect().top && mousePos.y < activeObject->mEnemy->getEndPosRect().bottom)	{						
+					if(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+						&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom)	{						
 							moveEndPos();
 							movingEndPos = true;
 					}
@@ -319,22 +321,22 @@ int Editor::updateAll(float dt)
 				// resize
 				if(activeObject->mObject->getResizeable())
 				{
-					if(mousePos.x > dragLeft.left && mousePos.x < dragLeft.right && mousePos.y > dragLeft.top && mousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
+					if(tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
 						resizePlatform(DRAGLEFT);
-					else if(mousePos.x > dragRight.left && mousePos.x < dragRight.right && mousePos.y > dragRight.top && mousePos.y < dragRight.bottom && !movingEndPos)
+					else if(tmpMousePos.x > dragRight.left && tmpMousePos.x < dragRight.right && tmpMousePos.y > dragRight.top && tmpMousePos.y < dragRight.bottom && !movingEndPos)
 						resizePlatform(DRAGRIGHT);
-					else if(mousePos.x > dragTop.left && mousePos.x < dragTop.right && mousePos.y > dragTop.top && mousePos.y < dragTop.bottom && !movingEndPos)
+					else if(tmpMousePos.x > dragTop.left && tmpMousePos.x < dragTop.right && tmpMousePos.y > dragTop.top && tmpMousePos.y < dragTop.bottom && !movingEndPos)
 						resizePlatform(DRAGUP);
-					else if(mousePos.x > dragBottom.left && mousePos.x < dragBottom.right && mousePos.y > dragBottom.top && mousePos.y < dragBottom.bottom && !movingEndPos)
+					else if(tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom && !movingEndPos)
 						resizePlatform(DRAGDOWN);
 					// move
-					else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
+					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	
 						movePlatform();
 				}
 
-				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
+				else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	
 						movePlatform();
-			}
+			//}
 		}
 		// moving the camera
 		else if(activeObject->mObject == NULL)
@@ -343,7 +345,7 @@ int Editor::updateAll(float dt)
 				// shouldn't be able to move outside to the left
 				if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
 					gGameCamera->move(-gDInput->mouseDX(), 0);
-					mMouse->setVX(mMouse->getPos().x - gDInput->mouseDX());
+					mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 				}
 				//else if(gGameCamera->getX() < 500)
 				//	gGameCamera->setX(500);
@@ -370,14 +372,14 @@ void Editor::movePlatform(void)
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
 
-		if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
+		/*if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
 				mMouse->setMousePos(mousePos.x - dx , mousePos.y);
 			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= GAME_HEIGHT)
-				mMouse->setMousePos(mousePos.x , mousePos.y - dy);
+				mMouse->setMousePos(mousePos.x , mousePos.y - dy);*/
 
 		// kolla begränsningar - true -> gameArea + ingen krock med annan plattform!
-		if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
-		{
+		//if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
+		//{
 			// så musen inte rör sig vid kanten
 			
 		
@@ -402,7 +404,7 @@ void Editor::movePlatform(void)
 					// ska kunna röra plattformen lodrätt
 					activeObject->move(0, dy);	
 					// musens ska inte röra på sig!
-					mMouse->setMousePos(mousePos.x - dx  , mousePos.y);
+					mMouse->setMousePos(mMouse->getPos().x - dx  , mMouse->getPos().y);
 				}
 				else if(snapDir == UP || snapDir == DOWN)
 				{
@@ -417,13 +419,13 @@ void Editor::movePlatform(void)
 
 					activeObject->move(dx, 0);
 					// musens ska inte röra på sig!
-					mMouse->setMousePos(mousePos.x , mousePos.y - dy);
+					mMouse->setMousePos(mMouse->getPos().x , mMouse->getPos().y - dy);
 				}	
-			}			
+			//}			
 			
 		}	
 		// sätt till kanten
-		else
+		/*else
 		{
 			if(activeObjectRect.left < 0)
 			{
@@ -441,7 +443,7 @@ void Editor::movePlatform(void)
 			{
 				activeObject->mObject->setXY(activeObject->mObject->getX(), GAME_HEIGHT - activeObject->mObject->getHeight()/2);
 			}
-		}
+		}*/
 		messageHandler(ACTIVE_OBJECT);
 }
 
@@ -552,6 +554,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 {
 	Object testObject = *activeObject->mObject;
 	RECT activeObjectRect = activeObject->mObject->getRect();
+	POINT tmpMousePos = mMouse->getPos();
 	RECT snapObjectRect;
 	bool toReturn = false;
 	int snapDist;
@@ -571,7 +574,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				// ta reda på hur långt den ska snappa
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
-				mMouse->setMousePos(mMouse->getPos().x + snapDist, mousePos.y);
+				mMouse->setMousePos(tmpMousePos.x + snapDist, tmpMousePos.y);
 				activeObject->move(snapDist, 0);
 
 				snapCount = 0;
@@ -591,7 +594,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
-				mMouse->setMousePos(mMouse->getPos().x - snapDist, mousePos.y);
+				mMouse->setMousePos(tmpMousePos.x - snapDist,tmpMousePos.y);
 				activeObject->move(-snapDist, 0);
 
 				snapCount = 0;
@@ -611,7 +614,9 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				mMouse->setMousePos(mMouse->getPos().x , mousePos.y + snapDist);
+				sprintf(buffer, "x1: %i, y: %i", tmpMousePos.x , tmpMousePos.y);
+				//MessageBox(0, buffer, 0, 0);
+				mMouse->setMousePos(tmpMousePos.x , tmpMousePos.y + snapDist);
 				activeObject->move(0, snapDist);
 
 				snapCount = 0;
@@ -631,7 +636,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				mMouse->setMousePos(mMouse->getPos().x, mousePos.y - snapDist);
+				mMouse->setMousePos(tmpMousePos.x, tmpMousePos.y - snapDist);
 				activeObject->move(0, -snapDist);
 
 				snapCount = 0;
@@ -843,6 +848,8 @@ void Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_TRYLEVEL:
 		{
 			strcpy(buffer, ACTIVE_LEVEL.c_str());
+			mMouse->restore();
+			gGameCamera->restore();
 			mLevel->saveLevel(buffer);
 			tryLevel = true;
 			break;

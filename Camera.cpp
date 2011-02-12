@@ -77,3 +77,8 @@ void Camera::move(float dx, float dy)
 	// update the view transform matrix
 	buildViewMatrix();
 }
+void Camera::restore(void)
+{
+	mPos.x = mViewportPos.x;
+	mPos.y = mViewportPos.y;
+}

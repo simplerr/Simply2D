@@ -18,7 +18,9 @@ public:
 	~Mouse();
 	void updateMouseWIN(void);
 	void updateMouseDX(void);
+
 	POINT getPos(void)	{return mPos;};
+	POINT getScreenPos(void);
 	bool buttonDown(MouseButton button);
 	void drawMousePos(void);
 
@@ -27,6 +29,8 @@ public:
 	void setY(int y);
 	void setVX(int x)	{mPos.x = x;};
 	void setVY(int y)	{mPos.y = y;};
+
+	void restore(void);
 
 private:
 	POINT mPos;

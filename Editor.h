@@ -61,7 +61,7 @@ public:
 private:
 	RECT gameArea;
 	Mouse *mMouse;
-	POINT mousePos;
+	//POINT mousePos;
 	GameWorld *mLevel;
 	ActiveObject *activeObject;
 	Object *snappedObject;
