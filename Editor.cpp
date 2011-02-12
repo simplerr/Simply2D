@@ -3,9 +3,12 @@
 #include "StaticPlatform.h"
 #include "MovingPlatform.h"
 #include "Enemy.h"
+#include "Camera.h"
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
+
+extern Camera* gGameCamera;
 
 Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
 {
@@ -275,7 +278,8 @@ int Editor::updateAll(float dt)
 			updateDragRects();
 		}
 	}
-	// move, resize and change endPos of active object
+	// move, resize, and change endPos of active object
+	// move the camera
 	if(gDInput->mouseButtonDown(LEFTBUTTON))
 	{
 		// if mousedown
@@ -330,7 +334,14 @@ int Editor::updateAll(float dt)
 				else if(mousePos.x > activeObjectRect.left && mousePos.x < activeObjectRect.right && mousePos.y > activeObjectRect.top && mousePos.y < activeObjectRect.bottom && !movingEndPos)	
 						movePlatform();
 			}
-		}	
+		}
+		// moving the camera
+		else if(activeObject->mObject == NULL)
+		{
+			if(gDInput->keyDown(DIK_LCONTROL))	{
+				gGameCamera->move(-gDInput->mouseDX(), -gDInput->mouseDY());
+			}
+		}
 		if(movingSpawnPos)	{
 			moveSpawnPos();
 			messageHandler(MOVE_SPAWNPOS);

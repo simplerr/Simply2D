@@ -119,9 +119,7 @@ void Player::update(double dt, GameWorld *Level)
 		move(0, mDY);
 	}
 	else if(collisions.hori == false)	{
-		//Level->moveWorld(-mDX, 0);
 		move(mDX, 0);
-		//gCamera->moveGameVP(mDX, 0);
 		if(mX >= 600)
 			gGameCamera->move(mDX, 0);
 	}
