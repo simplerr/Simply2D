@@ -73,7 +73,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mEditor->addMouse(mMouse);
 	mEditor->buildGUI();
 
-	loadBkgd("misc\\textures\\cool_background.bmp");
+	loadBkgd("misc\\textures\\city_bkgd_yellow.bmp");
 		
 	mainMenuActive = true;
 	gameActive = false;
@@ -152,7 +152,8 @@ void Game::onResetDevice()
 void Game::updateScene(float dt)
 {		
 	// updaterar musens position
-	mMouse->updateMouseWIN();
+	//mMouse->updateMouseWIN();
+	mMouse->updateMouseDX();
 	static float dtcount = 0;
 	dtcount += dt;
 	if(mainMenuActive && gDInput->keyPressed(DIK_ESCAPE))	{	// ska anpassas s� det funkar med editorActive ocks�!!
@@ -393,10 +394,17 @@ void Game::drawBkgd()
 	RECT r1;
 	r1.top = 0;
 	r1.left = 0;
-	r1.right = 1000;
+	r1.right = 4000;
 	r1.bottom = 800;
 
+	D3DXMATRIX texScaling;
+	D3DXMatrixScaling(&texScaling, 4.0f, 1.0f, 0.0f);
+	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
+
 	gGraphics->BlitTexture(mBkgdTex, r1, 0xFFFFFFFF, 0.0f);
+
+	D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
+	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 }
 
 void Game::buildMainMenu(void)

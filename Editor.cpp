@@ -339,7 +339,9 @@ int Editor::updateAll(float dt)
 		else if(activeObject->mObject == NULL)
 		{
 			if(gDInput->keyDown(DIK_LCONTROL))	{
-				gGameCamera->move(-gDInput->mouseDX(), -gDInput->mouseDY());
+				// shouldn't be able to move outside to the left
+				gGameCamera->move(-gDInput->mouseDX(), 0);
+				mMouse->setVX(1);//mMouse->getPos().x - gDInput->mouseDX());
 			}
 		}
 		if(movingSpawnPos)	{

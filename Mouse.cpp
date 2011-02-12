@@ -4,6 +4,15 @@
 Mouse::Mouse(HWND hwnd)
 {
 	mMainWnd = hwnd;
+
+	// start position for the mouse
+	GetCursorPos(&mPos);
+
+	RECT windowRect;	
+	GetWindowRect(mMainWnd, &windowRect);
+
+	mPos.x -= windowRect.left + 8;
+	mPos.y -= windowRect.top + 30;
 }
 
 Mouse::~Mouse()
@@ -36,7 +45,13 @@ void Mouse::updateMouseWIN(void)
 
 		mPos.x-=8;
 		mPos.y-=30;		
-	}		
+	}	
+}
+
+void Mouse::updateMouseDX(void)
+{
+	mPos.x += gDInput->mouseDX();
+	mPos.y += gDInput->mouseDY();
 }
 
 bool Mouse::buttonDown(MouseButton button)

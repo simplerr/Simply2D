@@ -58,7 +58,7 @@ void Player::update(double dt, GameWorld *Level)
 	double tmpY = mY;
 
 	// update frame
-	if(dtsum >= .12)	{
+	if(dtsum >= .08)	{
 		frame++;
 		dtsum = 0;
 	}
