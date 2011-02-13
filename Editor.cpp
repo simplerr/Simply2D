@@ -373,34 +373,23 @@ int Editor::updateAll(float dt)
 						currentAction = MOVING_OBJECT;
 						movePlatform();
 					}
-				}
-				/*else	{ // not resizable, move if within borders
-					if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)	{
-						if(currentAction != MOVING_ENDPOS)	{	
-							movePlatform();
-							currentAction = MOVING_OBJECT;
-						}
-					}
-				}*/
+				}				
 		}
 
-		// moving the camera
-		else if(activeObject->mObject == NULL)
-		{
-			if(gDInput->keyDown(DIK_LCONTROL))	{
-				// shouldn't be able to move outside to the left
-				if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
-					gGameCamera->move(-gDInput->mouseDX(), 0);
-					mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
-				}
-				//else if(gGameCamera->getX() < 500)
-				//	gGameCamera->setX(500);
-			}
-		}
 		if(movingSpawnPos)	{
 			moveSpawnPos();
 			messageHandler(MOVE_SPAWNPOS);
 				
+		}
+	}
+
+	// scroll knapp nere -> rör kamera
+	if(gDInput->mouseButtonDown(MIDDLEBUTTON))
+	{
+		// shouldn't be able to move outside to the left
+		if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
+			gGameCamera->move(-gDInput->mouseDX(), 0);
+			mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
 	}
 

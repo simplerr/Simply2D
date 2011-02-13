@@ -53,6 +53,7 @@ private:
 	Mouse *mMouse;
 
 	bool mainMenuActive, gameActive, editorActive, testActive;
+	bool firstTime;		// for the mouse position
 private:
 	
 };

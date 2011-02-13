@@ -78,7 +78,9 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	gameActive = false;
 	editorActive = false;
 	testActive = false;
+	firstTime = true;
 
+	//mMouse->setMousePos(mMou
 	//gGameCamera->activate();
 	onResetDevice();
 }
@@ -151,8 +153,12 @@ void Game::onResetDevice()
 
 void Game::updateScene(float dt)
 {		
+	// ta reda på musens startPos vid första loopen
+	if(firstTime)	{
+		mMouse->restore();
+		firstTime = false;
+	}
 	// updaterar musens position
-	//mMouse->updateMouseWIN();
 	mMouse->updateMouseDX();
 	static float dtcount = 0;
 	dtcount += dt;
