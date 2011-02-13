@@ -15,6 +15,18 @@
 
 static const int ADD = 150;
 
+enum CurrentAction
+{
+	SCALE_LEFT,
+	SCALE_RIGHT,
+	SCALE_UP,
+	SCALE_DOWN,
+	MOVING_OBJECT,
+	MOVING_ENDPOS,
+	MOVING_SPAWN,
+	IDLE
+};
+
 enum DragRect
 {
 	DRAGLEFT,
@@ -80,6 +92,7 @@ private:
 	const int SNAP_DIST;
 
 	int mOffset;
+	CurrentAction currentAction;
 	// window controls
 private:
 	TextBox *tPositionX; 

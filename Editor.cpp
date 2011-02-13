@@ -29,6 +29,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 	movingSpawnPos = false;
 	showPaths = false;
 	tryLevel = false;
+	currentAction = IDLE;
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -289,7 +290,7 @@ int Editor::updateAll(float dt)
 	}
 	// move, resize, and change endPos of active object
 	// move the camera
-	if(gDInput->mouseButtonDown(LEFTBUTTON))
+	if(gDInput->mouseButtonDown(LEFTBUTTON))			// HAXING ITW
 	{
 		// if mousedown
 		if(activeObject->mObject != NULL)
@@ -300,58 +301,89 @@ int Editor::updateAll(float dt)
 				// change end-pos
 				if(activeObject->mObject->getType() == MOVING_PLATFORM)
 				{
-					// moves the end pos
-					if(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
-						&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)	{						
-							moveEndPos();
-							movingEndPos = true;
+					// moves the end pos, now also works even if the mouse is a bit behind
+					if(currentAction == MOVING_ENDPOS)
+						moveEndPos();
+					else if(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+						&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)		
+					{			
+						currentAction = MOVING_ENDPOS;
+						moveEndPos();						
 					}
-					else 
-							movingEndPos = false;
 				}
-				else
-					movingEndPos = false;
 
 				if(activeObject->mObject->getType() == NORMAL_ENEMY)
 				{
-					if(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
-						&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom)	{						
-							moveEndPos();
-							movingEndPos = true;
+					if(currentAction == MOVING_ENDPOS)
+						moveEndPos();
+					else if(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+						&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom)
+					{				
+						currentAction = MOVING_ENDPOS;
+						moveEndPos();							
 					}
-					else 
-							movingEndPos = false;
 				}
-				else
-					movingEndPos = false;
 
 				// resize
-				if(activeObject->mObject->getResizeable() && !movingObject)
+				// the object should even if the mouse is outside the box, that is when currentAction == SCALE_XXXX
+				if(activeObject->mObject->getResizeable()) 
 				{
-					if(tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom && !movingEndPos)	// FIX
-						resizePlatform(DRAGLEFT);
-					else if(tmpMousePos.x > dragRight.left && tmpMousePos.x < dragRight.right && tmpMousePos.y > dragRight.top && tmpMousePos.y < dragRight.bottom && !movingEndPos)
-						resizePlatform(DRAGRIGHT);
-					else if(tmpMousePos.x > dragTop.left && tmpMousePos.x < dragTop.right && tmpMousePos.y > dragTop.top && tmpMousePos.y < dragTop.bottom && !movingEndPos)
-						resizePlatform(DRAGUP);
-					else if(tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom && !movingEndPos)
-						resizePlatform(DRAGDOWN);
-					// move
-					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)	{
-						movePlatform();
-						movingObject = true;
+					if(currentAction != MOVING_OBJECT && currentAction != MOVING_ENDPOS)
+					{	
+						if(currentAction == SCALE_LEFT)
+							resizePlatform(DRAGLEFT);
+						else if(tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom)	{
+								resizePlatform(DRAGLEFT);
+								currentAction = SCALE_LEFT;
+						}
+						else if(currentAction == SCALE_RIGHT)
+							resizePlatform(DRAGRIGHT);
+						else if(tmpMousePos.x > dragRight.left && tmpMousePos.x < dragRight.right && tmpMousePos.y > dragRight.top && tmpMousePos.y < dragRight.bottom)	{
+								resizePlatform(DRAGRIGHT);
+								currentAction = SCALE_RIGHT;
+						}
+						else if(currentAction == SCALE_UP)
+							resizePlatform(DRAGUP);
+						else if(tmpMousePos.x > dragTop.left && tmpMousePos.x < dragTop.right && tmpMousePos.y > dragTop.top && tmpMousePos.y < dragTop.bottom)	{
+								resizePlatform(DRAGUP);
+								currentAction = SCALE_UP;
+						}
+						else if(currentAction == SCALE_DOWN)
+							resizePlatform(DRAGDOWN);
+						else if(tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom)	{
+								resizePlatform(DRAGDOWN);
+								currentAction = SCALE_DOWN;
+						}
+						/*else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)	{
+							movePlatform();
+							movingObject = true;
+						}*/
+						//else if(!(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos))	{
+						//	movingObject = false;
+						//}
 					}
-					else
-						movingObject = false;
 				}
-				else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos)		{
-					movePlatform();
-					movingObject = true;
+
+				if(!activeObject->mObject->getResizeable() || (currentAction != SCALE_UP && currentAction != SCALE_DOWN && currentAction != SCALE_LEFT && currentAction != SCALE_RIGHT))
+				{
+					if(currentAction == MOVING_OBJECT)
+						movePlatform();
+					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)
+					{
+						currentAction = MOVING_OBJECT;
+						movePlatform();
+					}
 				}
-				else if(!(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && movingEndPos))
-					movingObject = false;
-			//}
+				/*else	{ // not resizable, move if within borders
+					if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)	{
+						if(currentAction != MOVING_ENDPOS)	{	
+							movePlatform();
+							currentAction = MOVING_OBJECT;
+						}
+					}
+				}*/
 		}
+
 		// moving the camera
 		else if(activeObject->mObject == NULL)
 		{
@@ -372,6 +404,12 @@ int Editor::updateAll(float dt)
 		}
 	}
 
+	// set the currentAction to IDLE
+	if(gDInput->mouseButtonReleased(LEFTBUTTON) && currentAction != IDLE)
+	{
+			currentAction = IDLE;
+	}
+
 	// check keyboard inputs
 	if(gDInput->keyPressed(DIK_P))
 		messageHandler(BUTTON_DELETE);
@@ -386,6 +424,7 @@ void Editor::movePlatform(void)
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
 
+		// så musen inte rör sig vid kanten
 		/*if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
 				mMouse->setMousePos(mousePos.x - dx , mousePos.y);
 			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= GAME_HEIGHT)
@@ -394,9 +433,7 @@ void Editor::movePlatform(void)
 		// kolla begränsningar - true -> gameArea + ingen krock med annan plattform!
 		//if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
 		//{
-			// så musen inte rör sig vid kanten
-			
-		
+				
 			if(!objectSnapping(activeObject->mObject, dx, dy))
 			{
 				if(snapDir == ALL)	// skulle kännas bättre med NONE

@@ -19,6 +19,8 @@ static const int USER_HEIGHT = 36;
 
 #define MOUSEPRESS 1
 
+
+
 enum goal
 {
 	START,

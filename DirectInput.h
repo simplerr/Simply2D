@@ -22,6 +22,7 @@ public:
 	bool keyPressed(char key);
 	bool mouseButtonDown(int button);
 	bool mouseButtonPressed(int button);
+	bool mouseButtonReleased(int button);
 	float mouseDX();
 	float mouseDY();
 	float mouseDZ();
