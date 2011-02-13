@@ -556,36 +556,44 @@ void Editor::resizePlatform(DragRect drag)
 
 	if(drag == DRAGLEFT)
 	{
-		if(activeObject->mObject->getWidth() >= 50)	{
+		if((activeObject->mObject->getWidth() >= 50 && dx > 0) || dx < 0)	{
 			activeObjectRect.left += dx;
 			activeObject->mObject->scale(-dx, 0);
 			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 			
 		}
+		else
+			mMouse->setMousePos(mMouse->getPos().x - dx, mMouse->getPos().y);
 	}	
 	else if(drag == DRAGRIGHT)
 	{
-		if(activeObject->mObject->getWidth() >= 50)	{
+		if((activeObject->mObject->getWidth() >= 50 && dx < 0) || dx > 0)	{
 			activeObjectRect.right += dx;
 			activeObject->mObject->scale(dx, 0);		// drar man musen åt höger ökar bredden
 			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 		}
+		else
+			mMouse->setMousePos(mMouse->getPos().x - dx, mMouse->getPos().y);
 	}
 	else if(drag == DRAGUP)
 	{
-		if(activeObject->mObject->getHeight() >= 50)	{
+		if((activeObject->mObject->getHeight() >= 50 && dy > 0) || dy < 0)	{
 			activeObjectRect.top += dy;
 			activeObject->mObject->scale(0, -dy);
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
+		else
+			mMouse->setMousePos(mMouse->getPos().x, mMouse->getPos().y - dy);
 	}
 	else if(drag == DRAGDOWN)
 	{	
-		if(activeObject->mObject->getHeight() >= 50)	{
+		if((activeObject->mObject->getHeight() >= 50 && dy < 0) || dy > 0)	{
 			activeObjectRect.bottom += dy;
 			activeObject->mObject->scale(0, dy);
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
+		else
+			mMouse->setMousePos(mMouse->getPos().x, mMouse->getPos().y - dy);
 	}
 	messageHandler(ACTIVE_OBJECT);
 }

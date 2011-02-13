@@ -85,10 +85,6 @@ void Mouse::setMousePos(int x, int y)
 	mPos.y = y;
 
 	SetCursorPos(windowRect.left + 8 + x - gGameCamera->getOffset(), windowRect.top + 30 + y);	
-
-	char buffer[256];
-	sprintf(buffer, "x: %i, y: %i", mPos.x, mPos.y);
-	//MessageBox(0, buffer, 0, 0);
 }
 
 void Mouse::setX(int x)
