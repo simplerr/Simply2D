@@ -72,17 +72,17 @@ bool DirectInput::keyPressed(char key)
 {	
 	return (!mLastKeyboardState[key] && mKeyboardState[key] & 0x80 ) != 0;	
 }
-
+// true if button is down
 bool DirectInput::mouseButtonDown(int button)
 {
 	return (mMouseState.rgbButtons[button] & 0x80) != 0;
 }
-
+// true if button is pressed
 bool DirectInput::mouseButtonPressed(int button)
 {
 	return (!mLastMouseState.rgbButtons[button] && mMouseState.rgbButtons[button] & 0x80) != 0;
 }
-
+// true if button is released
 bool DirectInput::mouseButtonReleased(int button)
 {
 	if((mLastMouseState.rgbButtons[button] & 0x80) != 0 && (mMouseState.rgbButtons[button] & 0x80) == 0)
