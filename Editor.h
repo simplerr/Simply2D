@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "InputBox.h"
 #include "TextBox.h"
-#include "GameWorld.h"
+#include "Level.h"
 #include "ListBox.h"
 #include "DropBox.h"
 #include "Button.h"
@@ -74,7 +74,7 @@ private:
 	RECT gameArea;
 	Mouse *mMouse;
 	//POINT mousePos;
-	GameWorld *mLevel;
+	Level *mLevel;
 	ActiveObject *activeObject;
 	Object *snappedObject;
 	string changeTexture;
@@ -90,6 +90,8 @@ private:
 	bool tryLevel;
 	const int SNAP_SENSE;
 	const int SNAP_DIST;
+
+	char *test;
 
 	int mOffset;
 	CurrentAction currentAction;

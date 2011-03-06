@@ -24,6 +24,8 @@ public:
 	bool buttonDown(MouseButton button);
 	void drawMousePos(void);
 
+	void move(int dx, int dy);
+
 	void setMousePos(int x, int y);
 	void setX(int x);
 	void setY(int y);

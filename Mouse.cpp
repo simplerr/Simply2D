@@ -101,6 +101,17 @@ void Mouse::setY(int y)
 
 }
 
+void Mouse::move(int dx, int dy)
+{
+	RECT windowRect;	
+	GetWindowRect(mMainWnd, &windowRect);
+
+	mPos.x += dx;
+	mPos.y += dy;
+
+	SetCursorPos(windowRect.left + 8 + mPos.x - gGameCamera->getOffset(), windowRect.top + 30 + mPos.y);
+}
+
 POINT Mouse::getScreenPos(void)
 {
 	POINT tmpPos;

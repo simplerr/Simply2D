@@ -44,11 +44,10 @@ void Player::onResetDevice(void)
 }
 
 
-void Player::update(double dt, GameWorld *Level)
+void Player::update(double dt, Level *Level)
 {
 	errorText = "....";
 
-	CollisionStruct collisions;
 	static double dtsum = 0;
 	static bool moving = false;
 	static double dJump = 0;
@@ -108,7 +107,16 @@ void Player::update(double dt, GameWorld *Level)
 		faceDir = RIGHT;
 	}
 
-	collisions = Level->collision(this);	
+	move(mDX, mDY);
+	Level->collision(this);
+
+	// returned objects onPlayerCollision()
+	// loop through the list
+	/*for (int i = 0;i < collisions.colidedObjects.size();i++)
+	{
+		// handle collision with player
+		collisions.colidedObjects[i]->onPlayerCollision(this);	// should update dx
+	}	
 
 	if(collisions.vert == false && collisions.hori == false)	{
 		move(mDX, mDY);
@@ -122,10 +130,10 @@ void Player::update(double dt, GameWorld *Level)
 		move(mDX, 0);
 		if(mX >= 600)
 			gGameCamera->move(mDX, 0);
-	}
+	}*/
 
 	// updatera mFalling
-	if(mFalling == true && collisions.vert)	{
+	/*if(mFalling == true && collisions.vert)	{
 		mFalling = false;
 	}
 	else if(!collisions.vert)
@@ -134,7 +142,7 @@ void Player::update(double dt, GameWorld *Level)
 	if(jumped == true  && collisions.vert && dJump < -1)	{
 		jumped = false;
 		mFalling = true;
-	}
+	}*/
 
 	if(jumped || mFalling)
 		frame = 4;
@@ -196,6 +204,16 @@ void Player::move(double dx, double dy)
 	mX += dx;
 	mY += dy;
 
+	// move all the points in the polygon as well!
+
+	for(int i = 0; i < mPolygon.pointList.size(); i++)
+	{
+		mPolygon.pointList[i].x += dx;
+		mPolygon.pointList[i].y += dy;
+		mPolygon.center.x += dx;
+		mPolygon.center.y += dy;
+	}
+
 	mDrawX = mX;
 	mDrawY = mY;
 }
@@ -213,6 +231,17 @@ void Player::setXY(float x, float y)
 {
 	mX = x;
 	mY = y;
+
+	mPolygon.center.x = mX;
+	mPolygon.center.y = mY;
+
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY - mHeight/2));
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY + mHeight/2));
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY + mHeight/2));
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY - mHeight/2));
+
+	mPolygon.sides = 4;
+
 	mDrawX = mX;
 	mDrawY = mY;
 }

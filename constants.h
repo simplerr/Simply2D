@@ -1,7 +1,10 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
+
 #include <string>
+#include <vector>
 #include "d3dUtil.h"
+//#include "Object.h"
 
 static const std::string GRASS_PLATFORM_SOURCE = "misc\\textures\\grass_platform.bmp";
 static const std::string BRICK_PLATFORM_SOURCE = "misc\\textures\\brick_platform.bmp";
@@ -16,10 +19,9 @@ static const int GAME_HEIGHT = 800;
 static const int USER_WIDTH = 36;
 static const int USER_HEIGHT = 36;
 
-
 #define MOUSEPRESS 1
 
-
+class Object;
 
 enum goal
 {
@@ -77,11 +79,13 @@ enum WindowID
 	NOT_SET
 };
 
-struct CollisionStruct
+/*struct CollisionStruct
 {
 	bool hori;
 	bool vert;
-};
+	Object object1;
+	Object object2;
+};*/
 
 enum CollisionDirection
 {
@@ -102,9 +106,9 @@ enum ObjectType
 	STATIC_PLATFORMA,
 	MOVING_PLATFORM,
 	NORMAL_ENEMY,
-	TELEPORTER,
+	TELEPORT,
 	LADDER,
-	TRAMPOLINE,	
+	TRAMPOLINE	
 };
 
 struct WindowRect

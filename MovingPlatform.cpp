@@ -3,8 +3,8 @@
 #include "Player.h"
 #include <fstream>
 
-MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
-	:MovingObject(MOVING_PLATFORM, x, y, width, height, textureSource,  startPos, endPos, player, moveType, speed)
+MovingPlatform::MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed)
+	:MovingObject(MOVING_PLATFORM, x, y, width, height, textureSource,  startPos, endPos, moveType, speed)
 {
 	// ctor
 	setResizeable(true);

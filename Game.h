@@ -7,7 +7,7 @@
 #include <string>
 #include "GfxStats.h"
 #include <list>
-#include "GameWorld.h"
+#include "Level.h"
 #include "Graphics.h"
 #include "Menu.h"
 #include "Window.h"
@@ -45,7 +45,7 @@ private:
 	IDirect3DTexture9* mBkgdTex;
 	D3DXVECTOR3 mBkgdCenter;
 
-	GameWorld *mLevel;
+	Level *mLevel;
 	Player *User;
 	Editor *mEditor;
 

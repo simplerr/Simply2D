@@ -1,7 +1,10 @@
 #include "Enemy.h"
+#include "Player.h"
+#include "Events.h"
+using namespace std;
 
-Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player, movingType moveType, float speed, int health, int dmg)
-	: MovingObject(NORMAL_ENEMY, x, y, width, height, textureSource,  startPos, endPos, player, moveType, speed)
+Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed, int health, int dmg)
+	: MovingObject(NORMAL_ENEMY, x, y, width, height, textureSource,  startPos, endPos, moveType, speed)
 {
 	mHealth = health;
 	mDamage = dmg;
@@ -80,31 +83,45 @@ void Enemy::scale(int dwidth, int dheight)
 	MovingObject::scale(dwidth, dheight);
 }
 
-void Enemy::onPlayerCollision(void)
+void Enemy::onPlayerCollision(Player *player)
 {
-	MovingObject::onPlayerCollision();
-	if(getPlayer()->getDY() > 0)
+	MovingObject::onPlayerCollision(player);
+	if(player->getDY() > 0)
 	{
 		// player hit enemy on the head -> enemy = dead
-		if(getPlayer()->getRect().bottom == getRect().top)	{	// smth weird here
+		if(player->getRect().bottom == getRect().top)	{	// smth weird here
 			this->damage(100);	// kills the enemy
 		}
 		else	{
 			// 1 attack/second
 			if(attackReady)	{
-				getPlayer()->damage(mDamage);
+				player->damage(mDamage);
 				attackReady = false;
 			}
 		}
 	}
 	else
 	{	
-		if(!(getPlayer()->getRect().bottom == getRect().top))	{		
+		if(!(player->getRect().bottom == getRect().top))	{		
 			// 1 attack/second
 			if(attackReady)	{
-				getPlayer()->damage(mDamage);
+				player->damage(mDamage);
 				attackReady = false;
 			}
 		}
 	}
+}
+
+void Enemy::OnEvent(Event *e)
+{
+	PlayerAttackEvent *atkEvent = NULL;
+	// could be a switch statement, but prolly not needed here
+	if(e->getType() == PLAYER_ATTACK)	{
+		atkEvent = dynamic_cast<PlayerAttackEvent*>(e);
+	}
+
+	damage(atkEvent->getDamage()); 
+
+	// could be bullet hit
+	// spike wall etc..
 }

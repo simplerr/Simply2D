@@ -12,7 +12,7 @@ extern Camera* gGameCamera;
 
 Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
 {
-	mLevel = new GameWorld(NULL);
+	mLevel = new Level(NULL);
 	
 	gameArea.top = 0;
 	gameArea.bottom = GAME_HEIGHT;
@@ -33,6 +33,9 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
+
+	test = new char[256];
+	test = "test";
 }
 Editor::~Editor()
 {
@@ -133,7 +136,7 @@ int Editor::updateAll(float dt)
 				messageHandler(ACTIVE_OBJECT);
 			}
 			else if(gDInput->mouseDZ() < 0)	{
-				if(activeObject->mObject->getHeight() > 58 && activeObject->mObject->getWidth() > 58)	{
+				if(activeObject->mObject->getHeight() > 50 && activeObject->mObject->getWidth() > 50)	{
 
 					activeObject->mObject->scale(-8, -8);
 					messageHandler(ACTIVE_OBJECT);
@@ -432,38 +435,40 @@ void Editor::movePlatform(void)
 				else if(snapDir == LEFT || snapDir == RIGHT)
 				{
 					// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
-					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE  || stillSnapped() == false)	// temporär, gäller alla platformer
+					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE )// || stillSnapped() == false)	// no longer snapped
 					{		
+						test = "stillSnapped() == false";
+						mMouse->move(0, -dy);
 						activeObject->move(dx, dy);
 						snapDir = ALL;
 					}
-					else	{
+					else	{	// snapped, don't move the object or mouse
+						test = "dont move mouse";
 						snapCount += dx;
-					}					
-
-					// ska kunna röra plattformen lodrätt
-					activeObject->move(0, dy);	
-					// musens ska inte röra på sig!
-					mMouse->setMousePos(mMouse->getPos().x - dx  , mMouse->getPos().y);
+						// musens ska inte röra på sig!
+						mMouse->move(-dx, 0);
+						// ska kunna röra plattformen lodrätt
+						activeObject->move(0, dy);
+					}	
 				}
 				else if(snapDir == UP || snapDir == DOWN)
 				{
-					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE || stillSnapped() == false)
+					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE)// || stillSnapped() == false)
 					{
 						activeObject->move(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
 						snapCount += dy;
-					}
-
-					activeObject->move(dx, 0);
-					// musens ska inte röra på sig!
-					mMouse->setMousePos(mMouse->getPos().x , mMouse->getPos().y - dy);
+						//mMouse->setMousePos(mMouse->getPos().x , mMouse->getPos().y - dy);
+						mMouse->move(0, -dy);
+						activeObject->move(dx, 0);
+					}					
 				}	
 			//}			
 			
-		}	
+		}
+
 		// sätt till kanten
 		/*else
 		{
@@ -491,6 +496,8 @@ void Editor::movePlatform(void)
 int Editor::renderGui()
 {
 	Window::renderAll();
+
+	gGraphics->drawText(test, GAME_WIDTH +10, 650);
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
@@ -618,15 +625,16 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 		{
 			// snap
 			if(dx > 0)
-			{
+			{				
 				// ta reda på hur långt den ska snappa
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
-				mMouse->setMousePos(tmpMousePos.x + snapDist, tmpMousePos.y);
+				mMouse->move(snapDist - dx, 0);
 				activeObject->move(snapDist, 0);
 
 				snapCount = 0;
 				snapDir = LEFT;
+				test = "snapped-right";
 				return true;
 			}
 		}
@@ -642,7 +650,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
-				mMouse->setMousePos(tmpMousePos.x - snapDist,tmpMousePos.y);
+				mMouse->move(-snapDist - dx, 0);
 				activeObject->move(-snapDist, 0);
 
 				snapCount = 0;
@@ -662,9 +670,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				sprintf(buffer, "x1: %i, y: %i", tmpMousePos.x , tmpMousePos.y);
-				//MessageBox(0, buffer, 0, 0);
-				mMouse->setMousePos(tmpMousePos.x , tmpMousePos.y + snapDist);
+				mMouse->move(0, snapDist - dy);
 				activeObject->move(0, snapDist);
 
 				snapCount = 0;
@@ -684,7 +690,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				mMouse->setMousePos(tmpMousePos.x, tmpMousePos.y - snapDist);
+				mMouse->move(0, -snapDist - dy);
 				activeObject->move(0, -snapDist);
 
 				snapCount = 0;
@@ -704,7 +710,7 @@ bool Editor::stillSnapped(void)
 		RECT activeObjectRect = activeObject->mObject->getRect();
 		RECT snappedObjectRect = snappedObject->getRect();
 		if(activeObjectRect.top <= snappedObjectRect.bottom && activeObjectRect.bottom >= snappedObjectRect.top && activeObjectRect.right >= snappedObjectRect.left &&
-			activeObjectRect.left <= snappedObjectRect.right && activeObject->mObject->getID() != snappedObject->getID())
+			activeObjectRect.left <= snappedObjectRect.right && activeObject->mObject->getID() != snappedObject->getID())	// ville nog egentligen ta reda på om id = last snap id
 			return true;
 	}
 
@@ -847,7 +853,7 @@ void Editor::messageHandler(WindowID sender, string data)
 					if(value == "Static Platform")
 					{
 						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\brick_platform.bmp");
-						mLevel->addStaticObject(platform);
+						mLevel->addObject(platform);
 					}
 					else if(value == "Moving Platform")
 					{				
@@ -857,8 +863,8 @@ void Editor::messageHandler(WindowID sender, string data)
 						start.y = 300;
 						end.x = 600;
 						end.y = 300;
-						MovingPlatform *platform = new MovingPlatform(200, 300, 100, 100, "misc\\textures\\grass_platform.bmp", start, end, NULL);
-						mLevel->addDynamicObject(platform);
+						MovingPlatform *platform = new MovingPlatform(200, 300, 100, 100, "misc\\textures\\grass_platform.bmp", start, end);
+						mLevel->addObject(platform);
 					}
 					else if(value == "Enemy")
 					{
@@ -868,8 +874,8 @@ void Editor::messageHandler(WindowID sender, string data)
 						start.y = 500;
 						end.x = 600;
 						end.y = 500;
-						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end, NULL);
-						mLevel->addDynamicObject(enemy);
+						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
+						mLevel->addObject(enemy);
 					}
 					// aktiv plattform = den nya?
 			}
@@ -879,9 +885,9 @@ void Editor::messageHandler(WindowID sender, string data)
 		{		
 			if(activeObject->mObject != NULL)	{
 				if(activeObject->mObject->getType() == STATIC_PLATFORMA)
-					mLevel->deleteStaticObject(activeObject->mObject->getID());	// ska lägga till för dynamic också!
+					mLevel->deleteObject(activeObject->mObject->getID());	// ska lägga till för dynamic också!
 				else if(activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)
-					mLevel->deleteDynamicObject(activeObject->mObject->getID());
+					mLevel->deleteObject(activeObject->mObject->getID());
 				resetInputBoxes();
 				activeObject->clear();
 			}

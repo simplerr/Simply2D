@@ -1,29 +1,36 @@
 #include "Object.h"
+#include <fstream>
+using namespace std;
 
-Object::Object(float x, float y, int width, int height, char *textureSource, ObjectType type)
+Object::Object(float x, float y, int width, int height, char *textureSource, ObjectType type, bool updates)
 {
 	mX = x;
 	mY = y;
 	mWidth = width;
 	mHeight = height;
+
+	// since all objects only are rects right now
+	mPolygon.center.x = mX;
+	mPolygon.center.y = mY;
+
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY - mHeight/2));	// top - left
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY + mHeight/2));	// bottom - left
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY + mHeight/2));   // bottom - right
+	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY - mHeight/2));	// top - right
+
+	mPolygon.sides = 4;
+
 	mType = type;
+	mUpdates = updates;
 
 	mTexture = gGraphics->loadObjectTexture(textureSource);
 	mTextureSource = new char[256];
 	memcpy(mTextureSource,textureSource, 255);
-	//mTextureSource = textureSource;
-
-	// ska egentligen inte ladda en ny textur ifall det redan finns ett objekt med denna textur!
-	// skapa en TextureHandler class eller liknande!
-	// mTexture = gGraphics->loadTexture(textureSource);
-	// fixas nu i Level::addXXXObject(...)
-
-	// texturen laddas vid addObject(...)
 }
 Object::~Object()
 {
 	// dtor
-	// ska inte radera texturen, det sköter GameWorld
+	// ska inte radera texturen, det sköter Level
 }
 void Object::draw(void)
 {
@@ -55,13 +62,9 @@ void Object::scale(int dwidth, int dheight)
 
 void Object::saveToFile(ofstream *fout)
 {
-	//fout->open(filename);
-
 	*fout << getType() << " " << mX << " " << mY << " " << mWidth << " " << mHeight << " " << getTextureSource() << endl;
-
-	//fout.close();
 }
-void Object::loadFromFile(ofstream *fout)
+void Object::loadFromFile(std::ofstream *fout)
 {
 
 }

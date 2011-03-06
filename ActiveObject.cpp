@@ -11,7 +11,7 @@ ActiveObject::ActiveObject()
 }
 ActiveObject::~ActiveObject()
 {
-	// gameWorld deletes what's needed
+	// Level deletes what's needed
 }
 
 void ActiveObject::setObject(Object *object)

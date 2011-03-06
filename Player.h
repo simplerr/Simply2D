@@ -3,9 +3,10 @@
 
 #include "d3dUtil.h"
 #include "constants.h"
-#include "GameWorld.h"
+//#include "Level.h"
 #include "DirectInput.h"
 #include "Graphics.h"
+#include "Object.h"
 
 #include <crtdbg.h>
 #include <string>
@@ -18,14 +19,14 @@ using namespace std;
 #define HEALTH 100
 #define DAMAGE 50
 
-class GameWorld;
+class Level;
 
 class Player
 {
 public:
 	Player(string filename, int width, int height);
 	~Player();
-	void update(double dt, GameWorld *Level);
+	void update(double dt, Level *Level);
 	void draw(void);
 	//void setFrameType(void);
 
@@ -43,10 +44,17 @@ public:
 	bool getFalling(void) {return mFalling;};
 	double getDY(void) {return mDY;};
 	double getDX(void) {return mDX;};
+	CollisionPolygon* getPolygon(void)							{return &mPolygon;};
 	POS getPos(void);
 
 	void damage(int dmg)	{ mHealth -= dmg;};
+public:
+	// lazyness
+	double mDX;
+	double mDY;
 private:
+	// shouldn't be filled in setXY()!
+	CollisionPolygon mPolygon;
 	double mX;
 	double mY;
 	int mWidth;
@@ -60,9 +68,6 @@ private:
 
 	double mDrawX;
 	double mDrawY;
-
-	double mDX;
-	double mDY;
  
 	IDirect3DTexture9* playerTexture;
 private:
@@ -80,7 +85,7 @@ private:
 
 #include "d3dUtil.h"
 #include "constants.h"
-#include "GameWorld.h"
+#include "Level.h"
 #include "DirectInput.h"
 #include "Graphics.h"
 
@@ -101,14 +106,14 @@ using namespace std;
 #define HEALTH 100
 #define DAMAGE 50
 
-class GameWorld;
+class Level;
 
 class Player
 {
 public:
 	Player(string filename, int width, int height);
 	~Player();
-	void update(double dt, GameWorld *Level);
+	void update(double dt, Level *Level);
 	void draw(void);
 	//void setFrameType(void);
 

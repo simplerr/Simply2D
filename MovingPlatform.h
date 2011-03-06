@@ -10,7 +10,7 @@ class Player;
 class MovingPlatform : public MovingObject
 {
 public:
-	MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player, movingType moveType = HORIZONTAL, float speed = 0.02f);
+	MovingPlatform(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType = HORIZONTAL, float speed = 0.02f);
 	~MovingPlatform();
 
 	void update(float dt);

@@ -1,7 +1,15 @@
+#ifndef ACTIVEOBJECT_H
+#define ACTIVEOBJECT_H
+
 #include "Object.h"
 #include "MovingPlatform.h"
 #include "StaticPlatform.h"
 #include "Enemy.h"
+
+/*class Object;
+class MovingPlatform;
+class StaticPlatform;
+class Enemy;*/
 
 class ActiveObject
 {
@@ -31,3 +39,5 @@ public:
 	//POS mSpawnPos;
 	//bool movingSpawnPos;
 };
+
+#endif

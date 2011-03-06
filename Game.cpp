@@ -67,7 +67,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	buildMainMenu();
 	
 	User = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
-	mLevel = new GameWorld(User);
+	mLevel = new Level(User);
 	mEditor = new Editor();
 	mEditor->addMouse(mMouse);
 	mEditor->buildGUI();
@@ -217,7 +217,7 @@ void Game::updateScene(float dt)
 
 	}
 	else if(gameActive || testActive)
-	{										
+	{			
 		mGfxStats->setTriCount(8 *2);
 		mGfxStats->setVertexCount(16 *4);
 		mGfxStats->update(dt);

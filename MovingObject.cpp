@@ -1,6 +1,7 @@
 #include "MovingObject.h"
+#include "Player.h"
 
-MovingObject::MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, Player *player,  movingType moveType, float speed)
+MovingObject::MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed)
 	:Object(x, y, width, height, textureSource, type)
 {
 
@@ -14,6 +15,8 @@ MovingObject::MovingObject(ObjectType type, float x, float y, int width, int hei
 		mEndPos = endPos;
 	}*/
 
+	setStatic(false);
+
 	mStartPos = startPos;
 	mEndPos = endPos;
 
@@ -26,7 +29,6 @@ MovingObject::MovingObject(ObjectType type, float x, float y, int width, int hei
 
 	mSpeed = speed;
 	mMoveType = moveType;
-	mPlayer = player;
 	mTravelX = mEndPos.x - mStartPos.x;
 	mTravelY = mEndPos.y - mStartPos.y;
 }
@@ -38,9 +40,6 @@ MovingObject::~MovingObject()
 
 void MovingObject::update(float dt)
 {
-	
-	if(mPlayer != NULL)
-	{
 		// flytta plattform
 		if(mMoveType == HORIZONTAL)
 		{
@@ -62,10 +61,10 @@ void MovingObject::update(float dt)
 				}
 
 				// move player
-				if(getPlayer() != NULL)	{
+				/*if(getPlayer() != NULL)	{
 					if(getPlayerCollision())
 						onPlayerCollision();
-				}
+				}*/
 			}
 			else if(mMovingDir == RIGHT)
 			{
@@ -81,21 +80,20 @@ void MovingObject::update(float dt)
 					else mMovingDir = LEFT;
 				}
 
-				if(getPlayer() != NULL)	{
+				/*if(getPlayer() != NULL)	{
 					if(getPlayerCollision())
 						onPlayerCollision();
-				}
+				}*/
 			}
 		}
-	}
 }
 
-bool MovingObject::getPlayerCollision(void)
+bool MovingObject::getPlayerCollision(Player *player)
 {
 	RECT objectRect = getRect();
-	RECT playerRect = mPlayer->getRect();	
+	RECT playerRect = player->getRect();	
 
-	if(!(playerRect.top -1 >= objectRect.bottom ||  playerRect.bottom +1<= objectRect.top ||  playerRect.right +1<= objectRect.left ||  playerRect.left -1 >= objectRect.right))
+	if(!(playerRect.top -1 >= objectRect.bottom ||  playerRect.bottom +1<= objectRect.top ||  playerRect.right +1 <= objectRect.left ||  playerRect.left  -1 >= objectRect.right))
 		return true;
 	else
 		return false;
@@ -222,10 +220,10 @@ void MovingObject::setXY(float x, float y)
 	mEndPos.y = mStartPos.y + mTravelY;
 }
 
-void MovingObject::onPlayerCollision(void)
+void MovingObject::onPlayerCollision(Player *player)
 {
 	if(getMoveDir() == LEFT)
-		movePlayer(-mSpeed, 0);
+		player->mDX-=mSpeed;//player->move(-mSpeed, 0);
 	else if(getMoveDir() == RIGHT)
-		movePlayer(mSpeed, 0);
+		player->mDX+=mSpeed;//player->move(mSpeed, 0);
 }
