@@ -4,7 +4,7 @@
 	shapes uses the top left to locate themselfs
 	player and objects uses the center
 	only one of these should exist!
-	in the editor POS = center though
+	in the editor POS = center thoughh
 */
 Shape::Shape()
 {
