@@ -2,6 +2,8 @@
 #include "Vertex.h"
 #include <tchar.h>
 #include "Camera.h"
+#include "Object.h"
+#include "Shape.h"
 
 //const DWORD D3DFVF_TLVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 //const DWORD D3DFVF_RECTVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -19,50 +21,12 @@ Graphics::Graphics(std::string s)
 	mVB_texture = NULL;
 	mVB_rect = NULL;
 
-	if(FAILED(gd3dDevice->CreateVertexBuffer(sizeof(TextureVertex) *4, D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &mVB_texture, NULL)))
-		MessageBox(0, "Kunde inte skapa Vertex Buffer 1", 0, 0);
+	// up to 16 vertices
+	if(FAILED(gd3dDevice->CreateVertexBuffer(sizeof(TextureVertex) *16, D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &mVB_texture, NULL)))
+		MessageBox(0, "Error creating TextureVertex buffer", 0, 0);
 
-	if(FAILED(gd3dDevice->CreateVertexBuffer(sizeof(RectVertex) *4, D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &mVB_rect, 0)))
-		MessageBox(0, "Kunde inte skapa Vertex Buffer 2", 0, 0);
-
-	   /*RectVertex *vertices = 0;
-
-	  HR(mVB_rect->Lock(0, 0, (void**)&vertices, 0));
-
-	  vertices[0].color = D3DCOLOR_ARGB(255, 255, 255, 0);
-	  vertices[0].pos.x = (float) 0;
-	  vertices[0].pos.y = (float) 0;
-	  vertices[0].pos.z = 0.0f;
-
-	  sprintf(buffer, "x1: %f, y1: %f, z1: %f",  vertices[0].pos.x,  vertices[0].pos.y,  vertices[0].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
-	  vertices[1].color = D3DCOLOR_ARGB(255, 255, 255, 0);
-	  vertices[1].pos.x = (float) 500;
-	  vertices[1].pos.y = (float) 0;
-	  vertices[1].pos.z = 0.0f; 
-
-	  sprintf(buffer, "x2: %f, y2: %f, z2: %f",  vertices[1].pos.x,  vertices[1].pos.y,  vertices[1].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
-	  vertices[2].color = D3DCOLOR_ARGB(255, 255, 255, 0);
-	  vertices[2].pos.x = (float) 500;
-	  vertices[2].pos.y = (float) 500;
-	  vertices[2].pos.z = 0.0f; 
-
-	  sprintf(buffer, "x3: %f, y3: %f, z3: %f",  vertices[2].pos.x,  vertices[2].pos.y,  vertices[2].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
-	  vertices[3].color = D3DCOLOR_ARGB(255, 255, 255, 0);
-	  vertices[3].pos.x = (float) 0;
-	  vertices[3].pos.y = (float) 500;
-	  vertices[3].pos.z = 0.0f;
-
-	  sprintf(buffer, "x4: %f, y4: %f, z4: %f",  vertices[3].pos.x,  vertices[3].pos.y,  vertices[3].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
-	  //Unlock the vertex buffer
-	  HR(mVB_rect->Unlock());*/
+	if(FAILED(gd3dDevice->CreateVertexBuffer(sizeof(RectVertex) *16, D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &mVB_rect, NULL)))
+		MessageBox(0, "Error creating RectVertex buffer", 0, 0);
 
 	mTextureHandler = new TextureHandler();
 
@@ -103,6 +67,72 @@ IDirect3DTexture9* Graphics::loadTexture(char *fileName)
 	}
 	return texture;
 }
+
+
+bool Graphics::drawShape(Shape shape, D3DCOLOR fillColor)
+{
+	// can't go outside buffer size
+	if(shape.pointList.size() > 16)
+		return false;
+
+	gd3dDevice->SetStreamSource(0, mVB_rect, 0, sizeof(RectVertex));
+	gd3dDevice->SetVertexDeclaration(RectVertex::Decl);
+	  
+	RectVertex *vertices = 0;
+
+	HR(mVB_rect->Lock(0, 0, (void**)&vertices, 0));
+
+	for(int i = 0; i < shape.pointList.size(); i++)
+	{
+		vertices[i].color = fillColor;
+		vertices[i].pos.x = shape.pointList[i].x;
+		vertices[i].pos.y = shape.pointList[i].y;
+		vertices[i].pos.z = 0.0f;
+	}
+
+	//Unlock the vertex buffer
+	HR(mVB_rect->Unlock());
+
+	//Draw image
+	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
+	gd3dDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);	
+
+	return true;
+}
+
+bool Graphics::drawShape(Shape shape, IDirect3DTexture9 *texture)
+{
+	// can't go outside buffer size
+	if(shape.pointList.size() > 16)
+		return false;
+
+	gd3dDevice->SetVertexDeclaration(TextureVertex::Decl);
+	gd3dDevice->SetStreamSource(0, mVB_texture, 0, sizeof(TextureVertex));	
+
+	TextureVertex *vertices = 0;
+	mVB_texture->Lock(0, 0, (void**)&vertices, 0);
+	
+	for(int i = 0; i < shape.pointList.size(); i++)
+	{
+		vertices[i].pos.x = shape.pointList[i].x;
+		vertices[i].pos.y = shape.pointList[i].y;
+		vertices[i].pos.z = 0.0f;
+
+		vertices[i].tex0.x = (shape.pointList[i].x - shape.origin.x) / (shape.getAABB().right - shape.origin.x);
+		vertices[i].tex0.y = (shape.pointList[i].y - shape.origin.y) / (shape.getAABB().bottom- shape.origin.y);
+	}
+
+	//Unlock the vertex buffer
+	mVB_texture->Unlock();
+
+	//Set texture
+	gd3dDevice->SetTexture (0, texture);
+
+	//Draw image
+	gd3dDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+	gd3dDevice->SetTexture (0, NULL);
+}
+
 
 void Graphics::BlitTexture(IDirect3DTexture9 *texture, RECT rDest,
     D3DCOLOR vertexColour, float rotate)

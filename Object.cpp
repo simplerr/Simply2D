@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Shape.h"
 #include <fstream>
 using namespace std;
 
@@ -10,15 +11,15 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 	mHeight = height;
 
 	// since all objects only are rects right now
-	mPolygon.center.x = mX;
-	mPolygon.center.y = mY;
+	mShape.origin.x = mX - mWidth/2;
+	mShape.origin.y = mY - mHeight/2;
 
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY - mHeight/2));	// top - left
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY + mHeight/2));	// bottom - left
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY + mHeight/2));   // bottom - right
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY - mHeight/2));	// top - right
-
-	mPolygon.sides = 4;
+	// these are defined in local space
+	// origin is in the top left of the shape
+	mShape.addPoint(Shape::Point(0, 0));	// top - left
+	mShape.addPoint(Shape::Point(0, mHeight));	// bottom - left
+	mShape.addPoint(Shape::Point(mWidth, mHeight));   // bottom - right
+	mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
 
 	mType = type;
 	mUpdates = updates;
@@ -34,7 +35,8 @@ Object::~Object()
 }
 void Object::draw(void)
 {
-	gGraphics->BlitTexture(mTexture, getRect(), 0xFFFFFFFF, 0);
+	//gGraphics->BlitTexture(mTexture, getRect(), 0xFFFFFFFF, 0);
+	gGraphics->drawShape(mShape, mTexture);
 }
 
 RECT Object::getRect(void)

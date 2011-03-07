@@ -107,6 +107,13 @@ void Player::update(double dt, Level *Level)
 		faceDir = RIGHT;
 	}
 
+	/* testing*/
+	if(gDInput->keyDown(DIK_W))	
+		mDY = - dt*MOVESPEED;
+	if(gDInput->keyDown(DIK_S))	
+		mDY = dt*MOVESPEED;
+		
+
 	move(mDX, mDY);
 	Level->collision(this);
 
@@ -162,6 +169,7 @@ void Player::draw(void)
 	playerRect.bottom = mDrawY + mHeight/2;
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
+	//gGraphics->drawShape(mShape, playerTexture);
 
 	// draw health
 	char buffer[256];
@@ -204,14 +212,14 @@ void Player::move(double dx, double dy)
 	mX += dx;
 	mY += dy;
 
-	// move all the points in the polygon as well!
+	// move all the points in the Shape as well!
 
-	for(int i = 0; i < mPolygon.pointList.size(); i++)
+	for(int i = 0; i < mShape.pointList.size(); i++)
 	{
-		mPolygon.pointList[i].x += dx;
-		mPolygon.pointList[i].y += dy;
-		mPolygon.center.x += dx;
-		mPolygon.center.y += dy;
+		mShape.pointList[i].x += dx;
+		mShape.pointList[i].y += dy;
+		mShape.origin.x += dx;
+		mShape.origin.y += dy;
 	}
 
 	mDrawX = mX;
@@ -232,15 +240,13 @@ void Player::setXY(float x, float y)
 	mX = x;
 	mY = y;
 
-	mPolygon.center.x = mX;
-	mPolygon.center.y = mY;
+	mShape.origin.x = mX - mWidth/2;
+	mShape.origin.y = mY - mHeight/2;
 
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY - mHeight/2));
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX - mWidth/2, mY + mHeight/2));
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY + mHeight/2));
-	mPolygon.pointList.push_back(CollisionPolygon::Point(mX + mWidth/2, mY - mHeight/2));
-
-	mPolygon.sides = 4;
+	mShape.addPoint(Shape::Point(0, 0));
+	mShape.addPoint(Shape::Point(0, mHeight));
+	mShape.addPoint(Shape::Point(mWidth, mHeight));
+	mShape.addPoint(Shape::Point(mWidth, 0));
 
 	mDrawX = mX;
 	mDrawY = mY;

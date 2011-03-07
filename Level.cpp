@@ -190,7 +190,7 @@ void Level::collision(Player *player)
 	// loop through each object and test collision against the player
 	for(int i = 0; i < mObjectList.size(); i++)
 	{		
-		MTV mtv = polyCollision(mObjectList[i]->getPolygon(), player->getPolygon());
+		MTV mtv = polyCollision(mObjectList[i]->getShape(), player->getShape());
 
 		if(mtv.collision)	{
 			sprintf(collisionText, "pushX: %f, pushY: %f", mtv.pushX, mtv.pushY);
@@ -240,30 +240,30 @@ void Level::collision(Player *player)
 	I have tried to comment the code as much as I could.
 	This is the steps that we have to do:
 
-	1.) Loop through the sides of polygon A
-	2.) Calculate the axis (the normal pointing OUT from the polygon) for each side
+	1.) Loop through the sides of Shape A
+	2.) Calculate the axis (the normal pointing OUT from the Shape) for each side
 	3.) Normalize the axis so it becomes a pure direction vector
-	4.) Project each point from polygon A on the axis
+	4.) Project each point from Shape A on the axis
 	5.) Find the maximum and minimum points
-	6.) Project each point from polygon B on the axis
+	6.) Project each point from Shape B on the axis
 	7.) Find the maximum and minimum points
 	8.) Check if they overlap
 	9.) Calculate the smallest intersection depth and it's direction (MTV)
 	10.) Return the MTV at the end of the function
 
-	These steps have to be repeated for polygon B as well to ensure there's no false collisions
+	These steps have to be repeated for Shape B as well to ensure there's no false collisions
 
 */
-MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
+MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 {	
-	CollisionPolygon::Point axis;															// axis we will project onto
-	CollisionPolygon::Point projection;														// the direction of the projection
+	Shape::Point axis;															// axis we will project onto
+	Shape::Point projection;														// the direction of the projection
 	int side;																				// current side 
 	double minA, maxA, minB, maxB, axisLen, tmp, minLen = 999999, tmpDepth = 1;;			// doubles needed
 	MTV mtv;																				// minimum intersection
 
-	// test polygon A's sides
-	for(side = 0; side < polygonA->sides; side++)
+	// test Shape A's sides
+	for(side = 0; side < ShapeA->sides; side++)
 	{
 		/* get the axis we will project on */
 		/*
@@ -277,13 +277,13 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 
 		if(side == 0)	// the first point must get connected to the last
 		{	
-			axis.x = -(polygonA->pointList[polygonA->sides-1].y - polygonA->pointList[0].y);
-			axis.y = polygonA->pointList[polygonA->sides-1].x - polygonA->pointList[0].x;	
+			axis.x = -(ShapeA->pointList[ShapeA->sides-1].y - ShapeA->pointList[0].y);
+			axis.y = ShapeA->pointList[ShapeA->sides-1].x - ShapeA->pointList[0].x;	
 		}
 		else
 		{
-			axis.x = -(polygonA->pointList[side].y - polygonA->pointList[side-1].y);
-			axis.y = polygonA->pointList[side-1].x - polygonA->pointList[side].x;	// should be reversed?:O
+			axis.x = -(ShapeA->pointList[side].y - ShapeA->pointList[side-1].y);
+			axis.y = ShapeA->pointList[side-1].x - ShapeA->pointList[side].x;	// should be reversed?:O
 			// axis.y gets negative on the bottom horizontal line
 			// this is because we want it to point out from the object
 			// not sure if it will work with other shapes though
@@ -300,7 +300,7 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 		axis.x /= axisLen;
 		axis.y /= axisLen;
 
-		/* project polygon A's points on the axis to find MIN and MAX points */
+		/* project Shape A's points on the axis to find MIN and MAX points */
 		/*
 			pointA.x = (pointA.x * axis.x + pointA.y * axis.y) * axis.x = dp * axis.x
 			pointA.y = (pointA.x * axis.x + pointA.y * axis.y) * axis.y = dp * axis.y
@@ -312,11 +312,11 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 			pointA.y = pointA.x * axis.x + pointA.y * axis.y = dp 		
 		*/
 
-		minA = maxA = (polygonA->pointList[0].x * axis.x + polygonA->pointList[0].y * axis.y);
+		minA = maxA = (ShapeA->pointList[0].x * axis.x + ShapeA->pointList[0].y * axis.y);
 
-		for(int i = 1; i < polygonA->sides; i++)
+		for(int i = 1; i < ShapeA->sides; i++)
 		{
-			tmp = (polygonA->pointList[i].x * axis.x + polygonA->pointList[i].y * axis.y);
+			tmp = (ShapeA->pointList[i].x * axis.x + ShapeA->pointList[i].y * axis.y);
 
 			if(tmp < minA)
 				minA = tmp;
@@ -324,12 +324,12 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 				maxA = tmp;
 		}
 
-		/* project polygon B's points on the axis to find MIN and MAX points */
-		minB = maxB = (polygonB->pointList[0].x * axis.x + polygonB->pointList[0].y * axis.y);
+		/* project Shape B's points on the axis to find MIN and MAX points */
+		minB = maxB = (ShapeB->pointList[0].x * axis.x + ShapeB->pointList[0].y * axis.y);
 
-		for(int i = 1; i < polygonB->sides; i++)
+		for(int i = 1; i < ShapeB->sides; i++)
 		{		
-			tmp = (polygonB->pointList[i].x * axis.x + polygonB->pointList[i].y * axis.y);		
+			tmp = (ShapeB->pointList[i].x * axis.x + ShapeB->pointList[i].y * axis.y);		
 
 			if(tmp < minB)
 				minB = tmp;
@@ -358,24 +358,24 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 		}
 	}
 
-	/* the same thing again but now for object B, sometimes a collision from polygon A isn't a collision for polygon B */
+	/* the same thing again but now for object B, sometimes a collision from Shape A isn't a collision for Shape B */
 	/*
 		- see above for detailed comments
 	*/
 
-	// test polygon B's sides
-	for(side = 0; side < polygonB->sides; side++)
+	// test Shape B's sides
+	for(side = 0; side < ShapeB->sides; side++)
 	{
 		/* get the axis we will project on */
 		if(side == 0)	// the first point must get connected to the last
 		{			
-			axis.x = -(polygonB->pointList[polygonB->sides-1].y - polygonB->pointList[0].y);
-			axis.y = polygonB->pointList[polygonB->sides-1].x - polygonB->pointList[0].x;
+			axis.x = -(ShapeB->pointList[ShapeB->sides-1].y - ShapeB->pointList[0].y);
+			axis.y = ShapeB->pointList[ShapeB->sides-1].x - ShapeB->pointList[0].x;
 		}
 		else
 		{
-			axis.x = -(polygonB->pointList[side].y - polygonB->pointList[side-1].y);
-			axis.y = polygonB->pointList[side-1].x - polygonB->pointList[side].x;
+			axis.x = -(ShapeB->pointList[side].y - ShapeB->pointList[side-1].y);
+			axis.y = ShapeB->pointList[side-1].x - ShapeB->pointList[side].x;
 		}
 
 		/* normalize the axis */	
@@ -383,12 +383,12 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 		axis.x /= axisLen;
 		axis.y /= axisLen;
 
-		/* project polygon B's points on the axis to find MIN and MAX points */		
-		minB = maxB = (polygonB->pointList[0].x * axis.x + polygonB->pointList[0].y * axis.y);
+		/* project Shape B's points on the axis to find MIN and MAX points */		
+		minB = maxB = (ShapeB->pointList[0].x * axis.x + ShapeB->pointList[0].y * axis.y);
 
-		for(int i = 1; i < polygonB->sides; i++)
+		for(int i = 1; i < ShapeB->sides; i++)
 		{
-			tmp = (polygonB->pointList[i].x * axis.x + polygonB->pointList[i].y * axis.y);			
+			tmp = (ShapeB->pointList[i].x * axis.x + ShapeB->pointList[i].y * axis.y);			
 
 			if(tmp < minB)
 				minB = tmp;
@@ -396,12 +396,12 @@ MTV Level::polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB)
 				maxB = tmp;
 		}
 
-		/* project polygon A's points on the axis to find MIN and MAX points */	
-		minA = maxA = (polygonA->pointList[0].x * axis.x + polygonA->pointList[0].y * axis.y);
+		/* project Shape A's points on the axis to find MIN and MAX points */	
+		minA = maxA = (ShapeA->pointList[0].x * axis.x + ShapeA->pointList[0].y * axis.y);
 
-		for(int i = 1; i < polygonA->sides; i++)
+		for(int i = 1; i < ShapeA->sides; i++)
 		{	
-			tmp = (polygonA->pointList[i].x * axis.x + polygonA->pointList[i].y * axis.y);
+			tmp = (ShapeA->pointList[i].x * axis.x + ShapeA->pointList[i].y * axis.y);
 
 			if(tmp < minA)
 				minA = tmp;

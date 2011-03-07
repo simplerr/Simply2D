@@ -21,7 +21,7 @@ class Player;
 struct MTV
 {
 	MTV(){};
-	MTV(double d, CollisionPolygon::Point axis)	{pushX = d*axis.x; pushY = d*axis.y;};
+	MTV(double d, Shape::Point axis)	{pushX = d*axis.x; pushY = d*axis.y;};
 
 	bool collision;
 	double pushX;
@@ -46,7 +46,7 @@ public:
 	void drawEditorLevel(void);
 
 	void collision(Player *player);
-	MTV polyCollision(CollisionPolygon *polygonA, CollisionPolygon *polygonB);
+	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);
 	POS getSpawn(void)  {return spawnPos;};

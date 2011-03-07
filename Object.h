@@ -3,6 +3,7 @@
 
 #include "constants.h"
 #include "d3dUtil.h"
+#include "Shape.h"
 //#include "Player.h"
 //#include "Events.h"
 
@@ -10,22 +11,6 @@ class Player;
 class Event;
 
 // for the collision detection
-
-
-struct CollisionPolygon
-{
-	CollisionPolygon()	{};
-	struct Point
-	{
-		Point()	{};
-		Point(double a_x, double a_y)	{ x = a_x; y = a_y;};
-		double x;
-		double y;
-	};
-	Point center;
-	int sides;
-	std::vector<Point> pointList;
-};
 
 class Object
 {
@@ -37,7 +22,7 @@ public:
 	virtual void drawPath(void)	{};
 	virtual void OnEvent(Event *e)	{};
 
-	CollisionPolygon* getPolygon(void)							{return &mPolygon;};
+	Shape* getShape(void)							{return &mShape;};
 	float getX(void)											{return mX;};
 	float getY(void)											{return mY;};
 	int getHeight(void)											{return mHeight;};
@@ -78,7 +63,7 @@ private:
 	IDirect3DTexture9* mTexture;
 	char *mTextureSource;
 
-	CollisionPolygon mPolygon;
+	Shape mShape;
 
 	float mX;
 	float mY;

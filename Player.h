@@ -44,7 +44,7 @@ public:
 	bool getFalling(void) {return mFalling;};
 	double getDY(void) {return mDY;};
 	double getDX(void) {return mDX;};
-	CollisionPolygon* getPolygon(void)							{return &mPolygon;};
+	Shape* getShape(void)							{return &mShape;};
 	POS getPos(void);
 
 	void damage(int dmg)	{ mHealth -= dmg;};
@@ -54,7 +54,7 @@ public:
 	double mDY;
 private:
 	// shouldn't be filled in setXY()!
-	CollisionPolygon mPolygon;
+	Shape mShape;
 	double mX;
 	double mY;
 	int mWidth;

@@ -19,6 +19,7 @@ enum FrameType
 enum direction;
 
 class TextureHandler;
+class Shape;
 
 class Graphics
 {
@@ -43,6 +44,9 @@ public:
 
 	void BlitRect(float x, float y, int width, int height, D3DCOLOR fillColor = D3DCOLOR_ARGB( 155, 155, 000, 000 ));
 	void BlitRect(RECT rect, D3DCOLOR fillColor = D3DCOLOR_ARGB( 155, 155, 000, 000 ));	
+
+	bool drawShape(Shape shape, D3DCOLOR fillColor = D3DCOLOR_ARGB( 255, 255, 000, 000 ));
+	bool drawShape(Shape shape, IDirect3DTexture9 *texture);
 
 private:
 	IDirect3DVertexBuffer9* mVB_texture;//mVB_texture;
