@@ -179,7 +179,7 @@ void Graphics::BlitTexture(IDirect3DTexture9 *texture, RECT rDest,
   gd3dDevice->SetTexture (0, NULL);
 }
 
-// TEXTUREN MÅSTE VARA HA ^2 I WIDTH OCH HEIGHT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// TEXTUREN MÅSTE VARA HA ^2 I WIDTH OCH HEIGHT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void Graphics::BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,
     D3DCOLOR vertexColour, int width, int height, int frame, float rotate, direction frameDir) // height & width onödigt?
 {
