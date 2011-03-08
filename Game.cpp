@@ -202,7 +202,7 @@ void Game::updateScene(float dt)
 			editorActive = false;
 			sprintf(buffer, ACTIVE_LEVEL.c_str()); 
 			mLevel->loadLevel(buffer);
-			mLevel->spawnPlayer();
+			//mLevel->spawnPlayer(); //-> currently increases sides in shape
 		}
 		else if(menuResult == "Editor")	{
 			editorActive = true;

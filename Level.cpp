@@ -3,6 +3,8 @@
 #include "Object.h"
 #include "MovingPlatform.h"
 #include "Enemy.h"
+#include <fstream>
+
 using namespace std;
 
 Level::Level(Player *player)
@@ -194,7 +196,6 @@ void Level::collision(Player *player)
 
 		if(mtv.collision)	{
 			sprintf(collisionText, "pushX: %f, pushY: %f", mtv.pushX, mtv.pushY);
-			//MessageBox(0, buffer, 0, 0);
 			player->move(-mtv.pushX, -mtv.pushY);
 		}
 	}
@@ -277,13 +278,14 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 
 		if(side == 0)	// the first point must get connected to the last
 		{	
-			axis.x = -(ShapeA->pointList[ShapeA->sides-1].y - ShapeA->pointList[0].y);
-			axis.y = ShapeA->pointList[ShapeA->sides-1].x - ShapeA->pointList[0].x;	
+			axis.x = (ShapeA->pointList[ShapeA->sides-1].y - ShapeA->pointList[0].y);
+			axis.y = ShapeA->pointList[ShapeA->sides-1].x - ShapeA->pointList[0].x;
 		}
 		else
 		{
 			axis.x = -(ShapeA->pointList[side].y - ShapeA->pointList[side-1].y);
 			axis.y = ShapeA->pointList[side-1].x - ShapeA->pointList[side].x;	// should be reversed?:O
+
 			// axis.y gets negative on the bottom horizontal line
 			// this is because we want it to point out from the object
 			// not sure if it will work with other shapes though
@@ -358,6 +360,8 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 		}
 	}
 
+
+
 	/* the same thing again but now for object B, sometimes a collision from Shape A isn't a collision for Shape B */
 	/*
 		- see above for detailed comments
@@ -383,6 +387,9 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 		axis.x /= axisLen;
 		axis.y /= axisLen;
 
+		ofstream fout("axis.txt");
+		fout << "sides: " << ShapeB->sides << " axis.x: " << axis.x << " axis.y: " << axis.y << endl;
+
 		/* project Shape B's points on the axis to find MIN and MAX points */		
 		minB = maxB = (ShapeB->pointList[0].x * axis.x + ShapeB->pointList[0].y * axis.y);
 
@@ -396,6 +403,8 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 				maxB = tmp;
 		}
 
+		fout << "minB: " << minB << " maxB: " << maxB << endl;
+
 		/* project Shape A's points on the axis to find MIN and MAX points */	
 		minA = maxA = (ShapeA->pointList[0].x * axis.x + ShapeA->pointList[0].y * axis.y);
 
@@ -408,6 +417,8 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 			else if (tmp > maxA)
 				maxA = tmp;
 		}
+
+		fout << "minA: " << minA << " maxA: " << maxA << endl;
 
 		/* test if they intersect, if not then return false */
 		if(minA > maxB || maxA < minB)	{
@@ -426,11 +437,14 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 			}
 			
 			if(tmpDepth < minLen)	{
+				
 				minLen = tmpDepth;
 				projection = axis;
-			}		
-		}		
+			}			
+		}
+		fout << "side: " << side << "depth: " << tmpDepth <<endl;
 	}
+	
 
 	/* return minimum intersection depth */
 	mtv = MTV(minLen, projection);

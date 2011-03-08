@@ -81,14 +81,23 @@ bool Graphics::drawShape(Shape shape, D3DCOLOR fillColor)
 	RectVertex *vertices = 0;
 
 	HR(mVB_rect->Lock(0, 0, (void**)&vertices, 0));
-
-	for(int i = 0; i < shape.pointList.size(); i++)
+	int i;
+	for(i = 0; i < shape.pointList.size(); i++)
 	{
 		vertices[i].color = fillColor;
 		vertices[i].pos.x = shape.pointList[i].x;
 		vertices[i].pos.y = shape.pointList[i].y;
-		vertices[i].pos.z = 0.0f;
+		vertices[i].pos.z = 0.0f;	
 	}
+
+	char buffer[256];
+		sprintf(buffer, "i: %i", i);
+		//MessageBox(0, buffer, 0, 0);
+
+	vertices[i].color = fillColor;
+	vertices[i].pos.x = shape.pointList[0].x;
+	vertices[i].pos.y = shape.pointList[0].y;
+	vertices[i].pos.z = 0.0f;
 
 	//Unlock the vertex buffer
 	HR(mVB_rect->Unlock());

@@ -75,7 +75,7 @@ void Player::update(double dt, Level *Level)
 	// Y kordinat updateras och ber�knas!
 
 	if(mFalling)	{
-		mDY = dt*FALLSPEED;
+		//mDY = dt*FALLSPEED;
 	}
 	else if(gDInput->keyPressed(DIK_SPACE))
 		jumped = true;
@@ -109,7 +109,7 @@ void Player::update(double dt, Level *Level)
 
 	/* testing*/
 	if(gDInput->keyDown(DIK_W))	
-		mDY = - dt*MOVESPEED;
+		mDY = - dt*MOVESPEED/10;
 	if(gDInput->keyDown(DIK_S))	
 		mDY = dt*MOVESPEED;
 		
@@ -169,7 +169,7 @@ void Player::draw(void)
 	playerRect.bottom = mDrawY + mHeight/2;
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
-	//gGraphics->drawShape(mShape, playerTexture);
+	gGraphics->drawShape(mShape);
 
 	// draw health
 	char buffer[256];
@@ -246,7 +246,7 @@ void Player::setXY(float x, float y)
 	mShape.addPoint(Shape::Point(0, 0));
 	mShape.addPoint(Shape::Point(0, mHeight));
 	mShape.addPoint(Shape::Point(mWidth, mHeight));
-	mShape.addPoint(Shape::Point(mWidth, 0));
+	//mShape.addPoint(Shape::Point(mWidth, 0));
 
 	mDrawX = mX;
 	mDrawY = mY;
