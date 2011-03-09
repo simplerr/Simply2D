@@ -37,7 +37,7 @@ public:
 	void setTextureSource(char *source);
 	IDirect3DTexture9 *getTexture(void)							{return mTexture;};
 
-	virtual void editorMove(float dx, float dy)					{mX += dx; mY += dy;};
+	virtual void editorMove(float dx, float dy);
 	virtual void move(float dx, float dy);
 	virtual void scale(int dwidth, int dheight);
 	virtual void setXY(float x, float y)						{mX = x; mY = y;};

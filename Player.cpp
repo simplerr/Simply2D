@@ -169,7 +169,6 @@ void Player::draw(void)
 	playerRect.bottom = mDrawY + mHeight/2;
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
-	gGraphics->drawShape(mShape);
 
 	// draw health
 	char buffer[256];

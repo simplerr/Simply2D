@@ -86,3 +86,12 @@ void Object::setTextureSource(char *source)
 	char buffer[256];
 	mTexture = gGraphics->loadTexture(mTextureSource);
 }
+
+void Object::editorMove(float dx, float dy)		
+{
+	mX += dx;
+	mY += dy;
+
+	mShape.origin.x += dx;
+	mShape.origin.y += dy;
+}
