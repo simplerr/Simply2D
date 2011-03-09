@@ -19,7 +19,8 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 	mShape.addPoint(Shape::Point(0, 0));	// top - left
 	mShape.addPoint(Shape::Point(0, mHeight));	// bottom - left
 	mShape.addPoint(Shape::Point(mWidth, mHeight));   // bottom - right
-	mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
+	//mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
+	
 
 	mType = type;
 	mUpdates = updates;

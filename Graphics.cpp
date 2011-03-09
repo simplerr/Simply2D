@@ -90,10 +90,7 @@ bool Graphics::drawShape(Shape shape, D3DCOLOR fillColor)
 		vertices[i].pos.z = 0.0f;	
 	}
 
-	char buffer[256];
-		sprintf(buffer, "i: %i", i);
-		//MessageBox(0, buffer, 0, 0);
-
+	// sista ska bindas till första
 	vertices[i].color = fillColor;
 	vertices[i].pos.x = shape.pointList[0].x;
 	vertices[i].pos.y = shape.pointList[0].y;
@@ -121,15 +118,22 @@ bool Graphics::drawShape(Shape shape, IDirect3DTexture9 *texture)
 	TextureVertex *vertices = 0;
 	mVB_texture->Lock(0, 0, (void**)&vertices, 0);
 	
-	for(int i = 0; i < shape.pointList.size(); i++)
+	int i;
+	for(i = 0; i < shape.pointList.size(); i++)
 	{
 		vertices[i].pos.x = shape.pointList[i].x;
 		vertices[i].pos.y = shape.pointList[i].y;
 		vertices[i].pos.z = 0.0f;
-
 		vertices[i].tex0.x = (shape.pointList[i].x - shape.origin.x) / (shape.getAABB().right - shape.origin.x);
 		vertices[i].tex0.y = (shape.pointList[i].y - shape.origin.y) / (shape.getAABB().bottom- shape.origin.y);
 	}
+
+	// sista ska bindas till första
+	vertices[i].pos.x = shape.pointList[0].x;
+	vertices[i].pos.y = shape.pointList[0].y;
+	vertices[i].pos.z = 0.0f;
+	vertices[i].tex0.x = (shape.pointList[0].x - shape.origin.x) / (shape.getAABB().right - shape.origin.x);
+	vertices[i].tex0.y = (shape.pointList[0].y - shape.origin.y) / (shape.getAABB().bottom- shape.origin.y);
 
 	//Unlock the vertex buffer
 	mVB_texture->Unlock();
