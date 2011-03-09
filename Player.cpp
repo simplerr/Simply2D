@@ -75,7 +75,7 @@ void Player::update(double dt, Level *Level)
 	// Y kordinat updateras och ber�knas!
 
 	if(mFalling)	{
-		mDY = dt*FALLSPEED;
+		//mDY = dt*FALLSPEED;
 	}
 	else if(gDInput->keyPressed(DIK_SPACE))
 		jumped = true;
@@ -214,13 +214,14 @@ void Player::move(double dx, double dy)
 
 	// move all the points in the Shape as well!
 
-	for(int i = 0; i < mShape.pointList.size(); i++)
+	/*for(int i = 0; i < mShape.pointList.size(); i++)
 	{
 		mShape.pointList[i].x += dx;
-		mShape.pointList[i].y += dy;
-		mShape.origin.x += dx;
-		mShape.origin.y += dy;
-	}
+		mShape.pointList[i].y += dy;	
+	}*/
+
+	mShape.origin.x += dx;
+	mShape.origin.y += dy;
 
 	mDrawX = mX;
 	mDrawY = mY;
@@ -242,12 +243,12 @@ void Player::setXY(float x, float y)
 
 	mShape.origin.x = mX - mWidth/2;
 	mShape.origin.y = mY - mHeight/2;
-
+	
 	mShape.addPoint(Shape::Point(0, 0));
 	mShape.addPoint(Shape::Point(0, mHeight));
 	mShape.addPoint(Shape::Point(mWidth, mHeight));
 	mShape.addPoint(Shape::Point(mWidth, 0));
-
+	
 	mDrawX = mX;
 	mDrawY = mY;
 }

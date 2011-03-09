@@ -11,10 +11,13 @@ Shape::Shape()
 	sides = 0;
 }
 
+// the order in which the points gets added is important
+// CreateShape() function should be created
+// to much to know for the user about the order
 void Shape::addPoint(Point point)
 {
-	point.x += origin.x;
-	point.y += origin.y;
+	//point.x += origin.x;
+	//point.y += origin.y;
 
 	// calculate the AABB
 	if(point.x < aabb.left)

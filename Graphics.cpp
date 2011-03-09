@@ -85,15 +85,15 @@ bool Graphics::drawShape(Shape shape, D3DCOLOR fillColor)
 	for(i = 0; i < shape.pointList.size(); i++)
 	{
 		vertices[i].color = fillColor;
-		vertices[i].pos.x = shape.pointList[i].x;
-		vertices[i].pos.y = shape.pointList[i].y;
+		vertices[i].pos.x = shape.pointList[i].x + shape.origin.x;
+		vertices[i].pos.y = shape.pointList[i].y + shape.origin.y;
 		vertices[i].pos.z = 0.0f;	
 	}
 
 	// sista ska bindas till första
 	vertices[i].color = fillColor;
-	vertices[i].pos.x = shape.pointList[0].x;
-	vertices[i].pos.y = shape.pointList[0].y;
+	vertices[i].pos.x = shape.pointList[0].x + shape.origin.x;
+	vertices[i].pos.y = shape.pointList[0].y + shape.origin.y;
 	vertices[i].pos.z = 0.0f;
 
 	//Unlock the vertex buffer
@@ -121,16 +121,16 @@ bool Graphics::drawShape(Shape shape, IDirect3DTexture9 *texture)
 	int i;
 	for(i = 0; i < shape.pointList.size(); i++)
 	{
-		vertices[i].pos.x = shape.pointList[i].x;
-		vertices[i].pos.y = shape.pointList[i].y;
+		vertices[i].pos.x = shape.pointList[i].x + shape.origin.x;
+		vertices[i].pos.y = shape.pointList[i].y + shape.origin.y;
 		vertices[i].pos.z = 0.0f;
-		vertices[i].tex0.x = (shape.pointList[i].x - shape.origin.x) / (shape.getAABB().right - shape.origin.x);
-		vertices[i].tex0.y = (shape.pointList[i].y - shape.origin.y) / (shape.getAABB().bottom- shape.origin.y);
+		vertices[i].tex0.x = (shape.pointList[i].x) / (shape.getAABB().right);
+		vertices[i].tex0.y = (shape.pointList[i].y) / (shape.getAABB().bottom);
 	}
 
 	// sista ska bindas till första
-	vertices[i].pos.x = shape.pointList[0].x;
-	vertices[i].pos.y = shape.pointList[0].y;
+	vertices[i].pos.x = shape.pointList[0].x + shape.origin.x;
+	vertices[i].pos.y = shape.pointList[0].y + shape.origin.y;
 	vertices[i].pos.z = 0.0f;
 	vertices[i].tex0.x = (shape.pointList[0].x - shape.origin.x) / (shape.getAABB().right - shape.origin.x);
 	vertices[i].tex0.y = (shape.pointList[0].y - shape.origin.y) / (shape.getAABB().bottom- shape.origin.y);

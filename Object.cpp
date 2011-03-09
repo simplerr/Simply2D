@@ -15,12 +15,20 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 	mShape.origin.y = mY - mHeight/2;
 
 	// these are defined in local space
-	// origin is in the top left of the shape
+	// origin is in the top left of the shape	
 	mShape.addPoint(Shape::Point(0, 0));	// top - left
 	mShape.addPoint(Shape::Point(0, mHeight));	// bottom - left
 	mShape.addPoint(Shape::Point(mWidth, mHeight));   // bottom - right
-	//mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
-	
+	mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
+
+	/*mShape.addPoint(Shape::Point(0, mHeight/3));	// bottom - left
+	mShape.addPoint(Shape::Point(0, mHeight*(2/3)));	// top - left
+	mShape.addPoint(Shape::Point(mWidth/3, mHeight));   // bottom - right
+	mShape.addPoint(Shape::Point(mWidth*(2/3), mHeight));	// top - right
+	mShape.addPoint(Shape::Point(mWidth, mHeight*(2/3)));	// top - right
+	mShape.addPoint(Shape::Point(mWidth, mHeight/3));	// top - right
+	mShape.addPoint(Shape::Point(mWidth*(2/3), 0));	// top - right
+	mShape.addPoint(Shape::Point(mWidth/3, 0));	// top - right*/
 
 	mType = type;
 	mUpdates = updates;

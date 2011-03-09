@@ -329,6 +329,11 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 				maxA = tmp;
 		}
 
+		/* correct with offset */
+		tmp = ShapeA->origin.x * axis.x + ShapeA->origin.y * axis.y;
+		minA += tmp;
+		maxA += tmp;
+
 		/* project Shape B's points on the axis to find MIN and MAX points */
 		minB = maxB = (ShapeB->pointList[0].x * axis.x + ShapeB->pointList[0].y * axis.y);
 
@@ -342,6 +347,11 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 				maxB = tmp;
 		}		
 
+		/* correct with offset */
+		tmp = ShapeB->origin.x * axis.x + ShapeB->origin.y * axis.y;
+		minB += tmp;
+		maxB += tmp;
+
 		/* test if they intersect, if not then store the penetration depth and axis */
 		if(minA > maxB || maxA < minB)	{
 			mtv.collision = false;
@@ -349,6 +359,7 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 		}
 		else
 		{	
+			// the projection axis is to be used by the player (objectB)
 			if(maxA < maxB)	
 			{
 				tmpDepth = maxA - minB;
@@ -407,6 +418,11 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 				maxB = tmp;
 		}
 
+		/* correct with offset */
+		tmp = ShapeB->origin.x * axis.x + ShapeB->origin.y * axis.y;
+		minB += tmp;
+		maxB += tmp;
+
 		/* project Shape A's points on the axis to find MIN and MAX points */	
 		minA = maxA = (ShapeA->pointList[0].x * axis.x + ShapeA->pointList[0].y * axis.y);
 
@@ -420,6 +436,11 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 				maxA = tmp;
 		}
 
+		/* correct with offset */
+		tmp = ShapeA->origin.x * axis.x + ShapeA->origin.y * axis.y;
+		minA += tmp;
+		maxA += tmp;
+
 		/* test if they intersect, if not then return false */
 		if(minA > maxB || maxA < minB)	{
 			mtv.collision = false;
@@ -427,7 +448,7 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 		}
 		else
 		{	
-			//MessageBox(0, "hej", 0, 0);
+			// get the minimal depth of intersection and the correct axis
 			if(maxA < maxB)	
 				tmpDepth = maxA - minB;
 			else if(maxA > maxB)
