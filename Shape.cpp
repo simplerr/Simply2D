@@ -50,3 +50,68 @@ RECT Shape::getRect(void)
 
 	return r;
 }
+
+void Shape::scale(direction side, double dwidth, double dheight)
+{
+	if(side == LEFT)
+		{			
+			for(int i = 0; i < pointList.size(); i++)	
+			{
+				if(pointList[i].x != aabb.left)	{
+					pointList[i].x -= (double)dwidth;
+					aabb.right -= (double)dwidth/2;									
+				}
+			}
+			origin.x += (double)dwidth;
+		}
+	else if(side == RIGHT)
+	{			
+		for(int i = 0; i < pointList.size(); i++)	
+		{
+			if(pointList[i].x != aabb.left)	{
+				pointList[i].x += dwidth;
+				aabb.right += (double)dwidth/2;
+			}
+		}
+	}
+	else if(side == UP)
+	{			
+		for(int i = 0; i < pointList.size(); i++)
+		{
+			if(pointList[i].y != aabb.top)	{
+				pointList[i].y += dheight;
+				aabb.bottom += (double)dheight/2;
+			}
+				
+		}
+		origin.y -= (double)dheight;
+	}
+	else if(side == DOWN)
+	{			
+		for(int i = 0; i < pointList.size(); i++)
+		{
+			if(pointList[i].y != aabb.top)	{
+				pointList[i].y += dheight;
+				aabb.bottom += (double)dheight/2;
+			}
+		}
+	}
+	else if(side == ALL)
+	{
+		for(int i = 0; i < pointList.size(); i++)	
+		{
+			// down & up
+			if(pointList[i].y != aabb.top)	{
+				pointList[i].y += 2*dheight;
+				aabb.bottom += (double)dheight;
+			}
+			// right & left
+			if(pointList[i].x != aabb.left)	{
+				pointList[i].x += 2*dwidth;
+				aabb.right += (double)dwidth;
+			}
+		}
+		origin.y -= (double)dheight;
+		origin.x -= (double)dwidth;
+	}
+}

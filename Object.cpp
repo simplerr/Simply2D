@@ -5,30 +5,15 @@ using namespace std;
 
 Object::Object(float x, float y, int width, int height, char *textureSource, ObjectType type, bool updates)
 {
-	mX = x;
-	mY = y;
-	mWidth = width;
-	mHeight = height;
-
-	// since all objects only are rects right now
-	mShape.origin.x = mX - mWidth/2;
-	mShape.origin.y = mY - mHeight/2;
+	mShape.origin.x = x;
+	mShape.origin.y = y;
 
 	// these are defined in local space
 	// origin is in the top left of the shape	
 	mShape.addPoint(Shape::Point(0, 0));	// top - left
-	mShape.addPoint(Shape::Point(0, mHeight));	// bottom - left
-	mShape.addPoint(Shape::Point(mWidth, mHeight));   // bottom - right
-	mShape.addPoint(Shape::Point(mWidth, 0));	// top - right
-
-	/*mShape.addPoint(Shape::Point(0, mHeight/3));	// bottom - left
-	mShape.addPoint(Shape::Point(0, mHeight*(2/3)));	// top - left
-	mShape.addPoint(Shape::Point(mWidth/3, mHeight));   // bottom - right
-	mShape.addPoint(Shape::Point(mWidth*(2/3), mHeight));	// top - right
-	mShape.addPoint(Shape::Point(mWidth, mHeight*(2/3)));	// top - right
-	mShape.addPoint(Shape::Point(mWidth, mHeight/3));	// top - right
-	mShape.addPoint(Shape::Point(mWidth*(2/3), 0));	// top - right
-	mShape.addPoint(Shape::Point(mWidth/3, 0));	// top - right*/
+	mShape.addPoint(Shape::Point(0, height));	// bottom - left
+	mShape.addPoint(Shape::Point(width, height));   // bottom - right
+	mShape.addPoint(Shape::Point(width, 0));	// top - right
 
 	mType = type;
 	mUpdates = updates;
@@ -66,70 +51,12 @@ void Object::move(float dx, float dy)
 
 void Object::scale(direction side, int dwidth, int dheight)
 {
-	if(side == LEFT)
-	{			
-		for(int i = 0; i < mShape.pointList.size(); i++)	{
-			if(mShape.pointList[i].x != mShape.aabb.left)	{
-				mShape.pointList[i].x -= (double)dwidth;
-				mShape.aabb.right -= (double)dwidth/2;									
-			}
-		}
-		mShape.origin.x += (double)dwidth;
-	}
-	else if(side == RIGHT)
-	{			
-		for(int i = 0; i < mShape.pointList.size(); i++)	{
-			if(mShape.pointList[i].x != mShape.aabb.left)	{
-				mShape.pointList[i].x += dwidth;
-				mShape.aabb.right += (double)dwidth/2;
-			}
-		}
-	}
-	else if(side == UP)
-	{			
-		for(int i = 0; i < mShape.pointList.size(); i++)	{
-			if(mShape.pointList[i].y != mShape.aabb.top)	{
-				mShape.pointList[i].y += dheight;
-				mShape.aabb.bottom += (double)dheight/2;
-			}
-				
-		}
-		mShape.origin.y -= (double)dheight;
-	}
-	else if(side == DOWN)
-	{			
-		for(int i = 0; i < mShape.pointList.size(); i++)	{
-			if(mShape.pointList[i].y != mShape.aabb.top)	{
-				mShape.pointList[i].y += dheight;
-				mShape.aabb.bottom += (double)dheight/2;
-			}
-		}
-	}
-	else if(side == ALL)
-	{
-		for(int i = 0; i < mShape.pointList.size(); i++)	
-		{
-			// down && up
-			if(mShape.pointList[i].y != mShape.aabb.top)	{
-				mShape.pointList[i].y += 2*dheight;
-				mShape.aabb.bottom += (double)dheight;
-			}
-			if(mShape.pointList[i].x != mShape.aabb.left)	{
-				mShape.pointList[i].x += 2*dwidth;
-				mShape.aabb.right += (double)dwidth;
-			}
-		}
-		mShape.origin.y -= (double)dheight;
-		mShape.origin.x -= (double)dwidth;
-	}
-		
-	//mWidth += dwidth;
-	//mHeight += dheight;
+	mShape.scale(side, dwidth, dheight);	
 }
 
 void Object::saveToFile(ofstream *fout)
 {
-	*fout << getType() << " " << mX << " " << mY << " " << mWidth << " " << mHeight << " " << getTextureSource() << endl;
+	*fout << getType() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getTextureSource() << endl;
 }
 void Object::loadFromFile(std::ofstream *fout)
 {

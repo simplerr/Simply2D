@@ -33,6 +33,7 @@ public:
 	void addPoint(Point point);
 	AABB getAABB(void);
 	RECT getRect(void);
+	void scale(direction side, double dwidth, double dheight);
 
 	AABB aabb;
 	Point origin;
