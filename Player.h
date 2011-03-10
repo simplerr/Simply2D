@@ -38,6 +38,7 @@ public:
 	//void setOnGround(bool b) {mOnGround = b;};
 
 	void setFalling(bool b) {mFalling = b;};
+	void onGround(bool b)	{mOnGround = b;};
 
 	void setXY(float x, float y);
 	RECT getRect(void);
@@ -60,7 +61,7 @@ private:
 	int mWidth;
 	int mHeight;
 	bool mFalling;
-
+	bool mOnGround;
 	int mHealth;
 	int mDamage;
 

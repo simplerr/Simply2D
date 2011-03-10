@@ -22,10 +22,8 @@ Player::Player(string filename, int width, int height)
 	faceDir = RIGHT;
 	frame = 0;
 	inair = true;
-	mFalling = true;
 
-	errorText = new char[256];
-	errorText = "...";
+	mOnGround = false;
 }
 
 Player::~Player()
@@ -72,12 +70,10 @@ void Player::update(double dt, Level *Level)
 	mDX = 0;
 	mDY = 0;
 
-	// Y kordinat updateras och ber�knas!
-
-	if(mFalling)	{
-		mDY = dt*FALLSPEED;
-	}
-	else if(gDInput->keyPressed(DIK_SPACE))
+	// fall
+	mDY = dt*FALLSPEED;
+	
+	if(gDInput->keyPressed(DIK_SPACE) && mOnGround)
 		jumped = true;
 
 	if(jumped)

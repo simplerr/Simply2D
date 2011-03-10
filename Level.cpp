@@ -195,9 +195,20 @@ void Level::collision(Player *player)
 		MTV mtv = polyCollision(mObjectList[i]->getShape(), player->getShape());
 
 		if(mtv.collision)	{
+			// push out from collision
 			player->move(mtv.pushX, mtv.pushY);
+
+			// on ground?
+			if(mtv.pushY < 0)
+				player->onGround(true);
+			else 
+				player->onGround(false);
+
+			// what's gonna happen with the player?
 			mObjectList[i]->onPlayerCollision(player, mtv);
-		}		
+		}	
+		else
+			player->onGround(false);
 	}
 
 	/*
