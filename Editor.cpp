@@ -130,7 +130,7 @@ int Editor::updateAll(float dt)
 		if(activeObject->mObject->getResizeable())
 		{
 			if(gDInput->mouseDZ() > 0)	{
-				activeObject->mObject->scale(8, 8);
+				activeObject->mObject->scale(ALL, 8, 8);
 
 				// messageHandler(OBJECT_SCALED)
 				messageHandler(ACTIVE_OBJECT);
@@ -138,7 +138,7 @@ int Editor::updateAll(float dt)
 			else if(gDInput->mouseDZ() < 0)	{
 				if(activeObject->mObject->getHeight() > 50 && activeObject->mObject->getWidth() > 50)	{
 
-					activeObject->mObject->scale(-8, -8);
+					activeObject->mObject->scale(ALL, -8, -8);
 					messageHandler(ACTIVE_OBJECT);
 				}
 			}
@@ -565,9 +565,8 @@ void Editor::resizePlatform(DragRect drag)
 	{
 		if((activeObject->mObject->getWidth() >= 50 && dx > 0) || dx < 0)	{
 			activeObjectRect.left += dx;
-			activeObject->mObject->scale(-dx, 0);
-			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
-			
+			activeObject->mObject->scale(LEFT, dx, 0);
+			//activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());			
 		}
 		else
 			mMouse->setMousePos(mMouse->getPos().x - dx, mMouse->getPos().y);
@@ -576,7 +575,7 @@ void Editor::resizePlatform(DragRect drag)
 	{
 		if((activeObject->mObject->getWidth() >= 50 && dx < 0) || dx > 0)	{
 			activeObjectRect.right += dx;
-			activeObject->mObject->scale(dx, 0);		// drar man musen åt höger ökar bredden
+			activeObject->mObject->scale(RIGHT, dx, 0);		// drar man musen åt höger ökar bredden
 			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 		}
 		else
@@ -586,7 +585,7 @@ void Editor::resizePlatform(DragRect drag)
 	{
 		if((activeObject->mObject->getHeight() >= 50 && dy > 0) || dy < 0)	{
 			activeObjectRect.top += dy;
-			activeObject->mObject->scale(0, -dy);
+			activeObject->mObject->scale(UP, 0, -dy);
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 		else
@@ -596,7 +595,7 @@ void Editor::resizePlatform(DragRect drag)
 	{	
 		if((activeObject->mObject->getHeight() >= 50 && dy < 0) || dy > 0)	{
 			activeObjectRect.bottom += dy;
-			activeObject->mObject->scale(0, dy);
+			activeObject->mObject->scale(DOWN, 0, dy);
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 		else
@@ -919,10 +918,10 @@ void Editor::messageHandler(WindowID sender, string data)
 			sprintf(buffer, "%i", (int)activeObject->mObject->getY());
 			iPositionY->setValue(buffer); 
 
-			sprintf(buffer, "%i", activeObject->mObject->getWidth());
+			sprintf(buffer, "%i", (int)activeObject->mObject->getWidth());
 			iWidth->setValue(buffer); 
 
-			sprintf(buffer, "%i", activeObject->mObject->getHeight());
+			sprintf(buffer, "%i", (int)activeObject->mObject->getHeight());
 			iHeight->setValue(buffer);
 
 			// update texture source

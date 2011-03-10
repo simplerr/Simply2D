@@ -2,6 +2,9 @@
 #define SHAPE_H
 
 #include <vector>
+#include "d3dUtil.h"
+#include <crtdbg.h>
+#include <string>
 
 class Shape
 {
@@ -20,6 +23,7 @@ public:
 	{
 		AABB() {left = 99999; top = 999999; right = 0; bottom = 0;};
 		AABB(double l, double t, double r, double b) { left = l; top = t; right = r; b = bottom;};
+
 		double left;
 		double top;
 		double right;
@@ -28,6 +32,7 @@ public:
 
 	void addPoint(Point point);
 	AABB getAABB(void);
+	RECT getRect(void);
 
 	AABB aabb;
 	Point origin;

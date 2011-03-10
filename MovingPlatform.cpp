@@ -39,7 +39,7 @@ void MovingPlatform::move(float dx, float dy)
 	MovingObject::move(dx, dy);
 }
 
-void MovingPlatform::scale(int dwidth, int dheight)
+void MovingPlatform::scale(direction side, int dwidth, int dheight)
 {
-	MovingObject::scale(dwidth, dheight);
+	MovingObject::scale(side, dwidth, dheight);
 }

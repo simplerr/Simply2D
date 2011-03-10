@@ -23,7 +23,7 @@ public:
 
 	void saveToFile(std::ofstream *fout);
 	void move(float dx, float dy);
-	void scale(int dwidth, int dheight);
+	void scale(direction side, int dwidth, int dheight);
 	void onPlayerCollision(Player *player);
 
 	void damage(int dmg) {mHealth -= dmg;};

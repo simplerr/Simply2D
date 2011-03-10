@@ -15,7 +15,7 @@ public:
 	virtual void draw(void);
 	virtual void saveToFile(std::ofstream *fout);
 	virtual void move(float dx, float dy);
-	virtual void scale(int dwidth, int dheight);
+	virtual void scale(direction side, int dwidth, int dheight);
 
 	void drawPath(void);
 	void setStartPos(POS pos);

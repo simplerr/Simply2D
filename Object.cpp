@@ -50,13 +50,12 @@ void Object::draw(void)
 
 RECT Object::getRect(void)
 {
-	RECT rect;
-	rect.left = mX - mWidth/2;
+	/*rect.left = mX - mWidth/2;
 	rect.right = mX + mWidth/2;
 	rect.top = mY - mHeight/2;
-	rect.bottom = mY + mHeight/2;
+	rect.bottom = mY + mHeight/2;*/
 
-	return rect;
+	return mShape.getRect();
 }
 
 void Object::move(float dx, float dy)
@@ -65,10 +64,67 @@ void Object::move(float dx, float dy)
 	mY += dy;
 }
 
-void Object::scale(int dwidth, int dheight)
+void Object::scale(direction side, int dwidth, int dheight)
 {
-	mWidth += dwidth;
-	mHeight += dheight;
+	if(side == LEFT)
+	{			
+		for(int i = 0; i < mShape.pointList.size(); i++)	{
+			if(mShape.pointList[i].x != mShape.aabb.left)	{
+				mShape.pointList[i].x -= (double)dwidth;
+				mShape.aabb.right -= (double)dwidth/2;									
+			}
+		}
+		mShape.origin.x += (double)dwidth;
+	}
+	else if(side == RIGHT)
+	{			
+		for(int i = 0; i < mShape.pointList.size(); i++)	{
+			if(mShape.pointList[i].x != mShape.aabb.left)	{
+				mShape.pointList[i].x += dwidth;
+				mShape.aabb.right += (double)dwidth/2;
+			}
+		}
+	}
+	else if(side == UP)
+	{			
+		for(int i = 0; i < mShape.pointList.size(); i++)	{
+			if(mShape.pointList[i].y != mShape.aabb.top)	{
+				mShape.pointList[i].y += dheight;
+				mShape.aabb.bottom += (double)dheight/2;
+			}
+				
+		}
+		mShape.origin.y -= (double)dheight;
+	}
+	else if(side == DOWN)
+	{			
+		for(int i = 0; i < mShape.pointList.size(); i++)	{
+			if(mShape.pointList[i].y != mShape.aabb.top)	{
+				mShape.pointList[i].y += dheight;
+				mShape.aabb.bottom += (double)dheight/2;
+			}
+		}
+	}
+	else if(side == ALL)
+	{
+		for(int i = 0; i < mShape.pointList.size(); i++)	
+		{
+			// down && up
+			if(mShape.pointList[i].y != mShape.aabb.top)	{
+				mShape.pointList[i].y += 2*dheight;
+				mShape.aabb.bottom += (double)dheight;
+			}
+			if(mShape.pointList[i].x != mShape.aabb.left)	{
+				mShape.pointList[i].x += 2*dwidth;
+				mShape.aabb.right += (double)dwidth;
+			}
+		}
+		mShape.origin.y -= (double)dheight;
+		mShape.origin.x -= (double)dwidth;
+	}
+		
+	//mWidth += dwidth;
+	//mHeight += dheight;
 }
 
 void Object::saveToFile(ofstream *fout)
@@ -94,4 +150,24 @@ void Object::editorMove(float dx, float dy)
 
 	mShape.origin.x += dx;
 	mShape.origin.y += dy;
+}
+
+double Object::getWidth(void)											
+{
+	return mShape.aabb.right - mShape.aabb.left;
+}
+
+double Object::getHeight(void)										
+{
+	return mShape.aabb.bottom - mShape.aabb.top;
+}
+
+// returns the center position
+double Object::getX(void)										
+{
+	return mShape.origin.x ;//+ getWidth()/2;
+}
+double Object::getY(void)
+{
+	return mShape.origin.y ;//+ getHeight()/2;
 }

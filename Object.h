@@ -23,10 +23,10 @@ public:
 	virtual void OnEvent(Event *e)	{};
 
 	Shape* getShape(void)							{return &mShape;};
-	float getX(void)											{return mX;};
-	float getY(void)											{return mY;};
-	int getHeight(void)											{return mHeight;};
-	int getWidth(void)											{return mWidth;};
+	double getX(void);
+	double getY(void);
+	double getHeight(void);
+	double getWidth(void);
 	int getID(void)												{return mID;};
 	int getType(void)											{return mType;};
 	RECT getRect(void);	
@@ -39,7 +39,7 @@ public:
 
 	virtual void editorMove(float dx, float dy);
 	virtual void move(float dx, float dy);
-	virtual void scale(int dwidth, int dheight);
+	virtual void scale(direction side, int dwidth, int dheight);
 	virtual void setXY(float x, float y)						{mX = x; mY = y;};
 
 	void setWidth(int width)									{mWidth = width;};

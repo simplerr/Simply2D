@@ -77,10 +77,10 @@ void Enemy::move(float dx, float dy)
 	// maybe waste
 	MovingObject::move(dx, dy);
 }
-void Enemy::scale(int dwidth, int dheight)
+void Enemy::scale(direction side, int dwidth, int dheight)
 {
 	// maybe waste
-	MovingObject::scale(dwidth, dheight);
+	MovingObject::scale(side, dwidth, dheight);
 }
 
 void Enemy::onPlayerCollision(Player *player)

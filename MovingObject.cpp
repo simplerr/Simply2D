@@ -174,11 +174,11 @@ void MovingObject::setEndPos(POS pos)
 	mTravelY = mEndPos.y - mStartPos.y;
 }
 
-void MovingObject::scale(int dwidth, int dheight)
+void MovingObject::scale(direction side, int dwidth, int dheight)
 {
 	//activeObject->setXY(activeObjectRect.left + activeObject->getWidth()/2, activeObject->getY());
 
-	Object::scale(dwidth, dheight);
+	Object::scale(side, dwidth, dheight);
 
 	mStartPos.x = getX();
 	mStartPos.y = getY();

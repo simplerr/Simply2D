@@ -39,3 +39,14 @@ Shape::AABB Shape::getAABB(void)
 {
 	return aabb;
 }
+
+RECT Shape::getRect(void) 
+{
+	RECT r;
+	r.left = aabb.left + Shape::origin.x;
+	r.right = aabb.right + Shape::origin.x;
+	r.top = aabb.top + Shape::origin.y;
+	r.bottom = aabb.bottom + Shape::origin.y;
+
+	return r;
+}
