@@ -307,7 +307,7 @@ int Editor::updateAll(float dt)
 					// moves the end pos, now also works even if the mouse is a bit behind
 					if(currentAction == MOVING_ENDPOS)
 						moveEndPos();
-					else if(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
+					else if(currentAction == IDLE && tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
 						&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom)		
 					{			
 						currentAction = MOVING_ENDPOS;
@@ -319,7 +319,7 @@ int Editor::updateAll(float dt)
 				{
 					if(currentAction == MOVING_ENDPOS)
 						moveEndPos();
-					else if(tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
+					else if(currentAction == IDLE && tmpMousePos.x > activeObject->mEnemy->getEndPosRect().left && tmpMousePos.x < activeObject->mEnemy->getEndPosRect().right
 						&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom)
 					{				
 						currentAction = MOVING_ENDPOS;
@@ -331,58 +331,49 @@ int Editor::updateAll(float dt)
 				// the object should even if the mouse is outside the box, that is when currentAction == SCALE_XXXX
 				if(activeObject->mObject->getResizeable()) 
 				{
+					// will do for now, could check for IDLE instead
 					if(currentAction != MOVING_OBJECT && currentAction != MOVING_ENDPOS)
 					{	
 						if(currentAction == SCALE_LEFT)
 							resizePlatform(DRAGLEFT);
-						else if(tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom)	{
+						else if(currentAction == IDLE && tmpMousePos.x > dragLeft.left && tmpMousePos.x < dragLeft.right && tmpMousePos.y > dragLeft.top && tmpMousePos.y < dragLeft.bottom)	{
 								resizePlatform(DRAGLEFT);
 								currentAction = SCALE_LEFT;
 						}
 						else if(currentAction == SCALE_RIGHT)
 							resizePlatform(DRAGRIGHT);
-						else if(tmpMousePos.x > dragRight.left && tmpMousePos.x < dragRight.right && tmpMousePos.y > dragRight.top && tmpMousePos.y < dragRight.bottom)	{
+						else if(currentAction == IDLE && tmpMousePos.x > dragRight.left && tmpMousePos.x < dragRight.right && tmpMousePos.y > dragRight.top && tmpMousePos.y < dragRight.bottom)	{
 								resizePlatform(DRAGRIGHT);
 								currentAction = SCALE_RIGHT;
 						}
 						else if(currentAction == SCALE_UP)
 							resizePlatform(DRAGUP);
-						else if(tmpMousePos.x > dragTop.left && tmpMousePos.x < dragTop.right && tmpMousePos.y > dragTop.top && tmpMousePos.y < dragTop.bottom)	{
+						else if(currentAction == IDLE && tmpMousePos.x > dragTop.left && tmpMousePos.x < dragTop.right && tmpMousePos.y > dragTop.top && tmpMousePos.y < dragTop.bottom)	{
 								resizePlatform(DRAGUP);
 								currentAction = SCALE_UP;
 						}
 						else if(currentAction == SCALE_DOWN)
 							resizePlatform(DRAGDOWN);
-						else if(tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom)	{
+						else if(currentAction == IDLE && tmpMousePos.x > dragBottom.left && tmpMousePos.x < dragBottom.right && tmpMousePos.y > dragBottom.top && tmpMousePos.y < dragBottom.bottom)	{
 								resizePlatform(DRAGDOWN);
 								currentAction = SCALE_DOWN;
 						}
-						/*else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)	{
-							movePlatform();
-							movingObject = true;
-						}*/
-						//else if(!(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom && !movingEndPos))	{
-						//	movingObject = false;
-						//}
 					}
 				}
 
-				if(!activeObject->mObject->getResizeable() || (currentAction != SCALE_UP && currentAction != SCALE_DOWN && currentAction != SCALE_LEFT && currentAction != SCALE_RIGHT))
-				{
-					if(currentAction == MOVING_OBJECT)
-						movePlatform();
-					else if(tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)
-					{
-						currentAction = MOVING_OBJECT;
-						movePlatform();
-					}
-				}				
+			// move the object
+			if(currentAction == MOVING_OBJECT)
+				movePlatform();
+			else if(currentAction == IDLE && tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)
+			{
+				currentAction = MOVING_OBJECT;
+				movePlatform();
+			}			
 		}
 
 		if(movingSpawnPos)	{
 			moveSpawnPos();
-			messageHandler(MOVE_SPAWNPOS);
-				
+			messageHandler(MOVE_SPAWNPOS);			
 		}
 	}
 
@@ -496,6 +487,17 @@ void Editor::movePlatform(void)
 int Editor::renderGui()
 {
 	Window::renderAll();
+
+	if(currentAction == MOVING_OBJECT)
+		sprintf(buffer, "moving_platfrom");
+	else if(currentAction == MOVING_ENDPOS)
+		sprintf(buffer, "moving_endpos");
+	else if(currentAction == SCALE_LEFT)
+		sprintf(buffer, "scaling_left");
+	else if(currentAction == IDLE)
+		sprintf(buffer, "idling");
+
+	gGraphics->drawText(buffer, 1050,530);
 
 	gGraphics->drawText(test, GAME_WIDTH +10, 650);
 
@@ -1050,6 +1052,7 @@ int Editor::renderLevel(void)
 		// displays the path of the moving object
 		if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)&& !showPaths)
 		{
+			bool drawPath = true;
 			RECT activeObjectRect = activeObject->mObject->getRect();
 			POS endPos;
 			if(activeObject->mMovingPlatform)
@@ -1060,22 +1063,34 @@ int Editor::renderLevel(void)
 			RECT pathRect;
 			if(endPos.x > activeObject->mObject->getX())
 			{
-				pathRect.left = activeObjectRect.right;
-				pathRect.right = endPos.x - activeObject->mObject->getWidth()/2;
-				pathRect.top = activeObject->mObject->getY() - 5;
-				pathRect.bottom = activeObject->mObject->getY() + 5;
+				// inside object -> dont draw path
+				if(endPos.x <= activeObject->mObject->getX() + activeObject->mObject->getWidth())
+					drawPath = false;
+				else	{
+					pathRect.left = activeObjectRect.right;
+					pathRect.right = endPos.x;
+					pathRect.top = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 - 5;
+					pathRect.bottom = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 + 5;
+				}
 			}
 			else if(endPos.x < activeObject->mObject->getX())
 			{
-				pathRect.left = endPos.x + activeObject->mObject->getWidth()/2;
-				pathRect.right = activeObjectRect.left;
-				pathRect.top = activeObject->mObject->getY() - 5;
-				pathRect.bottom = activeObject->mObject->getY() + 5;
+				// inside object -> dont draw path
+				if(endPos.x + activeObject->mObject->getWidth() >= activeObject->mObject->getX())
+					drawPath = false;
+				else	{
+					pathRect.left = endPos.x + activeObject->mObject->getWidth();
+					pathRect.right = activeObjectRect.left;
+					pathRect.top = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 - 5;
+					pathRect.bottom = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 + 5;
+				}
 			}
 			else
 				pathRect = activeObjectRect;
 
-			gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
+			// dont draw if inside object
+			if(drawPath)
+				gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
 
 			// displays the end pos, and the drag rect of the active object
 			if(activeObject->mMovingPlatform)

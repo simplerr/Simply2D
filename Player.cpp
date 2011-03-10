@@ -75,7 +75,7 @@ void Player::update(double dt, Level *Level)
 	// Y kordinat updateras och ber�knas!
 
 	if(mFalling)	{
-		//mDY = dt*FALLSPEED;
+		mDY = dt*FALLSPEED;
 	}
 	else if(gDInput->keyPressed(DIK_SPACE))
 		jumped = true;
@@ -108,10 +108,10 @@ void Player::update(double dt, Level *Level)
 	}
 
 	/* testing*/
-	if(gDInput->keyDown(DIK_W))	
+	/*if(gDInput->keyDown(DIK_W))	
 		mDY = - dt*MOVESPEED;
 	if(gDInput->keyDown(DIK_S))	
-		mDY = dt*MOVESPEED;
+		mDY = dt*MOVESPEED;*/
 		
 
 	move(mDX, mDY);

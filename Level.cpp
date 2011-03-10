@@ -195,10 +195,9 @@ void Level::collision(Player *player)
 		MTV mtv = polyCollision(mObjectList[i]->getShape(), player->getShape());
 
 		if(mtv.collision)	{
-			sprintf(collisionText, "pushX: %f, pushY: %f", mtv.pushX, mtv.pushY);
-			//MessageBox(0, collisionText, 0, 0);
 			player->move(mtv.pushX, mtv.pushY);
-		}
+			mObjectList[i]->onPlayerCollision(player, mtv);
+		}		
 	}
 
 	/*

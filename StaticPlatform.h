@@ -12,7 +12,6 @@ public:
 	~StaticPlatform();
 
 	void saveToFile(ofstream *fout);
-
 private:
 };
 

@@ -1,5 +1,6 @@
 #include "MovingObject.h"
 #include "Player.h"
+#include "Level.h"
 
 MovingObject::MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed)
 	:Object(x, y, width, height, textureSource, type)
@@ -191,10 +192,10 @@ void MovingObject::scale(direction side, int dwidth, int dheight)
 RECT MovingObject::getEndPosRect(void)
 {
 	RECT tmpRect;
-	tmpRect.left = mEndPos.x - getWidth()/2;
-	tmpRect.right = mEndPos.x + getWidth()/2;
-	tmpRect.top = mEndPos.y - getHeight()/2;
-	tmpRect.bottom = mEndPos.y + getHeight()/2;
+	tmpRect.left = mEndPos.x;
+	tmpRect.right = mEndPos.x + getWidth();
+	tmpRect.top = mEndPos.y;
+	tmpRect.bottom = mEndPos.y + getHeight();
 
 	return tmpRect;
 }
@@ -220,10 +221,14 @@ void MovingObject::setXY(float x, float y)
 	mEndPos.y = mStartPos.y + mTravelY;
 }
 
-void MovingObject::onPlayerCollision(Player *player)
+void MovingObject::onPlayerCollision(Player *player, MTV mtv)
 {
-	if(getMoveDir() == LEFT)
-		player->mDX-=mSpeed;//player->move(-mSpeed, 0);
-	else if(getMoveDir() == RIGHT)
-		player->mDX+=mSpeed;//player->move(mSpeed, 0);
+	// if the player stands on platform
+	if(mtv.pushY < 0)
+	{
+		if(getMoveDir() == LEFT)
+			player->move(-mSpeed, 0);//player->mDX-=mSpeed;//
+		else if(getMoveDir() == RIGHT)
+			player->move(mSpeed, 0);//player->mDX+=mSpeed;//player->move(mSpeed, 0);
+	}
 }

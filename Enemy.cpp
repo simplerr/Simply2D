@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Events.h"
+#include "Level.h"
 using namespace std;
 
 Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed, int health, int dmg)
@@ -83,9 +84,9 @@ void Enemy::scale(direction side, int dwidth, int dheight)
 	MovingObject::scale(side, dwidth, dheight);
 }
 
-void Enemy::onPlayerCollision(Player *player)
+void Enemy::onPlayerCollision(Player *player, MTV mtv)
 {
-	MovingObject::onPlayerCollision(player);
+	MovingObject::onPlayerCollision(player, mtv);
 	if(player->getDY() > 0)
 	{
 		// player hit enemy on the head -> enemy = dead

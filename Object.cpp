@@ -45,8 +45,8 @@ RECT Object::getRect(void)
 
 void Object::move(float dx, float dy)
 {
-	mX += dx;
-	mY += dy;
+	mShape.origin.x += dx;
+	mShape.origin.y += dy;
 }
 
 void Object::scale(direction side, int dwidth, int dheight)

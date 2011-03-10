@@ -13,20 +13,12 @@
 
 // might be error
 #include "Object.h"
+#include "MTV.h"
 
 class Object;
 class MovingObject;
 class Player;
 
-struct MTV
-{
-	MTV(){};
-	MTV(double d, Shape::Point axis)	{pushX = d*axis.x; pushY = d*axis.y;};
-
-	bool collision;
-	double pushX;
-	double pushY;
-};
 
 class Level
 {

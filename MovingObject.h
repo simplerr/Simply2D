@@ -31,7 +31,7 @@ public:
 	void editorMove(float dx, float dy);	
 	void setXY(float x, float y);
 
-	virtual void onPlayerCollision(Player *player);
+	virtual void onPlayerCollision(Player *player, MTV mtv);
 
 	direction getMoveDir()	{return mMovingDir;};
 	

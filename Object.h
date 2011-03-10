@@ -4,13 +4,14 @@
 #include "constants.h"
 #include "d3dUtil.h"
 #include "Shape.h"
+#include "Level.h"
+#include "MTV.h"
 //#include "Player.h"
 //#include "Events.h"
 
 class Player;
 class Event;
-
-// for the collision detection
+//class MTV;
 
 class Object
 {
@@ -53,7 +54,7 @@ public:
 	void setResizeable(bool b)									{resizeable = b;};
 
 	// new 
-	virtual void onPlayerCollision(Player *player)				{};
+	virtual void onPlayerCollision(Player *player, MTV mtv)				{};
 
 	bool doUpdate(void) 										{return mUpdates;};
 	void setStatic(bool b)										{mStatic = b;};
