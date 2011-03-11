@@ -215,41 +215,6 @@ void Level::collision(Player *player)
 		player->onGround(true);
 	else
 		player->onGround(false);
-
-	/*
-	//	AABB TEST
-	//
-	// add all the collision the list to processed
-	// simply a AABB broadphase test
-	for (int i = 0;i < mObjectList.size();i++)
-	{
-		// get the rect
-		objectRect = mObjectList[i]->getRect();
-
-		// collision?
-		if(!(playerRect.top >= objectRect.bottom ||  playerRect.bottom <= objectRect.top ||  playerRect.right <= objectRect.left ||  playerRect.left >= objectRect.right))
-		{
-			// a collision occured -> add to list
-			mCollisionList.push_back(mObjectList[i]);
-		}	
-	}
-
-	// process collisions
-	if(mCollisionList.size() > 0)
-	{
-		for (int i = 0;i < mCollisionList.size();i++)
-		{
-			// get the rect
-			objectRect = mCollisionList[i]->getRect();
-
-			// find out direction - normal
-			// move player out from object
-			// call onEvent()
-			MessageBox(0, "hejja!", 0, 0);
-		}
-	*/
-
-	
 }
 
 /* SAT - separating axis theorem

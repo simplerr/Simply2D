@@ -2,7 +2,6 @@
 #include "Object.h"
 #include "Game.h"
 #include "Camera.h"
-//#include <fstream>
 
 extern Camera* gGameCamera;
 
@@ -33,12 +32,12 @@ Player::~Player()
 
 void Player::onLostDevice()
 {
-	// inget att g�ra?
+	// nothing to do?
 }
 
 void Player::onResetDevice(void)
 {
-	// inget att g�ra?
+	// nothing to do?
 }
 
 
@@ -103,11 +102,6 @@ void Player::update(double dt, Level *Level)
 		faceDir = RIGHT;
 	}
 
-	/* testing*/
-	/*if(gDInput->keyDown(DIK_W))	
-		mDY = - dt*MOVESPEED;
-	if(gDInput->keyDown(DIK_S))	
-		mDY = dt*MOVESPEED;*/
 	
 	if(mShape.origin.x >= 516)
 		gGameCamera->addMovement(mDX, 0);
@@ -115,46 +109,8 @@ void Player::update(double dt, Level *Level)
 	move(mDX, mDY);
 	Level->collision(this);
 
-	// returned objects onPlayerCollision()
-	// loop through the list
-	/*for (int i = 0;i < collisions.colidedObjects.size();i++)
-	{
-		// handle collision with player
-		collisions.colidedObjects[i]->onPlayerCollision(this);	// should update dx
-	}	
-
-	if(collisions.vert == false && collisions.hori == false)	{
-		move(mDX, mDY);
-		if(mX >= 600)
-			gGameCamera->move(mDX, 0);
-	}
-	else if(collisions.vert == false || (collisions.vert && jumped)){
-		move(0, mDY);
-	}
-	else if(collisions.hori == false)	{
-		move(mDX, 0);
-		if(mX >= 600)
-			gGameCamera->move(mDX, 0);
-	}*/
-
-	// updatera mFalling
-	/*if(mFalling == true && collisions.vert)	{
-		mFalling = false;
-	}
-	else if(!collisions.vert)
-		mFalling = true;
-
-	if(jumped == true  && collisions.vert && dJump < -1)	{
-		jumped = false;
-		mFalling = true;
-	}*/
-
-	if(jumped || mFalling)
+	if(!mOnGround)
 		frame = 4;
-
-	// check health
-	//if(mHealth <= 0)
-	//	MessageBox(0, "Game Over!", 0, 0);
 }
 
 void Player::draw(void)
@@ -174,24 +130,6 @@ void Player::draw(void)
 	gGraphics->drawText(buffer, 1050, 200);
 }
 
-/*void Player::setFrameType(void)
-{
-	if(!mFalling)
-	{
-		if(faceDir == RIGHT)
-			frameType = GROUNDRIGHT;
-		else if(faceDir == LEFT)
-			frameType = GROUNDLEFT;
-	}
-	else if(mFalling)
-	{
-		if(faceDir == RIGHT)
-			frameType = AIRRIGHT;
-		else if(faceDir == LEFT)
-			frameType = AIRLEFT;
-	}
-}*/
-
 RECT Player::getRect(void)
 {	
 	RECT rect;
@@ -209,14 +147,7 @@ void Player::move(double dx, double dy)
 	mX += dx;
 	mY += dy;
 
-	// move all the points in the Shape as well!
-
-	/*for(int i = 0; i < mShape.pointList.size(); i++)
-	{
-		mShape.pointList[i].x += dx;
-		mShape.pointList[i].y += dy;	
-	}*/
-
+	// points are defined in local space, only need to move origin
 	mShape.origin.x += dx;
 	mShape.origin.y += dy;
 
