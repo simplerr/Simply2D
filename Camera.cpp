@@ -21,7 +21,8 @@ Camera::Camera(int x, int y, int width, int height)
 	mHeight = height;
 
 	mActive = false;
-	// activate(); ??
+	mDX = 0;
+	mDY = 0;
 }
 
 Camera::~Camera()
@@ -64,18 +65,27 @@ void Camera::buildViewport(void)
 	gd3dDevice->SetViewport(&mViewport);
 }
 
-void Camera::move(float dx, float dy)
+void Camera::move()
 {
 	// move the camera position
-	if(getX() >= 500)
-		mPos.x += dx;
+	if(getX() + mDX >= 516)
+		mPos.x += mDX;
 	else
-		mPos.x = 500;
+		mPos.x = 516;
 
-	mPos.y += dy;
+	mPos.y += mDY;
+
+	mDX = 0;
+	mDY = 0;
 
 	// update the view transform matrix
 	buildViewMatrix();
+}
+
+void Camera::addMovement(float dx, float dy)
+{
+	mDX += dx;
+	mDY += dy;
 }
 void Camera::restore(void)
 {

@@ -30,7 +30,8 @@ public:
 	void buildViewport(void);
 
 	void restore(void);
-	void move(float dx, float dy);
+	void addMovement(float dx, float dy);
+	void move();
 private:
 	D3DVIEWPORT9 mViewport;
 	D3DXMATRIX mView;
@@ -43,12 +44,8 @@ private:
 
 	bool mActive;
 
-	/*D3DVIEWPORT9 mGameViewPort;
-	D3DVIEWPORT9 mGuiViewPort;
-
-	D3DXMATRIX mGameView;
-	D3DXMATRIX mGuiView;
-	D3DXMATRIX mGameProj;*/
+	float mDX;
+	float mDY;
 };
 
 #endif

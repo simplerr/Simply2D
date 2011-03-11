@@ -108,7 +108,9 @@ void Player::update(double dt, Level *Level)
 		mDY = - dt*MOVESPEED;
 	if(gDInput->keyDown(DIK_S))	
 		mDY = dt*MOVESPEED;*/
-		
+	
+	if(mShape.origin.x >= 516)
+		gGameCamera->addMovement(mDX, 0);
 
 	move(mDX, mDY);
 	Level->collision(this);
@@ -222,13 +224,14 @@ void Player::move(double dx, double dy)
 	mDrawY = mY;
 }
 
-POS Player::getPos(void)
+double Player::getX(void)
 {
-	POS tmp;
-	tmp.x = mX;
-	tmp.y = mY;
+	return mShape.origin.x;
+}
 
-	return tmp;
+double Player::getY(void) 
+{
+	return mShape.origin.y;
 }
 
 void Player::setXY(float x, float y)

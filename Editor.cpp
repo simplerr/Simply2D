@@ -382,7 +382,7 @@ int Editor::updateAll(float dt)
 	{
 		// shouldn't be able to move outside to the left
 		if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
-			gGameCamera->move(-gDInput->mouseDX(), 0);
+			gGameCamera->addMovement(-gDInput->mouseDX(), 0);
 			mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
 	}

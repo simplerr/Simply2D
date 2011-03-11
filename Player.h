@@ -46,7 +46,8 @@ public:
 	double getDY(void) {return mDY;};
 	double getDX(void) {return mDX;};
 	Shape* getShape(void)							{return &mShape;};
-	POS getPos(void);
+	double getX(void);
+	double getY(void);
 
 	void damage(int dmg)	{ mHealth -= dmg;};
 public:

@@ -222,8 +222,8 @@ void Game::updateScene(float dt)
 		mGfxStats->setVertexCount(16 *4);
 		mGfxStats->update(dt);
 		
-		//User->update(dt, mLevel);
-		mLevel->updateLevel(dt);
+		mLevel->updateLevel(dt);	// update objects + player
+		gGameCamera->move();		// move the camera accordingly
 	}
 	else if(editorActive)
 	{
@@ -235,6 +235,7 @@ void Game::updateScene(float dt)
 			testActive = true;
 			editorActive = false;
 		}
+		gGameCamera->move();
 	}
 	/*else if(testActive)
 	{

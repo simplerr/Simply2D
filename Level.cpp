@@ -3,9 +3,12 @@
 #include "Object.h"
 #include "MovingPlatform.h"
 #include "Enemy.h"
+#include "Camera.h"
 #include <fstream>
 
 using namespace std;
+
+extern Camera* gGameCamera;
 
 Level::Level(Player *player)
 {
@@ -182,13 +185,7 @@ void Level::drawLevel(void)
 
 void Level::collision(Player *player)
 {
-	char buffer[256];
-	//MTV mtv;
-	RECT tmpRect;
-	bool collision = false;
-	RECT objectRect;
-	RECT playerRect = player->getRect();
-
+	bool onGround = false;
 	// loop through each object and test collision against the player
 	for(int i = 0; i < mObjectList.size(); i++)
 	{		
@@ -198,18 +195,26 @@ void Level::collision(Player *player)
 			// push out from collision
 			player->move(mtv.pushX, mtv.pushY);
 
-			// on ground?
-			if(mtv.pushY < 0)
-				player->onGround(true);
-			else 
-				player->onGround(false);
+			// the camera have to follow the player
+			if(player->getX() >= 516)
+				gGameCamera->addMovement(mtv.pushX, 0);
 
 			// what's gonna happen with the player?
-			mObjectList[i]->onPlayerCollision(player, mtv);
+			mObjectList[i]->onPlayerCollision(player, mtv);	
+
+			// on ground?
+			if(onGround)
+				continue;
+			
+			if(mtv.pushY < 0)
+				onGround = true;
 		}	
-		else
-			player->onGround(false);
 	}
+
+	if(onGround)
+		player->onGround(true);
+	else
+		player->onGround(false);
 
 	/*
 	//	AABB TEST
