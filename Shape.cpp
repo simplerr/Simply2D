@@ -115,3 +115,33 @@ void Shape::scale(direction side, double dwidth, double dheight)
 		origin.x -= (double)dwidth;
 	}
 }
+
+void Shape::setWidth(double width)
+{
+	int lastWidth = (int)aabb.right;
+	int newWidth = (int)width;
+	double nPos; // normalized position
+
+	for(int i = 0; i < pointList.size();i++)
+	{
+		nPos = pointList[i].x / lastWidth;
+		pointList[i].x = nPos * newWidth;
+	}
+
+	aabb.right = newWidth;
+}
+
+void Shape::setHeight(double height)
+{
+	int lastHeight = (int)aabb.bottom;
+	int newHeight = (int)height;
+	double nPos; // normalized position
+
+	for(int i = 0; i < pointList.size();i++)
+	{
+		nPos = pointList[i].y / lastHeight;
+		pointList[i].y = nPos * newHeight;
+	}
+
+	aabb.bottom = newHeight;
+}

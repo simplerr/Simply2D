@@ -36,6 +36,8 @@ Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SN
 
 	test = new char[256];
 	test = "test";
+
+	propertyCount = 0;
 }
 Editor::~Editor()
 {
@@ -43,11 +45,26 @@ Editor::~Editor()
 	delete mLevel;
 }
 
+
+void Editor::addPropertyPair(Property prop)
+{
+	PropertyPair tmpPair;
+	int y = 120 + 30 * propertyCount;
+
+	tmpPair.name = new TextBox(this, TEXT_XPOS, prop.name, 40, y, 60, 20);
+	tmpPair.value = new InputBox(this, INPUT_XPOS, 110, y, 60, 20);
+	// should make a new constructor o/
+	tmpPair.value->setValue(prop.value);
+
+	propertyPairs.push_back(tmpPair);
+
+	propertyCount++;
+}
+
 void Editor::buildGUI(void)
 {
-	
 	// kanske inte behöver ta name som arg?
-	tPositionX = new TextBox(this, TEXT_XPOS, "X:", 40, 120, 60, 20);
+	/*tPositionX = new TextBox(this, TEXT_XPOS, "X:", 40, 120, 60, 20);
 	tPositionY = new TextBox(this, TEXT_YPOS, "Y:", 40, 150, 60, 20);
 	tWidth = new TextBox(this, TEXT_WIDTH, "Width:", 40, 180, 60, 20);
 	tHeight = new TextBox(this, TEXT_HEIGHT, "Height:", 40, 210, 60, 20);
@@ -55,11 +72,11 @@ void Editor::buildGUI(void)
 	tStartY = new TextBox(this, TEXT_STARTY, "Start Y:", 40, 270, 60, 20);
 	tEndX = new TextBox(this, TEXT_ENDX, "End X:", 40, 300, 60, 20);
 	tEndY = new TextBox(this, TEXT_ENDY, "End Y:", 40, 330, 60, 20);
-	tSpeed = new TextBox(this, TEXT_SPEED, "Speed:", 40, 360, 60, 20);
+	tSpeed = new TextBox(this, TEXT_SPEED, "Speed:", 40, 360, 60, 20);*/
 	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 40, 60, 20);
 	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 70, 60, 20);
 
-	iPositionX = new InputBox(this, INPUT_XPOS, 110, 120, 60, 20);
+	/*iPositionX = new InputBox(this, INPUT_XPOS, 110, 120, 60, 20);
 	iPositionY = new InputBox(this, INPUT_YPOS, 110, 150, 60, 20);
 	iWidth = new InputBox(this, INPUT_WIDTH, 110, 180, 60, 20);
 	iHeight = new InputBox(this, INPUT_HEIGHT, 110, 210, 60, 20);
@@ -67,7 +84,7 @@ void Editor::buildGUI(void)
 	iStartY = new InputBox(this, INPUT_STARTY, 110, 270, 60, 20);
 	iEndX = new InputBox(this, INPUT_ENDX, 110, 300, 60, 20);
 	iEndY = new InputBox(this, INPUT_ENDY, 110, 330, 60, 20);
-	iSpeed = new InputBox(this, INPUT_SPEED, 110, 360, 60, 20);
+	iSpeed = new InputBox(this, INPUT_SPEED, 110, 360, 60, 20);*/
 	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 40, 60, 20);
 	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 70, 60, 20);
 
@@ -96,7 +113,7 @@ void Editor::buildGUI(void)
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 
-	tStartX->setVisibility(false);
+	/*tStartX->setVisibility(false);
 	tStartY->setVisibility(false);
 	tEndX->setVisibility(false);
 	tEndY->setVisibility(false);
@@ -107,7 +124,7 @@ void Editor::buildGUI(void)
 	iEndY->setVisibility(false);
 	iSpeed->setVisibility(false);
 
-	resetInputBoxes();
+	resetInputBoxes();*/
 }
 
 int Editor::updateAll(float dt)
@@ -211,10 +228,10 @@ int Editor::updateAll(float dt)
 				snapCount = SNAP_SENSE;
 
 				// update inputboxes - med activPlatforms värden ;d
-				messageHandler(ACTIVE_OBJECT);
+				messageHandler(OBJECT_SELECTED);	// object selected!:..........................:
 
 				// static eller dynamic platform?
-				if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY) && (mPrevActiveObjectType != MOVING_PLATFORM && mPrevActiveObjectType != NORMAL_ENEMY))
+				/*if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY) && (mPrevActiveObjectType != MOVING_PLATFORM && mPrevActiveObjectType != NORMAL_ENEMY))
 				{		
 					tStartX->setVisibility(true);
 					tStartY->setVisibility(true);
@@ -263,7 +280,7 @@ int Editor::updateAll(float dt)
 					}
 
 					mPrevActiveObjectType = STATIC_PLATFORMA;
-				}
+				}*/
 			}		
 			else
 			{	
@@ -510,7 +527,7 @@ int Editor::renderGui()
 
 void Editor::resetInputBoxes(void)
 {
-	char buffer[10] = " ";				
+	/*char buffer[10] = " ";				
 	iPositionX->setValue(buffer); 				
 	iPositionY->setValue(buffer); 				
 	iWidth->setValue(buffer); 				
@@ -520,7 +537,7 @@ void Editor::resetInputBoxes(void)
 	iStartY->setValue(buffer); 				
 	iEndX->setValue(buffer); 				
 	iEndY->setValue(buffer);
-	iSpeed->setValue(buffer);
+	iSpeed->setValue(buffer);*/
 
 }
 
@@ -724,6 +741,25 @@ void Editor::messageHandler(WindowID sender, string data)
 
 	switch(sender)
 	{
+	case LOL_TEXTSUBMIT:
+		{
+			if(activeObject->mObject != NULL)
+			{
+				// load properties into the active object
+				// a vector of properties have to be sent to the object
+				std::vector<Property> propertyList;
+
+				// build property list from the information of the widgets
+				Property tmpProperty;
+				for(int i = 0; i < propertyPairs.size(); i++)	{
+					tmpProperty.name = propertyPairs[i].name->getValue();
+					tmpProperty.value = propertyPairs[i].value->getValue();
+					propertyList.push_back(tmpProperty);
+				}
+				activeObject->mObject->loadProperties(propertyList);
+			}
+			break;
+		}
 	case INPUT_XPOS:
 		{
 			if(activeObject->mObject != NULL)	{
@@ -909,12 +945,21 @@ void Editor::messageHandler(WindowID sender, string data)
 			tryLevel = true;
 			break;
 		}
-	case ACTIVE_OBJECT:
+	case OBJECT_SELECTED:
 		{
+			if(activeObject != NULL)
+			{
+				std::vector<Property> properties = activeObject->mObject->getProperties();
+
+				for(int i = 0; i < properties.size(); i++)
+				{
+					addPropertyPair(properties[i]);			
+				}
+			}
 			// updatera inputboxarna 
 
 			// coords
-			sprintf(buffer, "%i", (int)activeObject->mObject->getX());
+			/*sprintf(buffer, "%i", (int)activeObject->mObject->getX());
 			iPositionX->setValue(buffer); 
 
 			sprintf(buffer, "%i", (int)activeObject->mObject->getY());
@@ -958,7 +1003,7 @@ void Editor::messageHandler(WindowID sender, string data)
 
 				// tmpPoint = endPos
 				//updateMovingPath();
-			}
+			}*/
 
 			updateDragRects();
 			break;

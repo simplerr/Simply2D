@@ -15,6 +15,13 @@
 
 static const int ADD = 150;
 
+struct PropertyPair
+{
+	//Property prop;
+	TextBox *name;
+	InputBox *value;
+};
+
 enum CurrentAction
 {
 	SCALE_LEFT,
@@ -70,7 +77,12 @@ public:
 	void updateMovingPath(void);	// ta arg?
 
 	void setTest(bool arg) { tryLevel = arg;};
+
+	void addPropertyPair(Property prop);
 private:
+	int propertyCount;
+	std::vector<PropertyPair> propertyPairs;
+
 	RECT gameArea;
 	Mouse *mMouse;
 	//POINT mousePos;
@@ -97,7 +109,7 @@ private:
 	CurrentAction currentAction;
 	// window controls
 private:
-	TextBox *tPositionX; 
+	/*TextBox *tPositionX; 
 	TextBox *tPositionY;
 	TextBox *tWidth;
 	TextBox *tHeight;
@@ -107,21 +119,23 @@ private:
 	TextBox *tEndX;
 	TextBox *tEndY;
 	TextBox *tSpeed;
-	TextBox *tSpawnX;
-	TextBox *tSpawnY;
 
 	InputBox *iPositionX;
 	InputBox *iPositionY;
 	InputBox *iWidth;
 	InputBox *iHeight;
-	InputBox *iSpawnX;
-	InputBox *iSpawnY;
+	
 
 	InputBox *iStartX;
 	InputBox *iStartY;
 	InputBox *iEndX;
 	InputBox *iEndY;
-	InputBox *iSpeed;
+	InputBox *iSpeed;*/
+
+	TextBox *tSpawnX;
+	TextBox *tSpawnY;
+	InputBox *iSpawnX;
+	InputBox *iSpawnY;
 
 	ListBox *listBox;
 

@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Shape.h"
 
+// the old way i did this
 //const DWORD D3DFVF_TLVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 //const DWORD D3DFVF_RECTVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE);
 

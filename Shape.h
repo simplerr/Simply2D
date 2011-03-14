@@ -34,6 +34,8 @@ public:
 	AABB getAABB(void);
 	RECT getRect(void);
 	void scale(direction side, double dwidth, double dheight);
+	void setWidth(double width);
+	void setHeight(double height);
 
 	AABB aabb;
 	Point origin;

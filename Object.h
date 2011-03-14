@@ -6,12 +6,18 @@
 #include "Shape.h"
 #include "Level.h"
 #include "MTV.h"
+#include <string.h>
 //#include "Player.h"
 //#include "Events.h"
 
 class Player;
 class Event;
-//class MTV;
+
+struct Property
+{
+	std::string name;
+	std::string value;
+};
 
 class Object
 {
@@ -59,6 +65,9 @@ public:
 	bool doUpdate(void) 										{return mUpdates;};
 	void setStatic(bool b)										{mStatic = b;};
 	bool isStatic(void)											{return mStatic;};
+
+	std::vector<Property> getProperties(void);
+	void loadProperties(std::vector<Property> propertyList);
 
 private:
 	IDirect3DTexture9* mTexture;

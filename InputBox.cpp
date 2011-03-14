@@ -62,7 +62,7 @@ int InputBox::wm_keydown(WPARAM wParam)
 		{
 		// enter
 		case '\r':		{
-							mParent->messageHandler(getID(), mValue);
+							mParent->messageHandler(LOL_TEXTSUBMIT, mValue);	// egentligen getID()
 							break;
 						}
 		// backspace

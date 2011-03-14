@@ -98,3 +98,59 @@ double Object::getY(void)
 {
 	return mShape.origin.y ;//+ getHeight()/2;
 }
+
+std::vector<Property> Object::getProperties(void)
+{
+	std::vector<Property> properties;
+
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "x";
+	sprintf(buffer, "%i", (int)mShape.origin.x);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "y";
+	sprintf(buffer, "%i", (int)mShape.origin.y);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "width";
+	sprintf(buffer, "%i", (int)mShape.aabb.right);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "height";
+	sprintf(buffer, "%i", (int)mShape.aabb.bottom);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	return properties;
+}
+
+void Object::loadProperties(std::vector<Property> propertyList)
+{
+	// change the string to int and load it into the object
+	int tmp;
+
+	tmp = atoi(propertyList[0].value.c_str());	// x
+	mShape.origin.x = tmp;
+
+	tmp = atoi(propertyList[1].value.c_str());	// y
+	mShape.origin.y = tmp;
+
+	tmp = atoi(propertyList[2].value.c_str());	// width
+	if(tmp != mShape.aabb.right)	{
+			mShape.setWidth(tmp);
+	}
+
+	tmp = atoi(propertyList[3].value.c_str());	// height
+	if(tmp != mShape.aabb.bottom)	{
+			mShape.setHeight(tmp);
+	}
+}
