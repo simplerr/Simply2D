@@ -7,11 +7,13 @@ Window::Window(Window *parent, WindowID id, int x, int y, int width, int height,
 		mParent = NULL;
 		mX = x;
 		mY = y;
+		nextID = 0;
+		primaryID = 0;
 	}
 	else	{
 			
 		mParent = parent;
-		mParent->mSubWins.push_back(this);
+		mParent->addWindow(this);//mSubWins.push_back(this);
 
 		RECT parentRect = parent->getRect();
 		mX = parentRect.left + x;
@@ -43,6 +45,45 @@ Window::~Window()
 	mSubWins.clear();
 }
 
+int Window::addWindow(Window *w)
+{
+	w->setPrimaryID(primaryID);
+	mSubWins.push_back(w);
+	primaryID++;
+
+	return 1;
+}
+
+int Window::removewindow(Window *w)
+{
+	// om det window man tar bort är det aktiva måste mActiveWin sättas till NULL!
+	// om det window man tar bort är det aktiva måste mActiveWin sättas till NULL!
+
+	//eh 
+	int i = 0;
+	vector<Window*>::iterator itr =  mSubWins.begin();
+	while(itr != mSubWins.end() && i < mSubWins.size())
+	{
+		if(mSubWins[i]->getPrimaryID() == w->getPrimaryID())
+		{
+			delete mSubWins[i];		// viktigt att deleta innan!
+			itr = mSubWins.erase(itr);
+			// if the erased window was the active one
+			if(mActiveWin != NULL)	{
+				if(mActiveWin->getPrimaryID() == w->getPrimaryID())
+					mActiveWin = NULL;
+			}
+			break;
+		}
+		else	{
+			itr++;
+			i++;
+		}
+	}
+
+	return 1;
+}
+
 void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen att göra >_>
 {
 		// ta reda på vilket window som ska köra wm_lbuttondown()!
@@ -50,7 +91,8 @@ void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen a
 		found = findChildAtCoord(mx, my);
 
 		if(found != NULL)	{
-			mActiveWin->mActive = false;
+			if(mActiveWin != NULL)
+				mActiveWin->mActive = false;
 			//mActiveWin->onDeactive();
 			mActiveWin = found;
 			mActiveWin->mActive = true;

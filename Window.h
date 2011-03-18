@@ -54,19 +54,21 @@ public:
 	//WindowRect getInfo(void)	{return mPosition;};
 
 	int addWindow(Window *w);
-	int removewindow(Window *w){};
+	int removewindow(Window *w);
+	void setPrimaryID(int id)	{primaryID = id;};
+	int getPrimaryID(void)		{return primaryID;};
 
 	virtual void onDeactive(void);
 
 	//virtual void updateRectToNewXY(void);
 	bool isActive(void) { return mActive;};
 
-	virtual void updateWindow(float dt)	{if(mActiveWin != this)mActiveWin->updateWindow(dt);};
+	virtual void updateWindow(float dt)	{if(mActiveWin != this && mActiveWin != NULL)mActiveWin->updateWindow(dt);};		// om det window man tar bort är det aktiva måste mActiveWin sättas till NULL!
 	virtual int renderAll(void);
   
 	//void setName(char *name) {mName = name;};
 	void setValue(string value) {mValue = value;};
-	void setActive(bool state){mActiveWin->mActive = state;};
+	void setActive(bool state){if(mActiveWin != NULL) mActiveWin->mActive = state;};
 	void setVisibility(bool value) {mVisible = value;};
 	void setParent(Window* parent)	{mParent = parent;};
 	void setsize(int width, int height)		{};
@@ -99,6 +101,8 @@ protected:
 	//WindowRect mPosition;
 	D3DCOLOR mColor;
 
+	int nextID;
+	int primaryID; // should replace WindowID -> create callback function
 	WindowID mID;
 	string mValue;
 	WindowID mActiveWinID;

@@ -48,6 +48,8 @@ Editor::~Editor()
 
 void Editor::addPropertyPair(Property prop)
 {
+	
+
 	PropertyPair tmpPair;
 	int y = 120 + 30 * propertyCount;
 
@@ -113,6 +115,8 @@ void Editor::buildGUI(void)
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 
+	testWidget = new Button(this, BUTTON_DELETE, "Pussy", 40, 670, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+
 	/*tStartX->setVisibility(false);
 	tStartY->setVisibility(false);
 	tEndX->setVisibility(false);
@@ -148,6 +152,7 @@ int Editor::updateAll(float dt)
 		{
 			if(gDInput->mouseDZ() > 0)	{
 				activeObject->mObject->scale(ALL, 8, 8);
+				updateDragRects();
 
 				// messageHandler(OBJECT_SCALED)
 				messageHandler(ACTIVE_OBJECT);
@@ -156,6 +161,7 @@ int Editor::updateAll(float dt)
 				if(activeObject->mObject->getHeight() > 50 && activeObject->mObject->getWidth() > 50)	{
 
 					activeObject->mObject->scale(ALL, -8, -8);
+					updateDragRects();
 					messageHandler(ACTIVE_OBJECT);
 				}
 			}
@@ -169,6 +175,7 @@ int Editor::updateAll(float dt)
 		{	
 			Object *tmpObject;
 			tmpObject = NULL;
+			bool sameObjectSelected = false;
 			
 			if(activeObject->mObject != NULL)
 			{
@@ -194,18 +201,21 @@ int Editor::updateAll(float dt)
 					}
 				}
 				else	// if the active object is pressed
-					tmpObject = activeObject->mObject;
+					sameObjectSelected = true;//tmpObject = activeObject->mObject;
 			}
 			else if(activeObject->mObject == NULL)
 				tmpObject = mLevel->getObjectAt(tmpMousePos);
 
-			if(tmpObject != NULL)
-			{
+			// new object selected
+			if(tmpObject != NULL && !sameObjectSelected)
+			{				
 				activeObject->setObject((tmpObject));
 				tmpObject = NULL;
+				// delete old widgets & create new
+				messageHandler(OBJECT_SELECTED);		// phlalal
 			}
-			else if(activeObject->mMovingPlatform || activeObject->mEnemy)	
-			{
+			else if(!sameObjectSelected)	{
+
 				if(activeObject->mMovingPlatform)	{
 					if(!(tmpMousePos.x > activeObject->mMovingPlatform->getEndPosRect().left && tmpMousePos.x < activeObject->mMovingPlatform->getEndPosRect().right
 					&& tmpMousePos.y > activeObject->mMovingPlatform->getEndPosRect().top && tmpMousePos.y < activeObject->mMovingPlatform->getEndPosRect().bottom))
@@ -216,9 +226,9 @@ int Editor::updateAll(float dt)
 					&& tmpMousePos.y > activeObject->mEnemy->getEndPosRect().top && tmpMousePos.y < activeObject->mEnemy->getEndPosRect().bottom))
 						activeObject->clear();
 				}
+				else
+					messageHandler(OBJECT_DESELECTED);				
 			}
-			else
-				activeObject->clear();
 
 			if(activeObject->mObject != NULL)	
 			{
@@ -379,12 +389,15 @@ int Editor::updateAll(float dt)
 				}
 
 			// move the object
-			if(currentAction == MOVING_OBJECT)
+			if(currentAction == MOVING_OBJECT)	{
 				movePlatform();
+				updateDragRects();
+			}
 			else if(currentAction == IDLE && tmpMousePos.x > activeObjectRect.left && tmpMousePos.x < activeObjectRect.right && tmpMousePos.y > activeObjectRect.top && tmpMousePos.y < activeObjectRect.bottom)
 			{
 				currentAction = MOVING_OBJECT;
 				movePlatform();
+				updateDragRects();
 			}			
 		}
 
@@ -402,6 +415,7 @@ int Editor::updateAll(float dt)
 			gGameCamera->addMovement(-gDInput->mouseDX(), 0);
 			mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
+		updateDragRects();
 	}
 
 	// set the currentAction to IDLE
@@ -527,18 +541,10 @@ int Editor::renderGui()
 
 void Editor::resetInputBoxes(void)
 {
-	/*char buffer[10] = " ";				
-	iPositionX->setValue(buffer); 				
-	iPositionY->setValue(buffer); 				
-	iWidth->setValue(buffer); 				
-	iHeight->setValue(buffer);
-
-	iStartX->setValue(buffer); 				
-	iStartY->setValue(buffer); 				
-	iEndX->setValue(buffer); 				
-	iEndY->setValue(buffer);
-	iSpeed->setValue(buffer);*/
-
+	for(int i = 0; i < propertyPairs.size(); i++)
+	{
+		propertyPairs[i].value->setValue("");
+	}
 }
 
 // de ska vara en procentuell del av activeObject
@@ -620,6 +626,8 @@ void Editor::resizePlatform(DragRect drag)
 		else
 			mMouse->setMousePos(mMouse->getPos().x, mMouse->getPos().y - dy);
 	}
+
+	updateDragRects();
 	messageHandler(ACTIVE_OBJECT);
 }
 
@@ -743,6 +751,7 @@ void Editor::messageHandler(WindowID sender, string data)
 	{
 	case LOL_TEXTSUBMIT:
 		{
+			removewindow(testWidget);
 			if(activeObject->mObject != NULL)
 			{
 				// load properties into the active object
@@ -757,6 +766,8 @@ void Editor::messageHandler(WindowID sender, string data)
 					propertyList.push_back(tmpProperty);
 				}
 				activeObject->mObject->loadProperties(propertyList);
+
+				updateDragRects();
 			}
 			break;
 		}
@@ -949,6 +960,19 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			if(activeObject != NULL)
 			{
+				// delete old property widgets
+				// remove old propertyPair list
+				for(int i = 0; i < propertyPairs.size(); i++)	{
+					removewindow(propertyPairs[i].name);
+					removewindow(propertyPairs[i].value);
+
+					propertyPairs[i].name = NULL;
+					propertyPairs[i].value = NULL;
+				}
+
+				propertyPairs.clear();
+				propertyCount = 0;
+
 				std::vector<Property> properties = activeObject->mObject->getProperties();
 
 				for(int i = 0; i < properties.size(); i++)
@@ -1006,6 +1030,13 @@ void Editor::messageHandler(WindowID sender, string data)
 			}*/
 
 			updateDragRects();
+			break;
+		}
+	case OBJECT_DESELECTED:
+		{
+			// empty widgets on information about the object
+			activeObject->clear();
+			resetInputBoxes();
 			break;
 		}
 	case CHECKBOX_SHOWPATH:

@@ -148,6 +148,8 @@ private:
 	DropBox *textureDropBox;
 	
 	CheckBox *pathCheckBox;
+
+	Window *testWidget;
 };
 
 #endif
