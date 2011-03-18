@@ -29,6 +29,10 @@ public:
 	void damage(int dmg) {mHealth -= dmg;};
 	int getHealth(void) {return mHealth;};
 	bool getAlive(void)	{return alive;};
+
+	std::vector<Property> getProperties(void);
+	void loadProperties(std::vector<Property> propertyList);
+
 private:
 	int mHealth;
 	int mDamage;

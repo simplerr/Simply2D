@@ -97,16 +97,16 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue(buffer);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 340, 110, 60);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 60);	// shouldn't take height, should expand on addItem
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 420, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 40, 270, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 420, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 630, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 570, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 570, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 240, 130, 20, 20);
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 540, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 605, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 905, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -114,8 +114,6 @@ void Editor::buildGUI(void)
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
-
-	testWidget = new Button(this, BUTTON_DELETE, "Pussy", 40, 670, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
 	/*tStartX->setVisibility(false);
 	tStartY->setVisibility(false);
@@ -155,14 +153,14 @@ int Editor::updateAll(float dt)
 				updateDragRects();
 
 				// messageHandler(OBJECT_SCALED)
-				messageHandler(ACTIVE_OBJECT);
+				messageHandler(OBJECT_UPDATED);
 			}
 			else if(gDInput->mouseDZ() < 0)	{
 				if(activeObject->mObject->getHeight() > 50 && activeObject->mObject->getWidth() > 50)	{
 
 					activeObject->mObject->scale(ALL, -8, -8);
 					updateDragRects();
-					messageHandler(ACTIVE_OBJECT);
+					messageHandler(OBJECT_UPDATED);
 				}
 			}
 		}
@@ -511,7 +509,7 @@ void Editor::movePlatform(void)
 				activeObject->mObject->setXY(activeObject->mObject->getX(), GAME_HEIGHT - activeObject->mObject->getHeight()/2);
 			}
 		}*/
-		messageHandler(ACTIVE_OBJECT);
+		messageHandler(OBJECT_UPDATED);
 }
 
 // just renders the GUI to the left
@@ -528,13 +526,11 @@ int Editor::renderGui()
 	else if(currentAction == IDLE)
 		sprintf(buffer, "idling");
 
-	gGraphics->drawText(buffer, 1050,530);
-
-	gGraphics->drawText(test, GAME_WIDTH +10, 650);
+	gGraphics->drawText(buffer, 1010, 640);
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, createObjectTextPos);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 435);
 
 	return 1;
 }
@@ -628,7 +624,7 @@ void Editor::resizePlatform(DragRect drag)
 	}
 
 	updateDragRects();
-	messageHandler(ACTIVE_OBJECT);
+	messageHandler(OBJECT_UPDATED);
 }
 
 bool Editor::objectSnapping(Object *object, float dx, float dy)
@@ -751,7 +747,6 @@ void Editor::messageHandler(WindowID sender, string data)
 	{
 	case LOL_TEXTSUBMIT:
 		{
-			removewindow(testWidget);
 			if(activeObject->mObject != NULL)
 			{
 				// load properties into the active object
@@ -1057,6 +1052,13 @@ void Editor::messageHandler(WindowID sender, string data)
 			iSpawnX->setValue(buffer);
 			sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 			iSpawnY->setValue(buffer);
+			break;
+		}
+
+	case OBJECT_UPDATED:
+		{
+			// update the input boxes with the new information!
+			updatePropertyWidgets();
 		}
 	}
 	
@@ -1082,7 +1084,7 @@ void Editor::moveEndPos(void)
 		endPos.x += dx;
 		activeObject->mEnemy->setEndPos(endPos);
 	}
-	messageHandler(ACTIVE_OBJECT);
+	messageHandler(OBJECT_UPDATED);
 }
 
 void Editor::moveSpawnPos(void)
@@ -1179,4 +1181,13 @@ int Editor::renderLevel(void)
 	return 1;
 }
 
+
+void Editor::updatePropertyWidgets(void)
+{
+	std::vector<Property> activeObjectProperties = activeObject->mObject->getProperties();
+	for(int i = 0; i < propertyPairs.size(); i++)
+	{
+		propertyPairs[i].value->setValue(activeObjectProperties[i].value);
+	}
+}
 

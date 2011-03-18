@@ -11,6 +11,9 @@ public:
 	MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed);
 	virtual ~MovingObject();
 
+	std::vector<Property> getProperties(void);
+	void loadProperties(std::vector<Property> propertyList);
+
 	virtual void update(float dt);
 	virtual void draw(void);
 	virtual void saveToFile(std::ofstream *fout);

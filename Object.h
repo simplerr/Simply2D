@@ -66,8 +66,8 @@ public:
 	void setStatic(bool b)										{mStatic = b;};
 	bool isStatic(void)											{return mStatic;};
 
-	std::vector<Property> getProperties(void);
-	void loadProperties(std::vector<Property> propertyList);
+	virtual std::vector<Property> getProperties(void);
+	virtual void loadProperties(std::vector<Property> propertyList);
 
 private:
 	IDirect3DTexture9* mTexture;

@@ -232,3 +232,64 @@ void MovingObject::onPlayerCollision(Player *player, MTV mtv)
 			player->move(mSpeed, 0);//player->mDX+=mSpeed;//player->move(mSpeed, 0);
 	}
 }
+
+std::vector<Property> MovingObject::getProperties(void)
+{
+	std::vector<Property> properties = Object::getProperties();
+
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "startx";
+	sprintf(buffer, "%i", (int)mStartPos.x);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "starty";
+	sprintf(buffer, "%i", (int)mStartPos.y);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "endx";
+	sprintf(buffer, "%i", (int)mEndPos.x);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "endy";
+	sprintf(buffer, "%i", (int)mEndPos.y);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "speed";
+	sprintf(buffer, "%.2f", mSpeed);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	return properties;
+}
+
+void MovingObject::loadProperties(std::vector<Property> propertyList)
+{
+	// x,y,widht,height
+	Object::loadProperties(propertyList);
+
+	int tmp;
+
+	// these are only neccessary for now!
+	tmp = atoi(propertyList[6].value.c_str());	// endx
+	if(tmp != mEndPos.x)	{
+			mEndPos.x = tmp;
+	}
+
+	float tmp2;
+
+	tmp2 = atof(propertyList[8].value.c_str());	// speed
+	if(tmp2 != mSpeed)	{
+			mSpeed = tmp2;
+	}
+}

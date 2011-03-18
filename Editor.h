@@ -79,7 +79,10 @@ public:
 	void setTest(bool arg) { tryLevel = arg;};
 
 	void addPropertyPair(Property prop);
+
+	void updatePropertyWidgets(void);
 private:
+
 	int propertyCount;
 	std::vector<PropertyPair> propertyPairs;
 
@@ -107,31 +110,7 @@ private:
 
 	int mOffset;
 	CurrentAction currentAction;
-	// window controls
 private:
-	/*TextBox *tPositionX; 
-	TextBox *tPositionY;
-	TextBox *tWidth;
-	TextBox *tHeight;
-
-	TextBox *tStartX;
-	TextBox *tStartY;
-	TextBox *tEndX;
-	TextBox *tEndY;
-	TextBox *tSpeed;
-
-	InputBox *iPositionX;
-	InputBox *iPositionY;
-	InputBox *iWidth;
-	InputBox *iHeight;
-	
-
-	InputBox *iStartX;
-	InputBox *iStartY;
-	InputBox *iEndX;
-	InputBox *iEndY;
-	InputBox *iSpeed;*/
-
 	TextBox *tSpawnX;
 	TextBox *tSpawnY;
 	InputBox *iSpawnX;
@@ -148,8 +127,6 @@ private:
 	DropBox *textureDropBox;
 	
 	CheckBox *pathCheckBox;
-
-	Window *testWidget;
 };
 
 #endif

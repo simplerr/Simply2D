@@ -126,3 +126,44 @@ void Enemy::OnEvent(Event *e)
 	// could be bullet hit
 	// spike wall etc..
 }
+
+std::vector<Property> Enemy::getProperties(void)
+{
+	std::vector<Property> properties = MovingObject::getProperties();
+
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "damage";
+	sprintf(buffer, "%i", mDamage);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "health";
+	sprintf(buffer, "%i", mHealth);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	return properties;
+}
+void Enemy::loadProperties(std::vector<Property> propertyList)
+{
+	// x,y,widht,height,startx,starty,endx,endy,speed
+	MovingObject::loadProperties(propertyList);
+
+	int tmp;
+
+	tmp = atoi(propertyList[9].value.c_str());	// damage
+	if(tmp != mDamage)	{
+			mDamage = tmp;
+	}
+
+	float tmp2;
+
+	tmp2 = atof(propertyList[10].value.c_str());	// health
+	if(tmp2 != mHealth)	{
+			mHealth = tmp2;
+	}
+}
