@@ -419,10 +419,11 @@ int Editor::updateAll(float dt)
 	if(gDInput->mouseButtonDown(MIDDLEBUTTON))
 	{
 		// shouldn't be able to move outside to the left
-		if(gGameCamera->getX() >= 500 || (gGameCamera->getX() < 500 && gDInput->mouseDX() < 0))	{
+		if(gGameCamera->getX() > 500 || (gGameCamera->getX() == 500 && gDInput->mouseDX() < 0))	{
 			gGameCamera->addMovement(-gDInput->mouseDX(), 0);
 			mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
+		
 	}
 
 	// set the currentAction to IDLE
