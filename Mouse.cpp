@@ -84,7 +84,7 @@ void Mouse::setMousePos(int x, int y)
 	mPos.x = x;
 	mPos.y = y;
 
-	SetCursorPos(windowRect.left + 8 + x - gGameCamera->getOffset(), windowRect.top + 30 + y);	
+	SetCursorPos(windowRect.left - 8 + x - gGameCamera->getOffset(), windowRect.top + 30 + y);	
 }
 
 void Mouse::setX(int x)

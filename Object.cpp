@@ -154,3 +154,68 @@ void Object::loadProperties(std::vector<Property> propertyList)
 			mShape.setHeight(tmp);
 	}
 }
+
+void Object::drawEditorFX(void)
+{
+	// orange effect
+	gGraphics->BlitRect(getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+}
+
+ObjectArea Object::getAreaAt(double mx, double my)
+{
+	RECT rect = getRect();
+	RECT *dragRects = getDragRects();
+
+	// first check the dragRects
+	for(int i = 0; i < 4; i++)	
+	{
+		if(mx > dragRects[i].left && mx < dragRects[i].right && my > dragRects[i].top && my < dragRects[i].bottom)	{
+			if(i == L)
+				return DRAG_LEFT;
+			else if(i == R)
+				return DRAG_RIGHT;
+			else if(i == T)
+				return DRAG_UP;
+			else if(i == B)
+				return DRAG_DOWN;
+		}
+	}
+
+	if(mx > rect.left && mx < rect.right && my > rect.top && my < rect.bottom)
+		return BODY;
+
+	return OUTSIDE;
+}
+
+RECT* Object::getDragRects(void)
+{
+	RECT rects[4];
+	RECT rect = getRect();
+	
+
+	// left drag rect
+	rects[L].left = rect.left;
+	rects[L].right = rects[L].left + 20;
+	rects[L].top = rect.top + 20;
+	rects[L].bottom = rect.bottom - 20;
+
+	// right drag rect
+	rects[R].right = rect.right;
+	rects[R].left = rects[R].right - 20;
+	rects[R].top = rect.top + 20;
+	rects[R].bottom = rect.bottom - 20;
+
+	// top drag rect
+	rects[T].top = rect.top;
+	rects[T].bottom = rects[T].top + 20;
+	rects[T].left = rect.left + 20;
+	rects[T].right = rect.right - 20;
+
+	// bottom drag rect
+	rects[B].bottom = rect.bottom;
+	rects[B].top = rects[B].bottom - 20;
+	rects[B].left = rect.left + 20;
+	rects[B].right = rect.right - 20;
+
+	return rects;
+}

@@ -68,10 +68,10 @@ void Camera::buildViewport(void)
 void Camera::move()
 {
 	// move the camera position
-	if(getX() + mDX >= 516)
+	if(getX() + mDX >= 500)
 		mPos.x += mDX;
 	else
-		mPos.x = 516;
+		mPos.x = 500;
 
 	mPos.y += mDY;
 

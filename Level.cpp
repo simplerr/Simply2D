@@ -172,8 +172,6 @@ void Level::updateLevel(double dt)
 
 void Level::drawLevel(void)
 {
-	gGraphics->drawText(collisionText, 700, 20);
-
 	if(mPlayer != NULL)
 		mPlayer->draw();
 
@@ -489,8 +487,6 @@ Object* Level::objectIntersection(Object *activeObject)
 void Level::drawEditorLevel(void)
 {
 	// draw the objects in the list with editor effects - HACK
-	if(!gGraphics)
-		MessageBox(0, "NULL PTR", 0, 0);
 
 	// statiska
 	for (int i = 0;i < mObjectList.size();i++)

@@ -26,14 +26,18 @@ public:
 	virtual ~Object();
 
 	virtual void draw(void);
+	virtual void drawEditorFX(void);
 	virtual void drawPath(void)	{};
 	virtual void OnEvent(Event *e)	{};
+
+	virtual ObjectArea getAreaAt(double mx, double my);
 
 	Shape* getShape(void)							{return &mShape;};
 	double getX(void);
 	double getY(void);
 	double getHeight(void);
 	double getWidth(void);
+	RECT* getDragRects(void);
 	int getID(void)												{return mID;};
 	int getType(void)											{return mType;};
 	RECT getRect(void);	

@@ -23,6 +23,25 @@ static const int USER_HEIGHT = 36;
 
 class Object;
 
+enum DragRects
+{
+	L,	// left
+	R,	// right	
+	T,	// top
+	B	// bottom
+};
+
+enum ObjectArea
+{
+	BODY,
+	END_RECT,
+	DRAG_LEFT,
+	DRAG_RIGHT,
+	DRAG_UP,
+	DRAG_DOWN,
+	OUTSIDE
+};
+
 enum goal
 {
 	START,

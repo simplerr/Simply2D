@@ -106,7 +106,7 @@ void Editor::buildGUI(void)
 
 	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 540, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 905, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 655, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -236,59 +236,7 @@ int Editor::updateAll(float dt)
 				snapCount = SNAP_SENSE;
 
 				// update inputboxes - med activPlatforms värden ;d
-				messageHandler(OBJECT_SELECTED);	// object selected!:..........................:
-
-				// static eller dynamic platform?
-				/*if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY) && (mPrevActiveObjectType != MOVING_PLATFORM && mPrevActiveObjectType != NORMAL_ENEMY))
-				{		
-					tStartX->setVisibility(true);
-					tStartY->setVisibility(true);
-					tEndX->setVisibility(true);
-					tEndY->setVisibility(true);
-					tSpeed->setVisibility(true);
-					iStartX->setVisibility(true);
-					iStartY->setVisibility(true);
-					iEndX->setVisibility(true);
-					iEndY->setVisibility(true);
-					iSpeed->setVisibility(true);
-
-					textureDropBox->move(0, +150);
-					deleteButton->move(0, +150);
-					createButton->move(0, +150);
-					listBox->move(0, +150);
-					saveButton->move(0, +150);
-					createObjectTextPos += 150;
-
-					if(activeObject->mObject->getType() == MOVING_PLATFORM)
-						mPrevActiveObjectType = MOVING_PLATFORM;			
-					else if(activeObject->mObject->getType() == NORMAL_ENEMY)
-						mPrevActiveObjectType = NORMAL_ENEMY;
-				}	
-				else if(activeObject->mObject->getType() == STATIC_PLATFORMA && mPrevActiveObjectType != STATIC_PLATFORMA)	
-				{
-					tStartX->setVisibility(false);
-					tStartY->setVisibility(false);
-					tEndX->setVisibility(false);
-					tEndY->setVisibility(false);
-					tSpeed->setVisibility(false);
-					iStartX->setVisibility(false);
-					iStartY->setVisibility(false);
-					iEndX->setVisibility(false);
-					iEndY->setVisibility(false);
-					iSpeed->setVisibility(false);
-
-					if(mPrevActiveObjectType != NO_OBJECT)
-					{
-						textureDropBox->move(0, -150);
-						deleteButton->move(0, -150);
-						createButton->move(0, -150);
-						listBox->move(0, -150);
-						saveButton->move(0, -150);
-						createObjectTextPos -= 150;
-					}
-
-					mPrevActiveObjectType = STATIC_PLATFORMA;
-				}*/
+				messageHandler(OBJECT_SELECTED);	
 			}		
 			else
 			{	
@@ -318,16 +266,77 @@ int Editor::updateAll(float dt)
 	}
 	// move, resize, and change endPos of active object
 	// move the camera
-	if(gDInput->mouseButtonDown(LEFTBUTTON))			// HAXING ITW
+	if(gDInput->mouseButtonDown(LEFTBUTTON))		
 	{
-		// if mousedown
+		// move the spawn pos
+		if(movingSpawnPos)	{
+				moveSpawnPos();
+				messageHandler(MOVE_SPAWNPOS);			
+			}
+
 		if(activeObject->mObject != NULL)
 		{
 			RECT activeObjectRect = activeObject->mObject->getRect();
-			//if(mousePos.x > gameArea.left && mousePos.x < gameArea.right && mousePos.y > gameArea.top && mousePos.y < gameArea.bottom)
-			//{	
+			ObjectArea areaType = activeObject->mObject->getAreaAt(tmpMousePos.x, tmpMousePos.y);
+
+			if(areaType != OUTSIDE || currentAction != IDLE)
+			{
+
+				// resize it				
+				if((currentAction == SCALE_LEFT || currentAction == SCALE_RIGHT || currentAction == SCALE_UP || currentAction == SCALE_DOWN || currentAction == IDLE)
+					|| (currentAction != MOVING_OBJECT && currentAction != MOVING_ENDPOS && (areaType == DRAG_LEFT || areaType == DRAG_RIGHT || areaType == DRAG_UP || areaType == DRAG_DOWN)))
+				{
+						if(currentAction == SCALE_LEFT)
+							resizePlatform(DRAGLEFT);
+						else if(currentAction == IDLE && areaType == DRAG_LEFT)	{
+								resizePlatform(DRAGLEFT);
+								currentAction = SCALE_LEFT;
+						}
+						else if(currentAction == SCALE_RIGHT)
+							resizePlatform(DRAGRIGHT);
+						else if(currentAction == IDLE && areaType == DRAG_RIGHT)	{
+								resizePlatform(DRAGRIGHT);
+								currentAction = SCALE_RIGHT;
+						}
+						else if(currentAction == SCALE_UP)
+							resizePlatform(DRAGUP);
+						else if(currentAction == IDLE && areaType == DRAG_UP)	{
+								resizePlatform(DRAGUP);
+								currentAction = SCALE_UP;
+						}
+						else if(currentAction == SCALE_DOWN)
+							resizePlatform(DRAGDOWN);
+						else if(currentAction == IDLE && areaType == DRAG_DOWN)	{
+								resizePlatform(DRAGDOWN);
+								currentAction = SCALE_DOWN;
+						}
+				}
+				// move the object
+				if(currentAction == MOVING_OBJECT)
+				{
+					movePlatform();
+					updateDragRects();					
+					currentAction = MOVING_OBJECT;
+				}
+				else if(areaType == BODY && currentAction != SCALE_LEFT && currentAction != SCALE_RIGHT && currentAction != SCALE_UP && currentAction != SCALE_DOWN)
+				{
+					movePlatform();
+					updateDragRects();					
+					currentAction = MOVING_OBJECT;	
+				}	
+
+				// move the endpos
+				if(currentAction == MOVING_ENDPOS)
+					moveEndPos();
+				else if(currentAction == IDLE && areaType == END_RECT)	{
+					currentAction = MOVING_ENDPOS;
+					moveEndPos();
+				}
+			}
+
+			
 				// change end-pos
-				if(activeObject->mObject->getType() == MOVING_PLATFORM)
+			/*	if(activeObject->mObject->getType() == MOVING_PLATFORM)
 				{
 					// moves the end pos, now also works even if the mouse is a bit behind
 					if(currentAction == MOVING_ENDPOS)
@@ -402,7 +411,8 @@ int Editor::updateAll(float dt)
 		if(movingSpawnPos)	{
 			moveSpawnPos();
 			messageHandler(MOVE_SPAWNPOS);			
-		}
+		}*/
+			}
 	}
 
 	// scroll knapp nere -> rör kamera
@@ -413,7 +423,6 @@ int Editor::updateAll(float dt)
 			gGameCamera->addMovement(-gDInput->mouseDX(), 0);
 			mMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
-		updateDragRects();
 	}
 
 	// set the currentAction to IDLE
@@ -435,16 +444,6 @@ void Editor::movePlatform(void)
 		// updatera koordinater
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
-
-		// så musen inte rör sig vid kanten
-		/*if(activeObjectRect.left <= 0 || activeObjectRect.right >= GAME_WIDTH)
-				mMouse->setMousePos(mousePos.x - dx , mousePos.y);
-			if(activeObjectRect.top <= 0 || activeObjectRect.bottom >= GAME_HEIGHT)
-				mMouse->setMousePos(mousePos.x , mousePos.y - dy);*/
-
-		// kolla begränsningar - true -> gameArea + ingen krock med annan plattform!
-		//if(activeObjectRect.left >= 0 && activeObjectRect.right <= GAME_WIDTH && activeObjectRect.top >= 0 && activeObjectRect.bottom <= GAME_HEIGHT)
-		//{
 				
 			if(!objectSnapping(activeObject->mObject, dx, dy))
 			{
@@ -484,31 +483,9 @@ void Editor::movePlatform(void)
 						mMouse->move(0, -dy);
 						activeObject->move(dx, 0);
 					}					
-				}	
-			//}			
-			
+				}						
 		}
 
-		// sätt till kanten
-		/*else
-		{
-			if(activeObjectRect.left < 0)
-			{
-				activeObject->mObject->setXY(activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
-			}
-			else if(activeObjectRect.right > GAME_WIDTH)
-			{
-				activeObject->mObject->setXY(GAME_WIDTH - activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
-			}
-			else if(activeObjectRect.top < 0)
-			{
-				activeObject->mObject->setXY(activeObject->mObject->getX(), activeObject->mObject->getHeight()/2);
-			}
-			else if(activeObjectRect.bottom > GAME_HEIGHT)
-			{
-				activeObject->mObject->setXY(activeObject->mObject->getX(), GAME_HEIGHT - activeObject->mObject->getHeight()/2);
-			}
-		}*/
 		messageHandler(OBJECT_UPDATED);
 }
 
@@ -516,17 +493,6 @@ void Editor::movePlatform(void)
 int Editor::renderGui()
 {
 	Window::renderAll();
-
-	if(currentAction == MOVING_OBJECT)
-		sprintf(buffer, "moving_platfrom");
-	else if(currentAction == MOVING_ENDPOS)
-		sprintf(buffer, "moving_endpos");
-	else if(currentAction == SCALE_LEFT)
-		sprintf(buffer, "scaling_left");
-	else if(currentAction == IDLE)
-		sprintf(buffer, "idling");
-
-	gGraphics->drawText(buffer, 1010, 640);
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
@@ -590,7 +556,7 @@ void Editor::resizePlatform(DragRect drag)
 			//activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());			
 		}
 		else
-			mMouse->setMousePos(mMouse->getPos().x - dx, mMouse->getPos().y);
+			mMouse->move(-dx, 0);
 	}	
 	else if(drag == DRAGRIGHT)
 	{
@@ -600,7 +566,7 @@ void Editor::resizePlatform(DragRect drag)
 			activeObject->mObject->setXY(activeObjectRect.left + activeObject->mObject->getWidth()/2, activeObject->mObject->getY());
 		}
 		else
-			mMouse->setMousePos(mMouse->getPos().x - dx, mMouse->getPos().y);
+			mMouse->move(-dx, 0);
 	}
 	else if(drag == DRAGUP)
 	{
@@ -610,7 +576,7 @@ void Editor::resizePlatform(DragRect drag)
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 		else
-			mMouse->setMousePos(mMouse->getPos().x, mMouse->getPos().y - dy);
+			mMouse->move(0, -dy);
 	}
 	else if(drag == DRAGDOWN)
 	{	
@@ -620,7 +586,7 @@ void Editor::resizePlatform(DragRect drag)
 			activeObject->mObject->setXY(activeObject->mObject->getX(), activeObjectRect.top + activeObject->mObject->getHeight()/2);
 		}
 		else
-			mMouse->setMousePos(mMouse->getPos().x, mMouse->getPos().y - dy);
+			mMouse->move(0, -dy);
 	}
 
 	updateDragRects();
@@ -975,55 +941,7 @@ void Editor::messageHandler(WindowID sender, string data)
 					addPropertyPair(properties[i]);			
 				}
 			}
-			// updatera inputboxarna 
-
-			// coords
-			/*sprintf(buffer, "%i", (int)activeObject->mObject->getX());
-			iPositionX->setValue(buffer); 
-
-			sprintf(buffer, "%i", (int)activeObject->mObject->getY());
-			iPositionY->setValue(buffer); 
-
-			sprintf(buffer, "%i", (int)activeObject->mObject->getWidth());
-			iWidth->setValue(buffer); 
-
-			sprintf(buffer, "%i", (int)activeObject->mObject->getHeight());
-			iHeight->setValue(buffer);
-
-			// update texture source
-			sprintf(buffer, "%s", activeObject->mObject->getTextureSource());
-			if(strcmp(buffer, "misc\\textures\\grass_platform.bmp") == 0)
-				textureDropBox->setValue("grass_platform");
-			else if(strcmp(buffer, "misc\\textures\\brick_platform.bmp") == 0)
-				textureDropBox->setValue("brick_platform");
-
-			// if moving platform
-			// updatera start, end och speed
-
-			if(activeObject->mObject->getType() == MOVING_PLATFORM)
-			{			
-				POS tmpPoint = activeObject->mMovingPlatform->getStartPos();
-				sprintf(buffer, "%i", (int)tmpPoint.x);
-				iStartX->setValue(buffer);
-
-				sprintf(buffer, "%i", (int)tmpPoint.y);
-				iStartY->setValue(buffer);
-
-				tmpPoint = activeObject->mMovingPlatform->getEndPos();
-
-				sprintf(buffer, "%i", (int)tmpPoint.x);
-				iEndX->setValue(buffer);
-
-				sprintf(buffer, "%i", (int)tmpPoint.y);
-				iEndY->setValue(buffer);
-
-				sprintf(buffer, "%.2f", activeObject->mMovingPlatform->getSpeed());
-				iSpeed->setValue(buffer);
-
-				// tmpPoint = endPos
-				//updateMovingPath();
-			}*/
-
+			
 			updateDragRects();
 			break;
 		}
@@ -1103,79 +1021,26 @@ void Editor::moveSpawnPos(void)
 int Editor::renderLevel(void)
 {
 	if(showPaths)
-		mLevel->drawEditorLevel();
+		mLevel->drawEditorLevel();		// hax ._-
 	else if(!showPaths)
 		mLevel->drawLevel();
 
 	POS spawnPos = mLevel->getSpawn();
 	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
 
+	if(activeObject->mObject != NULL)		// fix
+		activeObject->mObject->drawEditorFX();
+
 	// displays the orange effect
 	if(activeObject->mObject != NULL)	{
-		gGraphics->BlitRect(activeObject->mObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
 
-		// diplays the drag areas in different colours
+		// diplays the drag areas in blue
 		if(activeObject->mObject->getResizeable())
-		{
-			sprintf(buffer, "drag: %i", dragLeft.right);
-			//MessageBox(0, buffer, 0, 0);
-			
-
+		{			
 			gGraphics->BlitRect(dragLeft, D3DCOLOR_ARGB(220, 130, 166, 255));
 			gGraphics->BlitRect(dragRight, D3DCOLOR_ARGB(220, 130, 166, 255));
 			gGraphics->BlitRect(dragTop, D3DCOLOR_ARGB(220, 130, 166, 255));
 			gGraphics->BlitRect(dragBottom, D3DCOLOR_ARGB(220, 130, 166, 255));
-		}
-
-		// displays the path of the moving object
-		if((activeObject->mObject->getType() == MOVING_PLATFORM || activeObject->mObject->getType() == NORMAL_ENEMY)&& !showPaths)
-		{
-			bool drawPath = true;
-			RECT activeObjectRect = activeObject->mObject->getRect();
-			POS endPos;
-			if(activeObject->mMovingPlatform)
-				endPos = activeObject->mMovingPlatform->getEndPos();
-			else if(activeObject->mEnemy)
-				endPos = activeObject->mEnemy->getEndPos();
-
-			RECT pathRect;
-			if(endPos.x > activeObject->mObject->getX())
-			{
-				// inside object -> dont draw path
-				if(endPos.x <= activeObject->mObject->getX() + activeObject->mObject->getWidth())
-					drawPath = false;
-				else	{
-					pathRect.left = activeObjectRect.right;
-					pathRect.right = endPos.x;
-					pathRect.top = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 - 5;
-					pathRect.bottom = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 + 5;
-				}
-			}
-			else if(endPos.x < activeObject->mObject->getX())
-			{
-				// inside object -> dont draw path
-				if(endPos.x + activeObject->mObject->getWidth() >= activeObject->mObject->getX())
-					drawPath = false;
-				else	{
-					pathRect.left = endPos.x + activeObject->mObject->getWidth();
-					pathRect.right = activeObjectRect.left;
-					pathRect.top = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 - 5;
-					pathRect.bottom = activeObject->mObject->getY() + activeObject->mObject->getHeight()/2 + 5;
-				}
-			}
-			else
-				pathRect = activeObjectRect;
-
-			// dont draw if inside object
-			if(drawPath)
-				gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
-
-			// displays the end pos, and the drag rect of the active object
-			if(activeObject->mMovingPlatform)
-				gGraphics->BlitRect(activeObject->mMovingPlatform->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
-			else if(activeObject->mEnemy)
-				gGraphics->BlitRect(activeObject->mEnemy->getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
-			
 		}
 	}
 	return 1;

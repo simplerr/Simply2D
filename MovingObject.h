@@ -16,9 +16,11 @@ public:
 
 	virtual void update(float dt);
 	virtual void draw(void);
+	void drawEditorFX(void);
 	virtual void saveToFile(std::ofstream *fout);
 	virtual void move(float dx, float dy);
 	virtual void scale(direction side, int dwidth, int dheight);
+	ObjectArea getAreaAt(double mx, double my);
 
 	void drawPath(void);
 	void setStartPos(POS pos);

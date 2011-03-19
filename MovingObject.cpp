@@ -116,16 +116,16 @@ void MovingObject::drawPath(void)
 	if(endPos.x > getX())
 		{
 			pathRect.left = activeObjectRect.right;
-			pathRect.right = endPos.x - getWidth()/2;
-			pathRect.top = getY() - 5;
-			pathRect.bottom = getY() + 5;
+			pathRect.right = endPos.x;
+			pathRect.top = getY() + getHeight()/2 - 5;
+			pathRect.bottom = getY() + getHeight()/2 +5;
 		}
 	else if(endPos.x < getX())
 		{
-			pathRect.left = endPos.x + getWidth()/2;
+			pathRect.left = endPos.x + getWidth();
 			pathRect.right = activeObjectRect.left;
-			pathRect.top = getY() - 5;
-			pathRect.bottom = getY() + 5;
+			pathRect.top = getY() + getHeight()/2 - 5;
+			pathRect.bottom = getY() + getHeight()/2 + 5;
 		}
 		else
 			pathRect = activeObjectRect;
@@ -292,4 +292,61 @@ void MovingObject::loadProperties(std::vector<Property> propertyList)
 	if(tmp2 != mSpeed)	{
 			mSpeed = tmp2;
 	}
+}
+
+void MovingObject::drawEditorFX(void)
+{
+	Object::drawEditorFX();
+
+	bool drawPath = true;
+	RECT rect = getRect();
+	POS endPos= getEndPos();
+
+	RECT pathRect;
+	if(endPos.x > getX())
+	{
+		// inside object -> dont draw path
+		if(endPos.x <= getX() + getWidth())
+			drawPath = false;
+		else	{
+			pathRect.left = rect.right;
+			pathRect.right = endPos.x;
+			pathRect.top = getY() + getHeight()/2 - 5;
+			pathRect.bottom = getY() + getHeight()/2 + 5;
+		}
+	}
+	else if(endPos.x < getX())
+	{
+		// inside object -> dont draw path
+		if(endPos.x + getWidth() >= getX())
+			drawPath = false;
+		else	{
+			pathRect.left = endPos.x + getWidth();
+			pathRect.right = rect.left;
+			pathRect.top = getY() + getHeight()/2 - 5;
+			pathRect.bottom = getY() + getHeight()/2 + 5;
+		}
+	}
+	else
+		pathRect = rect;
+
+	// dont draw if inside object
+	if(drawPath)
+		gGraphics->BlitRect(pathRect, D3DCOLOR_ARGB(150, 0, 166, 255));
+
+
+	gGraphics->BlitRect(getEndPosRect(), D3DCOLOR_ARGB(150, 255, 166, 0));
+}
+
+ObjectArea MovingObject::getAreaAt(double mx, double my)
+{
+	ObjectArea tmpArea = Object::getAreaAt(mx, my);
+	RECT endPosRect = getEndPosRect();
+
+
+	// now also check the end rect
+	if(mx > endPosRect.left && mx < endPosRect.right && my > endPosRect.top && my < endPosRect.bottom)
+		tmpArea = END_RECT;
+
+	return tmpArea;
 }
