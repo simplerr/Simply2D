@@ -56,19 +56,18 @@ public:
 	void addMouse(Mouse *a_mouse){mMouse = a_mouse;};
 	void buildGUI(void);
 
-	void movePlatform(void);
+	void moveObject(void);
 	void resizePlatform(DragRect drag);
 	void moveSpawnPos(void);
 
 	void updateInputBoxes(void);
 	void resetInputBoxes(void);
-	void updateDragRects(void);
 
 	bool objectSnapping(Object *object, float dx, float dy);
 	bool stillSnapped(void);
 
 	void messageHandler(WindowID sender, string data = "nothing");
-	void resetActive(void) { activeObject->clear();};
+	void resetActive(void) {mActiveObject = NULL;};
 
 	void loadLevel(char *source) {mLevel->loadLevel(source);};
 
@@ -85,12 +84,13 @@ private:
 
 	int propertyCount;
 	std::vector<PropertyPair> propertyPairs;
+	Object *mActiveObject;
 
 	RECT gameArea;
 	Mouse *mMouse;
 	//POINT mousePos;
 	Level *mLevel;
-	ActiveObject *activeObject;
+	
 	Object *snappedObject;
 	string changeTexture;
 	RECT dragLeft, dragTop, dragBottom, dragRight;
