@@ -72,20 +72,21 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue(buffer);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 60);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 88);	// shouldn't take height, should expand on addItem
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 570, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 570, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 650, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 650, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 540, 130, 20, 20);
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 590, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 655, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 675, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	listBox->addItem("Enemy", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
+	listBox->addItem("Teleport", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -326,7 +327,7 @@ void Editor::moveObject(void)
 				{
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE)
 					{
-						mActiveObject->move(dx, dy);
+						mActiveObject->editorMove(dx, dy);
 						snapDir = ALL;
 					}
 					else	{
@@ -436,7 +437,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
 				mMouse->move(snapDist - dx, 0);
-				mActiveObject->move(snapDist, 0);
+				mActiveObject->editorMove(snapDist, 0);
 
 				snapCount = 0;
 				snapDir = LEFT;
@@ -456,7 +457,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
 				mMouse->move(-snapDist - dx, 0);
-				mActiveObject->move(-snapDist, 0);
+				mActiveObject->editorMove(-snapDist, 0);
 
 				snapCount = 0;
 				snapDir = RIGHT;
@@ -476,7 +477,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
 				mMouse->move(0, snapDist - dy);
-				mActiveObject->move(0, snapDist);
+				mActiveObject->editorMove(0, snapDist);
 
 				snapCount = 0;
 				snapDir = DOWN;
@@ -496,7 +497,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
 				mMouse->move(0, -snapDist - dy);
-				mActiveObject->move(0, -snapDist);
+				mActiveObject->editorMove(0, -snapDist);
 
 				snapCount = 0;
 				snapDir = UP;
