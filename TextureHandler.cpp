@@ -8,6 +8,8 @@ TextureHandler::TextureHandler()
 	backgroundTexture = NULL;
 	enemyTexture = NULL;
 	enemyTexture2 = NULL;
+	tpEnter = NULL;
+	tpDest = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -117,6 +119,36 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return enemyTexture2;
+		}
+	}
+	else if(fileName == TP_ENTER)
+	{
+		if(tpEnter != NULL)
+			return tpEnter;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &tpEnter)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return tpEnter;
+		}
+	}
+	else if(fileName == TP_DEST)
+	{
+		if(tpDest != NULL)
+			return tpDest;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &tpDest)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return tpDest;
 		}
 	}
 }

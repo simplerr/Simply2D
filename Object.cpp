@@ -29,7 +29,7 @@ Object::~Object()
 }
 void Object::draw(void)
 {
-	//gGraphics->BlitTexture(mTexture, getRect(), 0xFFFFFFFF, 0);
+	//gGraphics->BlitTexture(mTexture, getRect(),0xFFFFFFFF, 0);
 	gGraphics->drawShape(mShape, mTexture);
 }
 

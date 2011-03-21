@@ -19,6 +19,8 @@ private:
 	IDirect3DTexture9* enemyTexture;
 	IDirect3DTexture9* enemyTexture2;
 	IDirect3DTexture9* backgroundTexture;
+	IDirect3DTexture9* tpEnter;
+	IDirect3DTexture9* tpDest;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

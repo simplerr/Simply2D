@@ -2,6 +2,7 @@
 #include "StaticPlatform.h"
 #include "Object.h"
 #include "MovingPlatform.h"
+#include "Teleport.h"
 #include "Enemy.h"
 #include "Camera.h"
 #include <fstream>
@@ -68,6 +69,7 @@ void Level::loadLevel(char* levelFile)
 	ObjectType type;
 	char *text = new char[256];
 	char *textureSource = new char[256];
+	char *destTextureSource = new char[256];		// ulgy hax, dont use NEW HERE FFS!
 
 	int objectType, height, width, xpos, ypos;
 
@@ -112,6 +114,12 @@ void Level::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> health >> damage >> textureSource;
 			loadedObject = new Enemy(xpos, ypos, width, height, textureSource, startPos, endPos, HORIZONTAL, speed, health, damage);			
 		}	
+		else if(objectType == TELEPORT)
+		{
+			int destx, desty;
+			fin >> xpos >> ypos >> destx >> desty >> width >> height >> textureSource >> destTextureSource;
+			loadedObject = new Teleport(xpos, ypos, destx, desty, width, height, textureSource, destTextureSource);
+		}
 		addObject(loadedObject);
 	}
 

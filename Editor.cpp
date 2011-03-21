@@ -4,6 +4,7 @@
 #include "MovingPlatform.h"
 #include "Enemy.h"
 #include "Camera.h"
+#include "Teleport.h"
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
@@ -348,7 +349,7 @@ int Editor::renderGui()
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 435);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 415);
 
 	return 1;
 }
@@ -613,6 +614,11 @@ void Editor::messageHandler(WindowID sender, string data)
 						end.y = 500;
 						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
 						mLevel->addObject(enemy);
+					}
+					else if(value == "Teleport")
+					{
+						Teleport *teleport = new Teleport(200, 500, 600, 300, 50, 100, "misc\\textures\\tpenter.bmp", "misc\\textures\\tpdest.bmp");
+						mLevel->addObject(teleport);
 					}
 					// aktiv plattform = den nya?
 			}
