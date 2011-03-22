@@ -143,9 +143,11 @@ int Editor::updateAll(float dt)
 				if(!(tmpMousePos.x > mActiveObject->getRect().left && tmpMousePos.x < mActiveObject->getRect().right
 					&& tmpMousePos.y > mActiveObject->getRect().top && tmpMousePos.y < mActiveObject->getRect().bottom))
 				{
-					// if not selected the end rect of the active object
-					if(mActiveObject->getAreaAt(tmpMousePos.x, tmpMousePos.y) != END_RECT)
-						tmpObject = mLevel->getObjectAt(tmpMousePos);				
+					// if not selected the end rect or dest tp of the active object
+					if(mActiveObject->getAreaAt(tmpMousePos.x, tmpMousePos.y) == OUTSIDE)
+						tmpObject = mLevel->getObjectAt(tmpMousePos);
+					else
+						sameObjectSelected = true;
 				}
 				else	// if the active object is pressed
 					sameObjectSelected = true;
@@ -215,39 +217,50 @@ int Editor::updateAll(float dt)
 		if(mActiveObject != NULL)
 		{
 			RECT activeObjectRect = mActiveObject->getRect();
-			ObjectArea areaType = mActiveObject->getAreaAt(tmpMousePos.x, tmpMousePos.y);
+			ObjectArea areaType = mActiveObject->getAreaAt(tmpMousePos.x, tmpMousePos.y);			
 
 			if(areaType != OUTSIDE || currentAction != IDLE)
 			{
-
-				// resize it				
-				if((currentAction == SCALE_LEFT || currentAction == SCALE_RIGHT || currentAction == SCALE_UP || currentAction == SCALE_DOWN || currentAction == IDLE)
-					|| (areaType == DRAG_LEFT || areaType == DRAG_RIGHT || areaType == DRAG_UP || areaType == DRAG_DOWN))
+				// move dest tp
+				// make a move(ObjectArea, dx, dy) function? will save some dynamic_casts!
+				if((areaType == TP_DESTAREA && currentAction == IDLE) || currentAction == MOVING_TPDEST)
 				{
-						if(currentAction == SCALE_LEFT)
-							resizePlatform(DRAGLEFT);
-						else if(currentAction == IDLE && areaType == DRAG_LEFT)	{
+					Teleport *tmpTp = dynamic_cast<Teleport*>(mActiveObject);
+					tmpTp->moveDest(gDInput->mouseDX(), gDInput->mouseDY());
+					currentAction = MOVING_TPDEST;
+				}
+
+				// resize it
+				if(mActiveObject->getResizeable())
+				{
+					if((currentAction == SCALE_LEFT || currentAction == SCALE_RIGHT || currentAction == SCALE_UP || currentAction == SCALE_DOWN || currentAction == IDLE)
+						|| (areaType == DRAG_LEFT || areaType == DRAG_RIGHT || areaType == DRAG_UP || areaType == DRAG_DOWN))
+					{
+							if(currentAction == SCALE_LEFT)
 								resizePlatform(DRAGLEFT);
-								currentAction = SCALE_LEFT;
-						}
-						else if(currentAction == SCALE_RIGHT)
-							resizePlatform(DRAGRIGHT);
-						else if(currentAction == IDLE && areaType == DRAG_RIGHT)	{
+							else if(currentAction == IDLE && areaType == DRAG_LEFT)	{
+									resizePlatform(DRAGLEFT);
+									currentAction = SCALE_LEFT;
+							}
+							else if(currentAction == SCALE_RIGHT)
 								resizePlatform(DRAGRIGHT);
-								currentAction = SCALE_RIGHT;
-						}
-						else if(currentAction == SCALE_UP)
-							resizePlatform(DRAGUP);
-						else if(currentAction == IDLE && areaType == DRAG_UP)	{
+							else if(currentAction == IDLE && areaType == DRAG_RIGHT)	{
+									resizePlatform(DRAGRIGHT);
+									currentAction = SCALE_RIGHT;
+							}
+							else if(currentAction == SCALE_UP)
 								resizePlatform(DRAGUP);
-								currentAction = SCALE_UP;
-						}
-						else if(currentAction == SCALE_DOWN)
-							resizePlatform(DRAGDOWN);
-						else if(currentAction == IDLE && areaType == DRAG_DOWN)	{
+							else if(currentAction == IDLE && areaType == DRAG_UP)	{
+									resizePlatform(DRAGUP);
+									currentAction = SCALE_UP;
+							}
+							else if(currentAction == SCALE_DOWN)
 								resizePlatform(DRAGDOWN);
-								currentAction = SCALE_DOWN;
-						}
+							else if(currentAction == IDLE && areaType == DRAG_DOWN)	{
+									resizePlatform(DRAGDOWN);
+									currentAction = SCALE_DOWN;
+							}
+					}
 				}
 				// move the object
 				if(currentAction == MOVING_OBJECT)
@@ -756,8 +769,11 @@ int Editor::renderLevel(void)
 	POS spawnPos = mLevel->getSpawn();
 	gGraphics->BlitRect(spawnPos.x, spawnPos.y, USER_WIDTH, USER_HEIGHT, D3DCOLOR_ARGB(220, 220, 40, 0));
 
-	if(mActiveObject != NULL)
+	// draw the activeObject orange effect and end pos + dest tp etc..
+	if(mActiveObject != NULL)	{
 		mActiveObject->drawEditorFX();
+		gGraphics->BlitRect(mActiveObject->getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));	
+	}
 
 	return 1;
 }

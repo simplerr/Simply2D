@@ -499,9 +499,10 @@ void Level::drawEditorLevel(void)
 	// statiska
 	for (int i = 0;i < mObjectList.size();i++)
 	{
-		mObjectList[i]->draw();
-		if(mObjectList[i]->getType() == MOVING_PLATFORM || mObjectList[i]->getType() == NORMAL_ENEMY)
-			mObjectList[i]->drawPath();		// base class shouldn't have a drawPath() function
+		mObjectList[i]->drawEditorFX();
+		//mObjectList[i]->draw();
+		//if(mObjectList[i]->getType() == MOVING_PLATFORM || mObjectList[i]->getType() == NORMAL_ENEMY)
+		//	mObjectList[i]->drawPath();		// base class shouldn't have a drawPath() function
 	}
 }
 

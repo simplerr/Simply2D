@@ -41,6 +41,7 @@ enum ObjectArea
 	DRAG_RIGHT,
 	DRAG_UP,
 	DRAG_DOWN,
+	TP_DESTAREA,
 	OUTSIDE
 };
 

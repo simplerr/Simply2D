@@ -158,7 +158,8 @@ void Object::loadProperties(std::vector<Property> propertyList)
 void Object::drawEditorFX(void)
 {
 	// orange effect
-	gGraphics->BlitRect(getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));	
+	draw();
+	//gGraphics->BlitRect(getRect(), D3DCOLOR_ARGB(150, 255, 166, 0));	
 }
 
 ObjectArea Object::getAreaAt(double mx, double my)

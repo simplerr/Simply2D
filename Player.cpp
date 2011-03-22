@@ -167,6 +167,9 @@ double Player::getY(void)
 
 void Player::setXY(float x, float y)
 {
+	// find out how much to move the camera
+	gGameCamera->addMovement(x - mX, 0);
+
 	mX = x;
 	mY = y;
 
