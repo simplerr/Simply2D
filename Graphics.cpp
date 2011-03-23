@@ -158,26 +158,26 @@ void Graphics::BlitTexture(IDirect3DTexture9 *texture, RECT rDest,
   TextureVertex *vertices = 0;
   mVB_texture->Lock(0, 0, (void**)&vertices, 0);
 
-  vertices[0].pos.x = (float) rDest.left - 0.5f;
-  vertices[0].pos.y = (float) rDest.top - 0.5f;
+  vertices[0].pos.x = (float) rDest.left;
+  vertices[0].pos.y = (float) rDest.top;
   vertices[0].pos.z = 0.0f;
   vertices[0].tex0.x = 0.0f;
   vertices[0].tex0.y = 0.0f;
 
-  vertices[1].pos.x = (float) rDest.right - 0.5f;
-  vertices[1].pos.y = (float) rDest.top - 0.5f;
+  vertices[1].pos.x = (float) rDest.right;
+  vertices[1].pos.y = (float) rDest.top;
   vertices[1].pos.z = 0.0f;
   vertices[1].tex0.x = 1.0f;
   vertices[1].tex0.y = 0.0f;
 
-  vertices[2].pos.x = (float) rDest.right - 0.5f;
-  vertices[2].pos.y = (float) rDest.bottom - 0.5f;
+  vertices[2].pos.x = (float) rDest.right;
+  vertices[2].pos.y = (float) rDest.bottom;
   vertices[2].pos.z = 0.0f;
   vertices[2].tex0.x = 1.0f;
   vertices[2].tex0.y = 1.0f;
 
-  vertices[3].pos.x = (float) rDest.left - 0.5f;
-  vertices[3].pos.y = (float) rDest.bottom - 0.5f;
+  vertices[3].pos.x = (float) rDest.left;
+  vertices[3].pos.y = (float) rDest.bottom;
   vertices[3].pos.z = 0.0f;
   vertices[3].tex0.x = 0.0f;
   vertices[3].tex0.y = 1.0f;

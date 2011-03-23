@@ -39,6 +39,7 @@ public:
 
 	void setFalling(bool b) {mFalling = b;};
 	void onGround(bool b)	{mOnGround = b;};
+	void jump(int height);
 
 	void setXY(float x, float y);
 	RECT getRect(void);
@@ -67,17 +68,18 @@ private:
 	int mDamage;
 
 	const int JUMP_HEIGHT;
+	int MAX_HEIGHT;
 
 	double mDrawX;
 	double mDrawY;
+
+	bool mJumping;
  
 	IDirect3DTexture9* playerTexture;
 private:
 	int frame;
 	direction faceDir;
 	bool inair;
-
-	char *errorText;
 };
  
 #endif

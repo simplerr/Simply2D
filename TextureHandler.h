@@ -21,6 +21,7 @@ private:
 	IDirect3DTexture9* backgroundTexture;
 	IDirect3DTexture9* tpEnter;
 	IDirect3DTexture9* tpDest;
+	IDirect3DTexture9* trampoline;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

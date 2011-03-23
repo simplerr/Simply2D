@@ -2,6 +2,7 @@
 #include "StaticPlatform.h"
 #include "Object.h"
 #include "MovingPlatform.h"
+#include "Trampoline.h"
 #include "Teleport.h"
 #include "Enemy.h"
 #include "Camera.h"
@@ -120,6 +121,13 @@ void Level::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> destx >> desty >> width >> height >> textureSource >> destTextureSource;
 			loadedObject = new Teleport(xpos, ypos, destx, desty, width, height, textureSource, destTextureSource);
 		}
+		else if(objectType == TRAMPOLINE)
+		{
+			int boostHeight;
+
+			fin >> xpos >> ypos >> width >> height >> boostHeight >> textureSource;
+			loadedObject = new Trampoline(xpos, ypos, width, height, boostHeight, textureSource);
+		}
 		addObject(loadedObject);
 	}
 
@@ -212,8 +220,11 @@ void Level::collision(Player *player)
 			if(onGround)
 				continue;
 			
-			if(mtv.pushY < 0)
-				onGround = true;
+			if(mtv.pushY < 0)	{
+				// trampoline?
+				if(mObjectList[i]->getType() != TRAMPOLINE)	
+					onGround = true;
+			}
 		}	
 	}
 

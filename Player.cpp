@@ -21,6 +21,7 @@ Player::Player(string filename, int width, int height)
 	faceDir = RIGHT;
 	frame = 0;
 	inair = true;
+	mJumping = false;
 
 	mOnGround = false;
 }
@@ -43,12 +44,9 @@ void Player::onResetDevice(void)
 
 void Player::update(double dt, Level *Level)
 {
-	errorText = "....";
-
 	static double dtsum = 0;
 	static bool moving = false;
 	static double dJump = 0;
-	static bool jumped = false;
 	RECT tmpRect;
 	double tmpX = mX;
 	double tmpY = mY;
@@ -73,14 +71,14 @@ void Player::update(double dt, Level *Level)
 	mDY = dt*FALLSPEED;
 	
 	if(gDInput->keyPressed(DIK_SPACE) && mOnGround)
-		jumped = true;
+		jump(JUMP_HEIGHT);//jumped = true;
 
-	if(jumped)
+	if(mJumping)
 	{
 		// faller n�r han n�tt maxh�jd
-		if(dJump <= -JUMP_HEIGHT)	{
+		if(dJump <= -MAX_HEIGHT)	{
 			mFalling = true;
-			jumped = false;
+			mJumping = false;
 			dJump = 0;
 		}
 		else {
@@ -183,4 +181,10 @@ void Player::setXY(float x, float y)
 	
 	mDrawX = mX;
 	mDrawY = mY;
+}
+
+void Player::jump(int height)
+{
+	mJumping = true;
+	MAX_HEIGHT = height;
 }

@@ -10,6 +10,7 @@ TextureHandler::TextureHandler()
 	enemyTexture2 = NULL;
 	tpEnter = NULL;
 	tpDest = NULL;
+	trampoline = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -149,6 +150,21 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return tpDest;
+		}
+	}
+	else if(fileName == TRAMPOLINE_SOURCE)
+	{
+		if(trampoline != NULL)
+			return trampoline;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &trampoline)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return trampoline;
 		}
 	}
 }

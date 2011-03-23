@@ -127,6 +127,8 @@ void Game::onResetDevice()
 	HR(gd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
 	HR(gd3dDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
 
+	//HR(gd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT));
+
 	// This line of code disables Direct3D lighting
 	//HR(gd3dDevice->SetRenderState(D3DRS_LIGHTING, false));
 	
