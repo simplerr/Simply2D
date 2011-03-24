@@ -2,6 +2,7 @@
 #include "Editor.h"
 #include "StaticPlatform.h"
 #include "MovingPlatform.h"
+#include "WallJump.h"
 #include "Enemy.h"
 #include "Camera.h"
 #include "Teleport.h"
@@ -74,7 +75,7 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue(buffer);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 110);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 130);	// shouldn't take height, should expand on addItem
 
 	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
@@ -90,6 +91,7 @@ void Editor::buildGUI(void)
 	listBox->addItem("Enemy", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 	listBox->addItem("Teleport", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Trampoline", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
+	listBox->addItem("Walljump", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -364,7 +366,7 @@ int Editor::renderGui()
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 415);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 400);
 
 	return 1;
 }
@@ -639,6 +641,11 @@ void Editor::messageHandler(WindowID sender, string data)
 					{
 						Trampoline *trampoline = new Trampoline(300, 300, 32, 32, 100, "misc\\textures\\trampoline.bmp");
 						mLevel->addObject(trampoline);
+					}
+					else if(value == "Walljump")
+					{
+						WallJump *walljump = new WallJump(300, 300, 20, 100, "misc\\textures\\walljump.bmp");
+						mLevel->addObject(walljump);
 					}
 					// aktiv plattform = den nya?
 			}

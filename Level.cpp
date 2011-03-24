@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "MovingPlatform.h"
 #include "Trampoline.h"
+#include "WallJump.h"
 #include "Teleport.h"
 #include "Enemy.h"
 #include "Camera.h"
@@ -128,6 +129,11 @@ void Level::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> width >> height >> boostHeight >> textureSource;
 			loadedObject = new Trampoline(xpos, ypos, width, height, boostHeight, textureSource);
 		}
+		else if(objectType == WALLJUMP)
+		{
+			fin >> xpos >> ypos >> width >> height >> textureSource;				
+			loadedObject = new WallJump(xpos, ypos, width, height, textureSource);
+		}
 		addObject(loadedObject);
 	}
 
@@ -224,6 +230,9 @@ void Level::collision(Player *player)
 				// trampoline?
 				if(mObjectList[i]->getType() != TRAMPOLINE)	
 					onGround = true;
+
+				// could use a if statement, but not neccessary ( if prev != 1337 )
+				player->setPrevWallJumpID(1337);
 			}
 		}	
 	}

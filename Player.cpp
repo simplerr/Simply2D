@@ -22,8 +22,10 @@ Player::Player(string filename, int width, int height)
 	frame = 0;
 	inair = true;
 	mJumping = false;
-
 	mOnGround = false;
+
+	prevWallJumpID = 1337; 
+	mWallJumpOk = false;
 }
 
 Player::~Player()
@@ -70,8 +72,14 @@ void Player::update(double dt, Level *Level)
 	// fall
 	mDY = dt*FALLSPEED;
 	
-	if(gDInput->keyPressed(DIK_SPACE) && mOnGround)
-		jump(JUMP_HEIGHT);//jumped = true;
+	if(gDInput->keyPressed(DIK_SPACE))	{
+		if(mOnGround)
+			jump(JUMP_HEIGHT);//jumped = true;
+		else if(mWallJumpOk)	{
+			jump(JUMP_HEIGHT);
+			mWallJumpOk = false;
+		}
+	}
 
 	if(mJumping)
 	{
@@ -187,4 +195,12 @@ void Player::jump(int height)
 {
 	mJumping = true;
 	MAX_HEIGHT = height;
+}
+
+void Player::testWallJump(int id)
+{
+ 	if(prevWallJumpID != id)	{
+		mWallJumpOk = true;
+		prevWallJumpID = id;
+	}
 }

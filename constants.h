@@ -15,6 +15,7 @@ static const std::string ACTIVE_LEVEL = "levels\\level_1.txt";
 static const std::string TP_ENTER =	"misc\\textures\\tpenter.bmp";
 static const std::string TP_DEST =	"misc\\textures\\tpdest.bmp";
 static const std::string TRAMPOLINE_SOURCE = "misc\\textures\\trampoline.bmp";
+static const std::string WALLJUMP_SOURCE = "misc\\textures\\walljump.bmp";
 static const int WINDOW_WIDTH = 1200;
 static const int WINDOW_HEIGHT = 800;
 static const int GAME_WIDTH = 1000;
@@ -134,7 +135,8 @@ enum ObjectType
 	NORMAL_ENEMY,
 	TELEPORT,
 	LADDER,
-	TRAMPOLINE	
+	TRAMPOLINE,
+	WALLJUMP
 };
 
 struct WindowRect

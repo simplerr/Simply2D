@@ -11,6 +11,7 @@ TextureHandler::TextureHandler()
 	tpEnter = NULL;
 	tpDest = NULL;
 	trampoline = NULL;
+	walljump = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -165,6 +166,21 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return trampoline;
+		}
+	}
+	else if(fileName == WALLJUMP_SOURCE)
+	{
+		if(walljump != NULL)
+			return walljump;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &walljump)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return walljump;
 		}
 	}
 }

@@ -50,6 +50,8 @@ public:
 	double getX(void);
 	double getY(void);
 
+	void setPrevWallJumpID(int id)	{prevWallJumpID = id;};
+	void testWallJump(int id);
 	void damage(int dmg)	{ mHealth -= dmg;};
 public:
 	// lazyness
@@ -74,9 +76,11 @@ private:
 	double mDrawY;
 
 	bool mJumping;
+	bool mWallJumpOk;
  
 	IDirect3DTexture9* playerTexture;
 private:
+	int prevWallJumpID;
 	int frame;
 	direction faceDir;
 	bool inair;
