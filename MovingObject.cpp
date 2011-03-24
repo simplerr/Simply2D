@@ -237,10 +237,13 @@ std::vector<Property> MovingObject::getProperties(void)
 {
 	std::vector<Property> properties = Object::getProperties();
 
+	mStartPos.x = getX();
+	mStartPos.y = getY();
+
 	Property tmp;
 	char buffer[16];
 
-	tmp.name = "startx";
+	/*tmp.name = "startx";
 	sprintf(buffer, "%i", (int)mStartPos.x);
 	tmp.value = buffer;
 	
@@ -250,7 +253,7 @@ std::vector<Property> MovingObject::getProperties(void)
 	sprintf(buffer, "%i", (int)mStartPos.y);
 	tmp.value = buffer;
 	
-	properties.push_back(tmp);
+	properties.push_back(tmp);*/
 
 	tmp.name = "endx";
 	sprintf(buffer, "%i", (int)mEndPos.x);
@@ -281,14 +284,14 @@ void MovingObject::loadProperties(std::vector<Property> propertyList)
 	int tmp;
 
 	// these are only neccessary for now!
-	tmp = atoi(propertyList[6].value.c_str());	// endx
+	tmp = atoi(propertyList[4].value.c_str());	// endx
 	if(tmp != mEndPos.x)	{
 			mEndPos.x = tmp;
 	}
 
 	float tmp2;
 
-	tmp2 = atof(propertyList[8].value.c_str());	// speed
+	tmp2 = atof(propertyList[6].value.c_str());	// speed
 	if(tmp2 != mSpeed)	{
 			mSpeed = tmp2;
 	}

@@ -175,7 +175,7 @@ Window *Window::findChildAtCoord(int x, int y)
 
 void Window::keyPressed(WPARAM wParam)
 {
-	if(mInputState)
+	if(mInputState && mActiveWin != NULL)
 		mActiveWin->wm_keydown(wParam);
 }
 

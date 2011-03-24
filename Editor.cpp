@@ -630,7 +630,7 @@ void Editor::messageHandler(WindowID sender, string data)
 						start.y = 500;
 						end.x = 600;
 						end.y = 500;
-						Enemy *enemy = new Enemy(200, 500, 360, 360, "misc\\textures\\bad_mario.bmp", start, end);
+						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
 						mLevel->addObject(enemy);
 					}
 					else if(value == "Teleport")
