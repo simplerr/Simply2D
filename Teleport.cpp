@@ -80,4 +80,37 @@ void Teleport::moveDest(float dx, float dy)
 	mDestY += dy;
 }
 
+std::vector<Property> Teleport::getProperties(void)
+{
+	std::vector<Property> properties = Object::getProperties();
+
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "dest x";
+	sprintf(buffer, "%i", (int)mDestX);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "dest y";
+	sprintf(buffer, "%i", (int)mDestY);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	return properties;
+}
+void Teleport::loadProperties(std::vector<Property> propertyList)
+{
+	Object::loadProperties(propertyList);
+
+	int tmp;
+
+	tmp = atoi(propertyList[4].value.c_str());
+	mDestX = tmp;
+
+	tmp = atoi(propertyList[5].value.c_str());
+	mDestY = tmp;
+}
 

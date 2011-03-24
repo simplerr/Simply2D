@@ -45,10 +45,24 @@ std::vector<Property> Trampoline::getProperties(void)
 {
 	std::vector<Property> properties = Object::getProperties();
 
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "boost";
+	sprintf(buffer, "%i", (int)mBoostHeight);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
 	return properties;
 }
 
 void Trampoline::loadProperties(std::vector<Property> propertyList)
 {
+	Object::loadProperties(propertyList);
 
+	int tmp;
+
+	tmp = atoi(propertyList[4].value.c_str());
+	mBoostHeight = tmp;
 }

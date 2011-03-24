@@ -232,6 +232,7 @@ int Editor::updateAll(float dt)
 					Teleport *tmpTp = dynamic_cast<Teleport*>(mActiveObject);
 					tmpTp->moveDest(gDInput->mouseDX(), gDInput->mouseDY());
 					currentAction = MOVING_TPDEST;
+					messageHandler(OBJECT_UPDATED);
 				}
 
 				// resize it
@@ -644,7 +645,7 @@ void Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Walljump")
 					{
-						WallJump *walljump = new WallJump(300, 300, 20, 100, "misc\\textures\\walljump.bmp");
+						WallJump *walljump = new WallJump(300, 300, 50, 50, "misc\\textures\\walljump.bmp");
 						mLevel->addObject(walljump);
 					}
 					// aktiv plattform = den nya?

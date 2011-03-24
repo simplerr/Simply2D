@@ -18,6 +18,8 @@ public:
 	ObjectArea getAreaAt(double mx, double my);
 	void drawEditorFX(void); // draws the end tp
 	void moveDest(float dx, float dy);
+	std::vector<Property> getProperties(void);
+	void loadProperties(std::vector<Property> propertyList);
 private:
 	float mDestX;
 	float mDestY;
