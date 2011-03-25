@@ -16,6 +16,14 @@
 
 class Camera;
 
+enum GameState
+{
+	MAIN_MENU_STATE = 100,
+	PLAYING_STATE,
+	TESTING_STATE,
+	EDITOR_STATE
+};
+
 class Game : public D3DApp
 {
 public:
@@ -27,9 +35,6 @@ public:
 	void onResetDevice();
 	void updateScene(float dt);
 	void drawScene();
-
-	void renderGame(void);
-	void renderGUI(void);
 
 	void loadBkgd(char* filename);
 	void drawBkgd();
@@ -52,8 +57,9 @@ private:
 	Menu *mStartMenu;
 	Mouse *mMouse;
 
-	bool mainMenuActive, gameActive, editorActive, testActive;
-	bool firstTime;		// for the mouse position
+	GameState mGameState;
+	//bool mainMenuActive, gameActive, editorActive, testActive;
+	//bool firstTime;		// for the mouse position
 private:
 	
 };
