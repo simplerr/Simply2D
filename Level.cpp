@@ -264,13 +264,29 @@ void Level::collision(Player *player)
 */
 MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 {	
+	MTV mtv;
+	mtv.collision = false;
+
+	/* broadphase AABB test */
+	RECT rectA = ShapeA->getRect();
+	RECT rectB = ShapeB->getRect();
+
+	if(rectA.left > rectB.right)
+		return mtv;
+	else if(rectA.right < rectB.left)
+		return mtv;
+	else if(rectA.top > rectB.bottom)
+		return mtv;
+	else if(rectA.bottom < rectB.top)
+		return mtv;
+
 	bool b = true;
 	char buffer[256];
 	Shape::Point axis;															// axis we will project onto
 	Shape::Point projection;														// the direction of the projection
 	int side;																				// current side 
 	double minA, maxA, minB, maxB, axisLen, tmp, minLen = 999999, tmpDepth = 1;;			// doubles needed
-	MTV mtv;																				// minimum intersection
+																					// minimum intersection
 
 	// test Shape A's sides
 	for(side = 0; side < ShapeA->sides; side++)

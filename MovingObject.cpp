@@ -243,18 +243,6 @@ std::vector<Property> MovingObject::getProperties(void)
 	Property tmp;
 	char buffer[16];
 
-	/*tmp.name = "startx";
-	sprintf(buffer, "%i", (int)mStartPos.x);
-	tmp.value = buffer;
-	
-	properties.push_back(tmp);
-
-	tmp.name = "starty";
-	sprintf(buffer, "%i", (int)mStartPos.y);
-	tmp.value = buffer;
-	
-	properties.push_back(tmp);*/
-
 	tmp.name = "endx";
 	sprintf(buffer, "%i", (int)mEndPos.x);
 	tmp.value = buffer;
