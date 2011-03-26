@@ -361,7 +361,7 @@ void D3DApp::enableFullScreenMode(bool enable)
 	// Switch to windowed mode.
 	else
 	{
-		// Are we already in windowed mode?
+		// Are we already in windowed mode??
 		if( md3dPP.Windowed ) 
 			return;
 
