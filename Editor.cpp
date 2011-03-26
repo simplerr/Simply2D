@@ -672,7 +672,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_SAVE:
 		{
-			// levels save function does the work
+			// levels save function does the workk
 			strcpy(buffer, iLevel->getValue().c_str());
 			mLevel->saveLevel(buffer);
 			break;
