@@ -16,10 +16,10 @@ static const std::string TP_ENTER =	"misc\\textures\\tpenter.bmp";
 static const std::string TP_DEST =	"misc\\textures\\tpdest.bmp";
 static const std::string TRAMPOLINE_SOURCE = "misc\\textures\\trampoline.bmp";
 static const std::string WALLJUMP_SOURCE = "misc\\textures\\walljump.bmp";
-static const int WINDOW_WIDTH = 1200;
-static const int WINDOW_HEIGHT = 800;
-static const int GAME_WIDTH = 1000;
-static const int GAME_HEIGHT = 800;
+static const int WINDOW_WIDTH = 1400;
+static const int WINDOW_HEIGHT = 900;
+static const int GAME_WIDTH = 1200;
+static const int GAME_HEIGHT = 900;
 static const int USER_WIDTH = 36;
 static const int USER_HEIGHT = 36;
 
@@ -72,6 +72,7 @@ enum WindowID
 	OBJECT_SELECTED,
 	LOL_TEXTSUBMIT,
 	EDITOR,
+	INPUT_LEVEL,
 	INPUT_XPOS,
 	INPUT_YPOS,
 	INPUT_WIDTH,
@@ -83,6 +84,7 @@ enum WindowID
 	INPUT_SPAWNX,
 	INPUT_SPAWNY,
 	INPUT_SPEED,
+	TEXT_LEVEL,
 	TEXT_XPOS,
 	TEXT_YPOS,
 	TEXT_WIDTH,

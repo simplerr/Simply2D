@@ -61,8 +61,8 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	gGraphics = new Graphics("bulle");
 
 	// game and gui cameras!
-	gGameCamera = new Camera(500, 400, 1000, 800);
-	gGuiCamera = new Camera(1100, 400, 200, 800);
+	gGameCamera = new Camera(600, 450, 1200, 900);
+	gGuiCamera = new Camera(1300, 450, 200, 900);
 
 	buildMainMenu();
 	
@@ -83,6 +83,9 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	mGameState = MAIN_MENU_STATE;
 
 	onResetDevice();
+
+	//CreateWindow("EDIT", 0, WS_VISIBLE  | WS_CHILD | ES_LEFT | WS_TABSTOP | WS_BORDER, 500, 500, 100, 20, getMainWnd(), (HMENU)1, hInstance, 0);
+	//CreateWindow("EDIT", 0, WS_VISIBLE  | WS_CHILD | ES_LEFT | WS_TABSTOP | WS_BORDER, 500, 400, 100, 20, getMainWnd(), (HMENU)2, hInstance, 0);
 }
 
 Game::~Game()
@@ -268,7 +271,7 @@ void Game::drawScene()
 			gGuiCamera->activate(false);
 		}
 
-		gGraphics->BlitRect(600, 400, 1200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+		gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 		mStartMenu->drawMenu();	
 
 		if(!gGuiCamera->getActive())	{
@@ -277,7 +280,7 @@ void Game::drawScene()
 		}
 
 		HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
-		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+		gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 		
 	}
 	else if(mGameState == PLAYING_STATE || mGameState == TESTING_STATE)
@@ -294,7 +297,7 @@ void Game::drawScene()
 			gGuiCamera->activate(true);
 			gGameCamera->activate(false);
 		}
-		gGraphics->BlitRect(1100, 400, 200, 800, D3DCOLOR_ARGB( 155, 155, 200, 000));
+		gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	}
 	else if(mGameState == EDITOR_STATE)
 	{	
@@ -340,8 +343,8 @@ void Game::drawBkgd()
 	RECT r1;
 	r1.top = 0;
 	r1.left = 0;
-	r1.right = 4000;
-	r1.bottom = 800;
+	r1.right = 4800;
+	r1.bottom = 900;
 
 	D3DXMATRIX texScaling;
 	D3DXMatrixScaling(&texScaling, 4.0f, 1.0f, 0.0f);
@@ -355,7 +358,7 @@ void Game::drawBkgd()
 
 void Game::buildMainMenu(void)
 {
-	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 600, 400, 128, 256);
+	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
 	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp", "misc\\textures\\options_onpress.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp", "misc\\textures\\credits_onpress.bmp");
@@ -390,11 +393,11 @@ LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch( msg )
 	{
 	case WM_KEYDOWN:
-		if( wParam == '1' || wParam == '2' || wParam == '3' || wParam == '4' || wParam == '5' || wParam == '6' || wParam == '7' || wParam == '8' || wParam == '9' ||
-			wParam == '0' || wParam == '\b' || wParam == '\r' || wParam == VK_LEFT || wParam == VK_RIGHT || wParam == VK_DELETE)
-		{
+		//if( wParam == '1' || wParam == '2' || wParam == '3' || wParam == '4' || wParam == '5' || wParam == '6' || wParam == '7' || wParam == '8' || wParam == '9' ||
+		//	wParam == '0' || wParam == '\b' || wParam == '\r' || wParam == VK_LEFT || wParam == VK_RIGHT || wParam == VK_DELETE)
+		//{
 			mEditor->keyPressed(wParam);
-		}
+		//}
 	// case MOUSE?
 
 		// skicka wParam till WindowHandler

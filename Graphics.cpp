@@ -261,15 +261,16 @@ void Graphics::loadFont(void)
 {
 	D3DXFONT_DESC fontDesc;
 	fontDesc.Height          = 18;
-    fontDesc.Width           = 7;
+    fontDesc.Width           = 8;
     fontDesc.Weight          = 0;
     fontDesc.MipLevels       = 1;
     fontDesc.Italic          = false;
     fontDesc.CharSet         = DEFAULT_CHARSET;
     fontDesc.OutputPrecision = OUT_DEFAULT_PRECIS;
-    fontDesc.Quality         = DEFAULT_QUALITY;
+    fontDesc.Quality         = 2;
     fontDesc.PitchAndFamily  = DEFAULT_PITCH | FF_DONTCARE;
-    _tcscpy(fontDesc.FaceName, _T("Arial"));
+	 _tcscpy(fontDesc.FaceName, _T("Bitstream Vera Sans Mono"));
+    //_tcscpy(fontDesc.FaceName, _T("Arial")); Bitstream Vera Sans Mono
 
 	HR(D3DXCreateFontIndirect(gd3dDevice, &fontDesc, &mFont));
 }

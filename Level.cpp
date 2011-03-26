@@ -45,8 +45,11 @@ void Level::saveLevel(char* levelFile)
 	ofstream fout;
 	char buffer[256];
 	int width, height;
+
+	string tmp = "levels\\";
+	tmp.append(levelFile);
 	
-	fout.open(levelFile);
+	fout.open(tmp.c_str());
 	
 	fout << (int)spawnPos.x << " " << (int)spawnPos.y << endl;
 

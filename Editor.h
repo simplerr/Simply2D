@@ -112,8 +112,11 @@ private:
 	int mOffset;
 	CurrentAction currentAction;
 private:
+	TextBox *tLevel;
 	TextBox *tSpawnX;
 	TextBox *tSpawnY;
+
+	InputBox *iLevel;
 	InputBox *iSpawnX;
 	InputBox *iSpawnY;
 

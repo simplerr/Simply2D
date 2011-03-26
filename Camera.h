@@ -17,7 +17,7 @@ public:
 	int getY(void)					{return mPos.y;};
 	int getWidth(void)				{return mWidth;};
 	int getHeight(void)				{return mHeight;};
-	int getOffset(void)				{return mPos.x - 500;};
+	int getOffset(void)				{return mPos.x - 600;};
 
 	void setX(int x)				{mPos.x = x;};
 	void setY(int y)				{mPos.y = y;};

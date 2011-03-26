@@ -13,7 +13,7 @@
 
 extern Camera* gGameCamera;
 
-Editor::Editor() : Window(NULL, EDITOR, 1100, 400, 200, 800), SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : Window(NULL, EDITOR, 1300, 450, 200, 900), SNAP_SENSE(30), SNAP_DIST(10)
 {
 	mLevel = new Level(NULL);
 	
@@ -49,10 +49,10 @@ Editor::~Editor()
 void Editor::addPropertyPair(Property prop)
 {
 	PropertyPair tmpPair;
-	int y = 120 + 30 * propertyCount;
+	int y = 153 + 30 * propertyCount;
 
 	tmpPair.name = new TextBox(this, TEXT_XPOS, prop.name, 40, y, 60, 20);
-	tmpPair.value = new InputBox(this, INPUT_XPOS, 110, y, 60, 20);
+	tmpPair.value = new InputBox(this, INPUT_XPOS, 110, y, 60, 20, 4);
 	tmpPair.value->setValue(prop.value);
 
 	propertyPairs.push_back(tmpPair);
@@ -62,11 +62,17 @@ void Editor::addPropertyPair(Property prop)
 
 void Editor::buildGUI(void)
 {
-	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 40, 60, 20);
-	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 70, 60, 20);
+	int OFFSET = 30;
 
-	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 40, 60, 20);
-	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 70, 60, 20);
+	tLevel = new TextBox(this, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
+	iLevel = new InputBox(this, INPUT_LEVEL, 125, 22, 90, 20, 15);
+	iLevel->setValue("");
+
+	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 40 + OFFSET, 60, 20);
+	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 70 + OFFSET, 60, 20);
+
+	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 40 + OFFSET, 60, 20, 4);
+	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 70 + OFFSET, 60, 20, 4);
 
 	// sets the values to the spawnPos!
 	POS spawnPos = mLevel->getSpawn();
@@ -75,16 +81,16 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue(buffer);
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 66, 490, 110, 130);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 130);	// shouldn't take height, should expand on addItem
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 620, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 650, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 650, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 620 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 620 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 650 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 650 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 590, 130, 20, 20);
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 590 + OFFSET, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 675, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 675 + OFFSET, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -310,6 +316,8 @@ int Editor::updateAll(float dt)
 	// check keyboard inputs
 	if(gDInput->keyPressed(DIK_P))
 		messageHandler(BUTTON_DELETE);
+	else if(gDInput->keyPressed(DIK_C))
+		messageHandler(BUTTON_CREATE);
 
 	return 1;
 }
@@ -365,9 +373,9 @@ int Editor::renderGui()
 {
 	Window::renderAll();
 
-	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 7);
-	gGraphics->drawText("Active object:", GAME_WIDTH +10, 90);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 400);
+	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 37);
+	gGraphics->drawText("Active object:", GAME_WIDTH +10, 120);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 430);
 
 	return 1;
 }
@@ -664,7 +672,8 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_SAVE:
 		{
-			strcpy(buffer, ACTIVE_LEVEL.c_str());
+			// levels save function does the work
+			strcpy(buffer, iLevel->getValue().c_str());
 			mLevel->saveLevel(buffer);
 			break;
 		}

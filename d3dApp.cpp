@@ -79,7 +79,7 @@ void D3DApp::initMainWindow()
 
 	// Default to a window with a client area rectangle of 800x600.
 
-	RECT R = {0, 0, 1200, 800};
+	RECT R = {0, 0, 1400, 900};
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
 	mhMainWnd = CreateWindow("D3DWndClassName", mMainWndCaption.c_str(), 
 		WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN)/2-(R.right/2),
@@ -316,6 +316,18 @@ LRESULT D3DApp::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			enableFullScreenMode(true);
 	
 		// skicka wParam till WindowHandler
+		return 0;
+	case WM_COMMAND:
+		switch ( LOWORD(wParam) ) 
+		{
+		case 1:
+			MessageBox(0, "1!", 0, 0);
+			break;
+		case 2:
+			MessageBox(0, "2!", 0, 0);
+			break;
+		}
+
 		return 0;
 	}
 	return DefWindowProc(mhMainWnd, msg, wParam, lParam);

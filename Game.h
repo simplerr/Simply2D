@@ -45,6 +45,8 @@ public:
 	LRESULT msgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
+	HWND input;
+
 	GfxStats* mGfxStats;
 
 	IDirect3DTexture9* mBkgdTex;

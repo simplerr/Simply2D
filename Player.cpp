@@ -83,7 +83,7 @@ void Player::update(double dt, Level *Level)
 
 	if(mJumping)
 	{
-		// faller n�r han n�tt maxh�jd
+		// falls when max height is reached
 		if(dJump <= -MAX_HEIGHT)	{
 			mFalling = true;
 			mJumping = false;
@@ -107,7 +107,6 @@ void Player::update(double dt, Level *Level)
 		moving = true;
 		faceDir = RIGHT;
 	}
-
 	
 	if(mShape.origin.x >= 516)
 		gGameCamera->addMovement(mDX, 0);

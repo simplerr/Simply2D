@@ -1,9 +1,10 @@
 #include "InputBox.h"
 
-InputBox::InputBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+InputBox::InputBox(Window *parent, WindowID id, int x, int y, int width, int height, int maxlen,  D3DCOLOR color)
 		: Window(parent, id, x, y, width, height, color)
 {
 	showCaret = false;
+	maxLength = maxlen;
 }
 
 InputBox::~InputBox()
@@ -39,7 +40,7 @@ int InputBox::renderAll()
 		if(mActive)
 		{
 			if(showCaret)
-				gGraphics->drawText("|", mX-mWidth/2+(14+caretPos*9), mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));	
+				gGraphics->drawText("|", mX-mWidth/2+(12+caretPos*8), mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));		
 		}
 	}
 
@@ -98,10 +99,22 @@ int InputBox::wm_keydown(WPARAM wParam)
 						}
 		// input
 		default:		{
-							if(mValue.size() < 4)
+							if(mValue.size() < maxLength)
 							{
-								string strInput = string(1,input);		
-								mValue.insert(caretPos, strInput);	
+								
+								string strInput = string(1,input);	
+
+								if(strInput == "¾")
+									mValue.insert(caretPos, ".");
+								else if((int)input > 0)	{
+									if(isdigit(input) || isalpha(input))
+										mValue.insert(caretPos, strInput);
+									else
+										return 1;
+								}						
+								else
+									return 1;
+
 								caretPos +=1;
 							}						
 						}

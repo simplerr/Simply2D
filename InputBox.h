@@ -9,7 +9,7 @@
 class InputBox : public Window
 {
 public:
-	InputBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	InputBox(Window *parent, WindowID id, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~InputBox();
 
 	void updateWindow(float dt);
@@ -19,6 +19,7 @@ public:
 
 	//void takeInput(WPARAM wParam);
 private:
+	int maxLength;
 	int caretPos;
 	int caretTick;
 	bool showCaret, handled;

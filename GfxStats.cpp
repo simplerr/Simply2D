@@ -12,7 +12,7 @@ GfxStats::GfxStats()
 {
 	D3DXFONT_DESC fontDesc;
 	fontDesc.Height          = 18;
-    fontDesc.Width           = 0;
+    fontDesc.Width           = 8;
     fontDesc.Weight          = 0;
     fontDesc.MipLevels       = 1;
     fontDesc.Italic          = false;
@@ -20,7 +20,7 @@ GfxStats::GfxStats()
     fontDesc.OutputPrecision = OUT_DEFAULT_PRECIS;
     fontDesc.Quality         = DEFAULT_QUALITY;
     fontDesc.PitchAndFamily  = DEFAULT_PITCH | FF_DONTCARE;
-    _tcscpy(fontDesc.FaceName, _T("Times New Roman"));
+    _tcscpy(fontDesc.FaceName, _T("Bitstream Vera Sans Mono"));
 
 	HR(D3DXCreateFontIndirect(gd3dDevice, &fontDesc, &mFont));
 }
