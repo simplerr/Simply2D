@@ -101,7 +101,7 @@ int InputBox::wm_keydown(WPARAM wParam)
 		default:		{
 							if(mValue.size() < maxLength)
 							{
-								
+								// just for git
 								string strInput = string(1,input);	
 
 								if(strInput == "¾")
