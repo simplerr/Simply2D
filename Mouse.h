@@ -22,6 +22,7 @@ public:
 	POINT getPos(void)	{return mPos;};
 	POINT getScreenPos(void);
 	bool buttonDown(MouseButton button);
+	bool buttonPressed(MouseButton button);
 	void drawMousePos(void);
 
 	void move(int dx, int dy);

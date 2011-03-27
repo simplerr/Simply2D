@@ -71,6 +71,13 @@ bool Mouse::buttonDown(MouseButton button)
 	// lägg till mer vid behov
 }
 
+bool Mouse::buttonPressed(MouseButton button)
+{
+	if(gDInput->mouseButtonPressed(button))
+		return true;
+	// lägg till mer vid behov
+}
+
 void Mouse::drawMousePos(void)
 {
 	char buffer[256];

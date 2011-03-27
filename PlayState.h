@@ -17,6 +17,7 @@ public:
 	void drawMain(Game* game);
 	virtual void drawGui(Game* game);
 	virtual void drawBkgd(void);
+	void setLevel(string level);
 
 	static PlayState* Instance() {
 		return &mPlayState;

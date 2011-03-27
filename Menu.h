@@ -51,6 +51,7 @@ public:
 	void setMenuBackground(char *textureSource, int x, int y, int width, int height);
 
 	bool buttonPressed(POINT mousePos, std::string pressedButton);
+	std::string buttonPressed(POINT mousePos);
 	void updateSelectedItem(POINT mousePos);
 
 	//MenuItem createMenuItem(...);

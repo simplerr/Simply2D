@@ -158,11 +158,9 @@ void Menu::draw(void)
 			gGraphics->BlitTexture(i->onSelectTexture, i->itemRect, 0xFFFFFFFF, 0);
 
 		if(mUseFonts)
-			gGraphics->drawText((char*)i->itemName.c_str(), i->itemRect.left + (i->itemRect.right - i->itemRect.left)/2-20, i->itemRect.top + (i->itemRect.bottom - i->itemRect.top)/2-10);
+			gGraphics->drawText((char*)i->itemName.c_str(), i->itemRect.left + 5, i->itemRect.top + (i->itemRect.bottom - i->itemRect.top)/2-10);
 		i++;
-	}
-
-	
+	}	
 }
 
 void Menu::update(POINT mousePos)
@@ -247,4 +245,39 @@ bool Menu::buttonPressed(POINT mousePos, std::string pressedButton)
 		}
 	}
 		return false;		
+}
+
+std::string Menu::buttonPressed(POINT mousePos)
+{
+	// navigera med musen?
+	if(navigation == MOUSE)
+	{	
+			std::list<MenuItem>::iterator i = mMenuItemList.begin();
+			while( i != mMenuItemList.end())
+			{
+				if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)	{				
+					i->state = PRESSED;
+					return i->itemName;
+				}
+				i++;
+			}
+	}
+	// navigera med tangentbordet
+	else if(navigation == ARROWKEYS)
+	{
+		if(gDInput->keyPressed(DIK_RETURN))
+		{
+			std::list<MenuItem>::iterator i = mMenuItemList.begin();
+			while( i != mMenuItemList.end())
+			{
+				if(i->ID == idCounter)	{				
+					i->state = PRESSED;
+					return i->itemName;
+				}
+				i++;
+			}
+		}
+	}
+
+	return "none";		
 }

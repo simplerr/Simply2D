@@ -1,5 +1,9 @@
 #include "CustomLevelState.h"
-
+#include <Windows.h>
+#include <direct.h>
+#include <tchar.h>
+#include <string>
+#include <algorithm>
 #include "CameraManager.h"
 #include "MainMenuState.h"
 #include "PlayState.h"
@@ -15,10 +19,23 @@ CustomLevelState CustomLevelState::mCustomLevelState;
 void CustomLevelState::init()
 {
 	// create the menu
-	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, false, 4, 4);
-
+	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
 	mCustomLevelMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
-	mCustomLevelMenu->addMenuItem("Play", "misc\\textures\\level_menu_normal.bmp", "misc\\textures\\level_menu_hoover.bmp", "misc\\textures\\play_onpress.bmp");
+
+	// get the files in the map folder
+	std::vector<string> levelList = getLevels();
+
+	// add menu items, each level
+	for(int i = 0; i < levelList.size(); i++)
+	{
+		// remove .txt
+		if(levelList[i].find(".txt") != string::npos || levelList[i].find(".TXT") != string::npos)
+			levelList[i].erase(levelList[i].end()-4,levelList[i].end()); 
+
+		mCustomLevelMenu->addMenuItem(levelList[i], "misc\\textures\\level_menu_normal.bmp", "misc\\textures\\level_menu_hoover.bmp", "misc\\textures\\level_menu_normal.bmp");
+	}
+
+	// build the menu
 	mCustomLevelMenu->buildMenu();
 }
 
@@ -45,10 +62,19 @@ void CustomLevelState::handleEvents(Game* game)
 
 void CustomLevelState::update(Game* game, double dt)
 {
+	// consider to combine this with the menuHandler()
 	mCustomLevelMenu->update(gMouse->getPos());
 
 	// check if the playe pressed a menu element
 	string result = menuHandler();
+
+	// menu item was pressed -> set level
+	if(result != "none")	{
+		result.append(".txt");
+
+		game->changeState(PlayState::Instance());
+		PlayState::Instance()->setLevel(result);
+	}
 }
 
 void CustomLevelState::drawMain(Game* game)
@@ -64,12 +90,50 @@ void CustomLevelState::drawGui(Game* game)
 
 string CustomLevelState::menuHandler(void)
 {
-	if(gMouse->buttonDown(LEFTBUTTON))
+	if(gMouse->buttonPressed(LEFTBUTTON))
 	{
-		if(mCustomLevelMenu->buttonPressed(gMouse->getPos(), "CustemLevelMenu"))	{	
-			return "CustemLevelMenu";		
+		if(mCustomLevelMenu->buttonPressed(gMouse->getPos()) != "none")	{	
+			return mCustomLevelMenu->buttonPressed(gMouse->getPos());		
 		}	
 	}
 
 	return "none";
+}
+
+std::vector<string> CustomLevelState::getLevels(void)
+{
+	int size;
+	int counter = 0;
+	bool working(true);
+	string test;
+	char buffer[256] = "";
+	std::vector<string> levelList;
+
+	WIN32_FIND_DATA findData;
+	HANDLE myHandle = FindFirstFile("levels\\*",&findData); // C:\\hlserver\\*
+
+	if (myHandle == INVALID_HANDLE_VALUE) 
+	{
+		 MessageBox(0, "Error loading the first file", 0, 0);
+	} 
+	else 
+	{
+		do
+		{
+			test = string(findData.cFileName);
+
+			if (test != "."  && test !=  "..")
+			{
+				// remove spaces
+				for(int j = 0; j < test.length()-1; j++)	{
+					if(test[j] == ' ')
+						test.erase(j);
+				}
+				levelList.push_back(test);
+				counter++;
+			}
+		}	while (FindNextFile(myHandle, &findData));
+	}
+
+	return levelList;
 }

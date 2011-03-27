@@ -66,6 +66,7 @@ void Editor::buildGUI(void)
 {
 	int OFFSET = 30;
 
+	// should only allow input of 11 characters
 	tLevel = new TextBox(this, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
 	iLevel = new InputBox(this, INPUT_LEVEL, 125, 22, 90, 20, 15);
 	iLevel->setValue("");
@@ -674,7 +675,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_SAVE:
 		{
-			// levels save function does the workk
+			// levels save function does the work
 			strcpy(buffer, iLevel->getValue().c_str());
 			mLevel->saveLevel(buffer);
 			break;

@@ -18,6 +18,7 @@ public:
 	void drawMain(Game* game);
 	void drawGui(Game* game);
 	void drawBkgd(void);
+	std::vector<string> getLevels(void);
 
 	static CustomLevelState* Instance() {
 		return &mCustomLevelState;

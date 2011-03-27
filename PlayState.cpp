@@ -79,3 +79,10 @@ void PlayState::drawBkgd()
 	D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
 	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 }
+
+void PlayState::setLevel(string level)
+{
+	string levelToLoad = "levels\\";
+	levelToLoad.append(level);
+	mLevel->loadLevel((char*)levelToLoad.c_str()); // (char*)level.c_str()
+}
