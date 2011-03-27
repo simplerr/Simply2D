@@ -15,8 +15,7 @@ public:
 		return &mTestState;
 	}
 
-	void draw(Game* game) {
-		PlayState::draw();
+	void drawGui(Game* game) {
 		gGraphics->drawText("Press ESC to return", 1020, 20);
 	}
 protected:

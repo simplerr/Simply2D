@@ -15,7 +15,8 @@ public:
 
 	void handleEvents(Game* game);
 	void update(Game* game, double dt);
-	void draw(Game* game);
+	void drawMain(Game* game);
+	void drawGui(Game* game);
 	void drawBkgd(void);
 
 	static MainMenuState* Instance() {

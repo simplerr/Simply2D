@@ -1,8 +1,8 @@
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Camera.h"
+#include "CameraManager.h"
 
-extern Camera *gGameCamera;
+extern CameraManager *gCameraManager;
 
 Mouse *gMouse			 = 0;
 
@@ -86,7 +86,7 @@ void Mouse::setMousePos(int x, int y)
 	mPos.x = x;
 	mPos.y = y;
 
-	SetCursorPos(windowRect.left - 8 + x - gGameCamera->getOffset(), windowRect.top + 30 + y);	
+	SetCursorPos(windowRect.left - 8 + x - gCameraManager->gameCamera()->getOffset(), windowRect.top + 30 + y);	
 }
 
 void Mouse::setX(int x)
@@ -95,7 +95,7 @@ void Mouse::setX(int x)
 	GetWindowRect(mMainWnd, &windowRect);
 
 	SetCursorPos(windowRect.left + 8 + x, windowRect.top  + mPos.y);
-	mPos.x = x + gGameCamera->getOffset();
+	mPos.x = x + gCameraManager->gameCamera()->getOffset();
 }
 
 void Mouse::setY(int y)
@@ -111,7 +111,7 @@ void Mouse::move(int dx, int dy)
 	mPos.x += dx;
 	mPos.y += dy;
 
-	SetCursorPos(windowRect.left + 8 + mPos.x - gGameCamera->getOffset(), windowRect.top + 30 + mPos.y);
+	SetCursorPos(windowRect.left + 8 + mPos.x - gCameraManager->gameCamera()->getOffset(), windowRect.top + 30 + mPos.y);
 }
 
 POINT Mouse::getScreenPos(void)

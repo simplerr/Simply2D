@@ -6,12 +6,12 @@
 #include "WallJump.h"
 #include "Teleport.h"
 #include "Enemy.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include <fstream>
 
 using namespace std;
 
-extern Camera* gGameCamera;
+extern CameraManager* gCameraManager;
 
 Level::Level(Player *player)
 {
@@ -220,7 +220,7 @@ void Level::collision(Player *player)
 
 			// the camera have to follow the player
 			if(player->getX() >= 516)
-				gGameCamera->addMovement(mtv.pushX, 0);
+				gCameraManager->gameCamera()->addMovement(mtv.pushX, 0);
 
 			// what's gonna happen with the player?
 			mObjectList[i]->onPlayerCollision(player, mtv);	

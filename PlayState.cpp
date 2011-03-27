@@ -1,9 +1,8 @@
 #include "PlayState.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include "MainMenuState.h"
 
-extern Camera* gGameCamera;
-extern Camera* gGuiCamera;
+extern CameraManager* gCameraManager;
 
 PlayState PlayState::mPlayState;
 
@@ -47,25 +46,17 @@ void PlayState::handleEvents(Game* game)
 void PlayState::update(Game* game, double dt)
 {
 	mLevel->updateLevel(dt);	// update objects + player
-	gGameCamera->move();		// move the camera accordingly
+	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 
-void PlayState::draw(Game* game)
+void PlayState::drawMain(Game* game)
 {
-	// draw the game area
-	if(!gGameCamera->getActive())	{
-		gGameCamera->activate(true);
-		gGuiCamera->activate(false);
-	}
-
 	drawBkgd();
 	mLevel->drawLevel();
+}
 
-	// draw the gui area
-	if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
+void PlayState::drawGui(Game* game)
+{
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }
 

@@ -1,10 +1,9 @@
 #include "EditorState.h"
 
-#include "Camera.h"
+#include "CameraManager.h"
 #include "MainMenuState.h"
 
-extern Camera* gGameCamera;
-extern Camera* gGuiCamera;
+extern CameraManager* gCameraManager;
 
 EditorState EditorState::mEditorState;
 
@@ -45,25 +44,17 @@ void EditorState::handleEvents(Game* game)
 void EditorState::update(Game* game, double dt)
 {
 	mEditor->updateAll(dt);
-	gGameCamera->move();		// move the camera accordingly
+	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 
-void EditorState::draw(Game* game)
+void EditorState::drawMain(Game* game)
 {
-	// draw the game area
-	if(!gGameCamera->getActive())	{
-		gGameCamera->activate(true);
-		gGuiCamera->activate(false);
-	}
-
 	drawBkgd();
 	mEditor->renderLevel();
+}
 
-	// draw the gui area
-	if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
+void EditorState::drawGui(Game* game)
+{
 	//gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	mEditor->renderGui();
 }

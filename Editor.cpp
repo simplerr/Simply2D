@@ -4,14 +4,15 @@
 #include "MovingPlatform.h"
 #include "WallJump.h"
 #include "Enemy.h"
-#include "Camera.h"
 #include "Teleport.h"
 #include "Trampoline.h"
+#include "CameraManager.h"
+
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
 
-extern Camera* gGameCamera;
+extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 Editor::Editor() : Window(NULL, EDITOR, 1300, 450, 200, 900), SNAP_SENSE(30), SNAP_DIST(10)
@@ -111,7 +112,7 @@ int Editor::updateAll(float dt)
 
 	Window::updateWindow(dt);
 	POINT tmpMousePos = gMouse->getPos();
-	mOffset = gGameCamera->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
+	mOffset = gCameraManager->gameCamera()->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
 	
 	MovingPlatform *tmpPlatform;
 
@@ -301,8 +302,8 @@ int Editor::updateAll(float dt)
 	if(gDInput->mouseButtonDown(MIDDLEBUTTON))
 	{
 		// shouldn't be able to move outside to the left
-		if(gGameCamera->getX() > 500 || (gGameCamera->getX() == 500 && gDInput->mouseDX() < 0))	{
-			gGameCamera->addMovement(-gDInput->mouseDX(), 0);
+		if(gCameraManager->gameCamera()->getX() > 500 || (gCameraManager->gameCamera()->getX() == 500 && gDInput->mouseDX() < 0))	{
+			gCameraManager->gameCamera()->addMovement(-gDInput->mouseDX(), 0);
 			gMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
 		}
 		
@@ -682,7 +683,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			strcpy(buffer, ACTIVE_LEVEL.c_str());
 			gMouse->restore();
-			gGameCamera->restore();
+			gCameraManager->gameCamera()->restore();
 			mLevel->saveLevel(buffer);
 			tryLevel = true;
 			break;

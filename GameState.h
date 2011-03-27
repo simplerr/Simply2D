@@ -18,7 +18,7 @@ public:
 	virtual void handleEvents(Game* game) = 0;
 	virtual void update(Game* game, double dt) = 0;
 	virtual void drawMain(Game* game) = 0;
-	virtual void drawGUI(Game* game) = 0;
+	virtual void drawGui(Game* game) = 0;
 
 	void ChangeState(Game* game, GameState* state) {
 		game->changeState(state);

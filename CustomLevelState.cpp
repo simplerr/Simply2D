@@ -1,14 +1,13 @@
 #include "CustomLevelState.h"
 
-#include "Camera.h"
+#include "CameraManager.h"
 #include "MainMenuState.h"
 #include "PlayState.h"
 #include "Menu.h"
 
 class Menu;
 
-extern Camera* gGameCamera;
-extern Camera* gGuiCamera;
+extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 CustomLevelState CustomLevelState::mCustomLevelState;
@@ -52,22 +51,13 @@ void CustomLevelState::update(Game* game, double dt)
 	string result = menuHandler();
 }
 
-void CustomLevelState::draw(Game* game)
+void CustomLevelState::drawMain(Game* game)
 {
-	// draw the game area
-	if(!gGameCamera->getActive())	{
-		gGameCamera->activate(true);
-		gGuiCamera->activate(false);
-	}
-
 	mCustomLevelMenu->draw();
+}
 
-	// draw the gui area
-	if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
-
+void CustomLevelState::drawGui(Game* game)
+{
 	// the green side
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }

@@ -17,8 +17,12 @@ public:
 
 	void setCamera(Cam camera);
 
-	Camera *gGameCamera;
-	Camera *gGuiCamera;
+	Camera *gameCamera(void);
+	Camera *guiCamera(void);
+
+private:
+	Camera *mGameCamera;
+	Camera *mGuiCamera;
 };
 
 #endif

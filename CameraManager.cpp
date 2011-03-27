@@ -1,29 +1,41 @@
 #include "CameraManager.h"
 
+CameraManager *gCameraManager	= 0;
+
 CameraManager::CameraManager()
 {
-	gGameCamera = new Camera(600, 450, 1200, 900);
-	gGuiCamera = new Camera(1300, 450, 200, 900);
+	mGameCamera = new Camera(600, 450, 1200, 900);
+	mGuiCamera = new Camera(1300, 450, 200, 900);
 }
 
 CameraManager::~CameraManager()
 {
-	delete gGameCamera;
-	delete gGuiCamera;
+	delete mGameCamera;
+	delete mGuiCamera;
 }
 
 void CameraManager::setCamera(Cam camera)
 {
 	if(camera == GAME_CAMERA)	{
-		if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
+		if(!mGameCamera->getActive())	{
+			mGameCamera->activate(true);
+			mGuiCamera->activate(false);
 		}
 	}
 	else if(camera == GUI_CAMERA)	{
-		if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
+		if(!mGuiCamera->getActive())	{
+			mGuiCamera->activate(true);
+			mGameCamera->activate(false);
 		}
 	}
+}
+
+Camera* CameraManager::gameCamera(void)
+{
+	return mGameCamera;
+}
+
+Camera* CameraManager::guiCamera(void)
+{
+	return mGuiCamera;
 }

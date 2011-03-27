@@ -14,8 +14,9 @@ public:
 
 	virtual void handleEvents(Game* game);
 	void update(Game* game, double dt);
-	virtual void draw(Game* game);
-	void drawBkgd(void);
+	void drawMain(Game* game);
+	virtual void drawGui(Game* game);
+	virtual void drawBkgd(void);
 
 	static PlayState* Instance() {
 		return &mPlayState;

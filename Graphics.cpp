@@ -1,7 +1,7 @@
 #include "Graphics.h"
 #include "Vertex.h"
 #include <tchar.h>
-#include "Camera.h"
+#include "CameraManager.h"
 #include "Object.h"
 #include "Shape.h"
 
@@ -9,7 +9,7 @@
 //const DWORD D3DFVF_TLVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 //const DWORD D3DFVF_RECTVERTEX = (D3DFVF_XYZ | D3DFVF_DIFFUSE);
 
-extern Camera* gGameCamera;
+extern CameraManager* gCameraManager;
 
 Graphics::Graphics(std::string s)
 {
@@ -301,39 +301,23 @@ void Graphics::BlitRect(float x, float y, int width, int height, D3DCOLOR fillCo
 	  vertices[0].pos.y = (float) rDest.top;
 	  vertices[0].pos.z = 0.0f;
 
-	  char buffer[256];
-	  sprintf(buffer, "x1: %f, y1: %f, z1: %f",  vertices[0].pos.x,  vertices[0].pos.y,  vertices[0].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
 	  vertices[1].color = fillColor;
 	  vertices[1].pos.x = (float) rDest.right;
 	  vertices[1].pos.y = (float) rDest.top;
 	  vertices[1].pos.z = 0.0f; 
-
-	  sprintf(buffer, "x2: %f, y2: %f, z2: %f",  vertices[1].pos.x,  vertices[1].pos.y,  vertices[1].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
 
 	  vertices[2].color = fillColor;
 	  vertices[2].pos.x = (float) rDest.right;
 	  vertices[2].pos.y = (float) rDest.bottom;
 	  vertices[2].pos.z = 0.0f; 
 
-	  sprintf(buffer, "x3: %f, y3: %f, z3: %f",  vertices[2].pos.x,  vertices[2].pos.y,  vertices[2].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
 	  vertices[3].color = fillColor;
 	  vertices[3].pos.x = (float) rDest.left;
 	  vertices[3].pos.y = (float) rDest.bottom;
 	  vertices[3].pos.z = 0.0f;
 
-	  sprintf(buffer, "x4: %f, y4: %f, z4: %f",  vertices[3].pos.x,  vertices[3].pos.y,  vertices[3].pos.z);
-	  //MessageBox(0, buffer, 0, 0);
-
 	  //Unlock the vertex buffer
 	  HR(mVB_rect->Unlock());
-
-	 sprintf(buffer, "x: %i, y: %i, width: %i, height: %i", gGameCamera->getX(), gGameCamera->getY(), gGameCamera->getWidth(), gGameCamera->getHeight());
-	 //MessageBox(0, buffer, 0, 0);
 
 	  //Draw image
 	  HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));

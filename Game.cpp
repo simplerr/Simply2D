@@ -19,13 +19,12 @@
 #include "TextBox.h"
 #include "InputBox.h"
 #include "Enemy.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include "MainMenuState.h"
 
 using namespace std;
 
-extern Camera* gGameCamera;
-extern Camera* gGuiCamera;
+extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 // couldn't lie in d3dApp.cpp, no reason why not
@@ -63,8 +62,7 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	gGraphics = new Graphics("bulle");
 
 	// game and gui cameras!
-	gGameCamera = new Camera(600, 450, 1200, 900);
-	gGuiCamera = new Camera(1300, 450, 200, 900);
+	gCameraManager = new CameraManager();
 
 	mGameState = NULL;
 
@@ -88,7 +86,7 @@ void Game::changeState(GameState* state)
 
 	// restores their positions
 	gMouse->restore();
-	gGameCamera->restore();
+	gCameraManager->gameCamera()->restore();
 }
 
 bool Game::checkDeviceCaps()
@@ -158,267 +156,45 @@ void Game::updateScene(float dt)
 	mGfxStats->setTriCount(8 *2);
 	mGfxStats->setVertexCount(16 *4);
 	mGfxStats->update(dt);
-
-
-	/*switch(mGameState)
-	{
-	case MAIN_MENU_STATE:
-		{
-			string menuResult;
-			mStartMenu->updateMenu(gMouse->getPos());
-			menuResult = mainMenuHandler();
-			if(menuResult == "Play")	{
-				mGameState = PLAYING_STATE;
-				sprintf(buffer, ACTIVE_LEVEL.c_str()); 
-				mLevel->loadLevel(buffer);
-				//mLevel->spawnPlayer(); //-> currently increases sides in shape
-			}
-			else if(menuResult == "Editor")	{
-				mGameState = EDITOR_STATE;
-				sprintf(buffer, ACTIVE_LEVEL.c_str()); 
-				mEditor->loadLevel(buffer);
-			}
-			else if(menuResult == "Custom")	{
-				mGameState = SELECTING_LEVEL;
-			}
-
-			if(gDInput->keyPressed(DIK_ESCAPE))
-				mGameState = PLAYING_STATE;
-
-			break;
-		}
-	case PLAYING_STATE:
-		{
-			mGfxStats->setTriCount(8 *2);
-			mGfxStats->setVertexCount(16 *4);
-			mGfxStats->update(dt);
-		
-			mLevel->updateLevel(dt);	// update objects + player
-			gGameCamera->move();		// move the camera accordingly
-
-			if(gDInput->keyPressed(DIK_ESCAPE))	{
-				// restores if the camera have been moved
-				gMouse->restore();
-				gGameCamera->restore();
-				mGameState = MAIN_MENU_STATE;
-			}
-
-			break;
-		}
-	case TESTING_STATE:
-		{
-			mGfxStats->setTriCount(8 *2);
-			mGfxStats->setVertexCount(16 *4);
-			mGfxStats->update(dt);
-		
-			mLevel->updateLevel(dt);	// update objects + player
-			gGameCamera->move();		// move the camera accordingly
-
-			if(gDInput->keyPressed(DIK_ESCAPE))	{
-				// restores if the camera have been moved
-				gMouse->restore();
-				gGameCamera->restore();
-				mEditor->setTest(false);
-				mGameState = EDITOR_STATE;
-			}
-
-			break;
-		}
-	case EDITOR_STATE:
-		{
-			if(mEditor->updateAll(dt) < 0)	{
-				sprintf(buffer, ACTIVE_LEVEL.c_str()); 
-				mLevel->loadLevel(buffer);
-				mLevel->spawnPlayer();
-				mGameState = TESTING_STATE;
-			}
-			gGameCamera->move();
-
-			if(gDInput->keyPressed(DIK_ESCAPE))	{
-				// restores if the camera have been moved
-				gMouse->restore();
-				gGameCamera->restore();
-				mGameState = MAIN_MENU_STATE;
-			}
-			break;
-		}
-	case SELECTING_LEVEL:
-		{
-			mSelectLevelMenu->updateMenu(gMouse->getPos());
-			break;
-		}
-	}*/
 }
 
 void Game::drawScene()
 {
-
 	HR(gd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE));
 
-	// Clear the backbuffer and depth buffer.
-	// maybe unnecessary test, check it later..
-	if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
-		}
+	// clears the backbuffer and depth buffer
+	gCameraManager->setCamera(GAME_CAMERA);
 
 	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));	
 
-		if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
+	gCameraManager->setCamera(GUI_CAMERA);
 
 	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
 
 	HR(gd3dDevice->BeginScene());
 
 	// activate game camera
-	if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
-		}
+	gCameraManager->setCamera(GAME_CAMERA);
 
 	// should allways be displayed
 	mGfxStats->display();
 
-	mGameState->draw(this);
+	// draw the state content in the game area
+	mGameState->drawMain(this);
+
+	// activate gui camera
+	gCameraManager->setCamera(GUI_CAMERA);
+
+	// drwa the state content in the gui area
+	mGameState->drawGui(this);
 
 	gMouse->drawMousePos();
-
-
-
-	/*if(mGameState == MAIN_MENU_STATE)
-	{
-		if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
-		}
-
-		gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
-		mStartMenu->drawMenu();	
-
-		if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
-
-		HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
-		gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
-		
-	}
-	else if(mGameState == PLAYING_STATE || mGameState == TESTING_STATE)
-	{
-		if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
-		}
-		drawBkgd();
-		mLevel->drawLevel();
-		mGfxStats->display();
-
-		if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
-		gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
-	}
-	else if(mGameState == EDITOR_STATE)
-	{	
-		// render level
-		if(!gGameCamera->getActive())	{
-			gGameCamera->activate(true);
-			gGuiCamera->activate(false);
-		}
-
-		drawBkgd();
-		mGfxStats->display();
-		mEditor->renderLevel();	
-
-		// renders ui
-		if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
-		mEditor->renderGui();				
-	}
-	else if(mGameState == SELECTING_LEVEL)
-	{
-		if(!gGameCamera->getActive())
-			gGameCamera->activate(true);
-		mSelectLevelMenu->drawMenu();
-	}
-
-	if(mGameState == TESTING_STATE)
-		gGraphics->drawText("Press ESC to return", 1020, 20);
-	gMouse->drawMousePos();*/
 	
 	HR(gd3dDevice->EndScene());
 
 	// Present the backbuffer.
 	HR(gd3dDevice->Present(0, 0, 0, 0));
 }
-
-/*void Game::loadBkgd(char* filename)
-{	
-	mBkgdTex = gGraphics->loadTexture(filename); // ska ta filename egentligen^)
-		
-	if(!mBkgdTex)
-		MessageBox(0, "Eror loading background texture", 0, 0);
-}
-
-// b�r vara sk�rmens storlek
-void Game::drawBkgd()
-{	
-	RECT r1;
-	r1.top = 0;
-	r1.left = 0;
-	r1.right = 4800;
-	r1.bottom = 900;
-
-	D3DXMATRIX texScaling;
-	D3DXMatrixScaling(&texScaling, 4.0f, 1.0f, 0.0f);
-	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
-
-	gGraphics->BlitTexture(mBkgdTex, r1, 0xFFFFFFFF, 0.0f);
-
-	D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
-	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
-}
-
-void Game::buildMainMenu(void)
-{
-	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
-	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");
-	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
-	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp", "misc\\textures\\options_onpress.bmp");
-	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp", "misc\\textures\\credits_onpress.bmp");
-	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_onselect.bmp", "misc\\textures\\quit_onpress.bmp");
-	mStartMenu->buildMenu();
-}
-
-std::string Game::mainMenuHandler(void)
-{
-	// update
-	//mStartMenu->updateMouse();
-	// get input
-	if(gMouse->buttonDown(LEFTBUTTON))
-	{
-		if(mStartMenu->buttonPressed(gMouse->getPos(), "Play"))	{	
-			return "Play";		
-		}
-		else if(mStartMenu->buttonPressed(gMouse->getPos(), "Editor"))	{
-			return "Editor";
-		}
-		else if(mStartMenu->buttonPressed(gMouse->getPos(),  "Quit"))
-			return "Quit";
-		else if(mStartMenu->buttonPressed(gMouse->getPos(), "Custom"))	{
-			return "Custom";
-		}
-	}
-
-	return "NONE";
-}*/
 
 LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {

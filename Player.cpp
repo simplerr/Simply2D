@@ -1,9 +1,9 @@
 ﻿#include "player.h"
 #include "Object.h"
 #include "Game.h"
-#include "Camera.h"
+#include "CameraManager.h"
 
-extern Camera* gGameCamera;
+extern CameraManager* gCameraManager;
 
 Player::Player(string filename, int width, int height)
 	:JUMP_HEIGHT(80)
@@ -109,7 +109,7 @@ void Player::update(double dt, Level *Level)
 	}
 	
 	if(mShape.origin.x >= 516)
-		gGameCamera->addMovement(mDX, 0);
+		gCameraManager->gameCamera()->addMovement(mDX, 0);
 
 	move(mDX, mDY);
 	Level->collision(this);
@@ -132,7 +132,7 @@ void Player::draw(void)
 	// draw health
 	char buffer[256];
 	sprintf(buffer, "Health: %i", mHealth);
-	gGraphics->drawText(buffer, 1050, 200);
+	gGraphics->drawText(buffer, 1180, 200);
 }
 
 RECT Player::getRect(void)
@@ -173,7 +173,7 @@ double Player::getY(void)
 void Player::setXY(float x, float y)
 {
 	// find out how much to move the camera
-	gGameCamera->addMovement(x - mX, 0);
+	gCameraManager->gameCamera()->addMovement(x - mX, 0);
 
 	mX = x;
 	mY = y;

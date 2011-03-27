@@ -1,11 +1,10 @@
 #include "MainMenuState.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include "PlayState.h"
 #include "CustomLevelState.h"
 #include "EditorState.h"
 
-extern Camera* gGameCamera;
-extern Camera* gGuiCamera;
+extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 MainMenuState MainMenuState::mMainMenuState;
@@ -64,23 +63,14 @@ void MainMenuState::update(Game* game, double dt)
 	}
 }
 
-void MainMenuState::draw(Game* game)
+void MainMenuState::drawMain(Game* game)
 {
-	// draw the game area
-	if(!gGameCamera->getActive())	{
-		gGameCamera->activate(true);
-		gGuiCamera->activate(false);
-	}
-
 	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	mStartMenu->draw();	
+}
 
-	// draw the gui area
-	if(!gGuiCamera->getActive())	{
-			gGuiCamera->activate(true);
-			gGameCamera->activate(false);
-		}
-
+void MainMenuState::drawGui(Game* game)
+{
 	// the green side
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }
