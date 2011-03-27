@@ -4,6 +4,8 @@
 
 extern Camera *gGameCamera;
 
+Mouse *gMouse			 = 0;
+
 Mouse::Mouse(HWND hwnd)
 {
 	mMainWnd = hwnd;

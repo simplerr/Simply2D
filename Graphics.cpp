@@ -284,8 +284,7 @@ void Graphics::BlitRect(float x, float y, int width, int height, D3DCOLOR fillCo
 {
 	  //gd3dDevice->SetFVF(D3DFVF_RECTVERTEX); 
 	  gd3dDevice->SetStreamSource(0, mVB_rect, 0, sizeof(RectVertex));
-	  gd3dDevice->SetVertexDeclaration(RectVertex::Decl);
-	  
+	  gd3dDevice->SetVertexDeclaration(RectVertex::Decl);	  
 
 	  RECT rDest;
 	  rDest.left = x-(width/2);

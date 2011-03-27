@@ -54,7 +54,6 @@ public:
 	int renderLevel(void);
 	int renderGui(void);
 
-	void addMouse(Mouse *a_mouse){mMouse = a_mouse;};
 	void buildGUI(void);
 
 	void moveObject(void);
@@ -88,7 +87,6 @@ private:
 	Object *mActiveObject;
 
 	RECT gameArea;
-	Mouse *mMouse;
 	//POINT mousePos;
 	Level *mLevel;
 	

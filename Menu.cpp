@@ -1,15 +1,15 @@
 #include "Menu.h"
 
-Menu::Menu(HWND hMainWnd, std::string menuName, navigationType a_navigation, int itemAmount, int a_spacing)
+Menu::Menu(std::string menuName, navigationType a_navigation, bool useFonts, int itemAmount, int a_spacing)
 {
 	mName = menuName;
-	mhMainWnd = hMainWnd;
 	
 	// mellanrummet mellan menuitems
 	spacing = a_spacing;
 	navigation = a_navigation;
 
 	numbersOfItems = itemAmount;
+	mUseFonts = useFonts;
 }
 
 Menu::~Menu()
@@ -143,7 +143,7 @@ void Menu::buildMenu(int itemWidth, int itemHeight)
 	}
 }
 
-void Menu::drawMenu(void)
+void Menu::draw(void)
 {	
 	gGraphics->BlitTexture(backgroundTexture, backgroundRect, 0xFFFFFFFF, 0);
 
@@ -156,11 +156,16 @@ void Menu::drawMenu(void)
 			gGraphics->BlitTexture(i->onPressTexture, i->itemRect, 0xFFFFFFFF, 0);
 		else if(i->state = SELECTED)
 			gGraphics->BlitTexture(i->onSelectTexture, i->itemRect, 0xFFFFFFFF, 0);
+
+		if(mUseFonts)
+			gGraphics->drawText((char*)i->itemName.c_str(), i->itemRect.left + (i->itemRect.right - i->itemRect.left)/2-20, i->itemRect.top + (i->itemRect.bottom - i->itemRect.top)/2-10);
 		i++;
 	}
+
+	
 }
 
-void Menu::updateMenu(POINT mousePos)
+void Menu::update(POINT mousePos)
 {
 	updateSelectedItem(mousePos);
 }

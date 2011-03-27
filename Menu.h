@@ -1,3 +1,6 @@
+#ifndef MENU_H
+#define MENU_H
+
 #include <list>
 #include <string>
 #include "d3dUtil.h"
@@ -32,11 +35,11 @@ struct MenuItem
 class Menu
 {
 public:
-	Menu(HWND hMainWnd, std::string menuName, navigationType a_navigation, int itemAmount = 2, int a_spacing = 30);
+	Menu(std::string menuName, navigationType a_navigation, bool useFonts = false, int itemAmount = 2, int a_spacing = 30);
 	~Menu();
 
-	void drawMenu(void);
-	void updateMenu(POINT mousePos);
+	void draw(void);
+	void update(POINT mousePos);
 
 	void addMenuItem(MenuItem newItem);
 	void addMenuItem(std::string itemName, char *textureSource);
@@ -66,4 +69,8 @@ private:
 	navigationType navigation;
 	int numbersOfItems;
 	int idCounter;
+
+	bool mUseFonts;
 };
+
+#endif

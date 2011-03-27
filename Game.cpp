@@ -11,20 +11,22 @@
 #include "GfxStats.h"
 #include <list>
 #include <string>
-//#include <fstream>
 #include "Game.h"
 #include "Graphics.h"
 #include <tchar.h>
 #include "Window.h"
+#include "Mouse.h"
 #include "TextBox.h"
 #include "InputBox.h"
 #include "Enemy.h"
 #include "Camera.h"
+#include "MainMenuState.h"
 
 using namespace std;
 
 extern Camera* gGameCamera;
 extern Camera* gGuiCamera;
+extern Mouse* gMouse;
 
 // couldn't lie in d3dApp.cpp, no reason why not
 
@@ -56,48 +58,37 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 
 	mGfxStats = new GfxStats();
 
-	mMouse = new Mouse(mhMainWnd);
-	mStartMenu = new Menu(mhMainWnd, "StartMenu", MOUSE, 4, 4);
+	gMouse = new Mouse(mhMainWnd);
+
 	gGraphics = new Graphics("bulle");
 
 	// game and gui cameras!
 	gGameCamera = new Camera(600, 450, 1200, 900);
 	gGuiCamera = new Camera(1300, 450, 200, 900);
 
-	buildMainMenu();
+	mGameState = NULL;
+
+	changeState(MainMenuState::Instance());
 	
-	User = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
-	mLevel = new Level(User);
-	mEditor = new Editor();
-	mEditor->addMouse(mMouse);
-	mEditor->buildGUI();
-
-	loadBkgd("misc\\textures\\city_bkgd_yellow.bmp");
-		
-	/*mainMenuActive = true;
-	gameActive = false;
-	editorActive = false;
-	testActive = false;
-	firstTime = true;*/
-
-	mGameState = MAIN_MENU_STATE;
-
 	onResetDevice();
-
-	//CreateWindow("EDIT", 0, WS_VISIBLE  | WS_CHILD | ES_LEFT | WS_TABSTOP | WS_BORDER, 500, 500, 100, 20, getMainWnd(), (HMENU)1, hInstance, 0);
-	//CreateWindow("EDIT", 0, WS_VISIBLE  | WS_CHILD | ES_LEFT | WS_TABSTOP | WS_BORDER, 500, 400, 100, 20, getMainWnd(), (HMENU)2, hInstance, 0);
 }
 
 Game::~Game()
 {
-	mLevel->saveLevel("level_1.txt");
+	mGameState->cleanup();
+}
 
-	delete mStartMenu;
-	delete mGfxStats;
-	delete mLevel;
-	delete User;
-	delete mMouse;
-	delete mEditor;
+void Game::changeState(GameState* state)
+{
+	if(mGameState != NULL)
+		mGameState->cleanup();
+
+	mGameState = state;
+	mGameState->init();
+
+	// restores their positions
+	gMouse->restore();
+	gGameCamera->restore();
 }
 
 bool Game::checkDeviceCaps()
@@ -108,7 +99,7 @@ bool Game::checkDeviceCaps()
 
 void Game::onLostDevice()
 {
-	User->onLostDevice();
+	//User->onLostDevice();
 	mGfxStats->onLostDevice();
 }
 
@@ -116,7 +107,7 @@ void Game::onResetDevice()
 {
 	// Call the onResetDevice of other objects.
 	mGfxStats->onResetDevice();
-	User->onResetDevice();
+	//User->onResetDevice();
 
 	D3DXMATRIX W;
 	D3DXMatrixIdentity(&W);
@@ -157,14 +148,24 @@ void Game::onResetDevice()
 void Game::updateScene(float dt)
 {		
 	// updaterar musens position
-	mMouse->updateMouseDX();
+	gMouse->updateMouseDX();
 
-	switch(mGameState)
+	// update the current state
+	mGameState->handleEvents(this);
+	mGameState->update(this, dt);
+
+	// this should allways be displayed
+	mGfxStats->setTriCount(8 *2);
+	mGfxStats->setVertexCount(16 *4);
+	mGfxStats->update(dt);
+
+
+	/*switch(mGameState)
 	{
 	case MAIN_MENU_STATE:
 		{
 			string menuResult;
-			mStartMenu->updateMenu(mMouse->getPos());
+			mStartMenu->updateMenu(gMouse->getPos());
 			menuResult = mainMenuHandler();
 			if(menuResult == "Play")	{
 				mGameState = PLAYING_STATE;
@@ -176,6 +177,9 @@ void Game::updateScene(float dt)
 				mGameState = EDITOR_STATE;
 				sprintf(buffer, ACTIVE_LEVEL.c_str()); 
 				mEditor->loadLevel(buffer);
+			}
+			else if(menuResult == "Custom")	{
+				mGameState = SELECTING_LEVEL;
 			}
 
 			if(gDInput->keyPressed(DIK_ESCAPE))
@@ -194,7 +198,7 @@ void Game::updateScene(float dt)
 
 			if(gDInput->keyPressed(DIK_ESCAPE))	{
 				// restores if the camera have been moved
-				mMouse->restore();
+				gMouse->restore();
 				gGameCamera->restore();
 				mGameState = MAIN_MENU_STATE;
 			}
@@ -212,7 +216,7 @@ void Game::updateScene(float dt)
 
 			if(gDInput->keyPressed(DIK_ESCAPE))	{
 				// restores if the camera have been moved
-				mMouse->restore();
+				gMouse->restore();
 				gGameCamera->restore();
 				mEditor->setTest(false);
 				mGameState = EDITOR_STATE;
@@ -232,13 +236,18 @@ void Game::updateScene(float dt)
 
 			if(gDInput->keyPressed(DIK_ESCAPE))	{
 				// restores if the camera have been moved
-				mMouse->restore();
+				gMouse->restore();
 				gGameCamera->restore();
 				mGameState = MAIN_MENU_STATE;
 			}
 			break;
 		}
-	}
+	case SELECTING_LEVEL:
+		{
+			mSelectLevelMenu->updateMenu(gMouse->getPos());
+			break;
+		}
+	}*/
 }
 
 void Game::drawScene()
@@ -264,7 +273,22 @@ void Game::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
-	if(mGameState == MAIN_MENU_STATE)
+	// activate game camera
+	if(!gGameCamera->getActive())	{
+			gGameCamera->activate(true);
+			gGuiCamera->activate(false);
+		}
+
+	// should allways be displayed
+	mGfxStats->display();
+
+	mGameState->draw(this);
+
+	gMouse->drawMousePos();
+
+
+
+	/*if(mGameState == MAIN_MENU_STATE)
 	{
 		if(!gGameCamera->getActive())	{
 			gGameCamera->activate(true);
@@ -318,10 +342,16 @@ void Game::drawScene()
 		}
 		mEditor->renderGui();				
 	}
+	else if(mGameState == SELECTING_LEVEL)
+	{
+		if(!gGameCamera->getActive())
+			gGameCamera->activate(true);
+		mSelectLevelMenu->drawMenu();
+	}
 
 	if(mGameState == TESTING_STATE)
 		gGraphics->drawText("Press ESC to return", 1020, 20);
-	mMouse->drawMousePos();
+	gMouse->drawMousePos();*/
 	
 	HR(gd3dDevice->EndScene());
 
@@ -329,7 +359,7 @@ void Game::drawScene()
 	HR(gd3dDevice->Present(0, 0, 0, 0));
 }
 
-void Game::loadBkgd(char* filename)
+/*void Game::loadBkgd(char* filename)
 {	
 	mBkgdTex = gGraphics->loadTexture(filename); // ska ta filename egentligen^)
 		
@@ -359,7 +389,8 @@ void Game::drawBkgd()
 void Game::buildMainMenu(void)
 {
 	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
-	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
+	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");
+	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\play_onselect.bmp", "misc\\textures\\play_onpress.bmp");	
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp", "misc\\textures\\options_onpress.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp", "misc\\textures\\credits_onpress.bmp");
 	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_onselect.bmp", "misc\\textures\\quit_onpress.bmp");
@@ -371,20 +402,23 @@ std::string Game::mainMenuHandler(void)
 	// update
 	//mStartMenu->updateMouse();
 	// get input
-	if(mMouse->buttonDown(LEFTBUTTON))
+	if(gMouse->buttonDown(LEFTBUTTON))
 	{
-		if(mStartMenu->buttonPressed(mMouse->getPos(), "Play"))	{	
+		if(mStartMenu->buttonPressed(gMouse->getPos(), "Play"))	{	
 			return "Play";		
 		}
-		else if(mStartMenu->buttonPressed(mMouse->getPos(), "Editor"))	{
+		else if(mStartMenu->buttonPressed(gMouse->getPos(), "Editor"))	{
 			return "Editor";
 		}
-		else if(mStartMenu->buttonPressed(mMouse->getPos(),  "Quit"))
+		else if(mStartMenu->buttonPressed(gMouse->getPos(),  "Quit"))
 			return "Quit";
+		else if(mStartMenu->buttonPressed(gMouse->getPos(), "Custom"))	{
+			return "Custom";
+		}
 	}
 
 	return "NONE";
-}
+}*/
 
 LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -396,7 +430,7 @@ LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		//if( wParam == '1' || wParam == '2' || wParam == '3' || wParam == '4' || wParam == '5' || wParam == '6' || wParam == '7' || wParam == '8' || wParam == '9' ||
 		//	wParam == '0' || wParam == '\b' || wParam == '\r' || wParam == VK_LEFT || wParam == VK_RIGHT || wParam == VK_DELETE)
 		//{
-			mEditor->keyPressed(wParam);
+			//mEditor->keyPressed(wParam);
 		//}
 	// case MOUSE?
 

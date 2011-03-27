@@ -10,19 +10,12 @@
 #include "Level.h"
 #include "Graphics.h"
 #include "Menu.h"
+//#include "GameState.h"
 #include "Window.h"
-#include "Mouse.h"
 #include "Editor.h"
 
 class Camera;
-
-enum GameState
-{
-	MAIN_MENU_STATE = 100,
-	PLAYING_STATE,
-	TESTING_STATE,
-	EDITOR_STATE
-};
+class GameState;
 
 class Game : public D3DApp
 {
@@ -33,14 +26,17 @@ public:
 	bool checkDeviceCaps();
 	void onLostDevice();
 	void onResetDevice();
+
 	void updateScene(float dt);
 	void drawScene();
+
+	void changeState(GameState* state);
 
 	void loadBkgd(char* filename);
 	void drawBkgd();
 	
-	void buildMainMenu(void);
-	std::string mainMenuHandler(void);
+	//void buildMainMenu(void);
+	//std::string mainMenuHandler(void);
 
 	LRESULT msgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -49,21 +45,7 @@ private:
 
 	GfxStats* mGfxStats;
 
-	IDirect3DTexture9* mBkgdTex;
-	D3DXVECTOR3 mBkgdCenter;
-
-	Level *mLevel;
-	Player *User;
-	Editor *mEditor;
-
-	Menu *mStartMenu;
-	Mouse *mMouse;
-
-	GameState mGameState;
-	//bool mainMenuActive, gameActive, editorActive, testActive;
-	//bool firstTime;		// for the mouse position
-private:
-	
+	GameState *mGameState;
 };
 
 #endif
