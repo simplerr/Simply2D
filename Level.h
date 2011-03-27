@@ -50,8 +50,6 @@ private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL
 	std::vector<Object*> mCollisionList;
 
-	char *collisionText;
-
 	POS spawnPos;
 	int nextObjectID;
 	Player *mPlayer;

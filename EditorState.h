@@ -30,7 +30,6 @@ private:
 
 	Editor *mEditor;
 	IDirect3DTexture9* mBkgdTexture;
-
 };
 
 #endif

@@ -7,7 +7,6 @@
 //=============================================================================
 #include "d3dApp.h"
 #include "DirectInput.h"
-#include <crtdbg.h>
 #include "GfxStats.h"
 #include <list>
 #include <string>
@@ -21,6 +20,12 @@
 #include "Enemy.h"
 #include "CameraManager.h"
 #include "MainMenuState.h"
+#include "C:\Users\Axel\Documents\Visual Studio 2010\Memory_and_Exception_Trace\Stackwalker.h"
+
+
+//#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace std;
 
@@ -32,6 +37,8 @@ extern Mouse* gMouse;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
 {
+	InitAllocCheck(ACOutput_XML);
+
 	// Enable run-time memory check for debug builds.
 	#if defined(DEBUG) | defined(_DEBUG)
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -69,11 +76,21 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	changeState(MainMenuState::Instance());
 	
 	onResetDevice();
+
+	//char *a = new char[200];
 }
 
 Game::~Game()
 {
 	mGameState->cleanup();
+
+	delete mGfxStats;
+	delete gMouse;
+	delete gGraphics;
+	delete gCameraManager;
+
+	// print the memory leak file
+	DeInitAllocCheck();
 }
 
 void Game::changeState(GameState* state)

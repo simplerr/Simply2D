@@ -25,7 +25,7 @@ void MainMenuState::init()
 
 void MainMenuState::cleanup()
 {
-	
+	delete mStartMenu;
 }
 
 void MainMenuState::pause()

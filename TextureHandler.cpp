@@ -20,6 +20,11 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(playerTexture);
 	ReleaseCOM(backgroundTexture);
 	ReleaseCOM(enemyTexture);
+	ReleaseCOM(enemyTexture2);
+	ReleaseCOM(tpEnter);
+	ReleaseCOM(tpDest);
+	ReleaseCOM(trampoline);
+	ReleaseCOM(walljump);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)

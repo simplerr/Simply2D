@@ -15,8 +15,6 @@ extern CameraManager* gCameraManager;
 
 Level::Level(Player *player)
 {
-	collisionText = new char[256];
-
 	mPlayer = player;
 
 	char buffer[256];
@@ -72,9 +70,9 @@ void Level::loadLevel(char* levelFile)
 
 	Object *loadedObject;
 	ObjectType type;
-	char *text = new char[256];
-	char *textureSource = new char[256];
-	char *destTextureSource = new char[256];		// ulgy hax, dont use NEW HERE FFS!
+	char text[256];
+	string textureSource;
+	string destTextureSource;
 
 	int objectType, height, width, xpos, ypos;
 
@@ -101,14 +99,14 @@ void Level::loadLevel(char* levelFile)
 		if(objectType == STATIC_PLATFORMA)	
 		{
 			fin >> xpos >> ypos >> width >> height >> textureSource;				
-			loadedObject = new StaticPlatform(xpos, ypos, width, height, textureSource);
+			loadedObject = new StaticPlatform(xpos, ypos, width, height, (char*)textureSource.c_str());
 		}
 		else if(objectType == MOVING_PLATFORM)
 		{
 			POS startPos, endPos;
 			float speed;
 			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> textureSource;
-			loadedObject = new MovingPlatform(xpos, ypos, width, height, textureSource, startPos, endPos, HORIZONTAL, speed);
+			loadedObject = new MovingPlatform(xpos, ypos, width, height, (char*)textureSource.c_str(), startPos, endPos, HORIZONTAL, speed);
 		}
 		else if(objectType == NORMAL_ENEMY)
 		{
@@ -117,25 +115,25 @@ void Level::loadLevel(char* levelFile)
 			int health, damage;
 
 			fin >> xpos >> ypos >> startPos.x >> startPos.y >> endPos.x >> endPos.y >> width >> height >> speed >> health >> damage >> textureSource;
-			loadedObject = new Enemy(xpos, ypos, width, height, textureSource, startPos, endPos, HORIZONTAL, speed, health, damage);			
+			loadedObject = new Enemy(xpos, ypos, width, height, (char*)textureSource.c_str(), startPos, endPos, HORIZONTAL, speed, health, damage);			
 		}	
 		else if(objectType == TELEPORT)
 		{
 			int destx, desty;
 			fin >> xpos >> ypos >> destx >> desty >> width >> height >> textureSource >> destTextureSource;
-			loadedObject = new Teleport(xpos, ypos, destx, desty, width, height, textureSource, destTextureSource);
+			loadedObject = new Teleport(xpos, ypos, destx, desty, width, height, (char*)textureSource.c_str(), (char*)destTextureSource.c_str());
 		}
 		else if(objectType == TRAMPOLINE)
 		{
 			int boostHeight;
 
 			fin >> xpos >> ypos >> width >> height >> boostHeight >> textureSource;
-			loadedObject = new Trampoline(xpos, ypos, width, height, boostHeight, textureSource);
+			loadedObject = new Trampoline(xpos, ypos, width, height, boostHeight, (char*)textureSource.c_str());
 		}
 		else if(objectType == WALLJUMP)
 		{
 			fin >> xpos >> ypos >> width >> height >> textureSource;				
-			loadedObject = new WallJump(xpos, ypos, width, height, textureSource);
+			loadedObject = new WallJump(xpos, ypos, width, height, (char*)textureSource.c_str());
 		}
 		addObject(loadedObject);
 	}

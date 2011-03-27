@@ -7,6 +7,8 @@
 #include "DirectInput.h"
 #include "Camera.h"
 
+
+
 D3DApp* gd3dApp              = 0;
 IDirect3DDevice9* gd3dDevice = 0;
 Graphics* gGraphics			 = 0;
@@ -35,14 +37,12 @@ D3DApp::D3DApp(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, 
 
 	initMainWindow();
 	initDirect3D();
-
 }
 
 D3DApp::~D3DApp()
 {
 	ReleaseCOM(md3dObject);
 	ReleaseCOM(gd3dDevice);
-	delete gGraphics;
 }
 
 HINSTANCE D3DApp::getAppInst()
@@ -299,7 +299,7 @@ LRESULT D3DApp::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	// WM_CLOSE is sent when the user presses the 'X' button in the
 	// caption bar menu.
 	case WM_CLOSE:
-		DestroyWindow(mhMainWnd);
+		DestroyWindow(mhMainWnd);		
 		return 0;
 
 	// WM_DESTROY is sent when the window is being destroyed.
