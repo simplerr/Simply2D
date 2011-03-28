@@ -17,12 +17,12 @@ Level::Level(Player *player)
 {
 	mPlayer = player;
 
-	char buffer[256];
+	/*char buffer[256];
 	strcpy(buffer, ACTIVE_LEVEL.c_str());
-	loadLevel(buffer);
+	loadLevel(buffer);*/
 
-	if(mPlayer != NULL)
-		spawnPlayer();
+//	if(mPlayer != NULL)
+//		spawnPlayer();
 
 	nextObjectID = 0;
 }
@@ -138,6 +138,9 @@ void Level::loadLevel(char* levelFile)
 	}
 
 	fin.close();
+
+	if(mPlayer != NULL)
+		spawnPlayer();
 }
 
 void Level::addObject(Object *object)

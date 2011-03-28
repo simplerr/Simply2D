@@ -25,7 +25,7 @@ private:
 	float mDestY;
 
 	IDirect3DTexture9* mDestTexture;
-	char *mDestTextureSource;
+	char mDestTextureSource[256];
 };
 
 #endif

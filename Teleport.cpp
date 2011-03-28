@@ -10,7 +10,7 @@ Teleport::Teleport(float enterX, float enterY, float destX, float destY, int wid
 
 	// load the destination texture
 	mDestTexture = gGraphics->loadObjectTexture(destTextureSource);
-	mDestTextureSource = destTextureSource;
+	strcpy(mDestTextureSource, destTextureSource);
 
 	setResizeable(false);
 }

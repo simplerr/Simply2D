@@ -80,9 +80,9 @@ void Editor::buildGUI(void)
 	// sets the values to the spawnPos!
 	POS spawnPos = mLevel->getSpawn();
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().x);
-	iSpawnX->setValue(buffer);
+	iSpawnX->setValue("");
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
-	iSpawnY->setValue(buffer);
+	iSpawnY->setValue("");
 
 	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 130);	// shouldn't take height, should expand on addItem
 
@@ -825,5 +825,17 @@ void Editor::loadLevel(char *source)
 	tmp.erase(tmp.size()-4, tmp.size());
 	tmp.erase(0, 7);
 	iLevel->setValue(tmp);
+
+	mLevel->getSpawn().x;
+
+	// hax warning
+
+	itoa(mLevel->getSpawn().x, buffer, 10);
+	tmp = string(buffer);
+	iSpawnX->setValue(tmp);
+
+	itoa(mLevel->getSpawn().y, buffer, 10);
+	tmp = string(buffer);
+	iSpawnY->setValue(tmp);
 }
 
