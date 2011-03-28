@@ -12,7 +12,7 @@ public:
 	void pause();
 	void resume();
 
-	virtual void handleEvents(Game* game);
+	virtual void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
 	void update(Game* game, double dt);
 	void drawMain(Game* game);
 	virtual void drawGui(Game* game);

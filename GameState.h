@@ -15,7 +15,7 @@ public:
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 
-	virtual void handleEvents(Game* game) = 0;
+	virtual void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 	virtual void update(Game* game, double dt) = 0;
 	virtual void drawMain(Game* game) = 0;
 	virtual void drawGui(Game* game) = 0;

@@ -6,9 +6,14 @@
 class TestState : public PlayState
 {
 public:
-	void handleEvents(Game* game) {
-		if(gDInput->keyPressed(DIK_ESC))
-			game->changeState(EditorStage::Instance());
+	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam) {
+		switch(msg)
+		{
+			case WM_KEYDOWN:
+				if( wParam == VK_ESCAPE )
+					game->changeState(EditorStage::Instance());
+			break;
+		}		
 	}
 
 	static TestState* Instance() {

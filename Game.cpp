@@ -166,7 +166,7 @@ void Game::updateScene(float dt)
 	gMouse->updateMouseDX();
 
 	// update the current state
-	mGameState->handleEvents(this);
+	//mGameState->handleEvents(this);	// hax maybe
 	mGameState->update(this, dt);
 
 	// this should allways be displayed
@@ -217,18 +217,7 @@ LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	D3DApp::msgProc(msg, wParam, lParam);
 
-	switch( msg )
-	{
-	case WM_KEYDOWN:
-		//if( wParam == '1' || wParam == '2' || wParam == '3' || wParam == '4' || wParam == '5' || wParam == '6' || wParam == '7' || wParam == '8' || wParam == '9' ||
-		//	wParam == '0' || wParam == '\b' || wParam == '\r' || wParam == VK_LEFT || wParam == VK_RIGHT || wParam == VK_DELETE)
-		//{
-			//mEditor->keyPressed(wParam);
-		//}
-	// case MOUSE?
+	mGameState->handleEvents(this, msg, wParam, lParam);
 
-		// skicka wParam till WindowHandler
-		return 0;
-	}
 	return DefWindowProc(mhMainWnd, msg, wParam, lParam);
 }

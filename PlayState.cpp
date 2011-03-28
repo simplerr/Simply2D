@@ -36,11 +36,15 @@ void PlayState::resume()
 	// don't know how to to yet
 }
 
-void PlayState::handleEvents(Game* game)
+void PlayState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	if(gDInput->keyPressed(DIK_ESCAPE))
-		game->changeState(MainMenuState::Instance());
-
+	switch(msg)
+	{
+		case WM_KEYDOWN:
+			if( wParam == VK_ESCAPE )
+				game->changeState(MainMenuState::Instance());
+		break;
+	}
 }
 
 void PlayState::update(Game* game, double dt)

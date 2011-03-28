@@ -13,7 +13,7 @@ public:
 	void pause();
 	void resume();
 
-	void handleEvents(Game* game);
+	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
 	void update(Game* game, double dt);
 	void drawMain(Game* game);
 	void drawGui(Game* game);

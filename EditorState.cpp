@@ -35,10 +35,17 @@ void EditorState::resume()
 	// don't know how to to yet
 }
 
-void EditorState::handleEvents(Game* game)
+void EditorState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	if(gDInput->keyPressed(DIK_ESCAPE))
-		game->changeState(MainMenuState::Instance());
+	switch( msg )
+	{
+	case WM_KEYDOWN:			
+		if(wParam == VK_ESCAPE)
+			game->changeState(MainMenuState::Instance());
+		else
+			mEditor->keyPressed(wParam);
+		break;
+	}
 }
 
 void EditorState::update(Game* game, double dt)
