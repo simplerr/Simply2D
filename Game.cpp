@@ -20,6 +20,7 @@
 #include "Enemy.h"
 #include "CameraManager.h"
 #include "MainMenuState.h"
+#include "CustomEditorState.h"
 #include "C:\Users\Axel\Documents\Visual Studio 2010\Memory_and_Exception_Trace\Stackwalker.h"
 
 

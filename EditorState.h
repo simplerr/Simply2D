@@ -19,6 +19,7 @@ public:
 	void drawMain(Game* game);
 	void drawGui(Game* game);
 	void drawBkgd(void);
+	void setLevel(string level);
 
 	static EditorState* Instance() {
 		return &mEditorState;

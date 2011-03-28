@@ -7,6 +7,7 @@
 #include "CameraManager.h"
 #include "MainMenuState.h"
 #include "PlayState.h"
+#include "CustomEditorState.h"
 #include "Menu.h"
 
 class Menu;
@@ -15,6 +16,7 @@ extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 CustomLevelState CustomLevelState::mCustomLevelState;
+CustomEditorState CustomEditorState::mCustomEditorState;
 
 void CustomLevelState::init()
 {
@@ -67,8 +69,7 @@ void CustomLevelState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM 
 
 void CustomLevelState::update(Game* game, double dt)
 {
-	// consider to combine this with the menuHandler()
-	mCustomLevelMenu->update(gMouse->getPos());
+	updateMenu();
 
 	// check if the playe pressed a menu element
 	string result = menuHandler();
@@ -80,6 +81,13 @@ void CustomLevelState::update(Game* game, double dt)
 		game->changeState(PlayState::Instance());
 		PlayState::Instance()->setLevel(result);
 	}
+}
+
+// just so CustomEditorState can reach this
+void CustomLevelState::updateMenu(void)
+{
+	// consider to combine this with the menuHandler()
+	mCustomLevelMenu->update(gMouse->getPos());
 }
 
 void CustomLevelState::drawMain(Game* game)

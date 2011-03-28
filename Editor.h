@@ -69,7 +69,7 @@ public:
 	void messageHandler(WindowID sender, string data = "nothing");
 	void resetActive(void) {mActiveObject = NULL;};
 
-	void loadLevel(char *source) {mLevel->loadLevel(source);};
+	void loadLevel(char *source);
 
 	void moveEndPos(void);
 

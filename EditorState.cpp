@@ -85,3 +85,10 @@ void EditorState::drawBkgd()
 	D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
 	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 }
+
+void EditorState::setLevel(string level)
+{
+	string levelToLoad = "levels\\";
+	levelToLoad.append(level);
+	mEditor->loadLevel((char*)levelToLoad.c_str()); // (char*)level.c_str()
+}

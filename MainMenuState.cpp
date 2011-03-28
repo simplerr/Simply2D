@@ -3,6 +3,7 @@
 #include "PlayState.h"
 #include "CustomLevelState.h"
 #include "EditorState.h"
+#include "CustomEditorState.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
@@ -60,7 +61,7 @@ void MainMenuState::update(Game* game, double dt)
 		game->changeState(PlayState::Instance());	
 	}
 	else if(result == "Editor")	{
-		game->changeState(EditorState::Instance());
+		game->changeState(CustomEditorState::Instance());
 		//should ask for which level to edit -> SelectLevelState
 	}
 	else if(result == "Custom")	{

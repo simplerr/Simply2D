@@ -41,7 +41,6 @@ Level::~Level()
 void Level::saveLevel(char* levelFile)
 {
 	ofstream fout;
-	char buffer[256];
 	int width, height;
 
 	string tmp = "levels\\";

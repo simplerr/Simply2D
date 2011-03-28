@@ -19,7 +19,8 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 	mUpdates = updates;
 
 	mTexture = gGraphics->loadObjectTexture(textureSource);
-	mTextureSource = textureSource;
+	strcpy(mTextureSource, textureSource);
+	//mTextureSource = textureSource;
 }
 Object::~Object()
 {

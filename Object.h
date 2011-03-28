@@ -75,7 +75,7 @@ public:
 
 private:
 	IDirect3DTexture9* mTexture;
-	char *mTextureSource;
+	char mTextureSource[256];
 
 	Shape mShape;
 

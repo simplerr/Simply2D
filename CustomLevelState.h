@@ -14,7 +14,8 @@ public:
 	void resume();
 
 	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
-	void update(Game* game, double dt);
+	virtual void update(Game* game, double dt);
+	void updateMenu(void);
 	void drawMain(Game* game);
 	void drawGui(Game* game);
 	void drawBkgd(void);

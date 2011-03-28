@@ -677,7 +677,11 @@ void Editor::messageHandler(WindowID sender, string data)
 		{
 			// levels save function does the work
 			strcpy(buffer, iLevel->getValue().c_str());
-			mLevel->saveLevel(buffer);
+
+			// add  .txt
+			string tmp = string(buffer);
+			tmp.append(".txt");
+			mLevel->saveLevel((char*)tmp.c_str());
 			break;
 		}
 	case BUTTON_TRYLEVEL:
@@ -810,5 +814,16 @@ void Editor::updatePropertyWidgets(void)
 	{
 		propertyPairs[i].value->setValue(activeObjectProperties[i].value);
 	}
+}
+
+void Editor::loadLevel(char *source) 
+{
+	mLevel->loadLevel(source);
+
+	// remove level\ and .txt
+	string tmp = string(source);
+	tmp.erase(tmp.size()-4, tmp.size());
+	tmp.erase(0, 7);
+	iLevel->setValue(tmp);
 }
 
