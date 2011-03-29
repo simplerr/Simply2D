@@ -179,7 +179,7 @@ int D3DApp::run()
             DispatchMessage( &msg );
 		}
 		// Otherwise, do animation/game stuff.
-		else
+		//else
         {	
 			// If the application is paused then free some CPU cycles to other 
 			// applications and then continue on to the next frame.
@@ -203,6 +203,9 @@ int D3DApp::run()
 				// Prepare for next iteration: The current time stamp becomes
 				// the previous time stamp for the next iteration.
 				prevTimeStamp = currTimeStamp;
+			}
+			else	{
+				Sleep(20);
 			}
         }
     }
@@ -394,7 +397,7 @@ bool D3DApp::isDeviceLost()
 	// sleep for a bit and we'll try again on the next 
 	// message loop cycle.
 	if( hr == D3DERR_DEVICELOST )
-	{
+	{		
 		Sleep(20);
 		return true;
 	}
@@ -408,6 +411,7 @@ bool D3DApp::isDeviceLost()
 	// The device is lost but we can reset and restore it.
 	else if( hr == D3DERR_DEVICENOTRESET )
 	{
+		MessageBox(0, "Hej reset", 0, 0);
 		onLostDevice();
 		HR(gd3dDevice->Reset(&md3dPP));
 		onResetDevice();
