@@ -108,7 +108,7 @@ void Player::update(double dt, Level *Level)
 		faceDir = RIGHT;
 	}
 	
-	if(mShape.origin.x >= 516)
+	if(mShape.origin.x >= 616)
 		gCameraManager->gameCamera()->addMovement(mDX, 0);
 
 	move(mDX, mDY);

@@ -226,10 +226,24 @@ void MovingObject::onPlayerCollision(Player *player, MTV mtv)
 	// if the player stands on platform
 	if(mtv.pushY < 0)
 	{
-		if(getMoveDir() == LEFT)
-			player->move(-mSpeed, 0);//player->mDX-=mSpeed;//
-		else if(getMoveDir() == RIGHT)
-			player->move(mSpeed, 0);//player->mDX+=mSpeed;//player->move(mSpeed, 0);
+		if(player->getDX() == 0)
+		{
+			if(getMoveDir() == LEFT)	{
+				player->move(-mSpeed, 0);			
+			}
+			else if(getMoveDir() == RIGHT)
+				player->move(mSpeed, 0);
+		}
+		else
+		{
+			if(getMoveDir() == LEFT)	{
+				if(player->getDX() > 0)
+					player->move(mSpeed - player->getDX(), 0);			
+			}
+			else if(getMoveDir() == RIGHT)
+				if(player->getDX() < 0)
+					player->move(-mSpeed - player->getDX(), 0);
+		}
 	}
 }
 
