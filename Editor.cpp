@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Teleport.h"
 #include "Trampoline.h"
+#include "Spike.h"
 #include "CameraManager.h"
 
 
@@ -84,16 +85,16 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue("");
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 130);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 155);	// shouldn't take height, should expand on addItem
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 620 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 620 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 650 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 650 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 590 + OFFSET, 130, 20, 20);
+	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 675 + OFFSET, 16, 16);
+	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 697 + OFFSET, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -101,6 +102,7 @@ void Editor::buildGUI(void)
 	listBox->addItem("Teleport", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Trampoline", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 	listBox->addItem("Walljump", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
+	listBox->addItem("Spike", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -378,7 +380,7 @@ int Editor::renderGui()
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 37);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 120);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 430);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 420);
 
 	return 1;
 }
@@ -658,6 +660,11 @@ void Editor::messageHandler(WindowID sender, string data)
 					{
 						WallJump *walljump = new WallJump(300, 300, 50, 50, "misc\\textures\\walljump.bmp");
 						mLevel->addObject(walljump);
+					}
+					else if(value == "Spike")
+					{
+						Spike *spike = new Spike(300, 300, 500, 500, "misc\\textures\\spike.bmp", 100);
+						mLevel->addObject(spike);
 					}
 					// aktiv plattform = den nya?
 			}

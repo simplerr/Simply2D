@@ -6,6 +6,7 @@
 #include "WallJump.h"
 #include "Teleport.h"
 #include "Enemy.h"
+#include "Spike.h"
 #include "CameraManager.h"
 #include <fstream>
 
@@ -138,6 +139,12 @@ void Level::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> width >> height >> textureSource;				
 			loadedObject = new WallJump(xpos, ypos, width, height, (char*)textureSource.c_str());
 		}
+		else if(objectType == SPIKE)
+		{
+			int dmg;
+			fin >> xpos >> ypos >> width >> height >> dmg >> textureSource;
+			loadedObject = new Spike(xpos, ypos, width, height, (char*)textureSource.c_str(), dmg);
+		}
 		addObject(loadedObject);
 	}
 
@@ -222,7 +229,7 @@ void Level::collision(Player *player)
 			player->move(mtv.pushX, mtv.pushY);
 
 			// the camera have to follow the player
-			if(player->getX() >= 516)
+			if(player->getX() >= 616)
 				gCameraManager->gameCamera()->addMovement(mtv.pushX, 0);
 
 			// what's gonna happen with the player?
@@ -314,7 +321,7 @@ MTV Level::polyCollision(Shape *ShapeA, Shape *ShapeB)
 		}
 		else
 		{
-			axis.x = -(ShapeA->pointList[side].y - ShapeA->pointList[side-1].y);
+			axis.x = -(ShapeA->pointList[side-1].y - ShapeA->pointList[side].y);
 			axis.y = ShapeA->pointList[side-1].x - ShapeA->pointList[side].x;	// should be reversed?:O
 
 			// axis.y gets negative on the bottom horizontal line

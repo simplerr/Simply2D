@@ -19,10 +19,16 @@ struct Property
 	std::string value;
 };
 
+enum ShapeType
+{
+	QUAD = 301,
+	TRIANGLE
+};
+
 class Object
 {
 public:
-	Object(float x, float y, int width, int height, char *textureSource, ObjectType type, bool updates = false);
+	Object(float x, float y, int width, int height, char *textureSource, ObjectType type, ShapeType shape = QUAD, bool updates = false);
 	virtual ~Object();
 
 	virtual void draw(void);

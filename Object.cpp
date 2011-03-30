@@ -3,17 +3,30 @@
 #include <fstream>
 using namespace std;
 
-Object::Object(float x, float y, int width, int height, char *textureSource, ObjectType type, bool updates)
+Object::Object(float x, float y, int width, int height, char *textureSource, ObjectType type, ShapeType shape, bool updates)
 {
 	mShape.origin.x = x;
 	mShape.origin.y = y;
 
-	// these are defined in local space
-	// origin is in the top left of the shape	
-	mShape.addPoint(Shape::Point(0, 0));	// top - left
-	mShape.addPoint(Shape::Point(0, height));	// bottom - left
-	mShape.addPoint(Shape::Point(width, height));   // bottom - right
-	mShape.addPoint(Shape::Point(width, 0));	// top - right
+	if(shape == QUAD)
+	{
+		// these are defined in local space
+		// origin is in the top left of the shape	
+		mShape.addPoint(Shape::Point(0, 0));	// top - left
+		mShape.addPoint(Shape::Point(0, height));	// bottom - left
+		mShape.addPoint(Shape::Point(width, height));   // bottom - right
+		mShape.addPoint(Shape::Point(width, 0));	// top - right
+	}
+	else if(shape == TRIANGLE)
+	{
+		
+		mShape.addPoint(Shape::Point(0, height));	// bottom - left
+		mShape.addPoint(Shape::Point(width, height));	// bottom - right
+		mShape.addPoint(Shape::Point((double)width/2, 0));	// top - middle
+	
+
+
+	}
 
 	mType = type;
 	mUpdates = updates;
