@@ -121,6 +121,7 @@ void Game::onLostDevice()
 
 void Game::onResetDevice()
 {
+	//MessageBox(0, "Hej", 0, 0);
 	// Call the onResetDevice of other objects.
 	mGfxStats->onResetDevice();
 	//User->onResetDevice();

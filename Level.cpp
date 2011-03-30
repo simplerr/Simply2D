@@ -172,7 +172,6 @@ void Level::deleteObject(int ID)
 			i++;
 		}
 	}
-	nextObjectID -=1;
 }
 
 void Level::updateLevel(double dt)	
