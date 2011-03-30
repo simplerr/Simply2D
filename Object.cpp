@@ -29,23 +29,21 @@ Object::~Object()
 }
 void Object::draw(void)
 {
-	// scale it in the x direction
+	if(resizeable)
+	{
+		// scale it in the x direction
+		D3DXMATRIX texScaling;
+		D3DXMatrixScaling(&texScaling, getWidth()/256, 1.0f, 0.0f);
+		HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 
-	RECT r1;
-	r1.top = 0;
-	r1.left = 0;
-	r1.right = 4800;
-	r1.bottom = 900;
+		gGraphics->drawShape(mShape, mTexture);
 
-	D3DXMATRIX texScaling;
-	D3DXMatrixScaling(&texScaling, getWidth()/256, 1.0f, 0.0f);
-	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
-
-	gGraphics->drawShape(mShape, mTexture);
-
-	// restore to std scaling
-	D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
-	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
+		// restore to std scaling
+		D3DXMatrixScaling(&texScaling, 1.0f, 1.0f, 0.0f);
+		HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
+	}
+	else
+		gGraphics->drawShape(mShape, mTexture);
 
 	
 }

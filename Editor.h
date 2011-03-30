@@ -70,6 +70,7 @@ public:
 	void resetActive(void) {mActiveObject = NULL;};
 
 	void loadLevel(char *source);
+	string getTestLevel(void);
 
 	void moveEndPos(void);
 

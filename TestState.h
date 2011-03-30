@@ -2,6 +2,7 @@
 #define TESTSTATE_H
 
 #include "PlayState.h"
+#include "EditorState.h"
 
 class TestState : public PlayState
 {
@@ -10,8 +11,12 @@ public:
 		switch(msg)
 		{
 			case WM_KEYDOWN:
-				if( wParam == VK_ESCAPE )
-					game->changeState(EditorStage::Instance());
+				// should acctually pause the editor instead
+				if( wParam == VK_ESCAPE )	{
+					string levelName = getLevel();
+					game->changeState(EditorState::Instance());
+					EditorState::Instance()->setLevel(levelName);
+				}
 			break;
 		}		
 	}
@@ -21,7 +26,8 @@ public:
 	}
 
 	void drawGui(Game* game) {
-		gGraphics->drawText("Press ESC to return", 1020, 20);
+		PlayState::drawGui(game);
+		gGraphics->drawText("Press ESC to return", 1220, 20);
 	}
 protected:
 	TestState() {};

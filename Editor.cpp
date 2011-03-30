@@ -839,3 +839,9 @@ void Editor::loadLevel(char *source)
 	iSpawnY->setValue(tmp);
 }
 
+string Editor::getTestLevel(void)
+{
+	string tmp = mLevel->getLevelName();
+	return tmp;
+}
+

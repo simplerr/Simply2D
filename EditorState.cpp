@@ -2,6 +2,7 @@
 
 #include "CameraManager.h"
 #include "MainMenuState.h"
+#include "TestState.h"
 
 extern CameraManager* gCameraManager;
 
@@ -50,7 +51,12 @@ void EditorState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lPara
 
 void EditorState::update(Game* game, double dt)
 {
-	mEditor->updateAll(dt);
+	// test button pressed
+	if(mEditor->updateAll(dt) < 0)	{
+		string tmp = mEditor->getTestLevel();
+		game->changeState(TestState::Instance());
+		TestState::Instance()->setLevel(tmp);
+	}
 	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 

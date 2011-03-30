@@ -9,6 +9,8 @@
 #include "PlayState.h"
 #include "CustomEditorState.h"
 #include "Menu.h"
+#include "TestState.h"
+
 
 class Menu;
 
@@ -17,6 +19,7 @@ extern Mouse* gMouse;
 
 CustomLevelState CustomLevelState::mCustomLevelState;
 CustomEditorState CustomEditorState::mCustomEditorState;
+TestState TestState::mTestState;
 
 void CustomLevelState::init()
 {

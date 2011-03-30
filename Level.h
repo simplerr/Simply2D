@@ -28,6 +28,7 @@ public:
 
 	void saveLevel(char* levelFile);
 	void loadLevel(char* levelFile);
+	std::string getLevelName(void);
 
 	void addObject(Object *object);
 	void deleteObject(int ID);
@@ -50,6 +51,7 @@ private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL
 	std::vector<Object*> mCollisionList;
 
+	std::string mLevelSource;
 	POS spawnPos;
 	int nextObjectID;
 	Player *mPlayer;

@@ -61,6 +61,10 @@ void Level::saveLevel(char* levelFile)
 // loads a level from a .txt file
 void Level::loadLevel(char* levelFile)
 {	
+	// set the level source
+	mLevelSource = string(levelFile);
+	mLevelSource.erase(0, 7);
+
 	// clean the level before loading it
 	if(mObjectList.size() > 0)	
 		mObjectList.clear();
@@ -559,5 +563,10 @@ RECT Level::getSpawnRect(void)
 	tmpRect.bottom = spawnPos.y + USER_HEIGHT/2;
 
 	return tmpRect;
+}
+
+std::string Level::getLevelName(void)
+{
+	return mLevelSource;
 }
 
