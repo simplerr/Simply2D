@@ -8,7 +8,8 @@ PlayState PlayState::mPlayState;
 
 void PlayState::init(Game* game)
 {
-	GameState::init(game);
+	// important!
+	setGame(game);
 
 	mPlayer = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
 	mLevel = new Level(mPlayer);

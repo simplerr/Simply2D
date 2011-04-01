@@ -10,7 +10,8 @@ EditorState EditorState::mEditorState;
 
 void EditorState::init(Game* game)
 {
-	GameState::init(game);
+	// important!
+	setGame(game);
 
 	mEditor = new Editor();
 	mEditor->buildGUI();

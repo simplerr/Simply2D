@@ -9,7 +9,7 @@ class Game;
 class GameState
 {
 public:
-	virtual void init(Game* game) {mGame = game;};
+	virtual void init(Game* game) = 0;
 	virtual void cleanup() = 0;
 
 	virtual void pause() = 0;
@@ -19,6 +19,8 @@ public:
 	virtual void update(double dt) = 0;
 	virtual void drawMain(void) = 0;
 	virtual void drawGui(void) = 0;
+
+	void setGame(Game* game) {mGame = game;};
 
 	void changeState(GameState* state) {
 		mGame->changeState(state);

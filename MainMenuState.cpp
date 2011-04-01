@@ -12,7 +12,9 @@ MainMenuState MainMenuState::mMainMenuState;
 
 void MainMenuState::init(Game* game)
 {
-	GameState::init(game);
+	// important!
+	setGame(game);
+
 	// create the menu
 	mStartMenu = new Menu("StartMenu", MOUSE, false, 4, 4);
 

@@ -22,6 +22,7 @@
 #include "MainMenuState.h"
 #include "CustomEditorState.h"
 #include "TestState.h"
+#include "LevelCompletedState.h"
 #include "C:\Users\Axel\Documents\Visual Studio 2010\Memory_and_Exception_Trace\Stackwalker.h"
 
 

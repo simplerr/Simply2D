@@ -8,6 +8,8 @@
 #include "Enemy.h"
 #include "Spike.h"
 #include "CameraManager.h"
+#include "PlayState.h"
+#include "LevelCompletedState.h"
 #include <fstream>
 
 using namespace std;
@@ -33,6 +35,8 @@ Level::~Level()
 	{
 		delete mObjectList[i];
 	}
+
+	mObjectList.clear();
 
 	delete mLevelWarp;
 }
@@ -194,9 +198,6 @@ void Level::deleteObject(int ID)
 
 void Level::updateLevel(double dt)	
 {
-	// update player
-	mPlayer->update(dt, this);
-	
 	// update enemies
 	// update entities
 	for (int i = 0;i < mObjectList.size();i++)
@@ -210,6 +211,9 @@ void Level::updateLevel(double dt)
 				deleteObject(tmpEnemy->getID());
 		}
 	}
+
+	// update player
+	mPlayer->update(dt, this);
 }
 
 void Level::drawLevel(void)
@@ -262,19 +266,15 @@ void Level::collision(Player *player)
 		}	
 	}
 
-	// check if player have completed the map
-	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
-		//char buffer[256];
-		//sprintf(buffer, "Completed: %s up next: %s", (char*)mLevelSource.c_str(), (char*)mNextLevel.c_str());
-		//MessageBox(0, buffer, 0, 0);
-
-
-	}
-
 	if(onGround)
 		player->onGround(true);
 	else
 		player->onGround(false);
+
+	// check if player have completed the map
+	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
+		PlayState::Instance()->changeState(LevelCompletedState::Instance());
+	}
 }
 
 /* SAT - separating axis theorem

@@ -23,7 +23,8 @@ TestState TestState::mTestState;
 
 void CustomLevelState::init(Game* game)
 {
-	GameState::init(game);
+	// important!
+	setGame(game);
 
 	// create the menu
 	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
