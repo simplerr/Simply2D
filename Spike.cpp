@@ -39,7 +39,7 @@ void Spike::scale(direction side, int dwidth, int dheight)
 
 void Spike::onPlayerCollision(Player *player, MTV mtv)
 {
-	MessageBox(0, "GAME OVER NOOB", 0, 0);
+	//MessageBox(0, "GAME OVER NOOB", 0, 0);
 }
 
 std::vector<Property> Spike::getProperties(void)

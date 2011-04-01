@@ -7,17 +7,17 @@
 class CustomLevelState : public GameState
 {
 public:
-	void init();
+	void init(Game* game);
 	void cleanup();
 
 	void pause();
 	void resume();
 
-	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
-	virtual void update(Game* game, double dt);
+	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual void update(double dt);
 	void updateMenu(void);
-	void drawMain(Game* game);
-	void drawGui(Game* game);
+	void drawMain(void);
+	void drawGui(void);
 	void drawBkgd(void);
 	std::vector<string> getLevels(void);
 

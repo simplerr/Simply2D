@@ -18,12 +18,9 @@ Level::Level(Player *player)
 {
 	mPlayer = player;
 
-	/*char buffer[256];
-	strcpy(buffer, ACTIVE_LEVEL.c_str());
-	loadLevel(buffer);*/
-
-//	if(mPlayer != NULL)
-//		spawnPlayer();
+	//mLevelWarp.width = 64;
+	//mLevelWarp.height = 128;
+	//mLevelWarp.texture = gGraphics->loadTexture((char*)WARP_SOURCE.c_str());
 
 	nextObjectID = 0;
 }
@@ -36,6 +33,8 @@ Level::~Level()
 	{
 		delete mObjectList[i];
 	}
+
+	delete mLevelWarp;
 }
 
 // saves a level to a .txt file
@@ -49,7 +48,10 @@ void Level::saveLevel(char* levelFile)
 	
 	fout.open(tmp.c_str());
 	
+	// spawn, goal + nextlevel
 	fout << (int)spawnPos.x << " " << (int)spawnPos.y << endl;
+	fout << (int)mLevelWarp->getX() << " " << (int)mLevelWarp->getY() << endl;
+	fout << mNextLevel << endl;
 
 	for (int i = 0;i < mObjectList.size();i++)
 	{
@@ -70,8 +72,6 @@ void Level::loadLevel(char* levelFile)
 	if(mObjectList.size() > 0)	
 		mObjectList.clear();
 
-	char buffer[256];
-
 	Object *loadedObject;
 	ObjectType type;
 	char text[256];
@@ -91,9 +91,16 @@ void Level::loadLevel(char* levelFile)
 	}
 	fin.close();
 	fin.open(levelFile);
-	lines -= 2;		// correctment, hax
+	lines -= 4;		// correctment, since the first 3 lines arent object data (spawn, warp, next level)
 
 	fin >> spawnPos.x >> spawnPos.y;
+
+	// fix the Warp object
+	int tmpx, tmpy;
+	fin >> tmpx >> tmpy;
+	mLevelWarp = new Object(tmpx, tmpy, 64, 128, (char*)WARP_SOURCE.c_str(), LEVEL_WARP);
+	mLevelWarp->setResizeable(false);
+	fin >> mNextLevel;
 
 	// load each line and add the object it generates to mObjectList
 	for(int j = 0; j<lines;j++)
@@ -207,13 +214,18 @@ void Level::updateLevel(double dt)
 
 void Level::drawLevel(void)
 {
-	if(mPlayer != NULL)
-		mPlayer->draw();
-
 	for (int i = 0;i < mObjectList.size();i++)
 	{
 		mObjectList[i]->draw();
 	}
+
+	//gGraphics->BlitTexture(mLevelWarp.texture, mLevelWarp.getRect(), 0xFFFFFFFF, 0);
+
+	if(mLevelWarp != NULL)
+		mLevelWarp->draw();
+
+	if(mPlayer != NULL)
+		mPlayer->draw();
 }
 
 void Level::collision(Player *player)
@@ -248,6 +260,15 @@ void Level::collision(Player *player)
 				player->setPrevWallJumpID(1337);
 			}
 		}	
+	}
+
+	// check if player have completed the map
+	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
+		//char buffer[256];
+		//sprintf(buffer, "Completed: %s up next: %s", (char*)mLevelSource.c_str(), (char*)mNextLevel.c_str());
+		//MessageBox(0, buffer, 0, 0);
+
+
 	}
 
 	if(onGround)
@@ -518,6 +539,10 @@ Object* Level::getObjectAt(POINT mpos)
 			mpos.y > objectRect.top && mpos.y < objectRect.bottom)
 			tmp = mObjectList[i];
 	}
+
+	RECT warpRect = mLevelWarp->getRect();
+	if(mpos.x > warpRect.left && mpos.x < warpRect.right && mpos.y > warpRect.top && mpos.y < warpRect.bottom)
+			tmp = mLevelWarp;
 
 	return tmp;
 }

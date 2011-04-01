@@ -101,7 +101,7 @@ void Game::changeState(GameState* state)
 		mGameState->cleanup();
 
 	mGameState = state;
-	mGameState->init();
+	mGameState->init(this);
 
 	// restores their positions
 	gMouse->restore();
@@ -170,7 +170,7 @@ void Game::updateScene(float dt)
 
 	// update the current state
 	//mGameState->handleEvents(this);	// hax maybe
-	mGameState->update(this, dt);
+	mGameState->update(dt);
 
 	// this should allways be displayed
 	mGfxStats->setTriCount(8 *2);
@@ -200,13 +200,13 @@ void Game::drawScene()
 	mGfxStats->display();
 
 	// draw the state content in the game area
-	mGameState->drawMain(this);
+	mGameState->drawMain();
 
 	// activate gui camera
 	gCameraManager->setCamera(GUI_CAMERA);
 
 	// drwa the state content in the gui area
-	mGameState->drawGui(this);
+	mGameState->drawGui();
 
 	gMouse->drawMousePos();
 	
@@ -220,7 +220,7 @@ LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	D3DApp::msgProc(msg, wParam, lParam);
 
-	mGameState->handleEvents(this, msg, wParam, lParam);
+	mGameState->handleEvents(msg, wParam, lParam);
 
 	return DefWindowProc(mhMainWnd, msg, wParam, lParam);
 }

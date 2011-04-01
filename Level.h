@@ -19,6 +19,21 @@ class Object;
 class MovingObject;
 class Player;
 
+struct Warp
+{
+	int x,y;
+	int width, height;
+	IDirect3DTexture9* texture;
+	RECT getRect(void)	{
+		RECT r;
+		r.left = x - width/2;
+		r.right = x + width/2;
+		r.top = y - height/2;
+		r.bottom = y + height/2;
+
+		return r;
+	}
+};
 
 class Level
 {
@@ -29,6 +44,8 @@ public:
 	void saveLevel(char* levelFile);
 	void loadLevel(char* levelFile);
 	std::string getLevelName(void);
+	std::string getNextLevel(void) {return mNextLevel;};
+	void setNextLevel(std::string nextLevel) { mNextLevel = nextLevel;};
 
 	void addObject(Object *object);
 	void deleteObject(int ID);
@@ -44,6 +61,7 @@ public:
 	int getSnapDist(RECT rect, direction checkDir);
 	POS getSpawn(void)  {return spawnPos;};
 	RECT getSpawnRect(void);
+	Object* getWarp(void) {return mLevelWarp;};
 	void setSpawn(POS pos)	{spawnPos = pos;};
 	void spawnPlayer(void);
 
@@ -52,7 +70,10 @@ private:
 	std::vector<Object*> mCollisionList;
 
 	std::string mLevelSource;
+	std::string mNextLevel;
+
 	POS spawnPos;
+	Object* mLevelWarp;
 	int nextObjectID;
 	Player *mPlayer;
 };

@@ -17,6 +17,7 @@ static const std::string TP_DEST =	"misc\\textures\\tpdest.bmp";
 static const std::string TRAMPOLINE_SOURCE = "misc\\textures\\trampoline.bmp";
 static const std::string WALLJUMP_SOURCE = "misc\\textures\\walljump.bmp";
 static const std::string SPIKE_SOURCE = "misc\\textures\\spike.bmp";
+static const std::string WARP_SOURCE = "misc\\textures\\warp.bmp";
 static const int WINDOW_WIDTH = 1400;
 static const int WINDOW_HEIGHT = 900;
 static const int GAME_WIDTH = 1200;
@@ -68,12 +69,15 @@ struct POS
 
 enum WindowID
 {
+	LEVEL_COMPLETEDWINDOW,
+	OBJECT_INFO,
 	OBJECT_UPDATED,
 	OBJECT_DESELECTED,
 	OBJECT_SELECTED,
 	LOL_TEXTSUBMIT,
 	EDITOR,
 	INPUT_LEVEL,
+	INPUT_NEXT,
 	INPUT_XPOS,
 	INPUT_YPOS,
 	INPUT_WIDTH,
@@ -86,6 +90,7 @@ enum WindowID
 	INPUT_SPAWNY,
 	INPUT_SPEED,
 	TEXT_LEVEL,
+	TEXT_NEXT,
 	TEXT_XPOS,
 	TEXT_YPOS,
 	TEXT_WIDTH,
@@ -140,7 +145,8 @@ enum ObjectType
 	LADDER,
 	TRAMPOLINE,
 	WALLJUMP,
-	SPIKE
+	SPIKE,
+	LEVEL_WARP
 };
 
 struct WindowRect

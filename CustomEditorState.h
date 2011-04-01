@@ -8,7 +8,7 @@
 class CustomEditorState : public CustomLevelState
 {
 public:
-	void update(Game* game, double dt)	{
+	void update(double dt)	{
 		// consider to combine this with the menuHandler()
 		updateMenu();
 
@@ -19,7 +19,7 @@ public:
 		if(result != "none")	{
 			result.append(".txt");
 
-			game->changeState(EditorState::Instance());
+			changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(result);
 		}
 	}

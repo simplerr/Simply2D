@@ -6,8 +6,10 @@ extern CameraManager* gCameraManager;
 
 PlayState PlayState::mPlayState;
 
-void PlayState::init()
+void PlayState::init(Game* game)
 {
+	GameState::init(game);
+
 	mPlayer = new Player("misc\\textures\\player.bmp", USER_WIDTH, USER_HEIGHT);
 	mLevel = new Level(mPlayer);
 
@@ -36,30 +38,30 @@ void PlayState::resume()
 	// don't know how to to yet
 }
 
-void PlayState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
+void PlayState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
 		case WM_KEYDOWN:
 			if( wParam == VK_ESCAPE )
-				game->changeState(MainMenuState::Instance());
+				changeState(MainMenuState::Instance());
 		break;
 	}
 }
 
-void PlayState::update(Game* game, double dt)
+void PlayState::update(double dt)
 {
 	mLevel->updateLevel(dt);	// update objects + player
 	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 
-void PlayState::drawMain(Game* game)
+void PlayState::drawMain(void)
 {
 	drawBkgd();
 	mLevel->drawLevel();
 }
 
-void PlayState::drawGui(Game* game)
+void PlayState::drawGui(void)
 {
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }

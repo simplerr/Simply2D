@@ -8,8 +8,10 @@ extern CameraManager* gCameraManager;
 
 EditorState EditorState::mEditorState;
 
-void EditorState::init()
+void EditorState::init(Game* game)
 {
+	GameState::init(game);
+
 	mEditor = new Editor();
 	mEditor->buildGUI();
 
@@ -36,43 +38,43 @@ void EditorState::resume()
 	// don't know how to to yet
 }
 
-void EditorState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
+void EditorState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch( msg )
 	{
 	case WM_KEYDOWN:			
 		if(wParam == VK_ESCAPE)
-			game->changeState(MainMenuState::Instance());
+			changeState(MainMenuState::Instance());
 		else
 			mEditor->keyPressed(wParam);
 		break;
 	}
 }
 
-void EditorState::update(Game* game, double dt)
+void EditorState::update(double dt)
 {
 	// test button pressed
 	if(mEditor->updateAll(dt) < 0)	{
 		string tmp = mEditor->getTestLevel();
-		game->changeState(TestState::Instance());
+		changeState(TestState::Instance());
 		TestState::Instance()->setLevel(tmp);
 	}
 	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 
-void EditorState::drawMain(Game* game)
+void EditorState::drawMain(void)
 {
 	drawBkgd();
 	mEditor->renderLevel();
 }
 
-void EditorState::drawGui(Game* game)
+void EditorState::drawGui(void)
 {
 	//gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	mEditor->renderGui();
 }
 
-void EditorState::drawBkgd()
+void EditorState::drawBkgd(void)
 {	
 	RECT r1;
 	r1.top = 0;

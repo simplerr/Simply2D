@@ -33,6 +33,7 @@ Editor::Editor() : Window(NULL, EDITOR, 1300, 450, 200, 900), SNAP_SENSE(30), SN
 	movingObject = false;
 	movingEndPos = false;
 	movingSpawnPos = false;
+	movingWarp = false;
 	showPaths = false;
 	tryLevel = false;
 	currentAction = IDLE;
@@ -52,10 +53,10 @@ Editor::~Editor()
 void Editor::addPropertyPair(Property prop)
 {
 	PropertyPair tmpPair;
-	int y = 153 + 30 * propertyCount;
+	int y = 178 + 30 * propertyCount;
 
-	tmpPair.name = new TextBox(this, TEXT_XPOS, prop.name, 40, y, 60, 20);
-	tmpPair.value = new InputBox(this, INPUT_XPOS, 110, y, 60, 20, 4);
+	tmpPair.name = new TextBox(this, OBJECT_INFO, prop.name, 40, y, 60, 20);
+	tmpPair.value = new InputBox(this, OBJECT_INFO, 110, y, 60, 20, 4);
 	tmpPair.value->setValue(prop.value);
 
 	propertyPairs.push_back(tmpPair);
@@ -65,18 +66,22 @@ void Editor::addPropertyPair(Property prop)
 
 void Editor::buildGUI(void)
 {
-	int OFFSET = 30;
+	int OFFSET = 55;
 
 	// should only allow input of 11 characters
 	tLevel = new TextBox(this, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
 	iLevel = new InputBox(this, INPUT_LEVEL, 125, 22, 90, 20, 15);
 	iLevel->setValue("");
 
-	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 40 + OFFSET, 60, 20);
-	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 70 + OFFSET, 60, 20);
+	tNextLevel = new TextBox(this, TEXT_NEXT, "Next:", 40, 50, 60, 20);
+	iNextLevel = new InputBox(this, INPUT_NEXT, 125, 50, 90, 20, 15);
+	iNextLevel->setValue("");
 
-	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 40 + OFFSET, 60, 20, 4);
-	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 70 + OFFSET, 60, 20, 4);
+	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 95, 60, 20);
+	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 125, 60, 20);
+
+	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 95, 60, 20, 4);
+	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 125, 60, 20, 4);
 
 	// sets the values to the spawnPos!
 	POS spawnPos = mLevel->getSpawn();
@@ -203,6 +208,10 @@ int Editor::updateAll(float dt)
 				}
 				else
 					movingSpawnPos = false;
+
+				RECT warpRect = mLevel->getWarp()->getRect();
+				if(tmpMousePos.x > warpRect.left && tmpMousePos.x < warpRect.right && tmpMousePos.y > warpRect.top && tmpMousePos.y < warpRect.bottom)
+					mActiveObject = mLevel->getWarp();
 				
 				// reset inputboxes
 				resetInputBoxes();
@@ -225,9 +234,14 @@ int Editor::updateAll(float dt)
 	{
 		// move the spawn pos
 		if(movingSpawnPos)	{
-				moveSpawnPos();
-				messageHandler(MOVE_SPAWNPOS);			
-			}
+			moveSpawnPos();
+			messageHandler(MOVE_SPAWNPOS);			
+		}
+
+		if(movingWarp)	{
+			//mLevel->getWarp().x += gDInput->mouseDX();
+			//mLevel->getWarp().y += gDInput->mouseDY();
+		}
 
 		if(mActiveObject != NULL)
 		{
@@ -378,9 +392,9 @@ int Editor::renderGui()
 {
 	Window::renderAll();
 
-	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 37);
-	gGraphics->drawText("Active object:", GAME_WIDTH +10, 120);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 420);
+	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 65);
+	gGraphics->drawText("Active object:", GAME_WIDTH +10, 140);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 440);
 
 	return 1;
 }
@@ -561,7 +575,7 @@ void Editor::messageHandler(WindowID sender, string data)
 
 	switch(sender)
 	{
-	case LOL_TEXTSUBMIT:
+	case OBJECT_INFO:
 		{
 			if(mActiveObject != NULL)
 			{
@@ -672,7 +686,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	case BUTTON_DELETE:
 		{		
-			if(mActiveObject != NULL)	{
+			if(mActiveObject != NULL && mActiveObject->getType() != LEVEL_WARP)	{
 					mLevel->deleteObject(mActiveObject->getID());	// ska lägga till för dynamic också!
 
 				resetInputBoxes();
@@ -844,6 +858,13 @@ void Editor::loadLevel(char *source)
 	itoa(mLevel->getSpawn().y, buffer, 10);
 	tmp = string(buffer);
 	iSpawnY->setValue(tmp);
+
+	// load the nextmap and display it
+	// remove level\ and .txt
+	tmp = mLevel->getNextLevel();
+	tmp.erase(0, 7);
+
+	iNextLevel->setValue(tmp);
 }
 
 string Editor::getTestLevel(void)

@@ -9,24 +9,25 @@ class Game;
 class GameState
 {
 public:
-	virtual void init() = 0;
+	virtual void init(Game* game) {mGame = game;};
 	virtual void cleanup() = 0;
 
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 
-	virtual void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
-	virtual void update(Game* game, double dt) = 0;
-	virtual void drawMain(Game* game) = 0;
-	virtual void drawGui(Game* game) = 0;
+	virtual void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam) = 0;
+	virtual void update(double dt) = 0;
+	virtual void drawMain(void) = 0;
+	virtual void drawGui(void) = 0;
 
-	void ChangeState(Game* game, GameState* state) {
-		game->changeState(state);
+	void changeState(GameState* state) {
+		mGame->changeState(state);
 	}
 protected:
 	GameState(){};
 private:
 	bool mStateChanged;
+	Game *mGame;
 };
 
 #endif

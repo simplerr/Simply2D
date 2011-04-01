@@ -10,8 +10,9 @@ extern Mouse* gMouse;
 
 MainMenuState MainMenuState::mMainMenuState;
 
-void MainMenuState::init()
+void MainMenuState::init(Game* game)
 {
+	GameState::init(game);
 	// create the menu
 	mStartMenu = new Menu("StartMenu", MOUSE, false, 4, 4);
 
@@ -39,18 +40,18 @@ void MainMenuState::resume()
 	// don't know how to to yet
 }
 
-void MainMenuState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
+void MainMenuState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
 		case WM_KEYDOWN:
 			if( wParam == VK_ESCAPE )
-				game->changeState(MainMenuState::Instance());
+				changeState(MainMenuState::Instance());
 		break;
 	}
 }
 
-void MainMenuState::update(Game* game, double dt)
+void MainMenuState::update(double dt)
 {
 	mStartMenu->update(gMouse->getPos());
 
@@ -58,24 +59,24 @@ void MainMenuState::update(Game* game, double dt)
 	string result = menuHandler();
 
 	if(result == "Play")	{
-		game->changeState(PlayState::Instance());	
+		changeState(PlayState::Instance());	
 	}
 	else if(result == "Editor")	{
-		game->changeState(CustomEditorState::Instance());
+		changeState(CustomEditorState::Instance());
 		//should ask for which level to edit -> SelectLevelState
 	}
 	else if(result == "Custom")	{
-		game->changeState(CustomLevelState::Instance());
+		changeState(CustomLevelState::Instance());
 	}
 }
 
-void MainMenuState::drawMain(Game* game)
+void MainMenuState::drawMain(void)
 {
 	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	mStartMenu->draw();	
 }
 
-void MainMenuState::drawGui(Game* game)
+void MainMenuState::drawGui(void)
 {
 	// the green side
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));

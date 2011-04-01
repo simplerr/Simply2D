@@ -6,16 +6,16 @@
 class PlayState : public GameState
 {
 public:
-	void init();
+	void init(Game* game);
 	void cleanup();
 
 	void pause();
 	void resume();
 
-	virtual void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
-	void update(Game* game, double dt);
-	void drawMain(Game* game);
-	virtual void drawGui(Game* game);
+	virtual void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
+	void update(double dt);
+	void drawMain(void);
+	virtual void drawGui(void);
 	virtual void drawBkgd(void);
 	void setLevel(string level);
 	string getLevel(void) { return mLevel->getLevelName();}

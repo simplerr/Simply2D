@@ -7,16 +7,16 @@
 class MainMenuState : public GameState
 {
 public:
-	void init();
+	void init(Game* game);
 	void cleanup();
 
 	void pause();
 	void resume();
 
-	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam);
-	void update(Game* game, double dt);
-	void drawMain(Game* game);
-	void drawGui(Game* game);
+	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
+	void update(double dt);
+	void drawMain(void);
+	void drawGui(void);
 	void drawBkgd(void);
 
 	static MainMenuState* Instance() {

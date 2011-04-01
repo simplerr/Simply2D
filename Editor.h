@@ -101,6 +101,7 @@ private:
 	bool movingObject;
 	bool movingEndPos;
 	bool movingSpawnPos;
+	bool movingWarp;
 	bool showPaths;
 	bool tryLevel;
 	const int SNAP_SENSE;
@@ -114,10 +115,12 @@ private:
 	TextBox *tLevel;
 	TextBox *tSpawnX;
 	TextBox *tSpawnY;
+	TextBox *tNextLevel;
 
 	InputBox *iLevel;
 	InputBox *iSpawnX;
 	InputBox *iSpawnY;
+	InputBox *iNextLevel;
 
 	ListBox *listBox;
 

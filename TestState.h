@@ -7,14 +7,14 @@
 class TestState : public PlayState
 {
 public:
-	void handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam) {
+	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch(msg)
 		{
 			case WM_KEYDOWN:
 				// should acctually pause the editor instead
 				if( wParam == VK_ESCAPE )	{
 					string levelName = getLevel();
-					game->changeState(EditorState::Instance());
+					changeState(EditorState::Instance());
 					EditorState::Instance()->setLevel(levelName);
 				}
 			break;
@@ -25,8 +25,8 @@ public:
 		return &mTestState;
 	}
 
-	void drawGui(Game* game) {
-		PlayState::drawGui(game);
+	void drawGui(void) {
+		PlayState::drawGui();
 		gGraphics->drawText("Press ESC to return", 1220, 20);
 	}
 protected:

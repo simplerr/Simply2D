@@ -21,8 +21,10 @@ CustomLevelState CustomLevelState::mCustomLevelState;
 CustomEditorState CustomEditorState::mCustomEditorState;
 TestState TestState::mTestState;
 
-void CustomLevelState::init()
+void CustomLevelState::init(Game* game)
 {
+	GameState::init(game);
+
 	// create the menu
 	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
 	mCustomLevelMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
@@ -59,18 +61,18 @@ void CustomLevelState::resume()
 	// don't know how to to yet
 }
 
-void CustomLevelState::handleEvents(Game* game, UINT msg, WPARAM wParam, LPARAM lParam)
+void CustomLevelState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
 		case WM_KEYDOWN:
 			if( wParam == VK_ESCAPE )
-				game->changeState(MainMenuState::Instance());
+				changeState(MainMenuState::Instance());
 		break;
 	}
 }
 
-void CustomLevelState::update(Game* game, double dt)
+void CustomLevelState::update(double dt)
 {
 	updateMenu();
 
@@ -81,7 +83,7 @@ void CustomLevelState::update(Game* game, double dt)
 	if(result != "none")	{
 		result.append(".txt");
 
-		game->changeState(PlayState::Instance());
+		changeState(PlayState::Instance());
 		PlayState::Instance()->setLevel(result);
 	}
 }
@@ -93,12 +95,12 @@ void CustomLevelState::updateMenu(void)
 	mCustomLevelMenu->update(gMouse->getPos());
 }
 
-void CustomLevelState::drawMain(Game* game)
+void CustomLevelState::drawMain(void)
 {
 	mCustomLevelMenu->draw();
 }
 
-void CustomLevelState::drawGui(Game* game)
+void CustomLevelState::drawGui(void)
 {
 	// the green side
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
