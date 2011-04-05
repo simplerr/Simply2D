@@ -1,50 +1,33 @@
 #include "Window.h"
 #include "Graphics.h"
+#include "WindowHandler.h"
+#include "Functors.h"
 
-Window::Window(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
-{
-	if(parent == NULL)	{	
-		mParent = NULL;
-		mX = x;
-		mY = y;
-		nextID = 0;
-		primaryID = 0;
-	}
-	else	{
-			
-		mParent = parent;
-		mParent->addWindow(this);//mSubWins.push_back(this);
+Window::Window(WindowHandler *handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+{		
+	handler->addWindow(this);
 
-		RECT parentRect = parent->getRect();
-		mX = parentRect.left + x;
-		mY = parentRect.top + y;
-	}
+	mID = id;
+
+	mX = handler->getRect().left + x;
+	mY = handler->getRect().top + y;
 	
 	mWidth = width;
 	mHeight = height;
 
 	mColor = color;
-	mID = id;
-	mActiveWinID = NOT_SET;
 	mActive = false;
-	mActiveWin = this;
 	mInputState = true;
 	mVisible = true;
 	mValue = "none";
-
-	//sprintf(buffer, "value: %s, x: %i, y: %i, width: %i, height: %i", mValue.c_str(), mX, mY, mWidth, mHeight);
 }
 
 Window::~Window()
 {
-	// deletes
-	for(int i = 0;i<mSubWins.size();i++)
-	{
-		delete mSubWins[i];	
-	}
-	mSubWins.clear();
+	// dtor
 }
 
+/*
 int Window::addWindow(Window *w)
 {
 	w->setPrimaryID(primaryID);
@@ -106,13 +89,13 @@ void Window::sendMousePress(int mx, int my)	// bra namn? har ju bara med musen a
 		}
 }
 
-int Window::renderAll(void)
+int Window::draw(void)
 {
 	gGraphics->BlitRect(mX, mY, mWidth, mHeight, mColor);
 
 	for(int i = 0;i<mSubWins.size();i++)
 	{
-		mSubWins[i]->renderAll();
+		mSubWins[i]->draw();
 	}
 	return 1;
 }
@@ -136,7 +119,7 @@ int Window::wm_keydown(WPARAM wParam)
  recursive.
  
  ****************************************************************************/
-Window *Window::findChildAtCoord(int x, int y)
+/*Window *Window::findChildAtCoord(int x, int y)
 {
   int child = 0;
   Window *found = NULL;
@@ -177,7 +160,7 @@ void Window::keyPressed(WPARAM wParam)
 {
 	if(mInputState && mActiveWin != NULL)
 		mActiveWin->wm_keydown(wParam);
-}
+}*/
 
 RECT Window::getRect(void)
 {
@@ -195,3 +178,4 @@ void Window::onDeactive(void)
 {
 	// to be overwritten
 }
+

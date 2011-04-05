@@ -35,6 +35,8 @@ public:
 
 	void restore(void);
 
+	bool inside(RECT r);
+
 private:
 	POINT mPos;
 	HWND mMainWnd;

@@ -7,13 +7,14 @@
 class DropBox : public Window
 {
 public:
-	DropBox(Window *parent, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
+	DropBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230));
 	~DropBox();
 
-	void updateWindow(float dt);
-	int wm_lbuttondown(int x, int y); 
-	int wm_keydown(WPARAM wParam);
-    int renderAll(void);
+	void update(float dt);
+	void draw(void);
+	void pressed(void);
+	void hoover(void);
+
 	void addItem(string name, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));
 	void move(int dx, int dy);
 	void setPos(int x, int y);

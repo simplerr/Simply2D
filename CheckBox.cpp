@@ -1,7 +1,7 @@
 #include "CheckBox.h"
 
-CheckBox::CheckBox(Window *parent, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR checkedColor, D3DCOLOR color)
-	:Window(parent, id, x, y, width, height, color)
+CheckBox::CheckBox(WindowHandler* handler, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR checkedColor, D3DCOLOR color)
+	:Window(handler, id, x, y, width, height, color)
 {
 	mDisplayText = display;
 	mCheckedColor = checkedColor;
@@ -14,20 +14,19 @@ CheckBox::~CheckBox()
 	// dtor
 }
 
-int CheckBox::wm_lbuttondown(int x, int y)
+void CheckBox::pressed(void)
 {
 	if(!mChecked)	{
 		mChecked = true;
-		mParent->messageHandler(getID(), "True");
+		//callback();
 	}
 	else if(mChecked)	{
 		mChecked = false;
-		mParent->messageHandler(getID(), "False");
+		//callback();
 	}
-	return 1;
 }
 
-int CheckBox::renderAll(void)
+void CheckBox::draw(void)
 {
 	RECT tmpRect = getRect();
 
@@ -45,10 +44,8 @@ int CheckBox::renderAll(void)
 	else if(!mChecked)
 		gGraphics->BlitRect(tmpRect, D3DCOLOR_ARGB(255, 255, 255, 255));
 
-	// draw the text infront
+	// draw the text in front of the checkbox
 	sprintf(buffer, "%s", mDisplayText.c_str());
 	gGraphics->drawText(buffer, getX() - 100, getY() - getWidth()/2 - 2);
-
-	return 1;
 }
 

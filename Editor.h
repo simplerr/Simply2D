@@ -13,7 +13,11 @@
 #include "ActiveObject.h"
 #include "CheckBox.h"
 
+using namespace std;
+
 static const int ADD = 150;
+
+class WindowHandler;
 
 struct PropertyPair
 {
@@ -43,14 +47,13 @@ enum DragRect
 	DRAGDOWN
 };
 
-class Editor : public Window	
+class Editor
 {
 public:
 	Editor();
 	~Editor();
 
 	int updateAll(float dt);
-	int renderAll(void)	{ return 1;};
 	int renderLevel(void);
 	int renderGui(void);
 
@@ -81,35 +84,38 @@ public:
 	void addPropertyPair(Property prop);
 
 	void updatePropertyWidgets(void);
+
+	void TestF(void)	{};
 private:
 
-	int propertyCount;
-	std::vector<PropertyPair> propertyPairs;
-	Object *mActiveObject;
-
-	RECT gameArea;
-	//POINT mousePos;
-	Level *mLevel;
+	WindowHandler*			mWindowHandler;
+	Level*					mLevel;
+	Object*					mActiveObject;
+	int						mPropertyCount;		// remove?!
+	vector<PropertyPair>	mPropertyPairs;
 	
-	Object *snappedObject;
-	string changeTexture;
-	RECT dragLeft, dragTop, dragBottom, dragRight;
-	int snapCount;
-	direction snapDir;
-	ObjectType mPrevActiveObjectType;
-	int createObjectTextPos;
-	bool movingObject;
-	bool movingEndPos;
-	bool movingSpawnPos;
-	bool movingWarp;
-	bool showPaths;
-	bool tryLevel;
-	const int SNAP_SENSE;
-	const int SNAP_DIST;
 
-	char *test;
+	RECT		gameArea;
+	
+	Object*		snappedObject;
+	string		changeTexture;
+	RECT		dragLeft, dragTop, dragBottom, dragRight;
+	int			snapCount;
+	direction	snapDir;
+	ObjectType	mPrevActiveObjectType;
+	int			createObjectTextPos;
+	bool		movingObject;
+	bool		movingEndPos;
+	bool		movingSpawnPos;
+	bool		movingWarp;
+	bool		showPaths;
+	bool		tryLevel;
+	const int	SNAP_SENSE;
+	const int	SNAP_DIST;
 
-	int mOffset;
+	char*		test;
+
+	int			mOffset;
 	CurrentAction currentAction;
 private:
 	TextBox *tLevel;

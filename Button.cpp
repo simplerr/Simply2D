@@ -1,61 +1,91 @@
 #include "Button.h"
+#include <string>
+#include "Window.h"
+#include <boost\function.hpp>
+#include <boost\bind.hpp>
 
-Button::Button(Window *parent, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color)
-			:Window(parent, id, x, y, width, height, color)
+
+extern Mouse* gMouse;
+
+Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color)
+			:Window(handler, id, x, y, width, height, color)
 {
 	mDisplayText = display;
-	pressed = false;
-	mFlashTime = .08;
+	mMouseOver = false;
+	mFont = true;
+
+	mNormalTexture = NULL;
+	mHooverTexture = NULL;
 	// eh inget att g�ra?:d
 }
+
+Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, char* normalTexture, char* hooverTexture, bool font, D3DCOLOR color)
+	:Window(handler, id, x, y, width, height, color)	
+{
+	mDisplayText = display;
+	mMouseOver = false;
+	mFont = font;
+
+	mNormalTexture = gGraphics->loadTexture(normalTexture);
+	mHooverTexture = gGraphics->loadTexture(hooverTexture);
+}
+
 Button::~Button()
 {
 	// dtor
 }
 
-void Button::updateWindow(float dt)
+void Button::update(float dt)
 {
-	static float dtsum;
+	// cursor inside? then show hoover fx
+	/*int mx = gMouse->getScreenPos().x;
+	int my = gMouse->getScreenPos().y;
+	RECT bRect = getRect();
 
-	if(dtsum >= mFlashTime)	{
-		dtsum = 0;
-		pressed = false;
-	}
+	if(mx > bRect.left && mx < bRect.right && my > bRect.top && mx < bRect.bottom)
+		mMouseOver = true;
 	else
-		dtsum += dt;
+		mMouseOver = false;*/
 }
 
-int Button::wm_lbuttondown(int x, int y)
+void Button::pressed(void)
+{
+	if(callback != NULL)	{
+		callback(getID(), getValue());	
+	}	
+}
+void Button::hoover(void)
+{
+	mMouseOver = true;
+}
+
+void Button::draw(void)
 {
 	if(getVisible())
 	{
-		if(!pressed)	{
-			pressed = true;
-			//mValue = "pressed";
-			mParent->messageHandler(mID);
+		// draw the bkgd of button
+		if(mMouseOver)	{
+			if(mNormalTexture == NULL)
+				gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB(255, 255, 166, 0));
+			else	{
+				gGraphics->BlitTexture(mHooverTexture, getRect());
+
+			}
+
+			// so it wont be true forever
+			mMouseOver = false;
 		}
-	}
-
-	return 1;
-}
-
-int Button::renderAll(void)
-{
-	//sprintf(buffer, "value: %s, x: %i, y: %i, width: %i, height: %i", mValue.c_str(), mX, mY, mWidth, mHeight);
-	//MessageBox(0, buffer, 0, 0);
-	if(getVisible())
-	{
-		if(pressed)	{
-			gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB(255, 255, 166, 0));
-			//pressed = false;
-			//mValue = "notpressed";
+		else	{
+			if(mNormalTexture == NULL)
+				gGraphics->BlitRect(mX, mY, mWidth, mHeight, mColor);
+			else
+				gGraphics->BlitTexture(mNormalTexture, getRect());
 		}
-		else
-			gGraphics->BlitRect(mX, mY, mWidth, mHeight, mColor);
-		
-		strcpy(buffer, mDisplayText.c_str());
-		gGraphics->drawText(buffer, mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
-	}
 
-	return 1;
+		// draw the font 
+		if(mFont)	{
+			strcpy(buffer, mDisplayText.c_str());
+			gGraphics->drawText(buffer, mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
+		}	
+	}
 }

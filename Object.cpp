@@ -203,7 +203,7 @@ ObjectArea Object::getAreaAt(double mx, double my)
 				return DRAG_LEFT;
 			else if(i == R)
 				return DRAG_RIGHT;
-			else if(i == T)
+			else if(i == TO)
 				return DRAG_UP;
 			else if(i == B)
 				return DRAG_DOWN;
@@ -234,10 +234,10 @@ RECT* Object::getDragRects(void)
 	rects[R].bottom = rect.bottom - 20;
 
 	// top drag rect
-	rects[T].top = rect.top;
-	rects[T].bottom = rects[T].top + 20;
-	rects[T].left = rect.left + 20;
-	rects[T].right = rect.right - 20;
+	rects[TO].top = rect.top;
+	rects[TO].bottom = rects[TO].top + 20;
+	rects[TO].left = rect.left + 20;
+	rects[TO].right = rect.right - 20;
 
 	// bottom drag rect
 	rects[B].bottom = rect.bottom;

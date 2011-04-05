@@ -11,11 +11,15 @@
 #include "DirectInput.h"
 #include "constants.h"
 #include "Mouse.h"
+#include "Functors.h"
 using namespace std;
 
 // Developing a GUI Using C++ and DirectX
 // Source Listing 1
 // Window Class
+
+class WindowHandler;
+class Editor;
 
 struct ListItem
 {
@@ -43,69 +47,53 @@ static char buffer[256];
 class Window
 {
 public:
-	Window(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 155, 155, 200, 000));
+	Window(WindowHandler *handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 155, 155, 200, 000));
 	virtual ~Window();
-	virtual void init(void) {};
 	
-	
-	Window *findChildAtCoord(int x, int y);
-	int windowCount(void) {return mSubWins.size();};
+	virtual void update(double dt)	{}
+	virtual void draw(void)			{}
+	virtual void pressed(void)		{}
+	virtual void hoover(void)		{}
 
-	//WindowRect getInfo(void)	{return mPosition;};
+	WindowID getID(void)	{return mID;}
 
-	int addWindow(Window *w);
-	int removewindow(Window *w);
-	void setPrimaryID(int id)	{primaryID = id;};
-	int getPrimaryID(void)		{return primaryID;};
+	// also does stuff neccassary on deactivation
+	virtual void setActive(bool b)	{mActive = b;}
 
+	// ??
 	virtual void onDeactive(void);
+	virtual int wm_keydown(WPARAM wParam)	{return 1;}
 
-	//virtual void updateRectToNewXY(void);
-	bool isActive(void) { return mActive;};
+	bool isActive(void) { return mActive;}
+	void setValue(string value) {mValue = value;}
+	void setVisibility(bool value) {mVisible = value;}
+	virtual void move(int dx, int dy) {mX += dx; mY += dy;}
+	virtual void setPos(int x, int y) {mX = x; mY = y;}
 
-	virtual void updateWindow(float dt)	{if(mActiveWin != this && mActiveWin != NULL)mActiveWin->updateWindow(dt);};		// om det window man tar bort är det aktiva måste mActiveWin sättas till NULL!
-	virtual int renderAll(void);
-  
-	//void setName(char *name) {mName = name;};
-	void setValue(string value) {mValue = value;};
+	/*
 	void setActive(bool state){if(mActiveWin != NULL) mActiveWin->mActive = state;};
-	void setVisibility(bool value) {mVisible = value;};
-	void setParent(Window* parent)	{mParent = parent;};
-	void setsize(int width, int height)		{};
-	virtual void move(int dx, int dy) {mX += dx; mY += dy;};
-	virtual void setPos(int x, int y) {mX = x; mY = y;};
-	
-	void updateRect(void);
-
-	Window *getParent(void)	{return(mParent);};
-	Window *getWindow(void) {return(this);};
-	WindowID getID(void) {return mID;};
-	int getX(void) { return mX;};
-	int getY(void) { return mY;};
-	int getWidth(void) { return mWidth;};
-	int getHeight(void) { return mHeight;};
-	string getValue(void)	{return mValue;};
-	bool getVisible(void) {return mVisible;};
-	RECT getRect(void);
-
 	virtual void messageHandler(WindowID sender, string data = "nothing") {};
 	void keyPressed(WPARAM wParam);
 	void sendMousePress(int mx, int my);
 	virtual int wm_lbuttondown(int x, int y);
-	virtual int wm_keydown(WPARAM wParam);
+	
+	Window *findChildAtCoord(int x, int y);
+	*/
+
+	int getX(void) { return mX;}
+	int getY(void) { return mY;}
+	int getWidth(void) { return mWidth;}
+	int getHeight(void) { return mHeight;}
+	string getValue(void)	{return mValue;}
+	bool getVisible(void) {return mVisible;}
+	RECT getRect(void);
 
 protected:
-	Window *mParent;
-	Window *mActiveWin;
-	vector<Window*> mSubWins;
-	//WindowRect mPosition;
-	D3DCOLOR mColor;
+	//MessageFunctor* mFunctor; 
 
-	int nextID;
-	int primaryID; // should replace WindowID -> create callback function
 	WindowID mID;
 	string mValue;
-	WindowID mActiveWinID;
+	D3DCOLOR mColor;
 
 	int mX;
 	int mY;
@@ -116,6 +104,5 @@ protected:
 	bool mActive;
 	bool mInputState;
 };
-
 
 #endif

@@ -18,6 +18,8 @@ static const std::string TRAMPOLINE_SOURCE = "misc\\textures\\trampoline.bmp";
 static const std::string WALLJUMP_SOURCE = "misc\\textures\\walljump.bmp";
 static const std::string SPIKE_SOURCE = "misc\\textures\\spike.bmp";
 static const std::string WARP_SOURCE = "misc\\textures\\warp.bmp";
+static const std::string NORMAL_BUTTON_SOURCE = "misc\\textures\\button_normal.bmp";
+static const std::string HOOVER_BUTTON_SOURCE = "misc\\textures\\button_hoover.bmp";
 static const int WINDOW_WIDTH = 1400;
 static const int WINDOW_HEIGHT = 900;
 static const int GAME_WIDTH = 1200;
@@ -33,7 +35,7 @@ enum DragRects
 {
 	L,	// left
 	R,	// right	
-	T,	// top
+	TO,	// top
 	B	// bottom
 };
 

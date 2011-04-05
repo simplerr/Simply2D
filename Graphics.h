@@ -31,7 +31,7 @@ public:
 	IDirect3DTexture9* loadObjectTexture(char *fileName);
 
 	void BlitTexture(IDirect3DTexture9 *texture, RECT rDest,		// utan animation
-    D3DCOLOR vertexColour, float rotate);
+    D3DCOLOR vertexColour = 0xFFFFFFFF, float rotate = 0.0f);
 
 	void BlitAnimation(IDirect3DTexture9 *texture, RECT rDest,		// med animation
 		D3DCOLOR vertexColour, int width, int height, int frame, float rotate, direction frameDir);

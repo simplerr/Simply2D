@@ -5,19 +5,32 @@
 #include "Window.h"
 #include "Graphics.h"
 #include "DirectInput.h"
+#include <string>
+#include <boost\function.hpp>
+#include <boost\bind.hpp>
 
 class InputBox : public Window
 {
 public:
-	InputBox(Window *parent, WindowID id, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	InputBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~InputBox();
 
-	void updateWindow(float dt);
+	void update(float dt);
+	void draw(void);
+	void pressed(void);
+	//void hoover(void);
+
+	void setActive(bool b);
 	int wm_lbuttondown(int x, int y); 
 	int wm_keydown(WPARAM wParam);
-    int renderAll(void);
+  
+	boost::function<void(WindowID id, std::string value)> callback;
 
-	//void takeInput(WPARAM wParam);
+	template <class T>
+	void connect(void(T::*_callback)(WindowID id, std::string value), T* _object)	{
+		callback = boost::bind(_callback, _object, _1, _2);
+	}
+
 private:
 	int maxLength;
 	int caretPos;

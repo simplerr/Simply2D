@@ -1,114 +1,108 @@
 #include "ListBox.h"
 
-ListBox::ListBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
-				: Window(parent, id, x, y, width, height, color)
+extern Mouse* gMouse;
+
+ListBox::ListBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
+				: Window(handler, id, x, y, width, height, color)
 {
-	items = 0;
+	mItems = 0;
+	mMouseOver = false;
 }
 
 ListBox::~ListBox()
 {
 	// dtor
 }
-// körs bara om den är aktiv!
-void ListBox::updateWindow(float dt)
-{
-	// har nog inget att göra
-}
 
-int ListBox::wm_lbuttondown(int x, int y) 
+void ListBox::pressed(void)
 {
 	// ta reda på vilken listItem som blev tryckt
 	// spara dess namn i activeItemName
-	char buffer[256];
+	int x = gMouse->getPos().x;
+	int y = gMouse->getPos().y;
 
-	for(int i = 0; i<itemList.size();i++)
+	for(int i = 0; i<mItemList.size();i++)
 	{
-		if(x > itemList[i].getRect().left && x < itemList[i].getRect().right && y > itemList[i].getRect().top && y < itemList[i].getRect().bottom)
+		if(x > mItemList[i].getRect().left && x < mItemList[i].getRect().right && y > mItemList[i].getRect().top && y < mItemList[i].getRect().bottom)
 		{		
-			mValue = itemList[i].itemName;			// Button ska bara köra vald item!
-			mParent->messageHandler(getID(), mValue);
-			return 1;
+			mValue = mItemList[i].itemName;			// Button ska bara köra vald item!
+			//mMarkedRect = mItemList[i].getRect();
+			//mMarked = true;
+			// shouldn't do anything, buttons does the actions
+			//callback(getID(), getValue());
+			break;
 		}
 		else
 			mValue = "none";	// innanför boxen, men inte på ett item
 	}
-	return 1;
 }
-
-int ListBox::wm_keydown(WPARAM wParam)
+	
+void ListBox::hoover(void)
 {
-	// man ska kunna gå upp och ned
-	// ska fungera som i menyn
-	return 1;
+	mMouseOver = true;
+
+	for(int i = 0; i < mItems; i++)
+	{
+		if(gMouse->inside(mItemList[i].getRect()))
+			mHooverRect = mItemList[i].getRect();
+	}
 }
 
-int ListBox::renderAll(void)
+void ListBox::draw(void)
 {
 	// borde egentligen inta ligga här
-	// men updateWindow körs bara om det är det aktiva, ska det verkligen vara så?:S Ja - tror det
-	if(!mActive)
-		mValue = "none";
+	// men update körs bara om det är det aktiva, ska det verkligen vara så?:S Ja - tror det
+	//if(!mActive)
+	//	mValue = "none";
 
-	// rita ut "bakgrunden"
-	gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB (255, 30, 200, 150));
-	// rita ut alla items
-	for(int i = 0; i<itemList.size();i++)
+	// draw the bkgd, unnessessary!
+	//gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB (255, 30, 200, 150));
+	
+	// draw items
+	for(int i = 0; i<mItemList.size();i++)
 	{
-		if(itemList[i].itemName == mValue && mActive)
-			gGraphics->BlitRect(itemList[i].x, itemList[i].y, itemList[i].width, itemList[i].height, D3DCOLOR_ARGB(255, 255, 166, 0));
+		if(mItemList[i].itemName == mValue && mActive)
+			gGraphics->BlitRect(mItemList[i].x, mItemList[i].y, mItemList[i].width, mItemList[i].height, D3DCOLOR_ARGB(255, 255, 166, 0));
 		else
-			gGraphics->BlitRect(itemList[i].x, itemList[i].y, itemList[i].width, itemList[i].height, itemList[i].color);
-			
-		//char tmp[256];
-		strcpy(buffer, itemList[i].itemName.c_str());
-		gGraphics->drawText(buffer, itemList[i].x - itemList[i].width/2, itemList[i].y - itemList[i].height/2);
+		{ 
+			gGraphics->BlitRect(mItemList[i].x, mItemList[i].y, mItemList[i].width, mItemList[i].height, mItemList[i].color);
+			if(mMouseOver)
+				gGraphics->BlitRect(mHooverRect, D3DCOLOR_ARGB(255, 255, 166, 255));		
+		}
+
+		strcpy(buffer, mItemList[i].itemName.c_str());
+		gGraphics->drawText(buffer, mItemList[i].x - mItemList[i].width/2, mItemList[i].y - mItemList[i].height/2);
 	}
 
-	return 1;
+	mMouseOver = false;
 }
 void ListBox::addItem(string name, int height, D3DCOLOR color)
 {
 	ListItem tmpItem;
 	tmpItem.itemName = name;
 	
-	if(items == 0)
+	if(mItems == 0)
 		tmpItem.y = mY - (mHeight/2) + height/2;//mPosition.top + height/2;
 	else
-		tmpItem.y = mY - (mHeight/2) + height/2 + items *height;
+		tmpItem.y = mY - (mHeight/2) + height/2 + mItems *height;
 	
 	tmpItem.x = mX;
 	tmpItem.width = mWidth;
 	tmpItem.height = height;
 	
-	/*tmpItem.left = tmpItem.x - tmpItem.width/2;
-	tmpItem.rect.right = tmpItem.x + tmpItem.width/2;
-	tmpItem.rect.top = tmpItem.y - tmpItem.height/2;
-	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;*/
 	tmpItem.color = color;
 
-	items++;
-	itemList.push_back(tmpItem);
+	mItems++;
+	mItemList.push_back(tmpItem);
 }
-
-/*void ListBox::setPos(int x, int y)
-{
-	Window::setPos(x, y);
-
-	for(int i = 0; i<itemList.size();i++)
-	{
-		itemList[i].
-	}
-
-}*/
 
 void ListBox::move(int dx, int dy)
 {
 	Window::move(dx, dy);
 
-	for(int i = 0; i<itemList.size();i++)
+	for(int i = 0; i<mItemList.size();i++)
 	{
-		itemList[i].x += dx;
-		itemList[i].y += dy;
+		mItemList[i].x += dx;
+		mItemList[i].y += dy;
 	}
 }

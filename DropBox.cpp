@@ -1,7 +1,9 @@
 #include "DropBox.h"
 
-DropBox::DropBox(Window *parent, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color)
-	: Window(parent, id, x, y, width, height, color)
+extern Mouse* gMouse;
+
+DropBox::DropBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color)
+	: Window(handler, id, x, y, width, height, color)
 {
 	mItems = 0;
 	mExpanded = false;
@@ -19,21 +21,23 @@ DropBox::~DropBox()
 	// dtor
 }
 
-void DropBox::updateWindow(float dt)
+void DropBox::update(float dt)
 {
 	// nothing to do
 }
-int DropBox::wm_lbuttondown(int x, int y)
+
+void DropBox::pressed(void)
 {
 	RECT tmpRect = getRect();
-	// ta reda på om boxen är expandad
-	// trycker man innanför activeItem.RECT
+	int x = gMouse->getPos().x;
+	int y = gMouse->getPos().y;
+
+	// expanded?
 	if(!mExpanded)
 	{
 		if((x > mActivationRect.left && x < (mActivationRect.right + mSignSide) && y > mActivationRect.top && y < mActivationRect.bottom))
-		{
-			
-			// expandera drop boxen
+		{			
+			// expand it
 			mExpanded = true;
 			mY += ((mItems * mItemHeight) - mItemHeight);
 			mHeight += (mItems * mItemHeight) - mItemHeight;
@@ -41,7 +45,7 @@ int DropBox::wm_lbuttondown(int x, int y)
 	}
 	else if(mExpanded)
 	{
-		// om man trycker på sidesign 
+		// if the arrow gets pressed
 		if(x > mActivationRect.right && x < (mActivationRect.right + mSignSide) && y > mActivationRect.top && y <(mActivationRect.top + mSignSide))
 		{
 			mExpanded = false;
@@ -52,23 +56,25 @@ int DropBox::wm_lbuttondown(int x, int y)
 		{
 			if(x > mItemList[i].getRect().left && x < mItemList[i].getRect().right && y > mItemList[i].getRect().top && y < mItemList[i].getRect().bottom)
 			{	
-				mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;// mPosition.bottom = mActivationRect.bottom;
+				mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
 				mHeight -= (mItems * mItemHeight) - mItemHeight;
 				mExpanded = false;
 				mValue = mItemList[i].itemName;	
-				mParent->messageHandler(mID, mValue);			
+
+				// do what's needed
+				//callback();		
 			}
 		}
 		
 	}
-	return 1;
 }
-int DropBox::wm_keydown(WPARAM wParam)
+	
+void DropBox::hoover(void)
 {
-	// onödigt, rensa upp sen!
-	return 1;
+	//mMouseOver = true;
 }
-int DropBox::renderAll(void)
+
+void DropBox::draw(void)
 {
 	// sign pilen
 	gGraphics->BlitRect(mActivationRect.right + mSignSide/2, mActivationRect.top + mSignSide/2, mSignSide, mSignSide, D3DCOLOR_ARGB(255, 255, 166, 0));
@@ -89,7 +95,6 @@ int DropBox::renderAll(void)
 			gGraphics->drawText(buffer, mItemList[i].x - mItemList[i].width/2 - mSignSide/2, mItemList[i].y - mItemList[i].height/2);
 		}
 	}
-	return 1;
 }
 
 void DropBox::addItem(string name, D3DCOLOR color)

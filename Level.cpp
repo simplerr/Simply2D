@@ -19,6 +19,7 @@ extern CameraManager* gCameraManager;
 Level::Level(Player *player)
 {
 	mPlayer = player;
+	mLevelWarp = NULL;
 
 	//mLevelWarp.width = 64;
 	//mLevelWarp.height = 128;

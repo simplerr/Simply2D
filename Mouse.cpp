@@ -140,6 +140,16 @@ void Mouse::restore(void)
 {
 	mPos = getScreenPos();
 }
+
+bool Mouse::inside(RECT r)
+{
+	if(mPos.x > r.left && mPos.x < r.right && mPos.y > r.top && mPos.y < r.bottom)
+		return true;
+	else
+		return false;
+}
+
+
 /* DIRECT INPUT STYLISHH
 static int screenWidth = GetSystemMetrics(SM_CXFULLSCREEN);
 	static int screenHeight = GetSystemMetrics(SM_CYFULLSCREEN);

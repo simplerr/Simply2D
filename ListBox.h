@@ -4,29 +4,41 @@
 #include "Window.h"
 #include "constants.h"
 #include "d3dUtil.h"
+#include <string>
+#include <boost\function.hpp>
+#include <boost\bind.hpp>
 
 class ListBox : public Window
 {
 public:
-	ListBox(Window *parent, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	ListBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~ListBox();
 
-	void updateWindow(float dt);
-	int wm_lbuttondown(int x, int y); 
-	int wm_keydown(WPARAM wParam);
-    int renderAll(void);
-	//void setPos(int x, int y);
-	void move(int dx, int dy);
+	void draw(void);
+	void pressed(void);
+	void hoover(void);
 
-	void addItem(string name, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));		// ska få autokordinater!, OBS måste ha samma på alla items!
-	//void addItem(char *name, int x, int y, int width, int height);  den ovan ska användas istället!
-	// setActiveItem()
-	// getActiveItemName()
+	int wm_lbuttondown(int x, int y); 
+	//int wm_keydown(WPARAM wParam);
+
+	void move(int dx, int dy);	// useful?? - nOT! ._s
+
+	void addItem(string name, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));		// ska få autokordinater!
+
+	boost::function<void(WindowID id, std::string value)> callback;
+
+	template <class T>
+	void connect(void(T::*_callback)(WindowID id, std::string value), T* _object)	{
+		callback = boost::bind(_callback, _object, _1, _2);
+	}
+
 private:
-	//RECT listArea; -- Window::mPostion
-	vector<ListItem> itemList;
-	//char *activeItemName; = mValue
-	int items;
+	vector<ListItem> mItemList;
+	int mItems;
+	bool mMouseOver;
+	bool mMarked;
+	RECT mHooverRect;
+	RECT mMarkedRect;
 };
 
 #endif

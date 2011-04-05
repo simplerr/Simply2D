@@ -14,6 +14,8 @@ TextureHandler::TextureHandler()
 	walljump = NULL;
 	spike = NULL;
 	warp = NULL;
+	normal_button = NULL;
+	hoover_button = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -29,6 +31,8 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(walljump);
 	ReleaseCOM(spike);
 	ReleaseCOM(warp);
+	ReleaseCOM(normal_button);
+	ReleaseCOM(hoover_button);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -220,6 +224,36 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return warp;
+		}
+	}
+	else if(fileName == NORMAL_BUTTON_SOURCE)
+	{
+		if(normal_button != NULL)
+			return normal_button;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &normal_button)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return normal_button;
+		}
+	}
+	else if(fileName == HOOVER_BUTTON_SOURCE)
+	{
+		if(hoover_button != NULL)
+			return hoover_button;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &hoover_button)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return hoover_button;
 		}
 	}
 }

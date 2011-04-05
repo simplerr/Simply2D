@@ -8,6 +8,7 @@
 #include "Trampoline.h"
 #include "Spike.h"
 #include "CameraManager.h"
+#include "WindowHandler.h"
 
 
 // Window behöver ingen mus längre
@@ -16,8 +17,9 @@
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
-Editor::Editor() : Window(NULL, EDITOR, 1300, 450, 200, 900), SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 {
+	mWindowHandler = new WindowHandler(1300, 450, 200, 900);
 	mLevel = new Level(NULL);
 	
 	gameArea.top = 0;
@@ -40,8 +42,6 @@ Editor::Editor() : Window(NULL, EDITOR, 1300, 450, 200, 900), SNAP_SENSE(30), SN
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
-
-	propertyCount = 0;
 }
 Editor::~Editor()
 {
@@ -53,15 +53,15 @@ Editor::~Editor()
 void Editor::addPropertyPair(Property prop)
 {
 	PropertyPair tmpPair;
-	int y = 178 + 30 * propertyCount;
+	int y = 178 + 30 * mPropertyPairs.size();
 
-	tmpPair.name = new TextBox(this, OBJECT_INFO, prop.name, 40, y, 60, 20);
-	tmpPair.value = new InputBox(this, OBJECT_INFO, 110, y, 60, 20, 4);
+	tmpPair.name = new TextBox(mWindowHandler, OBJECT_INFO, prop.name, 40, y, 60, 20);
+	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, 110, y, 60, 20, 4);
 	tmpPair.value->setValue(prop.value);
 
-	propertyPairs.push_back(tmpPair);
+	mPropertyPairs.push_back(tmpPair);
 
-	propertyCount++;
+	mPropertyCount++;
 }
 
 void Editor::buildGUI(void)
@@ -69,19 +69,19 @@ void Editor::buildGUI(void)
 	int OFFSET = 55;
 
 	// should only allow input of 11 characters
-	tLevel = new TextBox(this, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
-	iLevel = new InputBox(this, INPUT_LEVEL, 125, 22, 90, 20, 15);
+	tLevel = new TextBox(mWindowHandler, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
+	iLevel = new InputBox(mWindowHandler, INPUT_LEVEL, 125, 22, 90, 20, 15);
 	iLevel->setValue("");
 
-	tNextLevel = new TextBox(this, TEXT_NEXT, "Next:", 40, 50, 60, 20);
-	iNextLevel = new InputBox(this, INPUT_NEXT, 125, 50, 90, 20, 15);
+	tNextLevel = new TextBox(mWindowHandler, TEXT_NEXT, "Next:", 40, 50, 60, 20);
+	iNextLevel = new InputBox(mWindowHandler, INPUT_NEXT, 125, 50, 90, 20, 15);
 	iNextLevel->setValue("");
 
-	tSpawnX = new TextBox(this, TEXT_SPAWNX, "X:", 40, 95, 60, 20);
-	tSpawnY = new TextBox(this, TEXT_SPAWNY, "Y:", 40, 125, 60, 20);
+	tSpawnX = new TextBox(mWindowHandler, TEXT_SPAWNX, "X:", 40, 95, 60, 20);
+	tSpawnY = new TextBox(mWindowHandler, TEXT_SPAWNY, "Y:", 40, 125, 60, 20);
 
-	iSpawnX = new InputBox(this, INPUT_SPAWNX, 110, 95, 60, 20, 4);
-	iSpawnY = new InputBox(this, INPUT_SPAWNY, 110, 125, 60, 20, 4);
+	iSpawnX = new InputBox(mWindowHandler, INPUT_SPAWNX, 110, 95, 60, 20, 4);
+	iSpawnY = new InputBox(mWindowHandler, INPUT_SPAWNY, 110, 125, 60, 20, 4);
 
 	// sets the values to the spawnPos!
 	POS spawnPos = mLevel->getSpawn();
@@ -90,16 +90,21 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue("");
 
-	listBox = new ListBox(this, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 155);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 155);	// shouldn't take height, should expand on addItem
+	listBox->connect(&Editor::messageHandler, this);
 
-	createButton = new Button(this, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	deleteButton = new Button(this, BUTTON_DELETE, "Delete", 110, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	saveButton = new Button(this, BUTTON_SAVE, "Save", 110, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
-	bTryLevel = new Button(this, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton->connect(&Editor::messageHandler, this);
 
-	textureDropBox = new DropBox(this, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
 
-	pathCheckBox = new CheckBox(this, CHECKBOX_SHOWPATH, "Show paths: ", 110, 697 + OFFSET, 16, 16);
+
+	deleteButton = new Button(mWindowHandler, BUTTON_DELETE, "Delete", 110, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(mWindowHandler, BUTTON_SAVE, "Save", 110, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+
+	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
+
+	pathCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SHOWPATH, "Show paths: ", 110, 697 + OFFSET, 16, 16);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -118,7 +123,7 @@ int Editor::updateAll(float dt)
 	if(tryLevel)
 		return -1;
 
-	Window::updateWindow(dt);
+	mWindowHandler->update(dt);
 	POINT tmpMousePos = gMouse->getPos();
 	mOffset = gCameraManager->gameCamera()->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
 	
@@ -216,17 +221,10 @@ int Editor::updateAll(float dt)
 				// reset inputboxes
 				resetInputBoxes();
 			}
-			setActive(false);
 		}
 		else
 		{
 			movingSpawnPos = false;
-			sendMousePress(gMouse->getScreenPos().x, gMouse->getScreenPos().y);
-		}
-		// initiera/updatera dragAreas
-		if(mActiveObject != NULL)
-		{
-			
 		}
 	}
 	// move, camera, resize, endPos of mActiveObject
@@ -390,7 +388,10 @@ void Editor::moveObject(void)
 // just renders the GUI to the right
 int Editor::renderGui()
 {
-	Window::renderAll();
+	// the green side
+	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+
+	mWindowHandler->draw();
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 65);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 140);
@@ -401,9 +402,9 @@ int Editor::renderGui()
 
 void Editor::resetInputBoxes(void)
 {
-	for(int i = 0; i < propertyPairs.size(); i++)
+	for(int i = 0; i < mPropertyPairs.size(); i++)
 	{
-		propertyPairs[i].value->setValue("");
+		mPropertyPairs[i].value->setValue("");
 	}
 }
 
@@ -585,9 +586,9 @@ void Editor::messageHandler(WindowID sender, string data)
 
 				// build property list from the information of the widgets
 				Property tmpProperty;
-				for(int i = 0; i < propertyPairs.size(); i++)	{
-					tmpProperty.name = propertyPairs[i].name->getValue();
-					tmpProperty.value = propertyPairs[i].value->getValue();
+				for(int i = 0; i < mPropertyPairs.size(); i++)	{
+					tmpProperty.name = mPropertyPairs[i].name->getValue();
+					tmpProperty.value = mPropertyPairs[i].value->getValue();
 					propertyList.push_back(tmpProperty);
 				}
 				mActiveObject->loadProperties(propertyList);
@@ -720,16 +721,15 @@ void Editor::messageHandler(WindowID sender, string data)
 			{
 				// delete old property widgets
 				// remove old propertyPair list
-				for(int i = 0; i < propertyPairs.size(); i++)	{
-					removewindow(propertyPairs[i].name);
-					removewindow(propertyPairs[i].value);
+				for(int i = 0; i < mPropertyPairs.size(); i++)	{
+					mWindowHandler->removeWindow(mPropertyPairs[i].name);
+					mWindowHandler->removeWindow(mPropertyPairs[i].value);
 
-					propertyPairs[i].name = NULL;
-					propertyPairs[i].value = NULL;
+					mPropertyPairs[i].name = NULL;
+					mPropertyPairs[i].value = NULL;
 				}
 
-				propertyPairs.clear();
-				propertyCount = 0;
+				mPropertyPairs.clear();
 
 				std::vector<Property> properties = mActiveObject->getProperties();
 
@@ -831,9 +831,9 @@ int Editor::renderLevel(void)
 void Editor::updatePropertyWidgets(void)
 {
 	std::vector<Property> activeObjectProperties = mActiveObject->getProperties();
-	for(int i = 0; i < propertyPairs.size(); i++)
+	for(int i = 0; i < mPropertyPairs.size(); i++)
 	{
-		propertyPairs[i].value->setValue(activeObjectProperties[i].value);
+		mPropertyPairs[i].value->setValue(activeObjectProperties[i].value);
 	}
 }
 

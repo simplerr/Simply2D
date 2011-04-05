@@ -25,6 +25,8 @@ private:
 	IDirect3DTexture9* walljump;
 	IDirect3DTexture9* spike;
 	IDirect3DTexture9* warp;
+	IDirect3DTexture9* normal_button;
+	IDirect3DTexture9* hoover_button;
 
 	// angryEnemyTexture
 	// normalEnemyTexture
