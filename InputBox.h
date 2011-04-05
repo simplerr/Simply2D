@@ -15,7 +15,7 @@ public:
 	InputBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~InputBox();
 
-	void update(float dt);
+	void update(double dt);
 	void draw(void);
 	void pressed(void);
 	//void hoover(void);

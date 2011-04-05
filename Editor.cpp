@@ -81,6 +81,8 @@ void Editor::buildGUI(void)
 	tSpawnY = new TextBox(mWindowHandler, TEXT_SPAWNY, "Y:", 40, 125, 60, 20);
 
 	iSpawnX = new InputBox(mWindowHandler, INPUT_SPAWNX, 110, 95, 60, 20, 4);
+	iSpawnX->connect(&Editor::messageHandler, this);
+
 	iSpawnY = new InputBox(mWindowHandler, INPUT_SPAWNY, 110, 125, 60, 20, 4);
 
 	// sets the values to the spawnPos!
@@ -871,5 +873,10 @@ string Editor::getTestLevel(void)
 {
 	string tmp = mLevel->getLevelName();
 	return tmp;
+}
+
+void Editor::keyPressed(WPARAM wParam)
+{
+	mWindowHandler->keyPressed(wParam);
 }
 

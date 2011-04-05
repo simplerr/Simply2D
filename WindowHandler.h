@@ -21,6 +21,7 @@ public:
 	void removeWindow(Window* window);							// deletes window with same ID
 
 	RECT getRect(void);											// returns the rect, used to set windows positions
+	void keyPressed(WPARAM wParam);								// keyboard input
 
 private:
 	vector<Window*> mWindowList;

@@ -137,3 +137,10 @@ RECT WindowHandler::getRect(void)
 
 	return rect;
 }
+
+// hack warning, but it does the job
+void WindowHandler::keyPressed(WPARAM wParam)
+{
+	if(mActiveWindow != NULL)
+		mActiveWindow->wm_keydown(wParam);
+}

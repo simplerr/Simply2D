@@ -47,7 +47,7 @@ void EditorState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 		if(wParam == VK_ESCAPE)
 			changeState(MainMenuState::Instance());
 		else
-			//mEditor->keyPressed(wParam);		// fixit
+			mEditor->keyPressed(wParam);		// fixit
 		break;
 	}
 }

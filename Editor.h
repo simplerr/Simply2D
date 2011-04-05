@@ -85,7 +85,9 @@ public:
 
 	void updatePropertyWidgets(void);
 
-	void TestF(void)	{};
+	void keyPressed(WPARAM wParam);
+
+	
 private:
 
 	WindowHandler*			mWindowHandler;

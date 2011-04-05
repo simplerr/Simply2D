@@ -12,7 +12,7 @@ InputBox::~InputBox()
 	// nada
 }
 
-void InputBox::update(float dt)
+void InputBox::update(double dt)
 {
 	static float dtsum = 0;
 	dtsum +=dt;
@@ -60,7 +60,8 @@ int InputBox::wm_keydown(WPARAM wParam)
 		{
 		// enter
 		case '\r':		{
-							//callback();
+							if(callback != NULL)
+								callback(getID(), getValue());
 							break;
 						}
 		// backspace
