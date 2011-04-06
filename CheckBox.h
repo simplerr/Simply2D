@@ -10,8 +10,8 @@ public:
 	~CheckBox();
 
 	void draw(void);
-	void pressed(void);
-	//void hoover(void);
+	void pressed(int mx, int my);
+	//void hoover(int mx, int my);
   
 private:
 	bool mChecked;

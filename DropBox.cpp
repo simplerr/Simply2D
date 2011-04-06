@@ -26,7 +26,7 @@ void DropBox::update(float dt)
 	// nothing to do
 }
 
-void DropBox::pressed(void)
+void DropBox::pressed(int mx, int my)
 {
 	RECT tmpRect = getRect();
 	int x = gMouse->getPos().x;
@@ -69,7 +69,7 @@ void DropBox::pressed(void)
 	}
 }
 	
-void DropBox::hoover(void)
+void DropBox::hoover(int mx, int my)
 {
 	//mMouseOver = true;
 }

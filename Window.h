@@ -52,8 +52,8 @@ public:
 	
 	virtual void update(double dt)	{}
 	virtual void draw(void)			{}
-	virtual void pressed(void)		{}
-	virtual void hoover(void)		{}
+	virtual void pressed(int mx, int my)		{}
+	virtual void hoover(int mx, int my)		{}
 
 	WindowID getID(void)	{return mID;}
 

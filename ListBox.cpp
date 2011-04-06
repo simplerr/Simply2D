@@ -14,22 +14,13 @@ ListBox::~ListBox()
 	// dtor
 }
 
-void ListBox::pressed(void)
+void ListBox::pressed(int mx, int my)
 {
-	// ta reda på vilken listItem som blev tryckt
-	// spara dess namn i activeItemName
-	int x = gMouse->getPos().x;
-	int y = gMouse->getPos().y;
-
 	for(int i = 0; i<mItemList.size();i++)
 	{
-		if(x > mItemList[i].getRect().left && x < mItemList[i].getRect().right && y > mItemList[i].getRect().top && y < mItemList[i].getRect().bottom)
+		if(mx > mItemList[i].getRect().left && mx < mItemList[i].getRect().right && my > mItemList[i].getRect().top && my < mItemList[i].getRect().bottom)
 		{		
-			mValue = mItemList[i].itemName;			// Button ska bara köra vald item!
-			//mMarkedRect = mItemList[i].getRect();
-			//mMarked = true;
-			// shouldn't do anything, buttons does the actions
-			//callback(getID(), getValue());
+			mValue = mItemList[i].itemName;			// buttons uses this information!
 			break;
 		}
 		else
@@ -37,13 +28,13 @@ void ListBox::pressed(void)
 	}
 }
 	
-void ListBox::hoover(void)
+void ListBox::hoover(int mx, int my)
 {
 	mMouseOver = true;
 
 	for(int i = 0; i < mItems; i++)
 	{
-		if(gMouse->inside(mItemList[i].getRect()))
+		if(gMouse->insideWindow(mItemList[i].getRect()))
 			mHooverRect = mItemList[i].getRect();
 	}
 }

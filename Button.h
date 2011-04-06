@@ -15,8 +15,8 @@ public:
 
 	void update(float dt);
     void draw(void);
-	void pressed(void);
-	void hoover(void);
+	void pressed(int mx, int my);
+	void hoover(int mx, int my);
 
 	boost::function<void(WindowID id, std::string value)> callback;
 

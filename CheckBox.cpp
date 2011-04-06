@@ -14,7 +14,7 @@ CheckBox::~CheckBox()
 	// dtor
 }
 
-void CheckBox::pressed(void)
+void CheckBox::pressed(int mx, int my)
 {
 	if(!mChecked)	{
 		mChecked = true;

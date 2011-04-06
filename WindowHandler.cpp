@@ -1,6 +1,8 @@
 #include "WindowHandler.h"
 #include "Mouse.h"
+#include "CameraManager.h"
 
+extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
 WindowHandler::WindowHandler()		
@@ -49,7 +51,7 @@ void WindowHandler::update(double dt)
 		{
 			winRect = mWindowList[i]->getRect();
 
-			if(gMouse->inside(winRect))	
+			if(gMouse->insideWindow(winRect))	
 			{
 			
 				// old active wont be active anymore
@@ -58,7 +60,7 @@ void WindowHandler::update(double dt)
 
 				mActiveWindow = mWindowList[i];
 				mActiveWindow->setActive(true);
-				mWindowList[i]->pressed();
+				mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y); // if the user have slided
 
 				insideAny = true;
 			}
@@ -76,9 +78,9 @@ void WindowHandler::update(double dt)
 		{
 			winRect = mWindowList[i]->getRect();
 
-			if(gMouse->inside(winRect))	
+			if(gMouse->insideWindow(winRect))	
 			{			
-				mWindowList[i]->hoover();
+				mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y); // if the user have slided
 			}
 		}
 	}

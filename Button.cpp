@@ -48,13 +48,13 @@ void Button::update(float dt)
 		mMouseOver = false;*/
 }
 
-void Button::pressed(void)
+void Button::pressed(int mx, int my)
 {
 	if(callback != NULL)	{
 		callback(getID(), getValue());	
 	}	
 }
-void Button::hoover(void)
+void Button::hoover(int mx, int my)
 {
 	mMouseOver = true;
 }

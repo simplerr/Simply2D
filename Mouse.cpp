@@ -149,6 +149,18 @@ bool Mouse::inside(RECT r)
 		return false;
 }
 
+bool Mouse::insideWindow(RECT r)
+{
+	POINT tmpPos = mPos;
+	tmpPos.x -= gCameraManager->gameCamera()->getOffset();
+
+	if(tmpPos.x > r.left && tmpPos.x < r.right && tmpPos.y > r.top && tmpPos.y < r.bottom)
+		return true;
+	else
+		return false;
+}
+
+
 
 /* DIRECT INPUT STYLISHH
 static int screenWidth = GetSystemMetrics(SM_CXFULLSCREEN);

@@ -47,6 +47,7 @@ Editor::~Editor()
 {
 	//mLevel->saveLevel("level_1.txt")
 	delete mLevel;
+	delete mWindowHandler;
 }
 
 

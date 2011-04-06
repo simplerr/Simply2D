@@ -12,8 +12,8 @@ public:
 
 	void update(float dt);
 	void draw(void);
-	void pressed(void);
-	void hoover(void);
+	void pressed(int mx, int my);
+	void hoover(int mx, int my);
 
 	void addItem(string name, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));
 	void move(int dx, int dy);

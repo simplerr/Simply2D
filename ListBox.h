@@ -15,8 +15,8 @@ public:
 	~ListBox();
 
 	void draw(void);
-	void pressed(void);
-	void hoover(void);
+	void pressed(int mx, int my);
+	void hoover(int mx, int my);
 
 	int wm_lbuttondown(int x, int y); 
 	//int wm_keydown(WPARAM wParam);

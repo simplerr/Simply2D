@@ -45,7 +45,7 @@ void InputBox::draw()
 	}
 }
 
-void InputBox::pressed(void)
+void InputBox::pressed(int mx, int my)
 {
 	caretPos = mValue.size();
 }

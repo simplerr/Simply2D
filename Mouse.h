@@ -36,6 +36,7 @@ public:
 	void restore(void);
 
 	bool inside(RECT r);
+	bool insideWindow(RECT r);
 
 private:
 	POINT mPos;
