@@ -59,6 +59,7 @@ void Editor::addPropertyPair(Property prop)
 	tmpPair.name = new TextBox(mWindowHandler, OBJECT_INFO, prop.name, 40, y, 60, 20);
 	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, 110, y, 60, 20, 4);
 	tmpPair.value->setValue(prop.value);
+	tmpPair.value->connect(&Editor::messageHandler, this);
 
 	mPropertyPairs.push_back(tmpPair);
 
@@ -72,10 +73,12 @@ void Editor::buildGUI(void)
 	// should only allow input of 11 characters
 	tLevel = new TextBox(mWindowHandler, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
 	iLevel = new InputBox(mWindowHandler, INPUT_LEVEL, 125, 22, 90, 20, 15);
+	iLevel->connect(&Editor::messageHandler, this);
 	iLevel->setValue("");
 
 	tNextLevel = new TextBox(mWindowHandler, TEXT_NEXT, "Next:", 40, 50, 60, 20);
 	iNextLevel = new InputBox(mWindowHandler, INPUT_NEXT, 125, 50, 90, 20, 15);
+	iNextLevel->connect(&Editor::messageHandler, this);
 	iNextLevel->setValue("");
 
 	tSpawnX = new TextBox(mWindowHandler, TEXT_SPAWNX, "X:", 40, 95, 60, 20);
@@ -85,6 +88,7 @@ void Editor::buildGUI(void)
 	iSpawnX->connect(&Editor::messageHandler, this);
 
 	iSpawnY = new InputBox(mWindowHandler, INPUT_SPAWNY, 110, 125, 60, 20, 4);
+	iSpawnY->connect(&Editor::messageHandler, this);
 
 	// sets the values to the spawnPos!
 	POS spawnPos = mLevel->getSpawn();
@@ -99,11 +103,14 @@ void Editor::buildGUI(void)
 	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	createButton->connect(&Editor::messageHandler, this);
 
-
-
 	deleteButton = new Button(mWindowHandler, BUTTON_DELETE, "Delete", 110, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton->connect(&Editor::messageHandler, this);
+
 	saveButton = new Button(mWindowHandler, BUTTON_SAVE, "Save", 110, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton->connect(&Editor::messageHandler, this);
+
 	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel->connect(&Editor::messageHandler, this);
 
 	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
 	textureDropBox->connect(&Editor::messageHandler, this);
