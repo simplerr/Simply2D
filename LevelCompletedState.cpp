@@ -15,8 +15,10 @@ void LevelCompletedState::init(Game* game)
 	// important!
 	setGame(game);
 
-	mWindowHandler = new WindowHandler();
-	Button* button = new Button(mWindowHandler, BUTTON_CREATE, "Press me", 200, 200, 80, 30, (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
+	mWindowHandler = new WindowHandler(700, 450, 600, 400);
+	mWindowHandler->setBackground(LEVEL_COMPLETED_SOURCE);
+	Button* button = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Press me", 500, 350, 100, 45, (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
+	button->connect(&LevelCompletedState::messageHandler, this);
 
 	// load the background
 	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\city_bkgd_yellow.bmp"); 
@@ -95,5 +97,12 @@ void LevelCompletedState::drawBkgd()
 
 void LevelCompletedState::messageHandler(WindowID id, string data)
 {
-
+	switch(id)
+	{
+	case BUTTON_NEXTLEVEL:
+		{
+			changeState(PlayState::Instance());
+			PlayState::Instance()->setLevel("KEKEL.txt");
+		}
+	}
 }

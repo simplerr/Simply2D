@@ -7,13 +7,14 @@ extern Mouse* gMouse;
 
 WindowHandler::WindowHandler()		
 {
-	mX = 0;
-	mY = 0;
+	mX = 700;
+	mY = 450;
 	mWidth = 1400;	// screen width
 	mHeight = 900;	// screen height
 
 	mActiveWindow = NULL;
 	mNextPrimaryID = 0;
+	mBackground = NULL;
 }
 
 WindowHandler::WindowHandler(int x, int y, int width, int height)
@@ -25,6 +26,7 @@ WindowHandler::WindowHandler(int x, int y, int width, int height)
 
 	mActiveWindow = NULL;
 	mNextPrimaryID = 0;
+	mBackground = NULL;
 }
 	
 WindowHandler::~WindowHandler()
@@ -161,6 +163,9 @@ void WindowHandler::update(double dt)
 
 void WindowHandler::draw(void)
 {	
+	if(mBackground != NULL)
+		gGraphics->BlitTexture(mBackground, getRect());
+
 	RECT activeRect, iterRect;
 	if(mActiveWindow != NULL)	
 		activeRect = mActiveWindow->getRect();
@@ -195,4 +200,10 @@ void WindowHandler::keyPressed(WPARAM wParam)
 {
 	if(mActiveWindow != NULL)
 		mActiveWindow->wm_keydown(wParam);
+}
+
+void WindowHandler::setBackground(string source)
+{
+	if(mBackground == NULL)
+		mBackground = gGraphics->loadTexture((char*)source.c_str());
 }

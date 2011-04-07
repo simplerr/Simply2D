@@ -23,10 +23,13 @@ public:
 	RECT getRect(void);											// returns the rect, used to set windows positions
 	void keyPressed(WPARAM wParam);								// keyboard input
 
+	void setBackground(string source);							// sets a background, default is none
+
 private:
 	vector<Window*> mWindowList;
 	Window* mActiveWindow;
 
+	IDirect3DTexture9* mBackground;
 	int mNextPrimaryID;
 	int mX;
 	int mY;
