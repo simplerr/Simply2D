@@ -55,8 +55,10 @@ public:
 	virtual void pressed(int mx, int my)		{}
 	virtual void hoover(int mx, int my)		{}
 
-	WindowID getID(void)	{return mID;}
-
+	WindowID getID(void)		{return mID;}
+	int getPrimaryID(void)			{return mPrimaryID;}
+	void setPrimaryID(int id)	{mPrimaryID = id;}
+	
 	// also does stuff neccassary on deactivation
 	virtual void setActive(bool b)	{mActive = b;}
 	void overlaped(bool b)			{mOverlaped = b;}
@@ -97,6 +99,7 @@ protected:
 	string mValue;
 	D3DCOLOR mColor;
 
+	int mPrimaryID;
 	int mX;
 	int mY;
 	int mWidth;

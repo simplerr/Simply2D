@@ -27,6 +27,7 @@ private:
 	vector<Window*> mWindowList;
 	Window* mActiveWindow;
 
+	int mNextPrimaryID;
 	int mX;
 	int mY;
 	int mWidth;

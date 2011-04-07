@@ -13,6 +13,7 @@ WindowHandler::WindowHandler()
 	mHeight = 900;	// screen height
 
 	mActiveWindow = NULL;
+	mNextPrimaryID = 0;
 }
 
 WindowHandler::WindowHandler(int x, int y, int width, int height)
@@ -23,6 +24,7 @@ WindowHandler::WindowHandler(int x, int y, int width, int height)
 	mHeight = height;
 
 	mActiveWindow = NULL;
+	mNextPrimaryID = 0;
 }
 	
 WindowHandler::~WindowHandler()
@@ -33,6 +35,42 @@ WindowHandler::~WindowHandler()
 	}
 	mWindowList.clear();
 }
+
+
+void WindowHandler::addWindow(Window* window)
+{
+	if(window != NULL)	{
+		window->setPrimaryID(mNextPrimaryID);
+		mWindowList.push_back(window);
+	}
+	mNextPrimaryID++;
+}
+
+void WindowHandler::removeWindow(Window* window)
+{
+	int i = 0;
+	vector<Window*>::iterator itr =  mWindowList.begin();
+	while(itr != mWindowList.end() && i < mWindowList.size())
+	{
+		if(mWindowList[i]->getPrimaryID() == window->getPrimaryID())
+		{
+			delete mWindowList[i];
+			itr = mWindowList.erase(itr);
+
+			// set the active window to NULL if it was erased
+			if(mActiveWindow != NULL)	{
+				if(mActiveWindow->getPrimaryID() == window->getPrimaryID())
+					mActiveWindow = NULL;
+			}
+			break;
+		}
+		else	{
+			itr++;
+			i++;
+		}
+	}
+}
+
 
 void WindowHandler::update(double dt)
 {
@@ -59,7 +97,7 @@ void WindowHandler::update(double dt)
 				if(mActiveWindow != NULL)
 				{					
 					/* the window that was pressed was the active one, call the press() function */
-					if(mActiveWindow->getID() == mWindowList[i]->getID())	{
+					if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID())	{
 						mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y);
 					}
 					/* not the active one and the mouse isn't inside the active window*/
@@ -102,10 +140,10 @@ void WindowHandler::update(double dt)
 			if(mActiveWindow != NULL)
 			{
 				/* inside a window but not inside the active one */
-				if(gMouse->insideWindow(winRect) && !gMouse->insideWindow(mActiveWindow->getRect()) && mActiveWindow->getID() != mWindowList[i]->getID())
+				if(gMouse->insideWindow(winRect) && !gMouse->insideWindow(mActiveWindow->getRect()) && mActiveWindow->getPrimaryID() != mWindowList[i]->getPrimaryID())
 					mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
 				/* inside the active window */
-				else if(mActiveWindow->getID() == mWindowList[i]->getID() && gMouse->insideWindow(winRect))
+				else if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID() && gMouse->insideWindow(winRect))
 					mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
 			}
 			/* no active window */
@@ -131,44 +169,12 @@ void WindowHandler::draw(void)
 	{
 		iterRect = mWindowList[i]->getRect();
 
-		if(mActiveWindow != NULL && mActiveWindow->getID() != mWindowList[i]->getID())	{
+		if(mActiveWindow != NULL && mActiveWindow->getPrimaryID() != mWindowList[i]->getPrimaryID())	{
 			if(activeRect.left < iterRect.right && activeRect.right > iterRect.left && activeRect.top < iterRect.bottom && activeRect.bottom > iterRect.top)	{
 				mWindowList[i]->overlaped(true);
 			}
 		}	
 		mWindowList[i]->draw();
-	}
-}
-
-void WindowHandler::addWindow(Window* window)
-{
-	if(window != NULL)	{
-		mWindowList.push_back(window);
-	}
-}
-
-void WindowHandler::removeWindow(Window* window)
-{
-	int i = 0;
-	vector<Window*>::iterator itr =  mWindowList.begin();
-	while(itr != mWindowList.end() && i < mWindowList.size())
-	{
-		if(mWindowList[i]->getID() == window->getID())
-		{
-			delete mWindowList[i];
-			itr = mWindowList.erase(itr);
-
-			// set the active window to NULL if it was erased
-			if(mActiveWindow != NULL)	{
-				if(mActiveWindow->getID() == window->getID())
-					mActiveWindow = NULL;
-			}
-			break;
-		}
-		else	{
-			itr++;
-			i++;
-		}
 	}
 }
 
