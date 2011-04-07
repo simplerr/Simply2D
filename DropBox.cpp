@@ -28,41 +28,39 @@ void DropBox::update(float dt)
 
 void DropBox::pressed(int mx, int my)
 {
-	RECT tmpRect = getRect();
-	int x = gMouse->getPos().x;
-	int y = gMouse->getPos().y;
-
+	mx = gMouse->getPos().x;
+	my = gMouse->getPos().y;
 	// expanded?
 	if(!mExpanded)
 	{
-		if((x > mActivationRect.left && x < (mActivationRect.right + mSignSide) && y > mActivationRect.top && y < mActivationRect.bottom))
+		if((mx > mActivationRect.left && mx < (mActivationRect.right + mSignSide) && my > mActivationRect.top && my < mActivationRect.bottom))
 		{			
 			// expand it
 			mExpanded = true;
 			mY += ((mItems * mItemHeight) - mItemHeight);
-			mHeight += (mItems * mItemHeight) - mItemHeight;
+			mHeight += (mItems * mItemHeight) ;
 		}
 	}
 	else if(mExpanded)
 	{
 		// if the arrow gets pressed
-		if(x > mActivationRect.right && x < (mActivationRect.right + mSignSide) && y > mActivationRect.top && y <(mActivationRect.top + mSignSide))
+		if(mx > mActivationRect.left && mx < (mActivationRect.right + mSignSide) && my > mActivationRect.top && my < mActivationRect.bottom)
 		{
 			mExpanded = false;
 			mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
-			mHeight -= (mItems * mItemHeight) - mItemHeight;
+			mHeight -= (mItems * mItemHeight);
 		}
 		for(int i = 0; i<mItemList.size();i++)
 		{
-			if(x > mItemList[i].getRect().left && x < mItemList[i].getRect().right && y > mItemList[i].getRect().top && y < mItemList[i].getRect().bottom)
+			if(mx > mItemList[i].getRect().left && mx < mItemList[i].getRect().right && my > mItemList[i].getRect().top && my < mItemList[i].getRect().bottom)
 			{	
 				mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
-				mHeight -= (mItems * mItemHeight) - mItemHeight;
+				mHeight -= (mItems * mItemHeight) ;
 				mExpanded = false;
 				mValue = mItemList[i].itemName;	
 
 				// do what's needed
-				//callback();		
+				callback(getID(), getValue());		
 			}
 		}
 		
@@ -101,31 +99,17 @@ void DropBox::addItem(string name, D3DCOLOR color)
 {
 	ListItem tmpItem;
 	tmpItem.itemName = name;
-	
-	//if(mItems == 0)
-	//	tmpItem.y = mY - (mHeight/2) + mItemHeight/2;//mPosition.top + height/2;
-	//else
-	//	tmpItem.y = mY - (mHeight/2) + mItemHeight/2 + mItems *mItemHeight;
 
 	if(mItems == 0)
-		tmpItem.y = mY + mItemHeight;// - (mHeight/2) + mItemHeight/2;
+		tmpItem.y = mY + mItemHeight;
 	else	
-		tmpItem.y =  mY + mItemHeight + mItems *mItemHeight;
-	
-	
+		tmpItem.y =  mY + mItemHeight + mItems *mItemHeight;	
 	
 	tmpItem.x = mX;
-	tmpItem.width = mActivationRect.right - mActivationRect.left;//mWidth;
+	tmpItem.width = mActivationRect.right - mActivationRect.left;
 	tmpItem.height = mItemHeight;
-	
-	/*tmpItem.rect.left = tmpItem.x - tmpItem.width/2;
-	tmpItem.rect.right = tmpItem.x + tmpItem.width/2;
-	tmpItem.rect.top = tmpItem.y - tmpItem.height/2;
-	tmpItem.rect.bottom = tmpItem.y + tmpItem.height/2;*/
-	tmpItem.color = color;
 
-	//mY += mItemHeight/2;
-	//mHeight += mItemHeight;
+	tmpItem.color = color;
 
 	mItems++;
 	mItemList.push_back(tmpItem);
@@ -153,11 +137,17 @@ void DropBox::move(int dx, int dy)
 	}
 }
 
-void DropBox::onDeactive(void)
+void DropBox::setActive(bool b)
 {
-	mExpanded = false;
-	mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
-	mHeight -= (mItems * mItemHeight) - mItemHeight;
+	Window::setActive(b);
+
+	if(!b)	{
+		if(mExpanded)	{
+			mExpanded = false;
+			mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
+			mHeight -= (mItems * mItemHeight);
+		}
+	}
 }
 /*void DropBox::fixSize(void)
 {

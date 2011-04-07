@@ -7,6 +7,7 @@ CheckBox::CheckBox(WindowHandler* handler, WindowID id, string display, int x, i
 	mCheckedColor = checkedColor;
 
 	mChecked = false;
+	setValue("False");
 }
 
 CheckBox::~CheckBox()
@@ -18,11 +19,13 @@ void CheckBox::pressed(int mx, int my)
 {
 	if(!mChecked)	{
 		mChecked = true;
-		//callback();
+		setValue("True");
+		callback(getID(), getValue());
 	}
 	else if(mChecked)	{
 		mChecked = false;
-		//callback();
+		setValue("False");
+		callback(getID(), getValue());
 	}
 }
 

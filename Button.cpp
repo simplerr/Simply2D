@@ -83,9 +83,11 @@ void Button::draw(void)
 		}
 
 		// draw the font 
-		if(mFont)	{
+		if(mFont && !getOverlap())	{
 			strcpy(buffer, mDisplayText.c_str());
 			gGraphics->drawText(buffer, mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
-		}	
+		}
+		
+		overlaped(false);
 	}
 }

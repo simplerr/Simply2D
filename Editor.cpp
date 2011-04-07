@@ -106,8 +106,10 @@ void Editor::buildGUI(void)
 	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 
 	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
+	textureDropBox->connect(&Editor::messageHandler, this);
 
 	pathCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SHOWPATH, "Show paths: ", 110, 697 + OFFSET, 16, 16);
+	pathCheckBox->connect(&Editor::messageHandler, this);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));

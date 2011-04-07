@@ -36,7 +36,7 @@ WindowHandler::~WindowHandler()
 
 void WindowHandler::update(double dt)
 {
-	// update the active window
+	/* update the active window */ 
 	if(mActiveWindow != NULL)
 		mActiveWindow->update(dt);
 
@@ -47,40 +47,75 @@ void WindowHandler::update(double dt)
 	{
 		bool insideAny = false;
 
+		/* loop through the window list*/
 		for(int i = 0; i < mWindowList.size(); i++)
 		{
 			winRect = mWindowList[i]->getRect();
 
+			/* a window was pressed */
 			if(gMouse->insideWindow(winRect))	
 			{
-			
-				// old active wont be active anymore
+				/* there is a active window*/
 				if(mActiveWindow != NULL)
-					mActiveWindow->setActive(false);
-
-				mActiveWindow = mWindowList[i];
-				mActiveWindow->setActive(true);
-				mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y); // if the user have slided
-
+				{					
+					/* the window that was pressed was the active one, call the press() function */
+					if(mActiveWindow->getID() == mWindowList[i]->getID())	{
+						mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y);
+					}
+					/* not the active one and the mouse isn't inside the active window*/
+					else if(!gMouse->insideWindow(mActiveWindow->getRect()))	{
+						mActiveWindow->setActive(false);	// deactivate
+						mActiveWindow = mWindowList[i];		// point at the new active window
+						mActiveWindow->setActive(true);		// activate it
+						mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y);	// send press
+					}
+				}
+				/* the active window was NULL */
+				else	
+				{
+					mActiveWindow = mWindowList[i];
+					mActiveWindow->setActive(true);
+					mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y); 
+				}
+				
+				/* indicates that some window was pressed*/
 				insideAny = true;
 			}
 		}
 
+		/* the mouse press wasn't inside any window, deactivate the active one! */
 		if(!insideAny)
 			if(mActiveWindow != NULL)	{
 				mActiveWindow->setActive(false);
 				mActiveWindow = NULL;
 			}
 	}
-	else	// just check for hoover
+	/* no mouse press, only which window that needs to call hoover() */
+	else
 	{
+		/* loop through window list */
 		for(int i = 0; i < mWindowList.size(); i++)
 		{
 			winRect = mWindowList[i]->getRect();
 
-			if(gMouse->insideWindow(winRect))	
-			{			
-				mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y); // if the user have slided
+			/* an active window */
+			if(mActiveWindow != NULL)
+			{
+				/* inside a window but not inside the active one */
+				if(gMouse->insideWindow(winRect) && !gMouse->insideWindow(mActiveWindow->getRect()) && mActiveWindow->getID() != mWindowList[i]->getID())
+					mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+				/* inside the active window */
+				else if(mActiveWindow->getID() == mWindowList[i]->getID() && gMouse->insideWindow(winRect))
+					mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+			}
+			/* no active window */
+			else	
+			{
+				/* inside a window */
+				if(gMouse->insideWindow(winRect))	
+				{			
+					mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+				}
 			}
 		}
 	}
@@ -88,12 +123,21 @@ void WindowHandler::update(double dt)
 
 void WindowHandler::draw(void)
 {	
+	RECT activeRect, iterRect;
+	if(mActiveWindow != NULL)	
+		activeRect = mActiveWindow->getRect();
+
 	for(int i = 0; i < mWindowList.size(); i++)
 	{
+		iterRect = mWindowList[i]->getRect();
+
+		if(mActiveWindow != NULL && mActiveWindow->getID() != mWindowList[i]->getID())	{
+			if(activeRect.left < iterRect.right && activeRect.right > iterRect.left && activeRect.top < iterRect.bottom && activeRect.bottom > iterRect.top)	{
+				mWindowList[i]->overlaped(true);
+			}
+		}	
 		mWindowList[i]->draw();
 	}
-
-	// perhaps draw a bkgd?
 }
 
 void WindowHandler::addWindow(Window* window)

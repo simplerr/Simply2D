@@ -20,6 +20,7 @@ Window::Window(WindowHandler *handler, WindowID id, int x, int y, int width, int
 	mInputState = true;
 	mVisible = true;
 	mValue = "none";
+	mOverlaped = false;
 }
 
 Window::~Window()

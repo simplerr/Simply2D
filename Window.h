@@ -59,6 +59,8 @@ public:
 
 	// also does stuff neccassary on deactivation
 	virtual void setActive(bool b)	{mActive = b;}
+	void overlaped(bool b)			{mOverlaped = b;}
+	bool getOverlap(void)			{return mOverlaped;}
 
 	// ??
 	virtual void onDeactive(void);
@@ -103,6 +105,7 @@ protected:
 	bool mVisible;
 	bool mActive;
 	bool mInputState;
+	bool mOverlaped;
 };
 
 #endif
