@@ -582,7 +582,7 @@ bool Editor::stillSnapped(void)
 	return false;
 }
 
-void Editor::messageHandler(WindowID sender, string data)
+bool Editor::messageHandler(WindowID sender, string data)
 {
 	char temp[256];
 
@@ -787,6 +787,7 @@ void Editor::messageHandler(WindowID sender, string data)
 		}
 	}
 	
+	return true;
 }
 
 void Editor::moveEndPos(void)

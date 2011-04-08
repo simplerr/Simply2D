@@ -69,7 +69,7 @@ public:
 	bool objectSnapping(Object *object, float dx, float dy);
 	bool stillSnapped(void);
 
-	void messageHandler(WindowID sender, string data = "nothing");
+	bool messageHandler(WindowID sender, string data = "nothing");
 	void resetActive(void) {mActiveObject = NULL;};
 
 	void loadLevel(char *source);

@@ -14,7 +14,7 @@ public:
 	WindowHandler(int x, int y, int width, int height);			// for a window that is local
 	~WindowHandler();
 
-	void update(double dt);										// updates the active window, checks for mouse presses/hoovers
+	bool update(double dt);										// updates the active window, checks for mouse presses/hoovers
 	void draw(void);											// draw all windows in the list
 
 	void addWindow(Window* window);								// adds window to list

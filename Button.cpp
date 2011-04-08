@@ -19,7 +19,7 @@ Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y
 	// eh inget att g�ra?:d
 }
 
-Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, char* normalTexture, char* hooverTexture, bool font, D3DCOLOR color)
+Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, bool b, char* normalTexture, char* hooverTexture, bool font, D3DCOLOR color)
 	:Window(handler, id, x, y, width, height, color)	
 {
 	mDisplayText = display;
@@ -48,11 +48,13 @@ void Button::update(float dt)
 		mMouseOver = false;*/
 }
 
-void Button::pressed(int mx, int my)
+bool Button::pressed(int mx, int my)
 {
 	if(callback != NULL)	{
-		callback(getID(), getValue());	
-	}	
+		if(!callback(getID(), getValue()))
+			return false;
+	}
+	return true;
 }
 void Button::hoover(int mx, int my)
 {

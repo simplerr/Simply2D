@@ -14,7 +14,7 @@ ListBox::~ListBox()
 	// dtor
 }
 
-void ListBox::pressed(int mx, int my)
+bool ListBox::pressed(int mx, int my)
 {
 	for(int i = 0; i<mItemList.size();i++)
 	{
@@ -26,6 +26,8 @@ void ListBox::pressed(int mx, int my)
 		else
 			mValue = "none";	// innanför boxen, men inte på ett item
 	}
+
+	return true;
 }
 	
 void ListBox::hoover(int mx, int my)

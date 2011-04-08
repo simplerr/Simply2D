@@ -15,7 +15,7 @@ CheckBox::~CheckBox()
 	// dtor
 }
 
-void CheckBox::pressed(int mx, int my)
+bool CheckBox::pressed(int mx, int my)
 {
 	if(!mChecked)	{
 		mChecked = true;
@@ -27,6 +27,10 @@ void CheckBox::pressed(int mx, int my)
 		setValue("False");
 		callback(getID(), getValue());
 	}
+
+	// doesn't need to return anything else,
+	// in facts it's only buttons that can change state
+	return true;
 }
 
 void CheckBox::draw(void)

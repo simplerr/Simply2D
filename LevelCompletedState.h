@@ -15,12 +15,13 @@ public:
 	void pause();
 	void resume();
 
-	void messageHandler(WindowID id, string data);
+	bool messageHandler(WindowID id, string data);	// returns false if the state needs to change and the window loop needs to break
 	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
 	void update(double dt);
 	void drawMain(void);
 	void drawGui(void);
 	void drawBkgd(void);
+	void setCompletedType(LevelType type);
 
 	static LevelCompletedState* Instance() {
 		return &mLevelCompletedState;
@@ -32,6 +33,14 @@ private:
 
 	WindowHandler *mWindowHandler;
 	IDirect3DTexture9* mBkgdTexture;
+	LevelType mCompletedType;
+
+private:
+	/* windows */
+	Button *mCustomNextButton;
+	Button *mCampaignNextButton;
+	Button *mMenuButton;
+	Button *mAgainButton;
 };
 
 #endif

@@ -19,6 +19,13 @@ class Object;
 class MovingObject;
 class Player;
 
+enum LevelType
+{
+	CAMPAIGN = 301,
+	CUSTOM
+};
+
+
 struct Warp
 {
 	int x,y;
@@ -65,6 +72,8 @@ public:
 	void setSpawn(POS pos)	{spawnPos = pos;};
 	void spawnPlayer(void);
 
+	LevelType getType(void)	{return mLevelType;}
+
 private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL
 	std::vector<Object*> mCollisionList;
@@ -76,6 +85,7 @@ private:
 	Object* mLevelWarp;
 	int nextObjectID;
 	Player *mPlayer;
+	LevelType mLevelType;
 };
 
 #endif

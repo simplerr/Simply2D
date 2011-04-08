@@ -31,6 +31,8 @@ WindowHandler::WindowHandler(int x, int y, int width, int height)
 	
 WindowHandler::~WindowHandler()
 {
+	mActiveWindow = NULL;
+
 	for(int i = 0;i<mWindowList.size();i++)
 	{
 		delete mWindowList[i];	
@@ -74,7 +76,7 @@ void WindowHandler::removeWindow(Window* window)
 }
 
 
-void WindowHandler::update(double dt)
+bool WindowHandler::update(double dt)
 {
 	/* update the active window */ 
 	if(mActiveWindow != NULL)
@@ -90,6 +92,10 @@ void WindowHandler::update(double dt)
 		/* loop through the window list*/
 		for(int i = 0; i < mWindowList.size(); i++)
 		{
+			/* windows that aren't visible shoudln't look after mouse presses */
+			if(!mWindowList[i]->getVisible())
+				continue;
+
 			winRect = mWindowList[i]->getRect();
 
 			/* a window was pressed */
@@ -100,14 +106,19 @@ void WindowHandler::update(double dt)
 				{					
 					/* the window that was pressed was the active one, call the press() function */
 					if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID())	{
-						mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y);
+						/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
+						if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y))
+							return false;
 					}
 					/* not the active one and the mouse isn't inside the active window*/
 					else if(!gMouse->insideWindow(mActiveWindow->getRect()))	{
 						mActiveWindow->setActive(false);	// deactivate
 						mActiveWindow = mWindowList[i];		// point at the new active window
 						mActiveWindow->setActive(true);		// activate it
-						mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y);	// send press
+
+						/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
+						if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y));	// send press
+							return false;
 					}
 				}
 				/* the active window was NULL */
@@ -115,7 +126,10 @@ void WindowHandler::update(double dt)
 				{
 					mActiveWindow = mWindowList[i];
 					mActiveWindow->setActive(true);
-					mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y); 
+
+					/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
+					if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y))
+						return false;
 				}
 				
 				/* indicates that some window was pressed*/
@@ -136,6 +150,10 @@ void WindowHandler::update(double dt)
 		/* loop through window list */
 		for(int i = 0; i < mWindowList.size(); i++)
 		{
+			/* windows that aren't visible shoudln't look after mouse hoover */
+			if(!mWindowList[i]->getVisible())
+				continue;
+
 			winRect = mWindowList[i]->getRect();
 
 			/* an active window */
@@ -172,13 +190,17 @@ void WindowHandler::draw(void)
 
 	for(int i = 0; i < mWindowList.size(); i++)
 	{
+		/* windows that aren't visible shouldn't be drawn (OREALLY?) */
+		if(!mWindowList[i]->getVisible())
+			continue;
+
 		iterRect = mWindowList[i]->getRect();
 
 		if(mActiveWindow != NULL && mActiveWindow->getPrimaryID() != mWindowList[i]->getPrimaryID())	{
 			if(activeRect.left < iterRect.right && activeRect.right > iterRect.left && activeRect.top < iterRect.bottom && activeRect.bottom > iterRect.top)	{
 				mWindowList[i]->overlaped(true);
 			}
-		}	
+		}
 		mWindowList[i]->draw();
 	}
 }

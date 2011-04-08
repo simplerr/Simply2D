@@ -52,7 +52,7 @@ public:
 	
 	virtual void update(double dt)	{}
 	virtual void draw(void)			{}
-	virtual void pressed(int mx, int my)		{}
+	virtual bool pressed(int mx, int my)		{return true;}
 	virtual void hoover(int mx, int my)		{}
 
 	WindowID getID(void)		{return mID;}
@@ -70,7 +70,7 @@ public:
 
 	bool isActive(void) { return mActive;}
 	void setValue(string value) {mValue = value;}
-	void setVisibility(bool value) {mVisible = value;}
+	void setVisible(bool value) {mVisible = value;}
 	virtual void move(int dx, int dy) {mX += dx; mY += dy;}
 	virtual void setPos(int x, int y) {mX = x; mY = y;}
 

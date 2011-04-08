@@ -45,9 +45,10 @@ void InputBox::draw()
 	}
 }
 
-void InputBox::pressed(int mx, int my)
+bool InputBox::pressed(int mx, int my)
 {
 	caretPos = mValue.size();
+	return true;
 }
 
 int InputBox::wm_keydown(WPARAM wParam)

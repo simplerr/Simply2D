@@ -17,8 +17,17 @@ void LevelCompletedState::init(Game* game)
 
 	mWindowHandler = new WindowHandler(700, 450, 600, 400);
 	mWindowHandler->setBackground(LEVEL_COMPLETED_SOURCE);
-	Button* button = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Press me", 500, 350, 100, 45, (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
-	button->connect(&LevelCompletedState::messageHandler, this);
+
+	mCampaignNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true);
+	mCampaignNextButton->connect(&LevelCompletedState::messageHandler, this);
+
+	mCustomNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true, (char*)GRAY_BUTTON_NORMAL_SOURCE.c_str(), (char*)GRAY_BUTTON_HOOVER_SOURCE.c_str());
+
+	mMenuButton = new Button(mWindowHandler, BUTTON_MENU, "Menu", 300, 350, 100, 45, true);
+	mMenuButton->connect(&LevelCompletedState::messageHandler, this);
+
+	mAgainButton = new Button(mWindowHandler, BUTTON_AGAIN, "Again", 100, 350, 100, 45, true);
+	mAgainButton->connect(&LevelCompletedState::messageHandler, this);
 
 	// load the background
 	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\city_bkgd_yellow.bmp"); 
@@ -67,6 +76,11 @@ void LevelCompletedState::drawMain(void)
 {
 	drawBkgd();
 	mWindowHandler->draw();
+
+	if(mCompletedType == CUSTOM)
+		gGraphics->drawText("custom!", 400, 400);
+	else
+		gGraphics->drawText("campaign!", 400, 400);
 }
 
 void LevelCompletedState::drawGui(void)
@@ -95,7 +109,7 @@ void LevelCompletedState::drawBkgd()
 	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 }
 
-void LevelCompletedState::messageHandler(WindowID id, string data)
+bool LevelCompletedState::messageHandler(WindowID id, string data)
 {
 	switch(id)
 	{
@@ -103,6 +117,29 @@ void LevelCompletedState::messageHandler(WindowID id, string data)
 		{
 			changeState(PlayState::Instance());
 			PlayState::Instance()->setLevel("KEKEL.txt");
+			break;
+		}
+	case BUTTON_MENU:
+		{
+			changeState(MainMenuState::Instance());
+			return false;
+			break;
+		}
+	case BUTTON_AGAIN:
+		{
+			break;
 		}
 	}
+
+	return true;
+}
+
+void LevelCompletedState::setCompletedType(LevelType type)
+{
+	mCompletedType = type;
+
+	if(mCompletedType == CAMPAIGN)
+		mCustomNextButton->setVisible(false);
+	else if(mCompletedType == CUSTOM)
+		mCampaignNextButton->setVisible(false);
 }

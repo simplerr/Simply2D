@@ -20,11 +20,7 @@ Level::Level(Player *player)
 {
 	mPlayer = player;
 	mLevelWarp = NULL;
-
-	//mLevelWarp.width = 64;
-	//mLevelWarp.height = 128;
-	//mLevelWarp.texture = gGraphics->loadTexture((char*)WARP_SOURCE.c_str());
-
+	mLevelType = CAMPAIGN;
 	nextObjectID = 0;
 }
 
@@ -56,7 +52,10 @@ void Level::saveLevel(char* levelFile)
 	// spawn, goal + nextlevel
 	fout << (int)spawnPos.x << " " << (int)spawnPos.y << endl;
 	fout << (int)mLevelWarp->getX() << " " << (int)mLevelWarp->getY() << endl;
-	fout << mNextLevel << endl;
+	if(mLevelType == CAMPAIGN)
+		fout << mNextLevel << endl;
+	else
+		fout << "CUSTOM" << endl;
 
 	for (int i = 0;i < mObjectList.size();i++)
 	{
@@ -105,7 +104,12 @@ void Level::loadLevel(char* levelFile)
 	fin >> tmpx >> tmpy;
 	mLevelWarp = new Object(tmpx, tmpy, 64, 128, (char*)WARP_SOURCE.c_str(), LEVEL_WARP);
 	mLevelWarp->setResizeable(false);
+
 	fin >> mNextLevel;
+	if(mNextLevel == "CUSTOM")
+		mLevelType = CUSTOM;
+	else
+		mLevelType = CAMPAIGN;
 
 	// load each line and add the object it generates to mObjectList
 	for(int j = 0; j<lines;j++)
@@ -274,7 +278,9 @@ void Level::collision(Player *player)
 
 	// check if player have completed the map
 	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
+		LevelType type = getType();
 		PlayState::Instance()->changeState(LevelCompletedState::Instance());
+		LevelCompletedState::Instance()->setCompletedType(type);
 	}
 }
 

@@ -15,7 +15,7 @@ public:
 	~ListBox();
 
 	void draw(void);
-	void pressed(int mx, int my);
+	bool pressed(int mx, int my);
 	void hoover(int mx, int my);
 
 	int wm_lbuttondown(int x, int y); 
@@ -25,10 +25,10 @@ public:
 
 	void addItem(string name, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));		// ska få autokordinater!
 
-	boost::function<void(WindowID id, std::string value)> callback;
+	boost::function<bool(WindowID id, std::string value)> callback;
 
 	template <class T>
-	void connect(void(T::*_callback)(WindowID id, std::string value), T* _object)	{
+	void connect(bool(T::*_callback)(WindowID id, std::string value), T* _object)	{
 		callback = boost::bind(_callback, _object, _1, _2);
 	}
 
