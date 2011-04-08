@@ -712,8 +712,15 @@ bool Editor::messageHandler(WindowID sender, string data)
 			// levels save function does the work
 			strcpy(buffer, iLevel->getValue().c_str());
 
+			// set the levels next level
+			string tmp = "levels\\";
+			tmp.append(iNextLevel->getValue());
+			tmp.append(".txt");
+			mLevel->setNextLevel(tmp);
+
 			// add  .txt
-			string tmp = string(buffer);
+			tmp = "levels\\";
+			tmp.append(string(buffer));
 			tmp.append(".txt");
 			mLevel->saveLevel((char*)tmp.c_str());
 			break;
@@ -876,6 +883,7 @@ void Editor::loadLevel(char *source)
 	// remove level\ and .txt
 	tmp = mLevel->getNextLevel();
 	tmp.erase(0, 7);
+	tmp.erase(tmp.size()-4, tmp.size());
 
 	iNextLevel->setValue(tmp);
 }
