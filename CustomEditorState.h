@@ -17,10 +17,13 @@ public:
 
 		// menu item was pressed -> set level
 		if(result != "none")	{
-			result.append(".txt");
+			/* add levels\\ and .txt */
+			string tmp = "levels\\";
+			tmp.append(result);
+			tmp.append(".txt");
 
 			changeState(EditorState::Instance());
-			EditorState::Instance()->setLevel(result);
+			EditorState::Instance()->setLevel(tmp);
 		}
 	}
 

@@ -44,11 +44,12 @@ void Level::saveLevel(char* levelFile)
 	ofstream fout;
 	int width, height;
 
-	string tmp = "levels\\";
-	tmp.append(levelFile);
+	//string tmp = "levels\\";
+	//tmp.append(levelFile);
 	
-	fout.open(tmp.c_str());
-	
+	//fout.open(tmp.c_str());
+	fout.open(levelFile);
+
 	// spawn, goal + nextlevel
 	fout << (int)spawnPos.x << " " << (int)spawnPos.y << endl;
 	fout << (int)mLevelWarp->getX() << " " << (int)mLevelWarp->getY() << endl;
@@ -70,7 +71,7 @@ void Level::loadLevel(char* levelFile)
 {	
 	// set the level source
 	mLevelSource = string(levelFile);
-	mLevelSource.erase(0, 7);
+	//mLevelSource.erase(0, 7);
 
 	// clean the level before loading it
 	if(mObjectList.size() > 0)	
@@ -278,9 +279,18 @@ void Level::collision(Player *player)
 
 	// check if player have completed the map
 	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
+
+		/* get the information we need before the level gets destroyed */
 		LevelType type = getType();
+		string current = this->getLevelName();
+		string next = this->getNextLevel();
+
+		/* change state */
 		PlayState::Instance()->changeState(LevelCompletedState::Instance());
+
+		/* send the neccessary data to the new state */
 		LevelCompletedState::Instance()->setCompletedType(type);
+		LevelCompletedState::Instance()->setLevels(current, next);
 	}
 }
 

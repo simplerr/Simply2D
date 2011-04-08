@@ -82,10 +82,14 @@ void CustomLevelState::update(double dt)
 
 	// menu item was pressed -> set level
 	if(result != "none")	{
-		result.append(".txt");
+
+		/* add levels\\ and .txt */
+		string tmp = "levels\\";
+		tmp.append(result);
+		tmp.append(".txt");
 
 		changeState(PlayState::Instance());
-		PlayState::Instance()->setLevel(result);
+		PlayState::Instance()->setLevel(tmp);
 	}
 }
 

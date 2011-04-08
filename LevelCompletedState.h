@@ -22,6 +22,7 @@ public:
 	void drawGui(void);
 	void drawBkgd(void);
 	void setCompletedType(LevelType type);
+	void setLevels(string current, string next);
 
 	static LevelCompletedState* Instance() {
 		return &mLevelCompletedState;
@@ -34,6 +35,8 @@ private:
 	WindowHandler *mWindowHandler;
 	IDirect3DTexture9* mBkgdTexture;
 	LevelType mCompletedType;
+	string mCurrentLevel;
+	string mNextLevel;
 
 private:
 	/* windows */

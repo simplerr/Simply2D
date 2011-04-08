@@ -89,7 +89,8 @@ void PlayState::drawBkgd()
 
 void PlayState::setLevel(string level)
 {
-	string levelToLoad = "levels\\";
-	levelToLoad.append(level);
-	mLevel->loadLevel((char*)levelToLoad.c_str()); // (char*)level.c_str()
+	//string levelToLoad = "levels\\";
+	//levelToLoad.append(level);
+	//mLevel->loadLevel((char*)levelToLoad.c_str()); // (char*)level.c_str()
+	mLevel->loadLevel((char*)level.c_str()); 
 }

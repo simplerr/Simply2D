@@ -33,6 +33,8 @@ Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y
 Button::~Button()
 {
 	// dtor
+	ReleaseCOM(mNormalTexture);
+	ReleaseCOM(mHooverTexture);
 }
 
 void Button::update(float dt)

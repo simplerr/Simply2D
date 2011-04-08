@@ -76,11 +76,6 @@ void LevelCompletedState::drawMain(void)
 {
 	drawBkgd();
 	mWindowHandler->draw();
-
-	if(mCompletedType == CUSTOM)
-		gGraphics->drawText("custom!", 400, 400);
-	else
-		gGraphics->drawText("campaign!", 400, 400);
 }
 
 void LevelCompletedState::drawGui(void)
@@ -116,21 +111,21 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 	case BUTTON_NEXTLEVEL:
 		{
 			changeState(PlayState::Instance());
-			PlayState::Instance()->setLevel("KEKEL.txt");
-			break;
+			PlayState::Instance()->setLevel(mNextLevel);
+			return false;
 		}
 	case BUTTON_MENU:
 		{
 			changeState(MainMenuState::Instance());
 			return false;
-			break;
 		}
 	case BUTTON_AGAIN:
 		{
-			break;
+			changeState(PlayState::Instance());
+			PlayState::Instance()->setLevel(mCurrentLevel);
+			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -142,4 +137,10 @@ void LevelCompletedState::setCompletedType(LevelType type)
 		mCustomNextButton->setVisible(false);
 	else if(mCompletedType == CUSTOM)
 		mCampaignNextButton->setVisible(false);
+}
+
+void LevelCompletedState::setLevels(string current, string next)
+{
+	mCurrentLevel = current;
+	mNextLevel = next;
 }

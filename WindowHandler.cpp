@@ -38,8 +38,9 @@ WindowHandler::~WindowHandler()
 		delete mWindowList[i];	
 	}
 	mWindowList.clear();
-}
 
+	ReleaseCOM(mBackground);
+}
 
 void WindowHandler::addWindow(Window* window)
 {
