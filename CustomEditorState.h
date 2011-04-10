@@ -4,33 +4,18 @@
 #include "GameState.h"
 #include "CustomLevelState.h"
 #include "EditorState.h"
+#include "WindowHandler.h"
 
 class CustomEditorState : public CustomLevelState
 {
 public:
-	void init(Game* game)	{
-		CustomLevelState::init(game);
-		addItem("New", (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
-		mCustomLevelMenu->connect(&CustomEditorState::menuHandler, this);
-	}
-
-	void update(double dt)	{
-		// call menuHandler() when a item is pressed
-		// state changing takes place there
-		updateMenu();
-	}
-
-	bool menuHandler(std::string name)	{
-		/*add levels\\ and .txt */
-		string tmp = "levels\\";
-		tmp.append(name);
-		tmp.append(".txt");
-
-		changeState(EditorState::Instance());
-		EditorState::Instance()->setLevel(tmp);
-
-		return false;
-	}
+	void init(Game* game);
+	void cleanup(void);
+	void update(double dt);
+	void drawMain(void);
+	bool menuHandler(std::string name);
+	bool messageHandler(WindowID id, std::string value);
+	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
 
 	static CustomEditorState* Instance() {
 		return &mCustomEditorState;
@@ -39,6 +24,10 @@ protected:
 	CustomEditorState() {};
 private:
 	static CustomEditorState mCustomEditorState;
+	WindowHandler *mWindowHandler;
+	Button* mCreateButton;
+	InputBox* mLevelName;
+	TextBox* mLabel;
 };
 
 #endif

@@ -32,10 +32,11 @@
 
 using namespace std;
 
+// couldn't lie in d3dApp.cpp, no reason why not
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
 
-// couldn't lie in d3dApp.cpp, no reason why not
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -53,6 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	DirectInput di(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
 	gDInput = &di;
 
+	/* this is where the game gets runned */
 	return gd3dApp->run();
 }
 

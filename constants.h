@@ -23,6 +23,7 @@ static const std::string HOOVER_BUTTON_SOURCE = "misc\\textures\\button_hoover.b
 static const std::string LEVEL_COMPLETED_SOURCE = "misc\\textures\\level_completed.bmp";
 static const std::string GRAY_BUTTON_NORMAL_SOURCE = "misc\\textures\\gray_button_normal.bmp";
 static const std::string GRAY_BUTTON_HOOVER_SOURCE = "misc\\textures\\gray_button_hoover.bmp";
+static const std::string NEW_LEVEL_SOURCE = "misc\\textures\\new_level.bmp";
 static const int WINDOW_WIDTH = 1400;
 static const int WINDOW_HEIGHT = 900;
 static const int GAME_WIDTH = 1200;
@@ -74,6 +75,8 @@ struct POS
 
 enum WindowID
 {
+	LABEL,
+	LEVEL_NAME, 
 	BUTTON_MENU,
 	BUTTON_AGAIN,
 	BUTTON_NEXTLEVEL,

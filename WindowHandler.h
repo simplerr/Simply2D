@@ -24,6 +24,7 @@ public:
 	void keyPressed(WPARAM wParam);								// keyboard input
 
 	void setBackground(string source);							// sets a background, default is none
+	void setVisible(bool b);									// decides if the handler and its components should be drawn or not
 
 private:
 	vector<Window*> mWindowList;
@@ -35,6 +36,7 @@ private:
 	int mY;
 	int mWidth;
 	int mHeight;
+	bool mVisible;
 };
 
 #endif

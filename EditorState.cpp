@@ -97,8 +97,5 @@ void EditorState::drawBkgd(void)
 
 void EditorState::setLevel(string level)
 {
-	/*string levelToLoad = "levels\\";
-	levelToLoad.append(level);
-	mEditor->loadLevel((char*)levelToLoad.c_str()); // (char*)level.c_str()*/
 	mEditor->loadLevel((char*)level.c_str()); 
 }
