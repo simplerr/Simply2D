@@ -1,4 +1,7 @@
 #include "Menu.h"
+#include "Mouse.h"
+
+extern Mouse* gMouse;
 
 Menu::Menu(std::string menuName, navigationType a_navigation, bool useFonts, int itemAmount, int a_spacing)
 {
@@ -21,7 +24,6 @@ Menu::~Menu()
 	{	
 		ReleaseCOM(i->standardTexture);
 		ReleaseCOM(i->onSelectTexture);
-		ReleaseCOM(i->onPressTexture);
 		i++;
 	}
 	// dtor
@@ -54,7 +56,6 @@ void Menu::addMenuItem(std::string itemName, char *textureSource)
 	tempMenuItem.itemName = itemName;
 	tempMenuItem.state = STANDARD;
 	tempMenuItem.standardTexture = gGraphics->loadTexture(textureSource);
-	tempMenuItem.onPressTexture = tempMenuItem.standardTexture;		// ingen hoover eller press effekt? peka på standard texturen då!
 	tempMenuItem.onSelectTexture = tempMenuItem.standardTexture;
 	tempMenuItem.ID = newID;
 
@@ -62,7 +63,7 @@ void Menu::addMenuItem(std::string itemName, char *textureSource)
 	mMenuItemList.push_back(tempMenuItem);
 }
 
-void Menu::addMenuItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource, char *onPressTextureSource)
+void Menu::addMenuItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource)
 {
 	static int newID = 0;
 	MenuItem tempMenuItem;
@@ -70,7 +71,6 @@ void Menu::addMenuItem(std::string itemName, char *standardTextureSource, char *
 	tempMenuItem.state = STANDARD;
 	tempMenuItem.standardTexture = gGraphics->loadTexture(standardTextureSource);
 	tempMenuItem.onSelectTexture = gGraphics->loadTexture(onSelectTextureSource);
-	tempMenuItem.onPressTexture = gGraphics->loadTexture(onPressTextureSource);	
 	tempMenuItem.ID = newID;
 
 	newID++;
@@ -152,8 +152,6 @@ void Menu::draw(void)
 	{	
 		if(i->state == STANDARD)
 			gGraphics->BlitTexture(i->standardTexture, i->itemRect, 0xFFFFFFFF, 0);
-		else if(i->state == PRESSED)
-			gGraphics->BlitTexture(i->onPressTexture, i->itemRect, 0xFFFFFFFF, 0);
 		else if(i->state = SELECTED)
 			gGraphics->BlitTexture(i->onSelectTexture, i->itemRect, 0xFFFFFFFF, 0);
 
@@ -165,31 +163,33 @@ void Menu::draw(void)
 
 void Menu::update(POINT mousePos)
 {
-	updateSelectedItem(mousePos);
-}
-
-void Menu::updateSelectedItem(POINT mousePos)
-{
+	//updateSelectedItem(mousePos);
 	if(navigation == MOUSE)
 	{
 		std::list<MenuItem>::iterator i = mMenuItemList.begin();
 		while( i != mMenuItemList.end())
 		{
-			if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)	{				
+			// mouse is inside
+			if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)
+			{
 				i->state = SELECTED;
+				if(gMouse->buttonPressed(LEFTBUTTON))	{
+					if(!callback(i->itemName))
+						break;
+				}		
 			}
 			else
-				i->state = STANDARD;			
+				i->state = STANDARD;
+
 			i++;
 		}
 	}
 	else if(navigation == ARROWKEYS)
 	{		
-
 		// updatera idCounter				
-			if(gDInput->keyPressed(DIK_W)){
-				idCounter--;
-			}
+		if(gDInput->keyPressed(DIK_W)){
+			idCounter--;
+		}
 		else if(gDInput->keyPressed(DIK_S))	{
 			idCounter++;
 		}
@@ -207,77 +207,20 @@ void Menu::updateSelectedItem(POINT mousePos)
 				i->state = SELECTED;
 			}
 			else
-				i->state = STANDARD;			
+				i->state = STANDARD;
+
+			// a item was pressed
+			if(gDInput->keyPressed(DIK_RETURN))
+			{
+				if(i->ID == idCounter)	
+				{
+					if(!callback(i->itemName))
+						break;
+				}					
+			}
+
 			i++;
 		}
 	}
-}
 
-bool Menu::buttonPressed(POINT mousePos, std::string pressedButton)
-{
-	// navigera med musen?
-	if(navigation == MOUSE)
-	{	
-			std::list<MenuItem>::iterator i = mMenuItemList.begin();
-			while( i != mMenuItemList.end())
-			{
-				if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top && i->itemName == pressedButton)	{				
-					i->state = PRESSED;
-					return true;
-				}
-				i++;
-			}
-	}
-	// navigera med tangentbordet
-	else if(navigation == ARROWKEYS)
-	{
-		if(gDInput->keyPressed(DIK_RETURN))
-		{
-			std::list<MenuItem>::iterator i = mMenuItemList.begin();
-			while( i != mMenuItemList.end())
-			{
-				if(i->ID == idCounter && i->itemName == pressedButton)	{				
-					i->state = PRESSED;
-					return true;
-				}
-				i++;
-			}
-		}
-	}
-		return false;		
-}
-
-std::string Menu::buttonPressed(POINT mousePos)
-{
-	// navigera med musen?
-	if(navigation == MOUSE)
-	{	
-			std::list<MenuItem>::iterator i = mMenuItemList.begin();
-			while( i != mMenuItemList.end())
-			{
-				if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)	{				
-					i->state = PRESSED;
-					return i->itemName;
-				}
-				i++;
-			}
-	}
-	// navigera med tangentbordet
-	else if(navigation == ARROWKEYS)
-	{
-		if(gDInput->keyPressed(DIK_RETURN))
-		{
-			std::list<MenuItem>::iterator i = mMenuItemList.begin();
-			while( i != mMenuItemList.end())
-			{
-				if(i->ID == idCounter)	{				
-					i->state = PRESSED;
-					return i->itemName;
-				}
-				i++;
-			}
-		}
-	}
-
-	return "none";		
 }

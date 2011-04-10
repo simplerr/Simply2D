@@ -19,6 +19,8 @@ public:
 	void drawGui(void);
 	void drawBkgd(void);
 
+	bool menuHandler(std::string name);
+
 	static MainMenuState* Instance() {
 		return &mMainMenuState;
 	}

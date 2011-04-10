@@ -19,19 +19,21 @@ public:
 	void drawMain(void);
 	void drawGui(void);
 	void drawBkgd(void);
+	void addItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource);
 	std::vector<string> getLevels(void);
+
+	bool menuHandler(std::string name);
 
 	static CustomLevelState* Instance() {
 		return &mCustomLevelState;
 	}
 
-	string menuHandler(void);
+	//string menuHandler(void);
 protected:
 	CustomLevelState() {}
+	Menu *mCustomLevelMenu;
 private:
 	static CustomLevelState mCustomLevelState;
-
-	Menu *mCustomLevelMenu;
 };
 
 #endif

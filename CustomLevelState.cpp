@@ -40,11 +40,12 @@ void CustomLevelState::init(Game* game)
 		if(levelList[i].find(".txt") != string::npos || levelList[i].find(".TXT") != string::npos)
 			levelList[i].erase(levelList[i].end()-4,levelList[i].end()); 
 
-		mCustomLevelMenu->addMenuItem(levelList[i], "misc\\textures\\level_menu_normal.bmp", "misc\\textures\\level_menu_hoover.bmp", "misc\\textures\\level_menu_normal.bmp");
+		mCustomLevelMenu->addMenuItem(levelList[i], "misc\\textures\\level_menu_normal.bmp", "misc\\textures\\level_menu_hoover.bmp");
 	}
 
 	// build the menu
 	mCustomLevelMenu->buildMenu();
+	mCustomLevelMenu->connect(&CustomLevelState::menuHandler, this);
 }
 
 void CustomLevelState::cleanup()
@@ -75,22 +76,9 @@ void CustomLevelState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 
 void CustomLevelState::update(double dt)
 {
+	// call menuHandler() when a item is pressed
+	// state changing takes place there
 	updateMenu();
-
-	// check if the playe pressed a menu element
-	string result = menuHandler();
-
-	// menu item was pressed -> set level
-	if(result != "none")	{
-
-		/* add levels\\ and .txt */
-		string tmp = "levels\\";
-		tmp.append(result);
-		tmp.append(".txt");
-
-		changeState(PlayState::Instance());
-		PlayState::Instance()->setLevel(tmp);
-	}
 }
 
 // just so CustomEditorState can reach this
@@ -109,18 +97,6 @@ void CustomLevelState::drawGui(void)
 {
 	// the green side
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
-}
-
-string CustomLevelState::menuHandler(void)
-{
-	if(gMouse->buttonPressed(LEFTBUTTON))
-	{
-		if(mCustomLevelMenu->buttonPressed(gMouse->getPos()) != "none")	{	
-			return mCustomLevelMenu->buttonPressed(gMouse->getPos());		
-		}	
-	}
-
-	return "none";
 }
 
 std::vector<string> CustomLevelState::getLevels(void)
@@ -159,4 +135,23 @@ std::vector<string> CustomLevelState::getLevels(void)
 	}
 
 	return levelList;
+}
+
+void CustomLevelState::addItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource)
+{
+	mCustomLevelMenu->addMenuItem(itemName, standardTextureSource, onSelectTextureSource);
+	mCustomLevelMenu->buildMenu();	// rebuild
+}
+
+bool CustomLevelState::menuHandler(std::string name)
+{	
+	//add levels\\ and .txt 
+	string tmp = "levels\\";
+	tmp.append(name);
+	tmp.append(".txt");
+
+	changeState(PlayState::Instance());
+	PlayState::Instance()->setLevel(tmp);
+
+	return false;
 }

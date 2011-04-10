@@ -8,23 +8,28 @@
 class CustomEditorState : public CustomLevelState
 {
 public:
+	void init(Game* game)	{
+		CustomLevelState::init(game);
+		addItem("New", (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
+		mCustomLevelMenu->connect(&CustomEditorState::menuHandler, this);
+	}
+
 	void update(double dt)	{
-		// consider to combine this with the menuHandler()
+		// call menuHandler() when a item is pressed
+		// state changing takes place there
 		updateMenu();
+	}
 
-		// check if the playe pressed a menu element
-		string result = menuHandler();
+	bool menuHandler(std::string name)	{
+		/*add levels\\ and .txt */
+		string tmp = "levels\\";
+		tmp.append(name);
+		tmp.append(".txt");
 
-		// menu item was pressed -> set level
-		if(result != "none")	{
-			/* add levels\\ and .txt */
-			string tmp = "levels\\";
-			tmp.append(result);
-			tmp.append(".txt");
+		changeState(EditorState::Instance());
+		EditorState::Instance()->setLevel(tmp);
 
-			changeState(EditorState::Instance());
-			EditorState::Instance()->setLevel(tmp);
-		}
+		return false;
 	}
 
 	static CustomEditorState* Instance() {
