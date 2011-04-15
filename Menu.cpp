@@ -15,6 +15,17 @@ Menu::Menu(std::string menuName, navigationType a_navigation, bool useFonts, int
 	mUseFonts = useFonts;
 }
 
+Menu::Menu(std::string menuName, navigationType a_navigation, MenuType type, int breakCount, bool useFonts, int itemAmount, int a_spacing)
+{
+	mName = menuName;
+	spacing = a_spacing;
+	navigation = a_navigation;
+	numbersOfItems = itemAmount;
+	mUseFonts = useFonts;
+	mType = type;
+	mBreakCount = breakCount;
+}
+
 Menu::~Menu()
 {
 	ReleaseCOM(backgroundTexture);
@@ -223,4 +234,107 @@ void Menu::update(POINT mousePos)
 		}
 	}
 
+}
+
+void Menu::buildMenu2(int itemWidth, int itemHeight)
+{
+	/* stuff neeeded */
+	int		menuSize;
+	int		widthInItems;
+	int		heightInItems;
+	int		loopX;
+	int		loopY;
+	int		dX;
+	int		dY;
+	int		curX;
+	int		curY;
+	int		resX, resY;
+	int		itemNumber;
+
+	/* number of items */
+	menuSize = mMenuItemList.size();
+
+	/* find out width and height counted in items */
+	widthInItems = menuSize % mBreakCount;
+
+	/*
+	*  this is neccessary to get a correct height
+	*  has to do with integers rounding down
+	*  will only occur when there's an uneven amount of menu items
+	*  adds mBreakCount since adding 1 isn't suffice with large menus
+	*/
+	if(menuSize % mBreakCount != 0)
+		heightInItems = (menuSize + mBreakCount) / mBreakCount;
+	else
+		heightInItems = (menuSize) / mBreakCount;
+
+	if(menuSize == 1)	{
+		widthInItems = 0;
+		heightInItems = 0;
+	}
+
+	/* if the first row is filled, then we now that the width = break count */
+	if(heightInItems != 0)
+		widthInItems = mBreakCount;
+
+	itemNumber = 0;
+
+	/* loopa through all items */
+	std::list<MenuItem>::iterator i = mMenuItemList.begin();
+	while( i != mMenuItemList.end())
+	{
+		loopX = itemNumber %  mBreakCount;
+		loopY = itemNumber /  mBreakCount;
+
+		/* even amount of items in the widest x row */
+		if(widthInItems % 2 == 0 && widthInItems != 0)	{
+			dX = (loopX * (spacing + itemWidth));
+			dX -= 0.5*(spacing + itemWidth);
+
+			if(menuSize == 1)
+				dX = 0;
+
+			resX = bkgdX - dX - widthInItems*(spacing + itemWidth)/2 ;//+ (spacing + itemWidth)/2;
+		}
+		/* uneven */
+		else	{
+			dX = loopX*(spacing +itemWidth);
+
+			if(menuSize == 1)
+				resX = bkgdX;
+			else
+				resX = bkgdX - dX - widthInItems*(spacing + itemWidth)/2 + (spacing + itemWidth)/2;;
+		}
+
+		/* even amount of items in the widest y row */
+		if(heightInItems % 2 == 0 && heightInItems != 0)	{
+			dY = (loopY * (spacing + itemHeight));
+			dY -= 0.5*(spacing + itemHeight);	
+			
+			if(menuSize == 1)
+				dY = 0;
+
+			resY = bkgdY - dY - heightInItems*(spacing + itemHeight)/2;
+		}
+		/* uneven */
+		else	{		
+				dY = loopY*(spacing +itemHeight);
+
+				if(menuSize == 1)
+					resY = bkgdY;
+				else
+					resY = bkgdY - dY - heightInItems*(spacing + itemHeight)/2 + (spacing + itemHeight)/2;
+		}
+
+		/* center the menu items */
+		//centerX -= 
+
+		i->itemRect.left = resX-(itemWidth/2);
+		i->itemRect.right = resX+(itemWidth/2);
+		i->itemRect.top = resY-(itemHeight/2);
+		i->itemRect.bottom = resY+(itemHeight/2); 
+
+		itemNumber--;
+		i++;
+	}
 }

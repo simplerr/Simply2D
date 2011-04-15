@@ -27,7 +27,8 @@ void CustomLevelState::init(Game* game)
 	setGame(game);
 
 	// create the menu
-	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
+	//mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
+	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, VER, 5, true, 4, 4);
 	mCustomLevelMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
 
 	// get the files in the map folder
@@ -44,7 +45,7 @@ void CustomLevelState::init(Game* game)
 	}
 
 	// build the menu
-	mCustomLevelMenu->buildMenu();
+	mCustomLevelMenu->buildMenu2();
 	mCustomLevelMenu->connect(&CustomLevelState::menuHandler, this);
 }
 
@@ -140,7 +141,7 @@ std::vector<string> CustomLevelState::getLevels(void)
 void CustomLevelState::addItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource)
 {
 	mCustomLevelMenu->addMenuItem(itemName, standardTextureSource, onSelectTextureSource);
-	mCustomLevelMenu->buildMenu();	// rebuild
+	mCustomLevelMenu->buildMenu2();	// rebuild
 }
 
 bool CustomLevelState::menuHandler(std::string name)

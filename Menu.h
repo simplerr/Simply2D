@@ -33,10 +33,17 @@ struct MenuItem
 	// soundfile etc..
 };
 
+enum MenuType
+{
+	HOR,
+	VER
+};
+
 class Menu
 {
 public:
 	Menu(std::string menuName, navigationType a_navigation, bool useFonts = false, int itemAmount = 2, int a_spacing = 30);
+	Menu(std::string menuName, navigationType a_navigation, MenuType type = HOR, int breakCount = 4, bool useFonts = false, int itemAmount = 2, int a_spacing = 30);
 	~Menu();
 
 	void draw(void);
@@ -46,6 +53,7 @@ public:
 	void addMenuItem(std::string itemName, char *textureSource);
 	void addMenuItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource);
 	void buildMenu(int itemWidth = 100, int itemHeight = 50);
+	void buildMenu2(int itemWidth = 100, int itemHeight = 50);
 
 	void displayCoordinates(void);
 
@@ -75,6 +83,8 @@ private:
 	int idCounter;
 
 	bool mUseFonts;
+	int mBreakCount;
+	MenuType mType;
 };
 
 #endif

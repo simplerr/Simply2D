@@ -197,7 +197,11 @@ int D3DApp::run()
 				
 				// Get snapshot of input devices.
 				gDInput->poll();
+
+				/* update the game */
 				updateScene(dt);
+
+				/* draw the game */
 				drawScene();
 
 				// Prepare for next iteration: The current time stamp becomes

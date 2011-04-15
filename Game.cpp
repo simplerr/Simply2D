@@ -125,7 +125,6 @@ void Game::onLostDevice()
 
 void Game::onResetDevice()
 {
-	//MessageBox(0, "Hej", 0, 0);
 	// Call the onResetDevice of other objects.
 	mGfxStats->onResetDevice();
 	//User->onResetDevice();
@@ -168,14 +167,13 @@ void Game::onResetDevice()
 
 void Game::updateScene(float dt)
 {		
-	// updaterar musens position
+	/* updates the mouse */
 	gMouse->updateMouseDX();
 
-	// update the current state
-	//mGameState->handleEvents(this);	// hax maybe
+	/* update the current state */
 	mGameState->update(dt);
 
-	// this should allways be displayed
+	/* this should allways be displayed */
 	mGfxStats->setTriCount(8 *2);
 	mGfxStats->setVertexCount(16 *4);
 	mGfxStats->update(dt);
@@ -196,19 +194,19 @@ void Game::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
-	// activate game camera
+	/* activate game camera */
 	gCameraManager->setCamera(GAME_CAMERA);
 
-	// should allways be displayed
+	/* should allways be displayed */
 	mGfxStats->display();
 
-	// draw the state content in the game area
+	/* draw the state content in the game area */
 	mGameState->drawMain();
 
-	// activate gui camera
+	/* activate gui camera */
 	gCameraManager->setCamera(GUI_CAMERA);
 
-	// drwa the state content in the gui area
+	/* draw the state content in the gui area */
 	mGameState->drawGui();
 
 	gMouse->drawMousePos();
