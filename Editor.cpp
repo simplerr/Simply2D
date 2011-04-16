@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "DropBox.h"
 #include "Editor.h"
 #include "StaticPlatform.h"
@@ -718,6 +719,18 @@ bool Editor::messageHandler(WindowID sender, string data)
 			tmp.append(".txt");
 			mLevel->setNextLevel(tmp);
 
+			// rename the filename and the level name if the name has changed
+			if(mOldLevelName != iLevel->getValue())	{
+				mLevel->setLevelName(iLevel->getValue());
+
+				string newName = "levels\\";
+				newName.append(iLevel->getValue());
+				newName.append(".txt");
+
+				if(rename(mOldLevelName.c_str(), newName.c_str()) != 0)
+					MessageBox(0, "heer", 0, 0); 			
+			}
+
 			// add  .txt
 			tmp = "levels\\";
 			tmp.append(string(buffer));
@@ -863,6 +876,7 @@ void Editor::loadLevel(char *source)
 
 	// remove level\ and .txt
 	string tmp = string(source);
+	mOldLevelName = tmp;
 	tmp.erase(tmp.size()-4, tmp.size());
 	tmp.erase(0, 7);
 	iLevel->setValue(tmp);

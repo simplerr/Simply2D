@@ -51,8 +51,9 @@ public:
 	void saveLevel(char* levelFile);
 	void loadLevel(char* levelFile);
 	std::string getLevelName(void);
+	void setLevelName(std::string levelName) { mLevelSource = levelName;}
 	std::string getNextLevel(void) {return mNextLevel;};
-	void setNextLevel(std::string nextLevel) { mNextLevel = nextLevel;};
+	void setNextLevel(std::string nextLevel) { mNextLevel = nextLevel;}
 
 	void addObject(Object *object);
 	void deleteObject(int ID);

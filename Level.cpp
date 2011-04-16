@@ -71,7 +71,6 @@ void Level::loadLevel(char* levelFile)
 {	
 	// set the level source
 	mLevelSource = string(levelFile);
-	//mLevelSource.erase(0, 7);
 
 	// clean the level before loading it
 	if(mObjectList.size() > 0)	

@@ -119,6 +119,7 @@ private:
 
 	int			mOffset;
 	CurrentAction currentAction;
+	string mOldLevelName;
 private:
 	TextBox *tLevel;
 	TextBox *tSpawnX;
