@@ -23,6 +23,7 @@ void CustomEditorState::cleanup()
 {
 	CustomLevelState::cleanup();
 	delete mWindowHandler;
+	mWindowHandler = NULL;
 }
 
 void CustomEditorState::update(double dt)
@@ -30,7 +31,9 @@ void CustomEditorState::update(double dt)
 	// call menuHandler() when a item is pressed
 	// state changing takes place there
 	updateMenu();
-	mWindowHandler->update(dt);
+
+	if(mWindowHandler != NULL)
+		mWindowHandler->update(dt);
 }
 
 void CustomEditorState::drawMain(void)
