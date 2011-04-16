@@ -720,8 +720,11 @@ bool Editor::messageHandler(WindowID sender, string data)
 			mLevel->setNextLevel(tmp);
 
 			// rename the filename and the level name if the name has changed
-			if(mOldLevelName != iLevel->getValue())	{
-				mLevel->setLevelName(iLevel->getValue());
+			string compareString = "levels\\";
+			compareString.append(iLevel->getValue());
+			compareString.append(".txt");
+			if(mOldLevelName != compareString)	{
+				mLevel->setLevelName(compareString);
 
 				string newName = "levels\\";
 				newName.append(iLevel->getValue());
@@ -732,18 +735,21 @@ bool Editor::messageHandler(WindowID sender, string data)
 			}
 
 			// add  .txt
-			tmp = "levels\\";
-			tmp.append(string(buffer));
-			tmp.append(".txt");
-			mLevel->saveLevel((char*)tmp.c_str());
+			//tmp = "levels\\";
+			//tmp.append(string(buffer));
+			//tmp.append(".txt");
+			mLevel->saveLevel((char*)compareString.c_str());
 			break;
 		}
 	case BUTTON_TRYLEVEL:
 		{
-			strcpy(buffer, ACTIVE_LEVEL.c_str());
+			string tmp = "levels\\";
+			tmp.append(iLevel->getValue().c_str());
+			tmp.append(".txt");
+
 			gMouse->restore();
 			gCameraManager->gameCamera()->restore();
-			mLevel->saveLevel(buffer);
+			mLevel->saveLevel((char*)tmp.c_str());
 			tryLevel = true;
 			break;
 		}
