@@ -2,14 +2,11 @@
 #define GAME_WORLD_H
 
 #include "constants.h"
-/*#include "Object.h"
-#include "MovingObject.h
-#include "Player.h"
-*/
 #include <list>
 #include <fstream>
 #include <string>
 #include <vector>
+#include "CampaignProgress.h"
 
 // might be error
 #include "Object.h"
@@ -23,23 +20,6 @@ enum LevelType
 {
 	CAMPAIGN = 301,
 	CUSTOM
-};
-
-
-struct Warp
-{
-	int x,y;
-	int width, height;
-	IDirect3DTexture9* texture;
-	RECT getRect(void)	{
-		RECT r;
-		r.left = x - width/2;
-		r.right = x + width/2;
-		r.top = y - height/2;
-		r.bottom = y + height/2;
-
-		return r;
-	}
 };
 
 class Level
@@ -67,17 +47,19 @@ public:
 	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);
-	POS getSpawn(void)  {return spawnPos;};
+	POS getSpawn(void)  {return spawnPos;}
 	RECT getSpawnRect(void);
-	Object* getWarp(void) {return mLevelWarp;};
-	void setSpawn(POS pos)	{spawnPos = pos;};
+	Object* getWarp(void) {return mLevelWarp;}
+	void setSpawn(POS pos)	{spawnPos = pos;}
 	void spawnPlayer(void);
 
 	LevelType getType(void)	{return mLevelType;}
+	void setType(LevelType type) {mLevelType = type;}
 
 private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL
-	std::vector<Object*> mCollisionList;
+
+	CampaignProgress mProgress;
 
 	std::string mLevelSource;
 	std::string mNextLevel;

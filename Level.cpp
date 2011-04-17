@@ -22,6 +22,7 @@ Level::Level(Player *player)
 	mLevelWarp = NULL;
 	mLevelType = CAMPAIGN;
 	nextObjectID = 0;
+	mProgress.loadProgress("levels\\campaign\\campaign_progress.txt");
 }
 
 Level::~Level()
@@ -283,6 +284,11 @@ void Level::collision(Player *player)
 		LevelType type = getType();
 		string current = this->getLevelName();
 		string next = this->getNextLevel();
+
+		/* set the next level to playable */
+		next.erase(0, 7);
+		next.erase(next.end()-4, next.end());
+		mProgress.setProgress(next, true);
 
 		/* change state */
 		PlayState::Instance()->changeState(LevelCompletedState::Instance());

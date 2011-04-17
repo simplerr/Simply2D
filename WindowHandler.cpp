@@ -38,12 +38,13 @@ WindowHandler::~WindowHandler()
 	while(itr != mWindowList.end() && i < mWindowList.size())
 	{		
 			delete mWindowList[i];
-			itr = mWindowList.erase(itr);
+			//itr = mWindowList.erase(itr);
 			
-
 			itr++;
 			i++;
 	}
+
+	//mWindowList.clear();
 
 	mActiveWindow = NULL;
 	ReleaseCOM(mBackground);

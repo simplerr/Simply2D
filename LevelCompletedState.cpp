@@ -111,7 +111,10 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 	case BUTTON_NEXTLEVEL:
 		{
 			changeState(PlayState::Instance());
-			PlayState::Instance()->setLevel(mNextLevel);
+			string tmp = "levels\\";
+			tmp.append(mNextLevel);
+			tmp.append(".txt");
+			PlayState::Instance()->setLevel(tmp);
 			return false;
 		}
 	case BUTTON_MENU:

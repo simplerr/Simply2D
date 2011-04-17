@@ -4,6 +4,7 @@
 #include "CustomLevelState.h"
 #include "EditorState.h"
 #include "CustomEditorState.h"
+#include "CampaignLevelState.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
@@ -76,7 +77,8 @@ bool MainMenuState::menuHandler(std::string name)
 {
 	if(name == "Play")
 	{
-		changeState(PlayState::Instance());
+		changeState(CampaignLevelState::Instance());
+		//changeState(PlayState::Instance());
 		return false;
 	}
 	else if(name == "Editor")

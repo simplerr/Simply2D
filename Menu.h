@@ -29,6 +29,7 @@ struct MenuItem
 	IDirect3DTexture9* standardTexture;
 	IDirect3DTexture9* onSelectTexture;
 	buttonState state;
+	bool pressable;
 	int ID;
 	// soundfile etc..
 };
@@ -58,6 +59,7 @@ public:
 	void displayCoordinates(void);
 
 	void setMenuBackground(char *textureSource, int x, int y, int width, int height);
+	void setPressable(std::string name, bool b);
 
 	boost::function<bool(std::string name)> callback;
 

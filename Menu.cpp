@@ -69,6 +69,7 @@ void Menu::addMenuItem(std::string itemName, char *textureSource)
 	tempMenuItem.standardTexture = gGraphics->loadTexture(textureSource);
 	tempMenuItem.onSelectTexture = tempMenuItem.standardTexture;
 	tempMenuItem.ID = newID;
+	tempMenuItem.pressable = true;
 
 	newID++;
 	mMenuItemList.push_back(tempMenuItem);
@@ -83,6 +84,7 @@ void Menu::addMenuItem(std::string itemName, char *standardTextureSource, char *
 	tempMenuItem.standardTexture = gGraphics->loadTexture(standardTextureSource);
 	tempMenuItem.onSelectTexture = gGraphics->loadTexture(onSelectTextureSource);
 	tempMenuItem.ID = newID;
+	tempMenuItem.pressable = true;
 
 	newID++;
 	mMenuItemList.push_back(tempMenuItem);
@@ -184,7 +186,7 @@ void Menu::update(POINT mousePos)
 			if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)
 			{
 				i->state = SELECTED;
-				if(gMouse->buttonPressed(LEFTBUTTON))	{
+				if(gMouse->buttonPressed(LEFTBUTTON) && i->pressable)	{
 					if(!callback(i->itemName))
 						break;
 				}		
@@ -223,7 +225,7 @@ void Menu::update(POINT mousePos)
 			// a item was pressed
 			if(gDInput->keyPressed(DIK_RETURN))
 			{
-				if(i->ID == idCounter)	
+				if(i->ID == idCounter && i->pressable)	
 				{
 					if(!callback(i->itemName))
 						break;
@@ -263,10 +265,16 @@ void Menu::buildMenu2(int itemWidth, int itemHeight)
 	*  will only occur when there's an uneven amount of menu items
 	*  adds mBreakCount since adding 1 isn't suffice with large menus
 	*/
-	if(menuSize % mBreakCount != 0)
+	if(menuSize % mBreakCount != 0)	{
 		heightInItems = (menuSize + mBreakCount) / mBreakCount;
-	else
+		if(heightInItems != 1)
+			widthInItems = mBreakCount;
+	}
+	else	{
 		heightInItems = (menuSize) / mBreakCount;
+		if(heightInItems != 0)
+			widthInItems = mBreakCount;
+	}
 
 	if(menuSize == 1)	{
 		widthInItems = 0;
@@ -274,8 +282,8 @@ void Menu::buildMenu2(int itemWidth, int itemHeight)
 	}
 
 	/* if the first row is filled, then we now that the width = break count */
-	if(heightInItems != 0)
-		widthInItems = mBreakCount;
+	//if(heightInItems != 0)	// (heightInItems != 1)
+	//	widthInItems = mBreakCount;
 
 	itemNumber = 0;
 
@@ -335,6 +343,17 @@ void Menu::buildMenu2(int itemWidth, int itemHeight)
 		i->itemRect.bottom = resY+(itemHeight/2); 
 
 		itemNumber--;
+		i++;
+	}
+}
+
+void Menu::setPressable(std::string name, bool b)
+{
+	std::list<MenuItem>::iterator i = mMenuItemList.begin();
+	while( i != mMenuItemList.end())
+	{
+		if(i->itemName == name)
+			i->pressable = b;
 		i++;
 	}
 }
