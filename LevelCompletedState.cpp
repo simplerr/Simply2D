@@ -23,11 +23,11 @@ void LevelCompletedState::init(Game* game)
 
 	mCustomNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true, (char*)GRAY_BUTTON_NORMAL_SOURCE.c_str(), (char*)GRAY_BUTTON_HOOVER_SOURCE.c_str());
 
-	mMenuButton = new Button(mWindowHandler, BUTTON_MENU, "Menu", 300, 350, 100, 45, true);
-	mMenuButton->connect(&LevelCompletedState::messageHandler, this);
-
 	mAgainButton = new Button(mWindowHandler, BUTTON_AGAIN, "Again", 100, 350, 100, 45, true);
 	mAgainButton->connect(&LevelCompletedState::messageHandler, this);
+
+	mMenuButton = new Button(mWindowHandler, BUTTON_MENU, "Menu", 300, 350, 100, 45, true);
+	mMenuButton->connect(&LevelCompletedState::messageHandler, this);
 
 	// load the background
 	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\city_bkgd_yellow.bmp"); 
