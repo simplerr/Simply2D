@@ -19,7 +19,8 @@ class Player;
 enum LevelType
 {
 	CAMPAIGN = 301,
-	CUSTOM
+	CUSTOM,
+	TEST
 };
 
 class Level

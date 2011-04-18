@@ -153,6 +153,7 @@ bool CustomLevelState::menuHandler(std::string name)
 
 	changeState(PlayState::Instance());
 	PlayState::Instance()->setLevel(tmp);
+	PlayState::Instance()->setLevelType(CUSTOM);
 
 	return false;
 }

@@ -126,6 +126,7 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 		{
 			changeState(PlayState::Instance());
 			PlayState::Instance()->setLevel(mCurrentLevel);
+			PlayState::Instance()->setLevelType(mCompletedType);
 			return false;
 		}
 	}

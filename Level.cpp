@@ -11,6 +11,8 @@
 #include "PlayState.h"
 #include "LevelCompletedState.h"
 #include <fstream>
+#include "EditorState.h"
+#include "TestState.h"
 
 using namespace std;
 
@@ -291,11 +293,19 @@ void Level::collision(Player *player)
 		mProgress.setProgress(next, true);
 
 		/* change state */
-		PlayState::Instance()->changeState(LevelCompletedState::Instance());
+		if(mLevelType != TEST)	{
+			PlayState::Instance()->changeState(LevelCompletedState::Instance());
 
-		/* send the neccessary data to the new state */
-		LevelCompletedState::Instance()->setCompletedType(type);
-		LevelCompletedState::Instance()->setLevels(current, next);
+			/* send the neccessary data to the new state */
+			LevelCompletedState::Instance()->setCompletedType(type);
+			LevelCompletedState::Instance()->setLevels(current, next);
+		}
+		else	{
+			TestState::Instance()->changeState(EditorState::Instance());
+			EditorState::Instance()->setLevel(current);
+		}
+
+		/* ADD TEST TYPE!!! */
 	}
 }
 

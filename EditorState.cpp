@@ -59,6 +59,7 @@ void EditorState::update(double dt)
 		string tmp = mEditor->getTestLevel();
 		changeState(TestState::Instance());
 		TestState::Instance()->setLevel(tmp);
+		TestState::Instance()->setLevelType(TEST);
 	}
 	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }

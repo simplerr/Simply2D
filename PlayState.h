@@ -18,6 +18,7 @@ public:
 	virtual void drawGui(void);
 	virtual void drawBkgd(void);
 	void setLevel(string level);
+	void setLevelType(LevelType type) {mLevel->setType(type);}
 	string getLevel(void) { return mLevel->getLevelName();}
 
 	static PlayState* Instance() {
