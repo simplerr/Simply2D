@@ -53,6 +53,7 @@ public:
 	void addMenuItem(MenuItem newItem);
 	void addMenuItem(std::string itemName, char *textureSource);
 	void addMenuItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource);
+	void removeItem(std::string itemName);
 	void buildMenu(int itemWidth = 100, int itemHeight = 50);
 	void buildMenu2(int itemWidth = 100, int itemHeight = 50);
 

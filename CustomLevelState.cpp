@@ -122,7 +122,7 @@ std::vector<string> CustomLevelState::getLevels(void)
 		{
 			test = string(findData.cFileName);
 
-			if (test != "."  && test !=  "..")
+			if (test != "."  && test !=  ".." && test != "campaign")
 			{
 				// remove spaces
 				for(int j = 0; j < test.length()-1; j++)	{
@@ -141,7 +141,7 @@ std::vector<string> CustomLevelState::getLevels(void)
 void CustomLevelState::addItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource)
 {
 	mCustomLevelMenu->addMenuItem(itemName, standardTextureSource, onSelectTextureSource);
-	mCustomLevelMenu->buildMenu2();	// rebuild
+	mCustomLevelMenu->buildMenu2();	
 }
 
 bool CustomLevelState::menuHandler(std::string name)
@@ -156,4 +156,11 @@ bool CustomLevelState::menuHandler(std::string name)
 	PlayState::Instance()->setLevelType(CUSTOM);
 
 	return false;
+}
+
+void CustomLevelState::removeItem(std::string itemName)
+{
+	itemName.erase(0, 7);
+	itemName.erase(itemName.size() - 4, itemName.size());
+	mCustomLevelMenu->removeItem(itemName);
 }

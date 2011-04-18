@@ -357,3 +357,17 @@ void Menu::setPressable(std::string name, bool b)
 		i++;
 	}
 }
+
+void Menu::removeItem(std::string itemName)
+{	
+	std::list<MenuItem>::iterator i = mMenuItemList.begin();
+	while( i != mMenuItemList.end())
+	{
+		if(i->itemName == itemName)	{
+			mMenuItemList.erase(i);
+			buildMenu2();
+			return;
+		}
+		i++;
+	}
+}

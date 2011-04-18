@@ -20,6 +20,7 @@ public:
 	void drawGui(void);
 	void drawBkgd(void);
 	void addItem(std::string itemName, char *standardTextureSource, char *onSelectTextureSource);
+	void removeItem(std::string itemName);
 	std::vector<string> getLevels(void);
 
 	virtual bool menuHandler(std::string name);

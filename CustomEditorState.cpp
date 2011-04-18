@@ -1,6 +1,7 @@
 #include "CustomEditorState.h"
 #include "MainMenuState.h"
 #include <fstream>
+#include <stdio.h>
 
 void CustomEditorState::init(Game* game)
 {
@@ -16,7 +17,10 @@ void CustomEditorState::init(Game* game)
 
 	CustomLevelState::init(game);
 	addItem("New", (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
+	addItem("Delete", (char*)NORMAL_BUTTON_SOURCE.c_str(), (char*)HOOVER_BUTTON_SOURCE.c_str());
 	mCustomLevelMenu->connect(&CustomEditorState::menuHandler, this);
+
+	mDeletePressed = false;
 }
 
 void CustomEditorState::cleanup()
@@ -62,6 +66,10 @@ bool CustomEditorState::menuHandler(std::string name)
 	{
 		mWindowHandler->setVisible(true);
 	}
+	else if(name == "Delete")
+	{
+		mDeletePressed = true;
+	}
 	else	
 	{
 		/*add levels\\ and .txt */
@@ -69,10 +77,21 @@ bool CustomEditorState::menuHandler(std::string name)
 		tmp.append(name);
 		tmp.append(".txt");
 
-		changeState(EditorState::Instance());
-		EditorState::Instance()->setLevel(tmp);
+		if(!mDeletePressed)
+		{
+			changeState(EditorState::Instance());
+			EditorState::Instance()->setLevel(tmp);
 
-		return false;
+			return false;
+		}
+		else
+		{
+			/* remove the pressed level */
+			remove(tmp.c_str());
+			removeItem(tmp);
+			mDeletePressed = false;
+			return false;
+		}
 	}
 	return true;
 }

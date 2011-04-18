@@ -24,6 +24,9 @@ protected:
 	CustomEditorState() {};
 private:
 	static CustomEditorState mCustomEditorState;
+
+	bool mDeletePressed;
+
 	WindowHandler *mWindowHandler;
 	Button* mCreateButton;
 	InputBox* mLevelName;
