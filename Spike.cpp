@@ -1,4 +1,5 @@
 #include "Spike.h"
+#include "Player.h"
 
 Spike::Spike(float x, float y, int width, int height, char *textureSource, int damage)
 	:Object(x, y, width, height, textureSource, SPIKE, TRIANGLE)
@@ -39,7 +40,7 @@ void Spike::scale(direction side, int dwidth, int dheight)
 
 void Spike::onPlayerCollision(Player *player, MTV mtv)
 {
-	//MessageBox(0, "GAME OVER NOOB", 0, 0);
+	player->damage(5000);
 }
 
 std::vector<Property> Spike::getProperties(void)

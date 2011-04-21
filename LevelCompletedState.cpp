@@ -7,7 +7,6 @@
 extern CameraManager* gCameraManager;
 extern Mouse*		  gMouse;
 
-
 LevelCompletedState LevelCompletedState::mLevelCompletedState;
 
 void LevelCompletedState::init(Game* game)

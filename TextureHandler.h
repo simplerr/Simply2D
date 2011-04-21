@@ -31,6 +31,8 @@ private:
 	IDirect3DTexture9* gray_button_hoover;
 	IDirect3DTexture9* gray_button_normal;
 	IDirect3DTexture9* new_level;
+	IDirect3DTexture9* game_over;
+	IDirect3DTexture9* bullet;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

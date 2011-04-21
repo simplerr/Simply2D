@@ -13,6 +13,10 @@
 #include <fstream>
 #include "EditorState.h"
 #include "TestState.h"
+#include "GameOverState.h"
+#include "Bullet.h"
+#include <list>
+#include <iterator>
 
 using namespace std;
 
@@ -220,8 +224,14 @@ void Level::updateLevel(double dt)
 		}
 	}
 
-	// update player
-	mPlayer->update(dt, this);
+	/* update player if he is not dead */
+	if(mPlayer->getHealth() > 0)
+		mPlayer->update(dt, this);
+	else	{
+		string tmp = getLevelName();
+		PlayState::Instance()->changeState(GameOverState::Instance());
+		GameOverState::Instance()->setLevels(tmp, "next");	// next wont get used
+	}
 }
 
 void Level::drawLevel(void)
@@ -243,7 +253,7 @@ void Level::drawLevel(void)
 void Level::collision(Player *player)
 {
 	bool onGround = false;
-	// loop through each object and test collision against the player
+	/* loop through each object and test collision against the player */
 	for(int i = 0; i < mObjectList.size(); i++)
 	{		
 		MTV mtv = polyCollision(mObjectList[i]->getShape(), player->getShape());
@@ -272,6 +282,21 @@ void Level::collision(Player *player)
 				player->setPrevWallJumpID(1337);
 			}
 		}	
+
+		
+		/* check bullet collisions */
+		if(player->mBulletList.size() > 0)	{
+			std::list<Bullet>::iterator j = player->mBulletList.begin();
+			while( j != player->mBulletList.end())
+			{	
+				if(polyCollision(mObjectList[i]->getShape(), j->getShape()).collision)	{
+					j->onObjectCollision(mObjectList[i]);
+					j->erase();
+				}
+
+				j++;
+			}
+		}
 	}
 
 	if(onGround)

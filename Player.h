@@ -3,10 +3,11 @@
 
 #include "d3dUtil.h"
 #include "constants.h"
-//#include "Level.h"
 #include "DirectInput.h"
 #include "Graphics.h"
 #include "Object.h"
+#include "Bullet.h"
+#include <list>
 
 #include <crtdbg.h>
 #include <string>
@@ -37,18 +38,19 @@ public:
 
 	//void setOnGround(bool b) {mOnGround = b;};
 
-	void setFalling(bool b) {mFalling = b;};
-	void onGround(bool b)	{mOnGround = b;};
+	void setFalling(bool b) {mFalling = b;}
+	void onGround(bool b)	{mOnGround = b;}
 	void jump(int height);
 
 	void setXY(float x, float y);
 	RECT getRect(void);
-	bool getFalling(void) {return mFalling;};
-	double getDY(void) {return mDY;};
-	double getDX(void) {return mDX;};
-	Shape* getShape(void)							{return &mShape;};
+	bool getFalling(void) {return mFalling;}
+	double getDY(void) {return mDY;}
+	double getDX(void) {return mDX;}
+	Shape* getShape(void)							{return &mShape;}
 	double getX(void);
 	double getY(void);
+	int getHealth(void)								{return mHealth;}
 
 	void setPrevWallJumpID(int id)	{prevWallJumpID = id;};
 	void testWallJump(int id);
@@ -57,8 +59,8 @@ public:
 	// lazyness
 	double mDX;
 	double mDY;
+	std::list<Bullet> mBulletList;
 private:
-	// shouldn't be filled in setXY()!
 	Shape mShape;
 	double mX;
 	double mY;

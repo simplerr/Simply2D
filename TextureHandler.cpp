@@ -20,6 +20,8 @@ TextureHandler::TextureHandler()
 	gray_button_hoover = NULL;
 	gray_button_normal = NULL;
 	new_level = NULL;
+	game_over = NULL;
+	bullet = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -41,6 +43,8 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(gray_button_normal);
 	ReleaseCOM(gray_button_hoover);
 	ReleaseCOM(new_level);
+	ReleaseCOM(game_over);
+	ReleaseCOM(bullet);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -322,6 +326,36 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return new_level;
+		}
+	}
+	else if(fileName == GAME_OVER_SOURCE)
+	{
+		if(game_over != NULL)
+			return game_over;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &game_over)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return game_over;
+		}
+	}
+	else if(fileName == BULLET_SOURCE)
+	{
+		if(bullet != NULL)
+			return bullet;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &bullet)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return bullet;
 		}
 	}
 }

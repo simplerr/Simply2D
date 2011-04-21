@@ -72,7 +72,7 @@ void Player::update(double dt, Level *Level)
 	// fall
 	mDY = dt*FALLSPEED;
 	
-	if(gDInput->keyPressed(DIK_SPACE))	{
+	if(gDInput->keyPressed(DIK_W))	{
 		if(mOnGround)
 			jump(JUMP_HEIGHT);//jumped = true;
 		else if(mWallJumpOk)	{
@@ -107,6 +107,26 @@ void Player::update(double dt, Level *Level)
 		moving = true;
 		faceDir = RIGHT;
 	}
+
+	if(gDInput->keyPressed(DIK_SPACE))	{
+		Bullet tmpBullet(mX, mY, 10, 10, faceDir, 50, 1, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
+		mBulletList.push_back(tmpBullet);
+	}
+
+	/* update bullet list */
+	std::list<Bullet>::iterator i = mBulletList.begin();
+	while( i != mBulletList.end())
+	{	
+		if(!i->getErased())	{
+			i->update(dt);
+			++i;
+		}
+		
+		else	{
+			/* delete whats needed */
+			i = mBulletList.erase(i);
+		}
+	}
 	
 	if(mShape.origin.x >= 616)
 		gCameraManager->gameCamera()->addMovement(mDX, 0);
@@ -133,6 +153,14 @@ void Player::draw(void)
 	char buffer[256];
 	sprintf(buffer, "Health: %i", mHealth);
 	gGraphics->drawText(buffer, 1180, 200);
+
+	/* draw bullet list */
+	std::list<Bullet>::iterator i = mBulletList.begin();
+	while( i != mBulletList.end())
+	{	
+		i->draw();
+		i++;
+	}
 }
 
 RECT Player::getRect(void)

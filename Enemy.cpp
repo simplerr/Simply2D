@@ -87,29 +87,16 @@ void Enemy::scale(direction side, int dwidth, int dheight)
 void Enemy::onPlayerCollision(Player *player, MTV mtv)
 {
 	MovingObject::onPlayerCollision(player, mtv);
-	if(player->getDY() > 0)
+
+	/* player jumped on enemy */
+	if(mtv.pushY < 0)
 	{
-		// player hit enemy on the head -> enemy = dead
-		if(player->getRect().bottom == getRect().top)	{	// smth weird here
-			this->damage(100);	// kills the enemy
-		}
-		else	{
-			// 1 attack/second
-			if(attackReady)	{
-				player->damage(mDamage);
-				attackReady = false;
-			}
-		}
+		this->damage(100);
 	}
 	else
-	{	
-		if(!(player->getRect().bottom == getRect().top))	{		
-			// 1 attack/second
-			if(attackReady)	{
-				player->damage(mDamage);
-				attackReady = false;
-			}
-		}
+	{
+		player->damage(mDamage);
+		attackReady = false;
 	}
 }
 
