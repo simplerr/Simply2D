@@ -162,6 +162,7 @@ enum ObjectType
 	SPIKE,
 	LEVEL_WARP,
 	BULLET,
+	TURRET
 };
 
 struct WindowRect

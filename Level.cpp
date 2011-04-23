@@ -17,6 +17,7 @@
 #include "Bullet.h"
 #include <list>
 #include <iterator>
+#include "Turret.h"
 
 using namespace std;
 
@@ -175,6 +176,11 @@ void Level::loadLevel(char* levelFile)
 
 	if(mPlayer != NULL)
 		spawnPlayer();
+
+	Turret* tmpTurret = new Turret(500, 650, 20, 40, (char*)ENEMY_SOURCE.c_str(), LEFT, 50, .15, 300, .4);
+	tmpTurret->setPlayer(mPlayer);
+	tmpTurret->setLevel(this);
+	addObject(tmpTurret);
 }
 
 void Level::addObject(Object *object)

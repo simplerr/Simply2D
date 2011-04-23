@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Player.h"
 
 Bullet::Bullet(float x, float y, int width, int height, direction dir, int damage, float speed, int lifelength, BulletOwner owner, char *textureSource)
 	: Object(x, y, width, height, textureSource, BULLET)
@@ -45,4 +46,9 @@ void Bullet::onObjectCollision(Object *object)
 		Enemy *enemy = dynamic_cast<Enemy*>(object);
 		enemy->damage(mDamage);
 	}
+}
+
+void Bullet::onPlayerCollision(Player *player, MTV mtv)	
+{
+	player->damage(50);
 }
