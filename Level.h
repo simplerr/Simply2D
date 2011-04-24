@@ -40,11 +40,11 @@ public:
 	void deleteObject(int ID);
 	Object *getObjectAt(POINT mpos);
 
-	void updateLevel(double dt);	
+	bool updateLevel(double dt);	
 	void drawLevel(void);
 	void drawEditorLevel(void);
 
-	void collision(Player *player);
+	bool collision(Player *player);
 	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);

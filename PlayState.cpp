@@ -24,7 +24,9 @@ void PlayState::init(Game* game)
 void PlayState::cleanup()
 {
 	delete mPlayer;
+	mPlayer = NULL;
 	delete mLevel;
+	mLevel = NULL;
 
 	ReleaseCOM(mBkgdTexture);
 }
@@ -52,8 +54,8 @@ void PlayState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 
 void PlayState::update(double dt)
 {
-	mLevel->updateLevel(dt);	// update objects + player
-	gCameraManager->gameCamera()->move();		// move the camera accordingly
+	if(mLevel->updateLevel(dt))	// update objects + player
+		gCameraManager->gameCamera()->move();		// move the camera accordingly
 }
 
 void PlayState::drawMain(void)

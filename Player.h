@@ -27,7 +27,7 @@ class Player
 public:
 	Player(string filename, int width, int height);
 	~Player();
-	void update(double dt, Level *Level);
+	bool update(double dt, Level *Level);
 	void draw(void);
 	//void setFrameType(void);
 

@@ -40,9 +40,10 @@ Level::~Level()
 	{
 		delete mObjectList[i];
 	}
-
+	
 	mObjectList.clear();
 
+	mPlayer = NULL;
 	delete mLevelWarp;
 }
 
@@ -103,7 +104,7 @@ void Level::loadLevel(char* levelFile)
 	}
 	fin.close();
 	fin.open(levelFile);
-	lines -= 4;		// correctment, since the first 3 lines arent object data (spawn, warp, next level)
+	lines -= 3;		// correctment, since the first 3 lines arent object data (spawn, warp, next level)
 
 	fin >> spawnPos.x >> spawnPos.y;
 
@@ -177,10 +178,10 @@ void Level::loadLevel(char* levelFile)
 	if(mPlayer != NULL)
 		spawnPlayer();
 
-	Turret* tmpTurret = new Turret(500, 650, 20, 40, (char*)ENEMY_SOURCE.c_str(), LEFT, 50, .15, 300, .4);
+	/*Turret* tmpTurret = new Turret(500, 650, 20, 40, (char*)ENEMY_SOURCE.c_str(), LEFT, 50, .15, 300, .4);
 	tmpTurret->setPlayer(mPlayer);
 	tmpTurret->setLevel(this);
-	addObject(tmpTurret);
+	addObject(tmpTurret);*/
 }
 
 void Level::addObject(Object *object)
@@ -214,7 +215,7 @@ void Level::deleteObject(int ID)
 	}
 }
 
-void Level::updateLevel(double dt)	
+bool Level::updateLevel(double dt)	
 {
 	// update enemies
 	// update entities
@@ -231,13 +232,19 @@ void Level::updateLevel(double dt)
 	}
 
 	/* update player if he is not dead */
-	if(mPlayer->getHealth() > 0)
+
+	if(mPlayer->getHealth() > 0)	{
+		// should return false if the user completed a map
 		mPlayer->update(dt, this);
+		collision(mPlayer);
+	}
 	else	{
 		string tmp = getLevelName();
 		PlayState::Instance()->changeState(GameOverState::Instance());
 		GameOverState::Instance()->setLevels(tmp, "next");	// next wont get used
 	}
+
+	return true;
 }
 
 void Level::drawLevel(void)
@@ -256,7 +263,7 @@ void Level::drawLevel(void)
 		mPlayer->draw();
 }
 
-void Level::collision(Player *player)
+bool Level::collision(Player *player)
 {
 	bool onGround = false;
 	/* loop through each object and test collision against the player */
@@ -338,6 +345,8 @@ void Level::collision(Player *player)
 
 		/* ADD TEST TYPE!!! */
 	}
+
+	return true;
 }
 
 /* SAT - separating axis theorem

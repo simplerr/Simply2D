@@ -43,8 +43,7 @@ void Player::onResetDevice(void)
 	// nothing to do?
 }
 
-
-void Player::update(double dt, Level *Level)
+bool Player::update(double dt, Level *Level)
 {
 	static double dtsum = 0;
 	static bool moving = false;
@@ -132,10 +131,11 @@ void Player::update(double dt, Level *Level)
 		gCameraManager->gameCamera()->addMovement(mDX, 0);
 
 	move(mDX, mDY);
-	Level->collision(this);
-
+	
 	if(!mOnGround)
 		frame = 4;
+
+	return true;//Level->collision(this);
 }
 
 void Player::draw(void)

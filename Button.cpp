@@ -35,6 +35,7 @@ Button::~Button()
 	// dtor
 	ReleaseCOM(mNormalTexture);
 	ReleaseCOM(mHooverTexture);
+	callback = NULL;
 }
 
 void Button::update(float dt)

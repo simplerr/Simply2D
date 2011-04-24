@@ -33,18 +33,12 @@ WindowHandler::WindowHandler(int x, int y, int width, int height)
 	
 WindowHandler::~WindowHandler()
 {	
-	int i = 0;
-	vector<Window*>::iterator itr =  mWindowList.begin();
-	while(itr != mWindowList.end() && i < mWindowList.size())
-	{		
-			delete mWindowList[i];
-			//itr = mWindowList.erase(itr);
-			
-			itr++;
-			i++;
+	for(int i = 0; i < mWindowList.size(); i++)
+	{
+		delete mWindowList[i];
 	}
 
-	//mWindowList.clear();
+	mWindowList.clear();
 
 	mActiveWindow = NULL;
 	ReleaseCOM(mBackground);
