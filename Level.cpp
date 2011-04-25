@@ -104,7 +104,7 @@ void Level::loadLevel(char* levelFile)
 	}
 	fin.close();
 	fin.open(levelFile);
-	lines -= 3;		// correctment, since the first 3 lines arent object data (spawn, warp, next level)
+	lines -= 4;		// correctment, since the first 3 lines arent object data (spawn, warp, next level)
 
 	fin >> spawnPos.x >> spawnPos.y;
 
@@ -169,6 +169,15 @@ void Level::loadLevel(char* levelFile)
 			int dmg;
 			fin >> xpos >> ypos >> width >> height >> dmg >> textureSource;
 			loadedObject = new Spike(xpos, ypos, width, height, (char*)textureSource.c_str(), dmg);
+		}
+		else if(objectType == TURRET)
+		{
+			float speed, firerate;
+			int dir;
+			int damage, health, lifelen;
+
+			fin >> xpos >> ypos >> width >> height >> speed >> health >> damage >> lifelen >> firerate >> dir >> textureSource;
+			loadedObject = new Turret(xpos, ypos, width, height, (char*)textureSource.c_str(), health, (direction)dir, damage, speed, lifelen, firerate);
 		}
 		addObject(loadedObject);
 	}
@@ -239,9 +248,16 @@ bool Level::updateLevel(double dt)
 		collision(mPlayer);
 	}
 	else	{
-		string tmp = getLevelName();
-		PlayState::Instance()->changeState(GameOverState::Instance());
-		GameOverState::Instance()->setLevels(tmp, "next");	// next wont get used
+		string current = getLevelName();
+
+		if(mLevelType != TEST)	{
+			PlayState::Instance()->changeState(GameOverState::Instance());
+			GameOverState::Instance()->setLevels(current, "next");	// next wont get used
+		}
+		else if(mLevelType == TEST)	{
+			TestState::Instance()->changeState(EditorState::Instance());
+			EditorState::Instance()->setLevel(current);
+		}
 	}
 
 	return true;

@@ -38,7 +38,7 @@ public:
 
 	virtual ObjectArea getAreaAt(double mx, double my);
 
-	Shape* getShape(void)							{return &mShape;};
+	Shape* getShape(void);
 	double getX(void);
 	double getY(void);
 	double getHeight(void);

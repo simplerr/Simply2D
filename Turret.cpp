@@ -1,6 +1,6 @@
 #include "Turret.h"
 
-Turret::Turret(float x, float y, int width, int height, char *textureSource, direction dir, int damage, float speed, int lifelength, float fireRate)
+Turret::Turret(float x, float y, int width, int height, char *textureSource, int health, direction dir, int damage, float speed, int lifelength, float fireRate)
 	:Object(x, y, width, height, textureSource, TURRET) 
 {
 	mDamage = damage;
@@ -9,6 +9,8 @@ Turret::Turret(float x, float y, int width, int height, char *textureSource, dir
 	mDirection = dir;
 	mFireRate = fireRate;
 	mTimeElapsed = 0;
+	setResizeable(false);
+	mHealth = health;
 }
 
 Turret::~Turret()
@@ -49,11 +51,8 @@ void Turret::update(float dt)
 		else	{
 			/* delete whats needed */
 			i = mBulletList.erase(i);
-		}
-
-		
+		}	
 	}
-
 }
 	
 void Turret::draw(void)
@@ -86,7 +85,9 @@ void Turret::OnEvent(Event *e)
 
 void Turret::saveToFile(std::ofstream *fout)
 {
-
+	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " ";
+	*fout << getWidth() << " " << getHeight() << " " << mBulletSpeed << " " << mHealth << " " << mDamage << " " << mBulletLifelength << " ";
+	*fout << mFireRate << " " << mDirection << " " << getTextureSource() << endl;
 }
 	
 void Turret::move(float dx, float dy)

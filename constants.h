@@ -26,6 +26,7 @@ static const std::string GRAY_BUTTON_NORMAL_SOURCE = "misc\\textures\\gray_butto
 static const std::string GRAY_BUTTON_HOOVER_SOURCE = "misc\\textures\\gray_button_hoover.bmp";
 static const std::string NEW_LEVEL_SOURCE = "misc\\textures\\new_level.bmp";
 static const std::string BULLET_SOURCE = "misc\\textures\\bullet.bmp";
+static const std::string TURRET_SOURCE = "misc\\textures\\turret.bmp";
 static const int WINDOW_WIDTH = 1400;
 static const int WINDOW_HEIGHT = 900;
 static const int GAME_WIDTH = 1200;

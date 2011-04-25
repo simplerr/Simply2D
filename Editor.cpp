@@ -8,6 +8,7 @@
 #include "Teleport.h"
 #include "Trampoline.h"
 #include "Spike.h"
+#include "Turret.h"
 #include "CameraManager.h"
 #include "WindowHandler.h"
 
@@ -98,7 +99,7 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue("");
 
-	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 155);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 175);	// shouldn't take height, should expand on addItem
 	listBox->connect(&Editor::messageHandler, this);
 
 	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
@@ -126,6 +127,7 @@ void Editor::buildGUI(void)
 	listBox->addItem("Trampoline", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 	listBox->addItem("Walljump", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Spike", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
+	listBox->addItem("Turret", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -691,8 +693,13 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Spike")
 					{
-						Spike *spike = new Spike(300, 300, 500, 500, "misc\\textures\\spike.bmp", 100);
+						Spike *spike = new Spike(300, 300, 50, 50, "misc\\textures\\spike.bmp", 100);
 						mLevel->addObject(spike);
+					}
+					else if(value == "Turret")
+					{
+						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, RIGHT, 50, .1, 200, .5);
+						mLevel->addObject(turret);
 					}
 					// aktiv plattform = den nya?
 			}

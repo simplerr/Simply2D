@@ -40,7 +40,7 @@ Shape::AABB Shape::getAABB(void)
 	return aabb;
 }
 
-RECT Shape::getRect(void) 
+RECT Shape::getRect(void)
 {
 	RECT r;
 	r.left = aabb.left + Shape::origin.x;

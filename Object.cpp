@@ -23,9 +23,6 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 		mShape.addPoint(Shape::Point(0, height));	// bottom - left
 		mShape.addPoint(Shape::Point(width, height));	// bottom - right
 		mShape.addPoint(Shape::Point((double)width/2, 0));	// top - middle
-	
-
-
 	}
 
 	mType = type;
@@ -246,4 +243,9 @@ RECT* Object::getDragRects(void)
 	rects[B].right = rect.right - 20;
 
 	return rects;
+}
+
+Shape* Object::getShape(void)							
+{
+	return &mShape;
 }

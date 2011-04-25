@@ -5,7 +5,7 @@
 class Turret : public Object
 {
 public:
-	Turret(float x, float y, int width, int height, char *textureSource, direction dir, int damage, float speed, int lifelength, float fireRate);
+	Turret(float x, float y, int width, int height, char *textureSource, int health, direction dir, int damage, float speed, int lifelength, float fireRate);
 	~Turret();
 
 	void update(float dt);
@@ -34,4 +34,5 @@ private:
 	direction mDirection;
 	float mFireRate;
 	float mTimeElapsed;
+	int mHealth;
 };

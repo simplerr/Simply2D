@@ -47,7 +47,7 @@ public:
 	bool getFalling(void) {return mFalling;}
 	double getDY(void) {return mDY;}
 	double getDX(void) {return mDX;}
-	Shape* getShape(void)							{return &mShape;}
+	Shape* getShape(void);
 	double getX(void);
 	double getY(void);
 	int getHealth(void)								{return mHealth;}

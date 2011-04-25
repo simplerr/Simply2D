@@ -231,3 +231,8 @@ void Player::testWallJump(int id)
 		prevWallJumpID = id;
 	}
 }
+
+Shape* Player::getShape(void)							
+{
+	return &mShape;
+}
