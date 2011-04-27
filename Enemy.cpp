@@ -142,14 +142,14 @@ void Enemy::loadProperties(std::vector<Property> propertyList)
 
 	int tmp;
 
-	tmp = atoi(propertyList[7].value.c_str());	// damage
+	tmp = atoi(propertyList[5].value.c_str());	// damage
 	if(tmp != mDamage)	{
 			mDamage = tmp;
 	}
 
 	float tmp2;
 
-	tmp2 = atof(propertyList[8].value.c_str());	// health
+	tmp2 = atof(propertyList[6].value.c_str());	// health
 	if(tmp2 != mHealth)	{
 			mHealth = tmp2;
 	}

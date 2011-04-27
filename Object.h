@@ -76,6 +76,8 @@ public:
 	void setStatic(bool b)										{mStatic = b;};
 	bool isStatic(void)											{return mStatic;};
 
+	void flipHorizontal(void);
+
 	virtual std::vector<Property> getProperties(void);
 	virtual void loadProperties(std::vector<Property> propertyList);
 

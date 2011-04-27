@@ -145,3 +145,15 @@ void Shape::setHeight(double height)
 
 	aabb.bottom = newHeight;
 }
+
+void Shape::flipHorizontal(void)
+{
+	for(int i = 0; i < pointList.size();i++)
+	{
+		// right of middle
+		if(pointList[i].x > aabb.right/2)	
+			pointList[i].x = pointList[i].x - 2*(pointList[i].x - (aabb.right/2));
+		else if(pointList[i].x < aabb.right/2)
+			pointList[i].x = pointList[i].x + 2*((aabb.right/2) - pointList[i].x);
+	}
+}

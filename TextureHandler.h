@@ -34,6 +34,7 @@ private:
 	IDirect3DTexture9* game_over;
 	IDirect3DTexture9* bullet;
 	IDirect3DTexture9* turret;
+	IDirect3DTexture9* turretFlipped;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

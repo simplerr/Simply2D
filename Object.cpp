@@ -143,17 +143,20 @@ std::vector<Property> Object::getProperties(void)
 
 	properties.push_back(tmp);
 
-	tmp.name = "width";
-	sprintf(buffer, "%i", (int)mShape.aabb.right);
-	tmp.value = buffer;
+	if(resizeable)
+	{
+		tmp.name = "width";
+		sprintf(buffer, "%i", (int)mShape.aabb.right);
+		tmp.value = buffer;
 
-	properties.push_back(tmp);
+		properties.push_back(tmp);
 
-	tmp.name = "height";
-	sprintf(buffer, "%i", (int)mShape.aabb.bottom);
-	tmp.value = buffer;
+		tmp.name = "height";
+		sprintf(buffer, "%i", (int)mShape.aabb.bottom);
+		tmp.value = buffer;
 	
-	properties.push_back(tmp);
+		properties.push_back(tmp);
+	}
 
 	return properties;
 }
@@ -169,14 +172,17 @@ void Object::loadProperties(std::vector<Property> propertyList)
 	tmp = atoi(propertyList[1].value.c_str());	// y
 	mShape.origin.y = tmp;
 
-	tmp = atoi(propertyList[2].value.c_str());	// width
-	if(tmp != mShape.aabb.right)	{
-			mShape.setWidth(tmp);
-	}
+	if(resizeable)
+	{
+		tmp = atoi(propertyList[2].value.c_str());	// width
+		if(tmp != mShape.aabb.right)	{
+				mShape.setWidth(tmp);
+		}
 
-	tmp = atoi(propertyList[3].value.c_str());	// height
-	if(tmp != mShape.aabb.bottom)	{
-			mShape.setHeight(tmp);
+		tmp = atoi(propertyList[3].value.c_str());	// height
+		if(tmp != mShape.aabb.bottom)	{
+				mShape.setHeight(tmp);
+		}
 	}
 }
 
@@ -248,4 +254,9 @@ RECT* Object::getDragRects(void)
 Shape* Object::getShape(void)							
 {
 	return &mShape;
+}
+
+void Object::flipHorizontal(void)
+{
+	mShape.flipHorizontal();
 }

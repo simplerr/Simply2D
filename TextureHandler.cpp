@@ -23,6 +23,7 @@ TextureHandler::TextureHandler()
 	game_over = NULL;
 	bullet = NULL;
 	turret = NULL;
+	turretFlipped = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -47,6 +48,7 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(game_over);
 	ReleaseCOM(bullet);
 	ReleaseCOM(turret);
+	ReleaseCOM(turretFlipped);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -373,6 +375,21 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return turret;
+		}
+	}
+	else if(fileName == TURRET_FLIPPED_SOURCE)
+	{
+		if(turretFlipped != NULL)
+			return turretFlipped;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &turretFlipped)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return turretFlipped;
 		}
 	}
 }

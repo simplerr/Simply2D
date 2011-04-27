@@ -107,12 +107,99 @@ void Turret::onPlayerCollision(Player *player, MTV mtv)
 	
 std::vector<Property> Turret::getProperties(void)
 {
-	std::vector<Property> properties;
+	std::vector<Property> properties = Object::getProperties();
+
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "health";
+	sprintf(buffer, "%i", mHealth);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "speed";
+	sprintf(buffer, "%.2f", mBulletSpeed);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "damage";
+	sprintf(buffer, "%i", mDamage);
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
+	tmp.name = "lifelen";
+	sprintf(buffer, "%i", mBulletLifelength);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "rate";
+	sprintf(buffer, "%.2f", mFireRate);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "dir";
+	sprintf(buffer, "%i", mDirection);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
 
 	return properties;
 }
 
 void Turret::loadProperties(std::vector<Property> propertyList)
 {
-	
+	// x,y,widht,height
+	Object::loadProperties(propertyList);
+
+	int tmp;
+
+	tmp = atoi(propertyList[2].value.c_str());	// health
+	if(tmp != mHealth)	{
+			mHealth = tmp;
+	}
+
+	float tmp2;
+
+	tmp2 = atof(propertyList[3].value.c_str());	// speed
+	if(tmp2 != mBulletSpeed)	{
+			mBulletSpeed = tmp2;
+	}
+
+	tmp = atoi(propertyList[4].value.c_str());	// damage
+	if(tmp != mDamage)	{
+			mDamage = tmp;
+	}
+
+	tmp = atoi(propertyList[5].value.c_str());	// bullet travel length
+	if(tmp != mBulletLifelength)	{
+			mBulletLifelength = tmp;
+	}
+
+	tmp2 = atof(propertyList[6].value.c_str());	// firerate
+	if(tmp2 != mFireRate)	{
+			mFireRate = tmp2;
+	}
+
+	tmp = atoi(propertyList[7].value.c_str());	// direction
+	if(tmp != mDirection)	{
+
+		if(tmp == RIGHT)	{
+			IDirect3DTexture9* texture = gGraphics->loadTexture((char*)TURRET_FLIPPED_SOURCE.c_str());
+			setTexture(texture);
+			setTextureSource((char*)TURRET_FLIPPED_SOURCE.c_str());	
+		}
+		else if(tmp == LEFT)	{
+			IDirect3DTexture9* texture = gGraphics->loadTexture((char*)TURRET_SOURCE.c_str());
+			setTexture(texture);
+			setTextureSource((char*)TURRET_SOURCE.c_str());	
+		}
+
+			
+		mDirection = (direction)tmp;
+	}
 }

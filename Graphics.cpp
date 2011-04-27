@@ -83,7 +83,8 @@ bool Graphics::drawShape(Shape shape, D3DCOLOR fillColor)
 
 	HR(mVB_rect->Lock(0, 0, (void**)&vertices, 0));
 	int i;
-	for(i = 0; i < shape.pointList.size(); i++)
+	//for(i = 0; i < shape.pointList.size(); i++)
+	for(i = shape.pointList.size(); i > 0; i--)
 	{
 		vertices[i].color = fillColor;
 		vertices[i].pos.x = shape.pointList[i].x + shape.origin.x;

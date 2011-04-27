@@ -698,7 +698,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Turret")
 					{
-						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, RIGHT, 50, .1, 200, .5);
+						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, .1, 200, .5);
 						mLevel->addObject(turret);
 					}
 					// aktiv plattform = den nya?

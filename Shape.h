@@ -37,6 +37,8 @@ public:
 	void setWidth(double width);
 	void setHeight(double height);
 
+	void flipHorizontal(void);
+
 	AABB aabb;
 	Point origin;
 	int sides;

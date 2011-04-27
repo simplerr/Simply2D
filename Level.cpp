@@ -177,7 +177,10 @@ void Level::loadLevel(char* levelFile)
 			int damage, health, lifelen;
 
 			fin >> xpos >> ypos >> width >> height >> speed >> health >> damage >> lifelen >> firerate >> dir >> textureSource;
-			loadedObject = new Turret(xpos, ypos, width, height, (char*)textureSource.c_str(), health, (direction)dir, damage, speed, lifelen, firerate);
+			Turret *tmpTurret = new Turret(xpos, ypos, width, height, (char*)textureSource.c_str(), health, (direction)dir, damage, speed, lifelen, firerate);
+			tmpTurret->setPlayer(mPlayer);
+
+			loadedObject = tmpTurret;
 		}
 		addObject(loadedObject);
 	}
