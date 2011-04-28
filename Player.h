@@ -52,6 +52,9 @@ public:
 	double getY(void);
 	int getHealth(void)								{return mHealth;}
 
+	bool getActivateKey(void);
+	void setActivateKey(bool b);
+
 	void setPrevWallJumpID(int id)	{prevWallJumpID = id;};
 	void testWallJump(int id);
 	void damage(int dmg)	{ mHealth -= dmg;};
@@ -70,6 +73,7 @@ private:
 	bool mOnGround;
 	int mHealth;
 	int mDamage;
+	bool mActivateKey;
 
 	const int JUMP_HEIGHT;
 	int MAX_HEIGHT;

@@ -63,6 +63,6 @@ void Trampoline::loadProperties(std::vector<Property> propertyList)
 
 	int tmp;
 
-	tmp = atoi(propertyList[4].value.c_str());
+	tmp = atoi(propertyList[2].value.c_str());
 	mBoostHeight = tmp;
 }

@@ -18,6 +18,7 @@
 #include <list>
 #include <iterator>
 #include "Turret.h"
+#include "Gate.h"
 
 using namespace std;
 
@@ -190,10 +191,9 @@ void Level::loadLevel(char* levelFile)
 	if(mPlayer != NULL)
 		spawnPlayer();
 
-	/*Turret* tmpTurret = new Turret(500, 650, 20, 40, (char*)ENEMY_SOURCE.c_str(), LEFT, 50, .15, 300, .4);
-	tmpTurret->setPlayer(mPlayer);
-	tmpTurret->setLevel(this);
-	addObject(tmpTurret);*/
+	Gate* gate = new Gate(400, 700, 50, 100, (char*)WARP_SOURCE.c_str(), 100, 700, 5);
+	gate->setPlayer(mPlayer);
+	addObject(gate);
 }
 
 void Level::addObject(Object *object)
@@ -231,6 +231,8 @@ bool Level::updateLevel(double dt)
 {
 	// update enemies
 	// update entities
+	bool playerActivation = false;
+
 	for (int i = 0;i < mObjectList.size();i++)
 	{
 		mObjectList[i]->update(dt);
@@ -241,6 +243,18 @@ bool Level::updateLevel(double dt)
 			if(!tmpEnemy->getAlive())
 				deleteObject(tmpEnemy->getID());
 		}
+
+		if(mObjectList[i]->getType() == GATE)	{
+			if(mPlayer->getActivateKey())	{
+				Gate *gate = dynamic_cast<Gate*>(mObjectList[i]);
+				if(gate->insideActivateArea())
+					playerActivation = true;
+			}
+		}
+	}
+
+	if(!playerActivation)	{
+		mPlayer->setActivateKey(false);
 	}
 
 	/* update player if he is not dead */

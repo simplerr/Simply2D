@@ -24,6 +24,8 @@ TextureHandler::TextureHandler()
 	bullet = NULL;
 	turret = NULL;
 	turretFlipped = NULL;
+	unpressed_gate_button = NULL;
+	pressed_gate_button = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -49,6 +51,8 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(bullet);
 	ReleaseCOM(turret);
 	ReleaseCOM(turretFlipped);
+	ReleaseCOM(unpressed_gate_button);
+	ReleaseCOM(pressed_gate_button);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -390,6 +394,36 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return turretFlipped;
+		}
+	}
+	else if(fileName == GATEBUTTON_UNPRESSED_SOURCE)
+	{
+		if(unpressed_gate_button != NULL)
+			return unpressed_gate_button;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &unpressed_gate_button)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return unpressed_gate_button;
+		}
+	}
+	else if(fileName == GATEBUTTON_PRESSED_SOURCE)
+	{
+		if(pressed_gate_button != NULL)
+			return pressed_gate_button;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &pressed_gate_button)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return pressed_gate_button;
 		}
 	}
 }

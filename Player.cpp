@@ -26,6 +26,7 @@ Player::Player(string filename, int width, int height)
 
 	prevWallJumpID = 1337; 
 	mWallJumpOk = false;
+	mActivateKey = false;
 }
 
 Player::~Player()
@@ -96,6 +97,7 @@ bool Player::update(double dt, Level *Level)
 	else
 		dJump = 0;
 
+	/* strafing */
 	if(gDInput->keyDown(DIK_A))	{
 		mDX = -dt*MOVESPEED;
 		moving = true;
@@ -105,6 +107,11 @@ bool Player::update(double dt, Level *Level)
 		mDX = dt*MOVESPEED;
 		moving = true;
 		faceDir = RIGHT;
+	}
+
+	/* activation key */
+	if(gDInput->keyPressed(DIK_E))	{
+		mActivateKey = true;
 	}
 
 	if(gDInput->keyPressed(DIK_SPACE))	{
@@ -235,4 +242,15 @@ void Player::testWallJump(int id)
 Shape* Player::getShape(void)							
 {
 	return &mShape;
+}
+
+
+bool Player::getActivateKey(void)
+{
+	return mActivateKey;
+}
+
+void Player::setActivateKey(bool b)
+{
+	mActivateKey = b;
 }
