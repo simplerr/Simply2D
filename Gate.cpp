@@ -1,19 +1,12 @@
 #include "Gate.h"
 
-Gate::Gate(float x, float y, int width, int height, char *textureSource, float buttonx, float buttony,float openTime)
+Gate::Gate(float x, float y, int width, int height, char *textureSource, float openTime)
 	: Object(x, y, width, height, textureSource, GATE)
 {
-	mOpenButton = new Object(buttonx, buttony, 20, 40, (char*)GATEBUTTON_UNPRESSED_SOURCE.c_str(), GATEBUTTON); 
-
-	mActivationRect = mOpenButton->getShape()->getRect();
-	mActivationRect.left -= 20;
-	mActivationRect.right += 20;
-	mActivationRect.top -= 20;
-	mActivationRect.bottom += 20;
-
 	mOpen = false;
 	mOpenTime = openTime;
 	mTimeElapsed = 0;
+	setResizeable(false);
 }
 
 Gate::~Gate()
@@ -23,35 +16,12 @@ Gate::~Gate()
 
 void Gate::update(float dt)
 {
-	if(mPlayer->getActivateKey())
-	{
-		// inside activation rect?
-		RECT playerRect = mPlayer->getShape()->getRect();
-		if(playerRect.right > mActivationRect.left && playerRect.left < mActivationRect.right && playerRect.bottom > mActivationRect.top
-		&& playerRect.top < mActivationRect.bottom)	{
-
-			if(!mOpen)	{
-				// open the gate
-				move(0, 2000);	// hack
-				mPlayer->setActivateKey(false);
-				mTimeElapsed = 0;
-				mOpen = true;
-			}
-			else	{
-				// close the gate
-				move(0, -2000);	// hack
-				mPlayer->setActivateKey(false);
-				mOpen = false;
-			}
-		}
-	}
-
 	if(mOpen)
 	{
 		mTimeElapsed += dt;
 
 		if(mTimeElapsed >= mOpenTime)	{
-			// close the gate
+			// close the ActivateButton
 			mOpen = false;
 			move(0, -2000);
 		}
@@ -61,13 +31,12 @@ void Gate::update(float dt)
 void Gate::draw(void)
 {
 	Object::draw();
-	mOpenButton->draw();
-	gGraphics->BlitRect(mActivationRect);
 }
 
 void Gate::saveToFile(std::ofstream *fout)
 {
-
+	*fout << getType() << " " << getID() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " ";
+	*fout << mOpenTime << " " << getTextureSource() << std::endl;
 }
 	
 void Gate::move(float dx, float dy)
@@ -89,24 +58,47 @@ std::vector<Property> Gate::getProperties(void)
 {
 	std::vector<Property> properties = Object::getProperties();
 
+	Property tmp;
+	char buffer[16];
+
+	tmp.name = "open";
+	sprintf(buffer, "%.2f", mOpenTime);
+	tmp.value = buffer;
+
+	properties.push_back(tmp);
+
+	tmp.name = "id";
+	sprintf(buffer, "%i", getID());
+	tmp.value = buffer;
+	
+	properties.push_back(tmp);
+
 	return properties;
 }
 
 void Gate::loadProperties(std::vector<Property> propertyList)
 {
+	Object::loadProperties(propertyList);
 
+	float tmp;
+
+	tmp = atof(propertyList[2].value.c_str());	// open time
+	if(tmp != mOpenTime)	{
+			mOpenTime = tmp;
+	}
 }
 
-void Gate::setPlayer(Player *player)
+void Gate::activate(void)
 {
-	mPlayer = player;
-}
-
-bool Gate::insideActivateArea(void)
-{
-	if(mPlayer->getX() > mActivationRect.left && mPlayer->getX() < mActivationRect.right && mPlayer->getY() > mActivationRect.top
-		&& mPlayer->getY() < mActivationRect.bottom)
-		return true;
-	else
-		return false;
+	if(!mOpen)	{
+		// open the ActivateButton
+		move(0, 2000);	// hack
+		mTimeElapsed = 0;
+		mOpen = true;
+	}
+	else	{
+		// close the ActivateButton
+		move(0, -2000);	// hack
+		mOpen = false;
+	}
 }

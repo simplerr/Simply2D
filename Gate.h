@@ -2,12 +2,12 @@
 #define GATE_H
 
 #include "Object.h"
-#include "Player.h"
+#include "Gate.h"
 
 class Gate	:	public Object
 {
 public:
-	Gate(float x, float y, int width, int height, char *textureSource, float buttonx, float buttony, float openTime);
+	Gate(float x, float y, int width, int height, char *textureSource, float openTime);
 	~Gate();
 
 	void update(float dt);
@@ -21,17 +21,10 @@ public:
 	std::vector<Property> getProperties(void);
 	void loadProperties(std::vector<Property> propertyList);
 
-	void setPlayer(Player *player);
-	void setLevel(Level *level);
-
-	bool insideActivateArea(void);
+	void activate(void);
 private:
-	Player *mPlayer;
-	RECT mActivationRect;
-	Object *mOpenButton;
 	float mOpenTime;
 	float mTimeElapsed;
 	bool mOpen;
-
 };
 #endif

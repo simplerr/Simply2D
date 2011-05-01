@@ -28,8 +28,8 @@ static const std::string NEW_LEVEL_SOURCE = "misc\\textures\\new_level.bmp";
 static const std::string BULLET_SOURCE = "misc\\textures\\bullet.bmp";
 static const std::string TURRET_SOURCE = "misc\\textures\\turret.bmp";
 static const std::string TURRET_FLIPPED_SOURCE = "misc\\textures\\turret2.bmp";
-static const std::string GATEBUTTON_UNPRESSED_SOURCE = "misc\\textures\\unpressed_gate_button.bmp";
-static const std::string GATEBUTTON_PRESSED_SOURCE = "misc\\textures\\pressed_gate_button.bmp";
+static const std::string ACTIVATEBUTTON_UNPRESSED_SOURCE = "misc\\textures\\unpressed_gate_button.bmp";
+static const std::string ACTIVATEBUTTON_PRESSED_SOURCE = "misc\\textures\\pressed_gate_button.bmp";
 static const int WINDOW_WIDTH = 1400;
 static const int WINDOW_HEIGHT = 900;
 static const int GAME_WIDTH = 1200;
@@ -168,7 +168,7 @@ enum ObjectType
 	BULLET,
 	TURRET,
 	GATE,
-	GATEBUTTON
+	ACTIVATE_BUTTON
 };
 
 struct WindowRect

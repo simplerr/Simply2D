@@ -11,7 +11,9 @@
 // might be error
 #include "Object.h"
 #include "MTV.h"
+//#include "ActivateButton.h"
 
+class ActivateButton;
 class Object;
 class MovingObject;
 class Player;
@@ -56,6 +58,8 @@ public:
 
 	LevelType getType(void)	{return mLevelType;}
 	void setType(LevelType type) {mLevelType = type;}
+
+	void connectGate(ActivateButton* button, int id);
 
 private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL

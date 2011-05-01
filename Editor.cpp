@@ -11,6 +11,8 @@
 #include "Turret.h"
 #include "CameraManager.h"
 #include "WindowHandler.h"
+#include "ActivateButton.h"
+#include "Gate.h"
 
 
 // Window behöver ingen mus längre
@@ -99,7 +101,7 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue("");
 
-	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 490 + OFFSET, 130, 175);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 480 + OFFSET, 130, 215);	// shouldn't take height, should expand on addItem
 	listBox->connect(&Editor::messageHandler, this);
 
 	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
@@ -128,6 +130,8 @@ void Editor::buildGUI(void)
 	listBox->addItem("Walljump", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Spike", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 	listBox->addItem("Turret", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
+	listBox->addItem("Button", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
+	listBox->addItem("Gate", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -410,7 +414,7 @@ int Editor::renderGui()
 
 	gGraphics->drawText("Spawn:", GAME_WIDTH +10, 65);
 	gGraphics->drawText("Active object:", GAME_WIDTH +10, 140);
-	gGraphics->drawText("Create object:", GAME_WIDTH +10, 440);
+	gGraphics->drawText("Create object:", GAME_WIDTH +10, 407);
 
 	return 1;
 }
@@ -700,6 +704,17 @@ bool Editor::messageHandler(WindowID sender, string data)
 					{
 						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, .1, 200, .5);
 						mLevel->addObject(turret);
+					}
+					else if(value == "Button")
+					{
+						ActivateButton *button = new ActivateButton(300, 300, 40, 40, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
+						button->setLevel(mLevel);
+						mLevel->addObject(button);
+					}
+					else if(value == "Gate")
+					{
+						Gate *gate = new Gate(300, 300, 40, 40, (char*)WARP_SOURCE.c_str(), 3);
+						mLevel->addObject(gate);
 					}
 					// aktiv plattform = den nya?
 			}

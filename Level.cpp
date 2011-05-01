@@ -19,6 +19,7 @@
 #include <iterator>
 #include "Turret.h"
 #include "Gate.h"
+#include "ActivateButton.h"
 
 using namespace std;
 
@@ -80,6 +81,9 @@ void Level::saveLevel(char* levelFile)
 // loads a level from a .txt file
 void Level::loadLevel(char* levelFile)
 {	
+	/* activation button list to be connected */
+	std::vector<ActivateButton*> buttonList;
+
 	// set the level source
 	mLevelSource = string(levelFile);
 
@@ -186,6 +190,24 @@ void Level::loadLevel(char* levelFile)
 
 			loadedObject = tmpTurret;
 		}
+		else if(objectType == ACTIVATE_BUTTON)
+		{
+			int gateId;
+			fin >> xpos >> ypos >> width >> height >> gateId >> textureSource;				
+			ActivateButton *tmpButton = new ActivateButton(xpos, ypos, width, height, (char*)textureSource.c_str());
+			tmpButton->setLevel(this);
+			tmpButton->setPlayer(mPlayer);
+			tmpButton->setGateId(gateId);
+			buttonList.push_back(tmpButton);
+
+			loadedObject = tmpButton;
+		}
+		else if(objectType == GATE)
+		{
+			float openTime;
+			fin >> xpos >> ypos >> width >> height >> openTime >> textureSource;				
+			loadedObject = new Gate(xpos, ypos, width, height, (char*)textureSource.c_str(), openTime);
+		}
 		//loadedObject->setID(objectId);
 		addObject(loadedObject, objectId);
 	}
@@ -198,9 +220,16 @@ void Level::loadLevel(char* levelFile)
 	mIdOffset = objectId;
 	mLoaded = true;
 
-	/*Gate* gate = new Gate(400, 700, 50, 100, (char*)WARP_SOURCE.c_str(), 100, 700, 5);
-	gate->setPlayer(mPlayer);
-	addObject(gate);*/
+	for(int i = 0; i < buttonList.size(); i++)
+	{
+		if(buttonList[i]->getGateId() != 99999)	{
+			for(int j = 0; j < mObjectList.size(); j++)
+			{
+				if(mObjectList[j]->getID() == buttonList[i]->getGateId())
+					buttonList[i]->connectGate((Gate*)mObjectList[j]);
+			}
+		}
+	}
 }
 
 void Level::addObject(Object *object, int id)
@@ -255,10 +284,10 @@ bool Level::updateLevel(double dt)
 			if(!tmpEnemy->getAlive())
 				deleteObject(tmpEnemy->getID());
 		}
-		else if(mObjectList[i]->getType() == GATE)	{
+		else if(mObjectList[i]->getType() == ACTIVATE_BUTTON)	{
 			if(mPlayer->getActivateKey())	{
-				Gate *gate = dynamic_cast<Gate*>(mObjectList[i]);
-				if(gate->insideActivateArea())
+				ActivateButton *button = dynamic_cast<ActivateButton*>(mObjectList[i]);
+				if(button->insideActivateArea())
 					playerActivation = true;
 			}
 		}
@@ -716,5 +745,16 @@ RECT Level::getSpawnRect(void)
 std::string Level::getLevelName(void)
 {
 	return mLevelSource;
+}
+
+void Level::connectGate(ActivateButton* button, int id)
+{
+	for (int i = 0;i < mObjectList.size();i++)
+	{
+		if(mObjectList[i]->getID() == id)	 {
+			button->connectGate((Gate*)mObjectList[i]);
+			break;
+		}
+	}
 }
 

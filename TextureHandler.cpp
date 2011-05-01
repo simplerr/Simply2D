@@ -396,7 +396,7 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 		return turretFlipped;
 		}
 	}
-	else if(fileName == GATEBUTTON_UNPRESSED_SOURCE)
+	else if(fileName == ACTIVATEBUTTON_UNPRESSED_SOURCE)
 	{
 		if(unpressed_gate_button != NULL)
 			return unpressed_gate_button;
@@ -411,7 +411,7 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 		return unpressed_gate_button;
 		}
 	}
-	else if(fileName == GATEBUTTON_PRESSED_SOURCE)
+	else if(fileName ==  ACTIVATEBUTTON_PRESSED_SOURCE)
 	{
 		if(pressed_gate_button != NULL)
 			return pressed_gate_button;
