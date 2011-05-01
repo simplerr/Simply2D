@@ -81,7 +81,7 @@ void Object::scale(direction side, int dwidth, int dheight)
 
 void Object::saveToFile(ofstream *fout)
 {
-	*fout << getType() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getTextureSource() << endl;
+	*fout << getType() << " " << getID() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getTextureSource() << endl;
 }
 void Object::loadFromFile(std::ofstream *fout)
 {

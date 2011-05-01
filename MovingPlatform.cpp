@@ -29,7 +29,7 @@ void MovingPlatform::draw(void)
 void MovingPlatform::saveToFile(std::ofstream *fout)
 {
 
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " " << (int)getStartPos().x << " " << (int)getStartPos().y << " " << (int)getEndPos().x << " " << (int)getEndPos().y << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " " << (int)getStartPos().x << " " << (int)getStartPos().y << " " << (int)getEndPos().x << " " << (int)getEndPos().y << " ";
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
 	*fout << getTextureSource() << endl;
 }

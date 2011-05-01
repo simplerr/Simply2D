@@ -85,7 +85,7 @@ void Turret::OnEvent(Event *e)
 
 void Turret::saveToFile(std::ofstream *fout)
 {
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " ";
 	*fout << getWidth() << " " << getHeight() << " " << mBulletSpeed << " " << mHealth << " " << mDamage << " " << mBulletLifelength << " ";
 	*fout << mFireRate << " " << mDirection << " " << getTextureSource() << endl;
 }

@@ -139,7 +139,7 @@ void MovingObject::drawPath(void)
 void MovingObject::saveToFile(ofstream *fout)
 {
 
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " " << (int)mStartPos.x << " " << (int)mStartPos.y << " " << (int)mEndPos.x << " " << (int)mEndPos.y << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " " << (int)mStartPos.x << " " << (int)mStartPos.y << " " << (int)mEndPos.x << " " << (int)mEndPos.y << " ";
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " ";
 	*fout << getTextureSource() << endl;
 }

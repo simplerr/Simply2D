@@ -36,7 +36,7 @@ public:
 	std::string getNextLevel(void) {return mNextLevel;};
 	void setNextLevel(std::string nextLevel) { mNextLevel = nextLevel;}
 
-	void addObject(Object *object);
+	void addObject(Object *object, int id = 0);
 	void deleteObject(int ID);
 	Object *getObjectAt(POINT mpos);
 
@@ -67,9 +67,10 @@ private:
 
 	POS spawnPos;
 	Object* mLevelWarp;
-	int nextObjectID;
+	int mIdOffset;
 	Player *mPlayer;
 	LevelType mLevelType;
+	bool mLoaded;
 };
 
 #endif

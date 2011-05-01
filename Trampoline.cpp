@@ -21,7 +21,7 @@ void Trampoline::draw(void)
 
 void Trampoline::saveToFile(std::ofstream *fout)
 {
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " ";
 	*fout << getWidth() << " " << getHeight() << " " << mBoostHeight << " ";
 	*fout << getTextureSource() <<  std::endl;
 }

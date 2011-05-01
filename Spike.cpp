@@ -25,7 +25,7 @@ void Spike::draw(void)
 
 void Spike::saveToFile(std::ofstream *fout)
 {
-	*fout << getType() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getDamage() << " " << getTextureSource() << std::endl;
+	*fout << getType() << " " << getID() << " " << getX() << " " << getY() << " " << getWidth() << " " << getHeight() << " " << getDamage() << " " << getTextureSource() << std::endl;
 }
 
 void Spike::move(float dx, float dy)

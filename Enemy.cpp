@@ -69,7 +69,7 @@ void Enemy::draw(void)
 
 void Enemy::saveToFile(std::ofstream *fout)
 {
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " " << (int)getStartPos().x << " " << (int)getStartPos().y << " " << (int)getEndPos().x << " " << (int)getEndPos().y << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " " << (int)getStartPos().x << " " << (int)getStartPos().y << " " << (int)getEndPos().x << " " << (int)getEndPos().y << " ";
 	*fout << getWidth() << " " << getHeight() << " " << getSpeed() << " " << mHealth << " " << mDamage << " ";
 	*fout << getTextureSource() << endl;
 }

@@ -53,7 +53,7 @@ void Teleport::drawEditorFX(void)
 
 void Teleport::saveToFile(std::ofstream *fout)
 {
-	*fout << getType() << " " << (int)getX() << " " << (int)getY() << " " << (int)mDestX << " " << (int)mDestY << " ";
+	*fout << getType() << " " << getID() << " " << (int)getX() << " " << (int)getY() << " " << (int)mDestX << " " << (int)mDestY << " ";
 	*fout << getWidth() << " " << getHeight() << " ";
 	*fout << getTextureSource() << " " << mDestTextureSource << endl;
 }

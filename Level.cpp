@@ -29,8 +29,9 @@ Level::Level(Player *player)
 	mPlayer = player;
 	mLevelWarp = NULL;
 	mLevelType = CAMPAIGN;
-	nextObjectID = 0;
+	mIdOffset = 0;
 	mProgress.loadProgress("levels\\campaign\\campaign_progress.txt");
+	mLoaded = false;
 }
 
 Level::~Level()
@@ -93,6 +94,7 @@ void Level::loadLevel(char* levelFile)
 	string destTextureSource;
 
 	int objectType, height, width, xpos, ypos;
+	int objectId = 0;
 
 	ifstream fin;
 	fin.open(levelFile);
@@ -125,6 +127,7 @@ void Level::loadLevel(char* levelFile)
 	for(int j = 0; j<lines;j++)
 	{
 		fin >> objectType;
+		fin >> objectId;
 		// might add a Object::loadFromFile() or a file manager
 		if(objectType == STATIC_PLATFORMA)	
 		{
@@ -183,7 +186,8 @@ void Level::loadLevel(char* levelFile)
 
 			loadedObject = tmpTurret;
 		}
-		addObject(loadedObject);
+		//loadedObject->setID(objectId);
+		addObject(loadedObject, objectId);
 	}
 
 	fin.close();
@@ -191,17 +195,25 @@ void Level::loadLevel(char* levelFile)
 	if(mPlayer != NULL)
 		spawnPlayer();
 
-	Gate* gate = new Gate(400, 700, 50, 100, (char*)WARP_SOURCE.c_str(), 100, 700, 5);
+	mIdOffset = objectId;
+	mLoaded = true;
+
+	/*Gate* gate = new Gate(400, 700, 50, 100, (char*)WARP_SOURCE.c_str(), 100, 700, 5);
 	gate->setPlayer(mPlayer);
-	addObject(gate);
+	addObject(gate);*/
 }
 
-void Level::addObject(Object *object)
+void Level::addObject(Object *object, int id)
 {
 	if(object != NULL)	{
-		object->setID(nextObjectID);
+		if(mLoaded)	{
+			mIdOffset++;
+			object->setID(mIdOffset);
+		}
+		else	{
+			object->setID(id);
+		}
 		mObjectList.push_back(object);
-		nextObjectID++;
 	}
 	else
 		MessageBox(0, "Null object", 0, 0);
@@ -243,8 +255,7 @@ bool Level::updateLevel(double dt)
 			if(!tmpEnemy->getAlive())
 				deleteObject(tmpEnemy->getID());
 		}
-
-		if(mObjectList[i]->getType() == GATE)	{
+		else if(mObjectList[i]->getType() == GATE)	{
 			if(mPlayer->getActivateKey())	{
 				Gate *gate = dynamic_cast<Gate*>(mObjectList[i]);
 				if(gate->insideActivateArea())
