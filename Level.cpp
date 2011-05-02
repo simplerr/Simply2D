@@ -405,22 +405,26 @@ bool Level::collision(Player *player)
 
 	// check if player have completed the map
 	if(polyCollision(mLevelWarp->getShape(), player->getShape()).collision)	{
-
 		/* get the information we need before the level gets destroyed */
 		LevelType type = getType();
 		string current = this->getLevelName();
 		string next = this->getNextLevel();
 
 		/* set the next level to playable */
-		next.erase(0, 16);
+		if(mLevelType == CAMPAIGN)
+			next.erase(0, 16);
+		else if(mLevelType == CUSTOM)
+			next.erase(0, 7);
+
 		next.erase(next.end()-4, next.end());
 		mProgress.setProgress(next, true);
 
-		sprintf(buffer, "time: %f", mPlayTime);
-		//MessageBox(0, buffer, 0, 0);
-
 		string tmpCurrent = current;
-		tmpCurrent.erase(0, 16);
+
+		if(mLevelType == CAMPAIGN)
+			tmpCurrent.erase(0, 16);
+		else if(mLevelType == CUSTOM)
+			tmpCurrent.erase(0, 7);
 		tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
 
 		if(mPlayTime < mProgress.getBestTime(tmpCurrent))
