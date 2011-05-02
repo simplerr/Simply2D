@@ -35,7 +35,7 @@ int CampaignProgress::loadProgress(std::string source)
 	mProgressList.clear();
 	for(int i = 0; i < levels; i++)
 	{
-		fin >> progress.name >> progress.playable;
+		fin >> progress.name >> progress.playable >> progress.bestTime >> progress.tries;
 
 		mProgressList.push_back(progress);
 	}
@@ -51,7 +51,8 @@ int CampaignProgress::saveProgress(std::string source)
 
 	for(int i = 0; i < mProgressList.size(); i++)
 	{
-		fout << mProgressList[i].name << " " << mProgressList[i].playable << endl;
+		fout << mProgressList[i].name << " " << mProgressList[i].playable << " " << mProgressList[i].bestTime << " ";
+		fout << mProgressList[i].tries << endl;
 	}
 
 	fout.close();
@@ -84,4 +85,39 @@ int CampaignProgress::setProgress(std::string levelName, bool b)
 	}
 
 	return 0;
+}
+
+double CampaignProgress::getBestTime(std::string levelName)
+{
+	for(int i = 0; i < mProgressList.size(); i++)
+	{
+		if(mProgressList[i].name == levelName)
+			return mProgressList[i].bestTime;
+	}
+
+	return 0;
+}
+
+void CampaignProgress::setBestTime(std::string levelName, double d)
+{
+	for(int i = 0; i < mProgressList.size(); i++)
+	{
+		if(mProgressList[i].name == levelName)	{
+			mProgressList[i].bestTime = d;
+			saveProgress("levels\\campaign\\campaign_progress.txt");
+			break;
+		}
+	}
+}
+
+void CampaignProgress::addTry(std::string levelName)
+{
+	for(int i = 0; i < mProgressList.size(); i++)
+	{
+		if(mProgressList[i].name == levelName)	{
+			mProgressList[i].tries++;
+			saveProgress("levels\\campaign\\campaign_progress.txt");
+			break;
+		}
+	}
 }

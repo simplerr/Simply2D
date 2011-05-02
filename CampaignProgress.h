@@ -8,6 +8,8 @@ struct LevelProgress
 {
 	std::string name;
 	bool playable;
+	double bestTime;
+	int tries;
 	// time, points, deaths, date can be added!
 };
 
@@ -23,6 +25,11 @@ public:
 
 	LevelProgress getProgress(std::string levelName);
 	int setProgress(std::string levelName, bool b);
+
+	double getBestTime(std::string levelName);
+	void setBestTime(std::string levelName, double d);
+
+	void addTry(std::string levelName);
 private:
 	std::vector<LevelProgress> mProgressList;
 };

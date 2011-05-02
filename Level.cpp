@@ -33,6 +33,7 @@ Level::Level(Player *player)
 	mIdOffset = 0;
 	mProgress.loadProgress("levels\\campaign\\campaign_progress.txt");
 	mLoaded = false;
+	mPlayTime = 0;
 }
 
 Level::~Level()
@@ -270,6 +271,11 @@ void Level::deleteObject(int ID)
 
 bool Level::updateLevel(double dt)	
 {
+	/* update the time since the level started */
+	if(mLevelType != TEST)	{
+		mPlayTime += dt;
+	}
+
 	// update enemies
 	// update entities
 	bool playerActivation = false;
@@ -306,6 +312,13 @@ bool Level::updateLevel(double dt)
 	}
 	else	{
 		string current = getLevelName();
+
+
+		string tmpCurrent = current;
+		tmpCurrent.erase(0, 16);
+		tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
+
+		mProgress.addTry(tmpCurrent);
 
 		if(mLevelType != TEST)	{
 			PlayState::Instance()->changeState(GameOverState::Instance());
@@ -399,9 +412,21 @@ bool Level::collision(Player *player)
 		string next = this->getNextLevel();
 
 		/* set the next level to playable */
-		next.erase(0, 7);
+		next.erase(0, 16);
 		next.erase(next.end()-4, next.end());
 		mProgress.setProgress(next, true);
+
+		sprintf(buffer, "time: %f", mPlayTime);
+		//MessageBox(0, buffer, 0, 0);
+
+		string tmpCurrent = current;
+		tmpCurrent.erase(0, 16);
+		tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
+
+		if(mPlayTime < mProgress.getBestTime(tmpCurrent))
+			mProgress.setBestTime(tmpCurrent, mPlayTime);
+
+		mProgress.addTry(tmpCurrent);
 
 		/* change state */
 		if(mLevelType != TEST)	{

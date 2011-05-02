@@ -110,7 +110,7 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 	case BUTTON_NEXTLEVEL:
 		{
 			changeState(PlayState::Instance());
-			string tmp = "levels\\";
+			string tmp = "levels\\campaign\\";
 			tmp.append(mNextLevel);
 			tmp.append(".txt");
 			PlayState::Instance()->setLevel(tmp);

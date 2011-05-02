@@ -75,6 +75,7 @@ private:
 	Player *mPlayer;
 	LevelType mLevelType;
 	bool mLoaded;
+	double mPlayTime;
 };
 
 #endif
