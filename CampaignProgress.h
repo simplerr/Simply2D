@@ -30,6 +30,9 @@ public:
 	void setBestTime(std::string levelName, double d);
 
 	void addTry(std::string levelName);
+
+	int getLevels(void);
+	std::vector<LevelProgress> getList(void);
 private:
 	std::vector<LevelProgress> mProgressList;
 };

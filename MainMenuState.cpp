@@ -5,6 +5,7 @@
 #include "EditorState.h"
 #include "CustomEditorState.h"
 #include "CampaignLevelState.h"
+#include "StatsState.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
@@ -25,6 +26,7 @@ void MainMenuState::init(Game* game)
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp");
 	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_onselect.bmp");
+	mStartMenu->addMenuItem("Stats", "misc\\textures\\warp.bmp", "misc\\textures\\quit_onselect.bmp");
 	mStartMenu->buildMenu();
 	mStartMenu->connect(&MainMenuState::menuHandler, this);
 }
@@ -94,6 +96,11 @@ bool MainMenuState::menuHandler(std::string name)
 	else if(name == "Quit")
 	{
 		// quit!
+	}
+	else if(name == "Stats")
+	{
+		changeState(StatsState::Instance());
+		return false;
 	}
 	
 	return true;

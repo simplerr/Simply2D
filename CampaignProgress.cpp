@@ -121,3 +121,13 @@ void CampaignProgress::addTry(std::string levelName)
 		}
 	}
 }
+
+int CampaignProgress::getLevels(void)
+{
+	return mProgressList.size();
+}
+
+std::vector<LevelProgress> CampaignProgress::getList(void)
+{
+	return mProgressList;
+}

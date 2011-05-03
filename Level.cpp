@@ -427,7 +427,7 @@ bool Level::collision(Player *player)
 			tmpCurrent.erase(0, 7);
 		tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
 
-		if(mPlayTime < mProgress.getBestTime(tmpCurrent))
+		if(mPlayTime < mProgress.getBestTime(tmpCurrent) || mProgress.getBestTime(tmpCurrent) == 0)
 			mProgress.setBestTime(tmpCurrent, mPlayTime);
 
 		mProgress.addTry(tmpCurrent);
