@@ -25,6 +25,10 @@ void Turret::update(float dt)
 
 	if(mTimeElapsed >= mFireRate)	{
 		Bullet tmpBullet(getX(), getY(), 10, 10, mDirection, mDamage, mBulletSpeed, mBulletLifelength, ENEMIES, (char*)BULLET_SOURCE.c_str());
+
+		if(mDirection == RIGHT)
+			tmpBullet.setXY(getX() + getWidth(), tmpBullet.getY());
+		
 		mBulletList.push_back(tmpBullet);
 		mTimeElapsed = 0;
 	}
@@ -143,8 +147,10 @@ std::vector<Property> Turret::getProperties(void)
 	properties.push_back(tmp);
 
 	tmp.name = "dir";
-	sprintf(buffer, "%i", mDirection);
-	tmp.value = buffer;
+	if(mDirection == LEFT)
+		tmp.value = "LEFT";
+	else if(mDirection == RIGHT)
+		tmp.value = "RIGHT";
 
 	properties.push_back(tmp);
 
@@ -185,7 +191,12 @@ void Turret::loadProperties(std::vector<Property> propertyList)
 			mFireRate = tmp2;
 	}
 
-	tmp = atoi(propertyList[7].value.c_str());	// direction
+	if(propertyList[7].value == "RIGHT")
+		tmp = RIGHT;
+	else if(propertyList[7].value == "LEFT")
+		tmp = LEFT;
+
+	//tmp = atoi(propertyList[7].value.c_str());	// direction
 	if(tmp != mDirection)	{
 
 		if(tmp == RIGHT)	{

@@ -50,6 +50,9 @@ void StatsState::drawMain(void)
 {
 	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 
+	gGraphics->drawText("Campaign Stats", 600, 200);
+	gGraphics->drawText("[ESC] to return", 600, 520);
+
 	/* backgrounds */
 	gGraphics->BlitRect(650, 380, 260, 250, D3DCOLOR_ARGB(255,0,0,0));
 	gGraphics->BlitRect(650, 380, 250, 240, D3DCOLOR_ARGB(255,255,255,255));

@@ -311,18 +311,24 @@ bool Level::updateLevel(double dt)
 		collision(mPlayer);
 	}
 	else	{
+		
 		string current = getLevelName();
 
-
-		string tmpCurrent = current;
-		tmpCurrent.erase(0, 16);
-		tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
-
-		mProgress.addTry(tmpCurrent);
-
 		if(mLevelType != TEST)	{
+			string tmpCurrent = current;
+			LevelType type = getType();
+
+			if(mLevelType == CAMPAIGN)
+				tmpCurrent.erase(0, 16);
+			else if(mLevelType == CUSTOM)
+				tmpCurrent.erase(0, 7);
+
+			tmpCurrent.erase(tmpCurrent.end()-4, tmpCurrent.end());
+
+			mProgress.addTry(tmpCurrent);
 			PlayState::Instance()->changeState(GameOverState::Instance());
 			GameOverState::Instance()->setLevels(current, "next");	// next wont get used
+			GameOverState::Instance()->setFailedType(type);
 		}
 		else if(mLevelType == TEST)	{
 			TestState::Instance()->changeState(EditorState::Instance());

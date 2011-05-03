@@ -61,7 +61,7 @@ void Editor::addPropertyPair(Property prop)
 	int y = 178 + 30 * mPropertyPairs.size();
 
 	tmpPair.name = new TextBox(mWindowHandler, OBJECT_INFO, prop.name, 40, y, 60, 20);
-	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, 110, y, 60, 20, 4);
+	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, 110, y, 60, 20, 5);
 	tmpPair.value->setValue(prop.value);
 	tmpPair.value->connect(&Editor::messageHandler, this);
 

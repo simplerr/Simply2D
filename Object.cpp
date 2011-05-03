@@ -260,3 +260,9 @@ void Object::flipHorizontal(void)
 {
 	mShape.flipHorizontal();
 }
+
+void Object::setXY(float x, float y)						
+{
+	mShape.origin.x = x;
+	mShape.origin.y = y;
+}

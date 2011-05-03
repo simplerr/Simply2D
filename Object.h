@@ -57,7 +57,7 @@ public:
 	virtual void editorMove(float dx, float dy);
 	virtual void move(float dx, float dy);
 	virtual void scale(direction side, int dwidth, int dheight);
-	virtual void setXY(float x, float y)						{mX = x; mY = y;};
+	virtual void setXY(float x, float y);
 
 	void setWidth(int width)									{mWidth = width;};
 	void setHeight(int height)									{mHeight = height;};

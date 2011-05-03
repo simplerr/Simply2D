@@ -50,5 +50,5 @@ void Bullet::onObjectCollision(Object *object)
 
 void Bullet::onPlayerCollision(Player *player, MTV mtv)	
 {
-	player->damage(50);
+	player->damage(mDamage);
 }

@@ -315,10 +315,10 @@ LRESULT D3DApp::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_KEYDOWN:
-		if( wParam == VK_ESCAPE )
-			enableFullScreenMode(false);
-		else if( wParam == 'F' )
-			enableFullScreenMode(true);
+		//if( wParam == VK_ESCAPE )
+		//	enableFullScreenMode(false);
+		//else if( wParam == 'F' )
+		//	enableFullScreenMode(true);
 	
 		// skicka wParam till WindowHandler
 		return 0;
