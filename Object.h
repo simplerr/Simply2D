@@ -76,6 +76,9 @@ public:
 	void setStatic(bool b)										{mStatic = b;};
 	bool isStatic(void)											{return mStatic;};
 
+	bool getRemove(void);
+	void setRemove(bool b);
+
 	void flipHorizontal(void);
 
 	virtual std::vector<Property> getProperties(void);
@@ -96,6 +99,7 @@ private:
 	bool resizeable;
 	bool mUpdates;
 	bool mStatic;
+	bool mRemove;
 };
 
 #endif

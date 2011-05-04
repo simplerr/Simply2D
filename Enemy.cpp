@@ -40,7 +40,7 @@ void Enemy::update(float dt)
 	if(!deathAnim && frame > 3)
 		frame = 0;
 	else if(deathAnim && frame > 6)
-		alive = false; // animation done  -> dead
+		setRemove(true);	// will remove it from the list
 
 	// update attack cooldown
 	if(!attackReady)

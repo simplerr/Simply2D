@@ -20,6 +20,8 @@
 #include "Turret.h"
 #include "Gate.h"
 #include "ActivateButton.h"
+#include "GunPowerup.h"
+
 
 using namespace std;
 
@@ -209,6 +211,11 @@ void Level::loadLevel(char* levelFile)
 			fin >> xpos >> ypos >> width >> height >> openTime >> textureSource;				
 			loadedObject = new Gate(xpos, ypos, width, height, (char*)textureSource.c_str(), openTime);
 		}
+		else if(objectType == GUNPOWERUP)
+		{
+			fin >> xpos >> ypos >> width >> height >> textureSource;				
+			loadedObject = new GunPowerup(xpos, ypos, width, height, (char*)textureSource.c_str(), 5);
+		}
 		//loadedObject->setID(objectId);
 		addObject(loadedObject, objectId);
 	}
@@ -221,6 +228,7 @@ void Level::loadLevel(char* levelFile)
 	mIdOffset = objectId;
 	mLoaded = true;
 
+	/* connect buttons to gates */
 	for(int i = 0; i < buttonList.size(); i++)
 	{
 		if(buttonList[i]->getGateId() != 99999)	{
@@ -231,6 +239,9 @@ void Level::loadLevel(char* levelFile)
 			}
 		}
 	}
+
+	GunPowerup *pow = new GunPowerup(500, 500, 50, 50, (char*)MAP_GUN_SOURCE.c_str(), 5);
+	addObject(pow);
 }
 
 void Level::addObject(Object *object, int id)
@@ -284,13 +295,12 @@ bool Level::updateLevel(double dt)
 	{
 		mObjectList[i]->update(dt);
 
-		// remove killed enemies from the list - HAAAAAAAAAAAAAAAACKKKK
-		if(mObjectList[i]->getType() == NORMAL_ENEMY)	{
-			Enemy *tmpEnemy = dynamic_cast<Enemy*>(mObjectList[i]);
-			if(!tmpEnemy->getAlive())
-				deleteObject(tmpEnemy->getID());
-		}
-		else if(mObjectList[i]->getType() == ACTIVATE_BUTTON)	{
+		/* remove dead enemies */
+		if(mObjectList[i]->getRemove())
+			deleteObject(mObjectList[i]->getID());
+
+		/* activate pressed buttons - hack */
+		if(mObjectList[i]->getType() == ACTIVATE_BUTTON)	{
 			if(mPlayer->getActivateKey())	{
 				ActivateButton *button = dynamic_cast<ActivateButton*>(mObjectList[i]);
 				if(button->insideActivateArea())

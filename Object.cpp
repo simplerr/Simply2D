@@ -30,7 +30,7 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 
 	mTexture = gGraphics->loadObjectTexture(textureSource);
 	strcpy(mTextureSource, textureSource);
-	//mTextureSource = textureSource;
+	mRemove = false;
 }
 Object::~Object()
 {
@@ -265,4 +265,15 @@ void Object::setXY(float x, float y)
 {
 	mShape.origin.x = x;
 	mShape.origin.y = y;
+}
+
+
+bool Object::getRemove(void)
+{
+	return mRemove;
+}
+
+void Object::setRemove(bool b)
+{
+	mRemove = b;
 }

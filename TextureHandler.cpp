@@ -26,6 +26,9 @@ TextureHandler::TextureHandler()
 	turretFlipped = NULL;
 	unpressed_gate_button = NULL;
 	pressed_gate_button = NULL;
+	left_gun = NULL;
+	right_gun = NULL;
+	map_gun = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -53,6 +56,9 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(turretFlipped);
 	ReleaseCOM(unpressed_gate_button);
 	ReleaseCOM(pressed_gate_button);
+	ReleaseCOM(left_gun);
+	ReleaseCOM(right_gun);
+	ReleaseCOM(map_gun);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -424,6 +430,51 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return pressed_gate_button;
+		}
+	}
+	else if(fileName ==  LEFT_GUN_SOURCE)
+	{
+		if(left_gun != NULL)
+			return left_gun;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &left_gun)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return left_gun;
+		}
+	}
+	else if(fileName ==  RIGHT_GUN_SOURCE)
+	{
+		if(right_gun != NULL)
+			return right_gun;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &right_gun)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return right_gun;
+		}
+	}
+	else if(fileName ==  MAP_GUN_SOURCE)
+	{
+		if(map_gun != NULL)
+			return map_gun;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &map_gun)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return map_gun;
 		}
 	}
 }

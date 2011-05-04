@@ -37,6 +37,9 @@ private:
 	IDirect3DTexture9* turretFlipped;
 	IDirect3DTexture9* unpressed_gate_button;
 	IDirect3DTexture9* pressed_gate_button;
+	IDirect3DTexture9* left_gun;
+	IDirect3DTexture9* right_gun;
+	IDirect3DTexture9* map_gun;
 
 	// angryEnemyTexture
 	// normalEnemyTexture
