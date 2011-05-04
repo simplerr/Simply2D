@@ -27,6 +27,10 @@ Player::Player(string filename, int width, int height)
 	prevWallJumpID = 1337; 
 	mWallJumpOk = false;
 	mActivateKey = false;
+
+	mAmmo = 0;
+	mRightGunTexture = gGraphics->loadObjectTexture((char*)RIGHT_GUN_SOURCE.c_str());
+	mLeftGunTexture = gGraphics->loadObjectTexture((char*)LEFT_GUN_SOURCE.c_str());
 }
 
 Player::~Player()
@@ -114,9 +118,10 @@ bool Player::update(double dt, Level *Level)
 		mActivateKey = true;
 	}
 
-	if(gDInput->keyPressed(DIK_SPACE))	{
+	if(gDInput->keyPressed(DIK_SPACE) && mAmmo > 0)	{
 		Bullet tmpBullet(mX, mY, 10, 10, faceDir, 50, 1, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
 		mBulletList.push_back(tmpBullet);
+		mAmmo--;
 	}
 
 	/* update bullet list */
@@ -147,7 +152,7 @@ bool Player::update(double dt, Level *Level)
 
 void Player::draw(void)
 {
-	// draw animation
+	/* draw animation */
 	RECT playerRect;//= getRect();	
 	playerRect.left = mDrawX - mWidth/2;
 	playerRect.right = mDrawX + mWidth/2;
@@ -155,6 +160,26 @@ void Player::draw(void)
 	playerRect.bottom = mDrawY + mHeight/2;
 	
 	gGraphics->BlitAnimation(playerTexture, playerRect, 0xFFFFFFFF, 0, 0, frame, 0.0f, faceDir);
+
+	/* draw the gun */
+	if(mAmmo > 0)
+	{
+		RECT r;
+
+		r.top = getY() + mShape.getAABB().bottom / 2;
+		r.bottom = getY() + mShape.getAABB().bottom;
+
+		if(faceDir == RIGHT)	{	
+			r.left = getX() + mShape.getAABB().right / 2;
+			r.right = getX() + mShape.getAABB().right + 20;
+			gGraphics->BlitTexture(mRightGunTexture, r);	
+		}
+		else if(faceDir == LEFT)	{
+			r.left = getX() - 20;
+			r.right = getX() + mShape.getAABB().right / 2;
+			gGraphics->BlitTexture(mLeftGunTexture, r);	
+		}
+	}
 
 	// draw health
 	char buffer[256];
@@ -253,4 +278,9 @@ bool Player::getActivateKey(void)
 void Player::setActivateKey(bool b)
 {
 	mActivateKey = b;
+}
+
+void Player::lootGun(int ammo, int bulletType)
+{
+	mAmmo = ammo;
 }

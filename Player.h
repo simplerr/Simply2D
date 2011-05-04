@@ -58,6 +58,7 @@ public:
 	void setPrevWallJumpID(int id)	{prevWallJumpID = id;};
 	void testWallJump(int id);
 	void damage(int dmg)	{ mHealth -= dmg;};
+	void lootGun(int ammo, int bulletType);
 public:
 	// lazyness
 	double mDX;
@@ -83,8 +84,12 @@ private:
 
 	bool mJumping;
 	bool mWallJumpOk;
+
+	int mAmmo;
  
 	IDirect3DTexture9* playerTexture;
+	IDirect3DTexture9* mLeftGunTexture;
+	IDirect3DTexture9* mRightGunTexture;
 private:
 	int prevWallJumpID;
 	int frame;

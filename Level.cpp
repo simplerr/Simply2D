@@ -213,8 +213,9 @@ void Level::loadLevel(char* levelFile)
 		}
 		else if(objectType == GUNPOWERUP)
 		{
-			fin >> xpos >> ypos >> width >> height >> textureSource;				
-			loadedObject = new GunPowerup(xpos, ypos, width, height, (char*)textureSource.c_str(), 5);
+			int ammo, type;
+			fin >> xpos >> ypos >> width >> height >> ammo >> type >> textureSource;				
+			loadedObject = new GunPowerup(xpos, ypos, width, height, (char*)textureSource.c_str(), ammo, type);
 		}
 		//loadedObject->setID(objectId);
 		addObject(loadedObject, objectId);
