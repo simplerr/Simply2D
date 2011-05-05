@@ -13,7 +13,7 @@
 #include "WindowHandler.h"
 #include "ActivateButton.h"
 #include "Gate.h"
-
+#include "GunPowerup.h"
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
@@ -72,7 +72,7 @@ void Editor::addPropertyPair(Property prop)
 
 void Editor::buildGUI(void)
 {
-	int OFFSET = 55;
+	int OFFSET = 75;
 
 	// should only allow input of 11 characters
 	tLevel = new TextBox(mWindowHandler, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
@@ -101,25 +101,25 @@ void Editor::buildGUI(void)
 	sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
 	iSpawnY->setValue("");
 
-	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 480 + OFFSET, 130, 215);	// shouldn't take height, should expand on addItem
+	listBox = new ListBox(mWindowHandler, LISTBOX_OBJECTTYPE, 76, 480 + OFFSET, 130, 235);	// shouldn't take height, should expand on addItem
 	listBox->connect(&Editor::messageHandler, this);
 
-	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 662 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	createButton->connect(&Editor::messageHandler, this);
 
-	deleteButton = new Button(mWindowHandler, BUTTON_DELETE, "Delete", 110, 642 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	deleteButton = new Button(mWindowHandler, BUTTON_DELETE, "Delete", 110, 662 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	deleteButton->connect(&Editor::messageHandler, this);
 
-	saveButton = new Button(mWindowHandler, BUTTON_SAVE, "Save", 110, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	saveButton = new Button(mWindowHandler, BUTTON_SAVE, "Save", 110, 692 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	saveButton->connect(&Editor::messageHandler, this);
 
-	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 672 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
+	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 692 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	bTryLevel->connect(&Editor::messageHandler, this);
 
-	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 612 + OFFSET, 130, 20, 20);
+	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 632 + OFFSET, 130, 20, 20);
 	textureDropBox->connect(&Editor::messageHandler, this);
 
-	pathCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SHOWPATH, "Show paths: ", 110, 697 + OFFSET, 16, 16);
+	pathCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SHOWPATH, "Show paths: ", 110, 717 + OFFSET, 16, 16);
 	pathCheckBox->connect(&Editor::messageHandler, this);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -132,6 +132,7 @@ void Editor::buildGUI(void)
 	listBox->addItem("Turret", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Button", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 	listBox->addItem("Gate", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
+	listBox->addItem("Gun Powerup", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 
 	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
 	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
@@ -449,7 +450,6 @@ void Editor::resizePlatform(DragRect drag)
 		if((mActiveObject->getWidth() >= 50 && dx < 0) || dx > 0)	{
 			activeObjectRect.right += dx;
 			mActiveObject->scale(RIGHT, dx, 0);		// drar man musen åt höger ökar bredden
-			mActiveObject->setXY(activeObjectRect.left + mActiveObject->getWidth()/2, mActiveObject->getY());
 		}
 		else
 			gMouse->move(-dx, 0);
@@ -459,7 +459,6 @@ void Editor::resizePlatform(DragRect drag)
 		if((mActiveObject->getHeight() >= 50 && dy > 0) || dy < 0)	{
 			activeObjectRect.top += dy;
 			mActiveObject->scale(UP, 0, -dy);
-			mActiveObject->setXY(mActiveObject->getX(), activeObjectRect.top + mActiveObject->getHeight()/2);
 		}
 		else
 			gMouse->move(0, -dy);
@@ -469,7 +468,6 @@ void Editor::resizePlatform(DragRect drag)
 		if((mActiveObject->getHeight() >= 50 && dy < 0) || dy > 0)	{
 			activeObjectRect.bottom += dy;
 			mActiveObject->scale(DOWN, 0, dy);
-			mActiveObject->setXY(mActiveObject->getX(), activeObjectRect.top + mActiveObject->getHeight()/2);
 		}
 		else
 			gMouse->move(0, -dy);
@@ -643,7 +641,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 				if(strcmp(buffer, "grass_platform") == 0)
 					mActiveObject->setTextureSource("misc\\textures\\grass_platform.bmp");
 				if(strcmp(buffer, "brick_platform") == 0)
-					mActiveObject->setTextureSource("misc\\textures\\brick_platform.bmp");
+					mActiveObject->setTextureSource("misc\\textures\\dirt_grass.bmp");
 			}
 			break;
 		}
@@ -655,7 +653,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 			{								
 					if(value == "Static Platform")
 					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\brick_platform.bmp");
+						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\dirt_grass.bmp");
 						mLevel->addObject(platform);
 					}
 					else if(value == "Moving Platform")
@@ -715,6 +713,11 @@ bool Editor::messageHandler(WindowID sender, string data)
 					{
 						Gate *gate = new Gate(300, 300, 40, 40, (char*)WARP_SOURCE.c_str(), 3);
 						mLevel->addObject(gate);
+					}
+					else if(value == "Gun Powerup")
+					{
+						GunPowerup *powerup = new GunPowerup(300, 300, 40, 40, (char*)MAP_GUN_SOURCE.c_str(), 5);
+						mLevel->addObject(powerup);
 					}
 					// aktiv plattform = den nya?
 			}

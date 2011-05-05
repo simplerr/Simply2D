@@ -455,3 +455,53 @@ void Graphics::BlitRect(RECT rect, D3DCOLOR fillColor)
 	  //Draw image
 	  gd3dDevice->DrawPrimitive (D3DPT_TRIANGLEFAN, 0, 2);
 }
+
+void Graphics::BlitTexture(IDirect3DTexture9 *texture, int x, int y, int width, int height,		// utan animation
+    D3DCOLOR vertexColour, float rotate)
+{
+  RECT rDest;
+  rDest.left = x;
+  rDest.right = x + width;
+  rDest.top = y;
+  rDest.bottom = y + height;
+	
+  gd3dDevice->SetVertexDeclaration(TextureVertex::Decl);
+  gd3dDevice->SetStreamSource(0, mVB_texture, 0, sizeof(TextureVertex));	
+
+  TextureVertex *vertices = 0;
+  mVB_texture->Lock(0, 0, (void**)&vertices, 0);
+
+  vertices[0].pos.x = (float) rDest.left;
+  vertices[0].pos.y = (float) rDest.top;
+  vertices[0].pos.z = 0.0f;
+  vertices[0].tex0.x = 0.0f;
+  vertices[0].tex0.y = 0.0f;
+
+  vertices[1].pos.x = (float) rDest.right;
+  vertices[1].pos.y = (float) rDest.top;
+  vertices[1].pos.z = 0.0f;
+  vertices[1].tex0.x = 1.0f;
+  vertices[1].tex0.y = 0.0f;
+
+  vertices[2].pos.x = (float) rDest.right;
+  vertices[2].pos.y = (float) rDest.bottom;
+  vertices[2].pos.z = 0.0f;
+  vertices[2].tex0.x = 1.0f;
+  vertices[2].tex0.y = 1.0f;
+
+  vertices[3].pos.x = (float) rDest.left;
+  vertices[3].pos.y = (float) rDest.bottom;
+  vertices[3].pos.z = 0.0f;
+  vertices[3].tex0.x = 0.0f;
+  vertices[3].tex0.y = 1.0f;
+
+  //Unlock the vertex buffer
+  mVB_texture->Unlock();
+
+  //Set texture
+  gd3dDevice->SetTexture (0, texture);
+
+  //Draw image
+  gd3dDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+  gd3dDevice->SetTexture (0, NULL);
+}

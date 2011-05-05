@@ -181,11 +181,6 @@ void Player::draw(void)
 		}
 	}
 
-	// draw health
-	char buffer[256];
-	sprintf(buffer, "Health: %i", mHealth);
-	gGraphics->drawText(buffer, 1180, 200);
-
 	/* draw bullet list */
 	std::list<Bullet>::iterator i = mBulletList.begin();
 	while( i != mBulletList.end())
@@ -193,6 +188,18 @@ void Player::draw(void)
 		i->draw();
 		i++;
 	}
+}
+
+void Player::drawGui(void)
+{
+	/* draw health */
+	char buffer[256];
+	sprintf(buffer, "Health: %i", mHealth);
+	gGraphics->drawText(buffer, 1250, 100);
+
+	/* draw ammo */
+	sprintf(buffer, "Ammo: %i", mAmmo);
+	gGraphics->drawText(buffer, 1250, 125);
 }
 
 RECT Player::getRect(void)

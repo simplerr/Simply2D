@@ -15,7 +15,7 @@ void PlayState::init(Game* game)
 	mLevel = new Level(mPlayer);
 
 	// load the background
-	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\city_bkgd_yellow.bmp"); 
+	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\cloud_bkgd.bmp"); 
 		
 	if(!mBkgdTexture)
 		MessageBox(0, "Couldn't background texture", 0, 0);
@@ -67,6 +67,7 @@ void PlayState::drawMain(void)
 void PlayState::drawGui(void)
 {
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	mLevel->drawGui();
 }
 
 void PlayState::drawBkgd()

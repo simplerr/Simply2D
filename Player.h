@@ -29,6 +29,7 @@ public:
 	~Player();
 	bool update(double dt, Level *Level);
 	void draw(void);
+	void drawGui(void);
 	//void setFrameType(void);
 
 	void onLostDevice(void);

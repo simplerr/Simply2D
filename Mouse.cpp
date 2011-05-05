@@ -82,7 +82,7 @@ void Mouse::drawMousePos(void)
 {
 	char buffer[256];
 	sprintf(buffer, "Mouse x: %i\nMouse y: %i", (int)mPos.x, (int)mPos.y);
-	gGraphics->drawText(buffer, GAME_WIDTH + 10	, 765); 
+	gGraphics->drawText(buffer, GAME_WIDTH + 10	, 805); 
 }
 
 void Mouse::setMousePos(int x, int y)

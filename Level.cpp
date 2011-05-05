@@ -240,9 +240,6 @@ void Level::loadLevel(char* levelFile)
 			}
 		}
 	}
-
-	GunPowerup *pow = new GunPowerup(500, 500, 50, 50, (char*)MAP_GUN_SOURCE.c_str(), 5);
-	addObject(pow);
 }
 
 void Level::addObject(Object *object, int id)
@@ -364,6 +361,17 @@ void Level::drawLevel(void)
 
 	if(mPlayer != NULL)
 		mPlayer->draw();
+}
+
+void Level::drawGui(void)
+{
+	gGraphics->BlitRect(1300, 135, 120, 80, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	mPlayer->drawGui();
+	
+	char buffer[256];
+	sprintf(buffer, "Time: %.3f", mPlayTime);
+	gGraphics->drawText(buffer, 1250, 150);
 }
 
 bool Level::collision(Player *player)

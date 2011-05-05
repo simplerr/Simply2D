@@ -45,6 +45,7 @@ public:
 	bool updateLevel(double dt);	
 	void drawLevel(void);
 	void drawEditorLevel(void);
+	void drawGui(void);
 
 	bool collision(Player *player);
 	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
