@@ -29,6 +29,7 @@ TextureHandler::TextureHandler()
 	left_gun = NULL;
 	right_gun = NULL;
 	map_gun = NULL;
+	gate = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -59,6 +60,7 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(left_gun);
 	ReleaseCOM(right_gun);
 	ReleaseCOM(map_gun);
+	ReleaseCOM(gate);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -475,6 +477,21 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return map_gun;
+		}
+	}
+	else if(fileName ==  GATE_SOURCE)
+	{
+		if(gate != NULL)
+			return gate;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &gate)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return gate;
 		}
 	}
 }

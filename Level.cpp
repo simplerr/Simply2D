@@ -121,7 +121,7 @@ void Level::loadLevel(char* levelFile)
 	// fix the Warp object
 	int tmpx, tmpy;
 	fin >> tmpx >> tmpy;
-	mLevelWarp = new Object(tmpx, tmpy, 64, 128, (char*)WARP_SOURCE.c_str(), LEVEL_WARP);
+	mLevelWarp = new Object(tmpx, tmpy, 100, 100, (char*)WARP_SOURCE.c_str(), LEVEL_WARP);
 	mLevelWarp->setResizeable(false);
 
 	fin >> mNextLevel;
@@ -268,7 +268,30 @@ void Level::deleteObject(int ID)
 		if(mObjectList[i]->getID() == ID)
 		{
 			delete mObjectList[i];		// viktigt att deleta innan!
-			itr = mObjectList.erase(itr);			
+			mObjectList[i] = NULL;
+			itr = mObjectList.erase(itr);	
+			break;
+		}
+		else	{
+			itr++;
+			i++;
+		}
+	}
+}
+
+// used to remove a single object, mostly by the editor
+void Level::removeObject(int ID)
+{
+	int i = 0;
+	vector<Object*>::iterator itr =  mObjectList.begin();
+	while(itr != mObjectList.end() && i < mObjectList.size())
+	{
+		if(mObjectList[i]->getID() == ID)
+		{
+			mObjectList[i]->onRemove();
+			delete mObjectList[i];		// viktigt att deleta innan!
+			mObjectList[i] = NULL;
+			itr = mObjectList.erase(itr);	
 			break;
 		}
 		else	{

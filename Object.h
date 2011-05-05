@@ -81,6 +81,8 @@ public:
 
 	void flipHorizontal(void);
 
+	virtual void onRemove(void) {};
+
 	virtual std::vector<Property> getProperties(void);
 	virtual void loadProperties(std::vector<Property> propertyList);
 

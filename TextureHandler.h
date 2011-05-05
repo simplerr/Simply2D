@@ -40,6 +40,7 @@ private:
 	IDirect3DTexture9* left_gun;
 	IDirect3DTexture9* right_gun;
 	IDirect3DTexture9* map_gun;
+	IDirect3DTexture9* gate;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

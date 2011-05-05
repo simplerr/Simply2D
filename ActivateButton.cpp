@@ -15,6 +15,8 @@ ActivateButton::ActivateButton(float x, float y, int width, int height, char *te
 	mGate = NULL;
 	mLevel = NULL;
 	mGateId = 99999;
+
+	mPressedTexture = gGraphics->loadObjectTexture((char*)ACTIVATEBUTTON_PRESSED_SOURCE.c_str());
 }
 
 ActivateButton::~ActivateButton()
@@ -24,8 +26,10 @@ ActivateButton::~ActivateButton()
 
 void ActivateButton::update(float dt)
 {
+	static bool deleted;
 	if(mGate != NULL)
 	{
+		deleted = false;
 		if(mPlayer->getActivateKey())
 		{
 			// inside activation rect?
@@ -38,12 +42,25 @@ void ActivateButton::update(float dt)
 			}
 		}
 	}
+	else	{
+		if(!deleted)
+			mGateId = 9999;
+	}
 }
 
 void ActivateButton::draw(void)
 {
-	Object::draw();
-	gGraphics->BlitRect(mActivationRect);
+	if(mGate != NULL)	{
+		if(!mGate->getOpen())
+			Object::draw();
+		else
+			gGraphics->drawShape(*getShape(), mPressedTexture);
+	}
+	else
+		Object::draw();
+
+
+	//gGraphics->BlitRect(mActivationRect);
 }
 
 void ActivateButton::saveToFile(std::ofstream *fout)
@@ -143,6 +160,8 @@ bool ActivateButton::insideActivateArea(void)
 void ActivateButton::connectGate(Gate *gate)
 {
 	mGate = gate;
+	if(mGate != NULL)
+		mGate->setActivateButton(this);
 }
 
 void ActivateButton::setGateId(int id)

@@ -38,6 +38,7 @@ private:
 	RECT mActivationRect;
 	Gate *mGate;
 	int mGateId;
+	IDirect3DTexture9* mPressedTexture;
 };
 
 #endif

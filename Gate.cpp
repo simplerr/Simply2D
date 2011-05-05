@@ -1,4 +1,5 @@
 #include "Gate.h"
+#include "ActivateButton.h"
 
 Gate::Gate(float x, float y, int width, int height, char *textureSource, float openTime)
 	: Object(x, y, width, height, textureSource, GATE)
@@ -7,6 +8,7 @@ Gate::Gate(float x, float y, int width, int height, char *textureSource, float o
 	mOpenTime = openTime;
 	mTimeElapsed = 0;
 	setResizeable(false);
+	mActivateButton = NULL;
 }
 
 Gate::~Gate()
@@ -100,5 +102,23 @@ void Gate::activate(void)
 		// close the ActivateButton
 		move(0, -2000);	// hack
 		mOpen = false;
+	}
+}
+
+bool Gate::getOpen(void)
+{
+	return mOpen;
+}
+
+void Gate::setActivateButton(ActivateButton *button)
+{
+	mActivateButton = button;
+}
+
+void Gate::onRemove(void) 
+{
+	if(mActivateButton != NULL)	{
+		mActivateButton->setGateId(9999);
+		mActivateButton->connectGate(NULL);
 	}
 }

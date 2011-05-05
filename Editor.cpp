@@ -680,17 +680,17 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Teleport")
 					{
-						Teleport *teleport = new Teleport(200, 500, 600, 300, 50, 100, "misc\\textures\\tpenter.bmp", "misc\\textures\\tpdest.bmp");
+						Teleport *teleport = new Teleport(200, 500, 600, 300, 50, 50, (char*)TP_ENTER.c_str(), (char*)TP_DEST.c_str());
 						mLevel->addObject(teleport);
 					}
 					else if(value == "Trampoline")
 					{
-						Trampoline *trampoline = new Trampoline(300, 300, 32, 32, 100, "misc\\textures\\trampoline.bmp");
+						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 100, "misc\\textures\\trampoline.bmp");
 						mLevel->addObject(trampoline);
 					}
 					else if(value == "Walljump")
 					{
-						WallJump *walljump = new WallJump(300, 300, 50, 50, "misc\\textures\\walljump.bmp");
+						WallJump *walljump = new WallJump(300, 300, 60, 60, "misc\\textures\\walljump.bmp");
 						mLevel->addObject(walljump);
 					}
 					else if(value == "Spike")
@@ -705,13 +705,13 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Button")
 					{
-						ActivateButton *button = new ActivateButton(300, 300, 40, 40, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
+						ActivateButton *button = new ActivateButton(300, 300, 30, 60, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
 						button->setLevel(mLevel);
 						mLevel->addObject(button);
 					}
 					else if(value == "Gate")
 					{
-						Gate *gate = new Gate(300, 300, 40, 40, (char*)WARP_SOURCE.c_str(), 3);
+						Gate *gate = new Gate(300, 300, 40, 60, (char*)GATE_SOURCE.c_str(), 3);
 						mLevel->addObject(gate);
 					}
 					else if(value == "Gun Powerup")
@@ -726,7 +726,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_DELETE:
 		{		
 			if(mActiveObject != NULL && mActiveObject->getType() != LEVEL_WARP)	{
-					mLevel->deleteObject(mActiveObject->getID());	// ska lägga till för dynamic också!
+					mLevel->removeObject(mActiveObject->getID());	// ska lägga till för dynamic också!
 
 				resetInputBoxes();
 				mActiveObject = NULL;

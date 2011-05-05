@@ -40,6 +40,7 @@ public:
 
 	void addObject(Object *object, int id = 0);
 	void deleteObject(int ID);
+	void removeObject(int ID);
 	Object *getObjectAt(POINT mpos);
 
 	bool updateLevel(double dt);	
