@@ -321,7 +321,7 @@ bool Level::updateLevel(double dt)
 			deleteObject(mObjectList[i]->getID());
 
 		/* activate pressed buttons - hack */
-		if(mObjectList[i]->getType() == ACTIVATE_BUTTON)	{
+		else if(mObjectList[i]->getType() == ACTIVATE_BUTTON)	{
 			if(mPlayer->getActivateKey())	{
 				ActivateButton *button = dynamic_cast<ActivateButton*>(mObjectList[i]);
 				if(button->insideActivateArea())
