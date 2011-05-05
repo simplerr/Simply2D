@@ -12,6 +12,9 @@ Bullet::Bullet(float x, float y, int width, int height, direction dir, int damag
 	mSpeed = speed;
 	mErase = false;
 	mTravelled = 0;
+	setResizeable(false);
+
+	mRightBullet = gGraphics->loadTexture("misc\\textures\\right_bullet.bmp");
 }
 
 Bullet::~Bullet()
@@ -36,6 +39,12 @@ void Bullet::update(float dt)
 void Bullet::draw(void)
 {
 	Object::draw();
+
+
+	if(mDir == LEFT)
+		Object::draw();
+	else
+		gGraphics->drawShape(*getShape(), mRightBullet);
 }
 
 void Bullet::onObjectCollision(Object *object)

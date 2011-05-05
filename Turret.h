@@ -35,4 +35,9 @@ private:
 	float mFireRate;
 	float mTimeElapsed;
 	int mHealth;
+
+	bool mFireEffect;
+	double mFireTime;
+
+	IDirect3DTexture9* mBulletFire;
 };

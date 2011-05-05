@@ -11,26 +11,43 @@ Turret::Turret(float x, float y, int width, int height, char *textureSource, int
 	mTimeElapsed = 0;
 	setResizeable(false);
 	mHealth = health;
+
+	mFireEffect = false;
+	mFireTime = 0;
+	mBulletFire = gGraphics->loadTexture("misc\\textures\\bullet_fire.bmp");
 }
 
 Turret::~Turret()
 {
 	// dtor
+	ReleaseCOM(mBulletFire);
 }
 
 void Turret::update(float dt)
 {
+	/* calculate the fire effect */
+	if(mFireEffect)	{
+		if(mFireTime > .1)	{
+			mFireEffect = false;
+		}
+		else	{
+			mFireTime += dt;
+		}
+	}
+
 	/* add bullet to list if x time has passed */
 	mTimeElapsed += dt;
 
 	if(mTimeElapsed >= mFireRate)	{
-		Bullet tmpBullet(getX(), getY(), 10, 10, mDirection, mDamage, mBulletSpeed, mBulletLifelength, ENEMIES, (char*)BULLET_SOURCE.c_str());
+		Bullet tmpBullet(getX()-10, getY(), 32, 16, mDirection, mDamage, mBulletSpeed, mBulletLifelength, ENEMIES, (char*)BULLET_SOURCE.c_str());
 
 		if(mDirection == RIGHT)
-			tmpBullet.setXY(getX() + getWidth(), tmpBullet.getY());
+			tmpBullet.setXY(getX() + getWidth()-10, tmpBullet.getY());
 		
 		mBulletList.push_back(tmpBullet);
 		mTimeElapsed = 0;
+		mFireEffect = true;
+		mFireTime = 0;
 	}
 
 	/* update bullet list */
@@ -62,6 +79,17 @@ void Turret::update(float dt)
 void Turret::draw(void)
 {
 	Object::draw();
+
+	/* draw the bullet explosion */
+	if(mFireEffect)	
+	{
+		if(mDirection == LEFT)	{
+			gGraphics->BlitTexture(mBulletFire, getX(), getY(), 20, 20);
+		}
+		else if(mDirection == RIGHT)	{
+			gGraphics->BlitTexture(mBulletFire, getX()+getWidth()-10, getY(), 20, 20);
+		}
+	}
 
 	/* draw bullet list */
 	std::list<Bullet>::iterator i = mBulletList.begin();

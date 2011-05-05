@@ -29,13 +29,18 @@ Player::Player(string filename, int width, int height)
 	mActivateKey = false;
 
 	mAmmo = 0;
+	mFireEffect = false;
+	mFireTime = 0;
+
 	mRightGunTexture = gGraphics->loadObjectTexture((char*)RIGHT_GUN_SOURCE.c_str());
 	mLeftGunTexture = gGraphics->loadObjectTexture((char*)LEFT_GUN_SOURCE.c_str());
+	mBulletFire = gGraphics->loadTexture("misc\\textures\\bullet_fire.bmp");
 }
 
 Player::~Player()
 {
 	// dtor
+	ReleaseCOM(mBulletFire);
 }
 
 void Player::onLostDevice()
@@ -64,6 +69,15 @@ bool Player::update(double dt, Level *Level)
 	}
 	else
 		dtsum += dt;
+
+	if(mFireEffect)	{
+		if(mFireTime > .1)	{
+			mFireEffect = false;
+		}
+		else	{
+			mFireTime += dt;
+		}
+	}
 
 	if(frame > 3 || !moving)
 		frame = 0;
@@ -119,9 +133,15 @@ bool Player::update(double dt, Level *Level)
 	}
 
 	if(gDInput->keyPressed(DIK_SPACE) && mAmmo > 0)	{
-		Bullet tmpBullet(mX, mY, 10, 10, faceDir, 50, 1, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
+		Bullet tmpBullet(mX-64, mY-5, 32, 16, faceDir, 50, .5, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
+
+		if(faceDir == RIGHT)
+			tmpBullet.move(95, 0);
+
 		mBulletList.push_back(tmpBullet);
 		mAmmo--;
+		mFireEffect = true;
+		mFireTime = 0;
 	}
 
 	/* update bullet list */
@@ -181,6 +201,17 @@ void Player::draw(void)
 		}
 	}
 
+	/* draw the bullet explosion */
+	if(mFireEffect)	
+	{
+		if(faceDir == LEFT)	{
+			gGraphics->BlitTexture(mBulletFire, getX()-32, getY()+10, 20, 20);
+			//mJustFired = false;
+		}
+		else if(faceDir == RIGHT)	{
+			gGraphics->BlitTexture(mBulletFire, getX()+16+mShape.getAABB().right, getY()+10, 20, 20);
+		}
+	}
 	/* draw bullet list */
 	std::list<Bullet>::iterator i = mBulletList.begin();
 	while( i != mBulletList.end())

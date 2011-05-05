@@ -87,10 +87,13 @@ private:
 	bool mWallJumpOk;
 
 	int mAmmo;
+	bool mFireEffect;
+	double mFireTime;
  
 	IDirect3DTexture9* playerTexture;
 	IDirect3DTexture9* mLeftGunTexture;
 	IDirect3DTexture9* mRightGunTexture;
+	IDirect3DTexture9* mBulletFire;
 private:
 	int prevWallJumpID;
 	int frame;

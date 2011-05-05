@@ -17,15 +17,15 @@ void LevelCompletedState::init(Game* game)
 	mWindowHandler = new WindowHandler(700, 450, 600, 400);
 	mWindowHandler->setBackground(LEVEL_COMPLETED_SOURCE);
 
-	mCampaignNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true);
+	mCampaignNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, false, "misc\\textures\\next.bmp", "misc\\textures\\next_hoover.bmp");
 	mCampaignNextButton->connect(&LevelCompletedState::messageHandler, this);
 
-	mCustomNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true, (char*)GRAY_BUTTON_NORMAL_SOURCE.c_str(), (char*)GRAY_BUTTON_HOOVER_SOURCE.c_str());
+	mCustomNextButton = new Button(mWindowHandler, BUTTON_NEXTLEVEL, "Next", 500, 350, 100, 45, true, "misc\\textures\\next_gray.bmp", "misc\\textures\\next_gray_hoover.bmp");
 
-	mAgainButton = new Button(mWindowHandler, BUTTON_AGAIN, "Again", 100, 350, 100, 45, true);
+	mAgainButton = new Button(mWindowHandler, BUTTON_AGAIN, "Again", 100, 350, 100, 45, true, "misc\\textures\\again.bmp", "misc\\textures\\again_hoover.bmp");
 	mAgainButton->connect(&LevelCompletedState::messageHandler, this);
 
-	mMenuButton = new Button(mWindowHandler, BUTTON_MENU, "Menu", 300, 350, 100, 45, true);
+	mMenuButton = new Button(mWindowHandler, BUTTON_MENU, "Menu", 300, 350, 100, 45, true , "misc\\textures\\menu.bmp", "misc\\textures\\menu_hoover.bmp");
 	mMenuButton->connect(&LevelCompletedState::messageHandler, this);
 
 	// load the background

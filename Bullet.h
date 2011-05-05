@@ -30,6 +30,7 @@ private:
 	direction mDir;
 	BulletOwner mOwner;
 	bool mErase;
+	IDirect3DTexture9 *mRightBullet;
 };
 
 #endif
