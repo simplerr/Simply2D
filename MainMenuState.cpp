@@ -18,16 +18,17 @@ void MainMenuState::init(Game* game)
 	setGame(game);
 
 	// create the menu
-	mStartMenu = new Menu("StartMenu", MOUSE, false, 4, 4);
+	mStartMenu = new Menu("MainMenu", MOUSE, VER, 1, false, 4, 4);
 
-	mStartMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
-	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_onselect.bmp");
-	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\play_onselect.bmp");	
-	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_onselect.bmp");
-	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_onselect.bmp");
-	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_onselect.bmp");
-	mStartMenu->addMenuItem("Stats", "misc\\textures\\warp.bmp", "misc\\textures\\quit_onselect.bmp");
-	mStartMenu->buildMenu();
+	mStartMenu->setMenuBackground("misc\\textures\\menu_bkgd.bmp", 700, 450, 128, 350);
+	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_hoover.bmp");
+	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\custom_hoover.bmp");	
+	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_hoover.bmp");
+	mStartMenu->addMenuItem("Stats", "misc\\textures\\stats.bmp", "misc\\textures\\stats_hoover.bmp");
+	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_hoover.bmp");
+	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_hoover.bmp");
+	
+	mStartMenu->buildMenu2();
 	mStartMenu->connect(&MainMenuState::menuHandler, this);
 }
 

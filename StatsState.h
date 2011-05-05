@@ -29,6 +29,8 @@ private:
 	static StatsState mStatsState;
 	CampaignProgress mProgress;
 
+	IDirect3DTexture9* mBackground;
+
 	int mTableX;
 	int mTableY;
 };

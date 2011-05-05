@@ -28,8 +28,8 @@ void CustomLevelState::init(Game* game)
 
 	// create the menu
 	//mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
-	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, VER, 5, true, 4, 4);
-	mCustomLevelMenu->setMenuBackground("misc\\textures\\menubackground.bmp", 700, 450, 128, 256);
+	mCustomLevelMenu = new Menu("CustemLevelMenu", MOUSE, VER, 2, true, 4, 4);
+	mCustomLevelMenu->setMenuBackground("misc\\textures\\menu_bkgd.bmp", 700, 450, 256, 350);
 
 	// get the files in the map folder
 	std::vector<string> levelList = getLevels();
@@ -91,6 +91,7 @@ void CustomLevelState::updateMenu(void)
 
 void CustomLevelState::drawMain(void)
 {
+	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 	mCustomLevelMenu->draw();
 }
 

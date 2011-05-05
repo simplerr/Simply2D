@@ -34,7 +34,6 @@ void Teleport::draw(void)
 {
 	// draw the enter sprite
 	Object::draw();
-
 }
 
 void Teleport::drawEditorFX(void)
