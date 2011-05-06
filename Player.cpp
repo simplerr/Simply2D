@@ -27,6 +27,7 @@ Player::Player(string filename, int width, int height)
 	prevWallJumpID = 1337; 
 	mWallJumpOk = false;
 	mActivateKey = false;
+	mHittedCeiling = false;
 
 	mAmmo = 0;
 	mFireEffect = false;
@@ -102,10 +103,11 @@ bool Player::update(double dt, Level *Level)
 	if(mJumping)
 	{
 		// falls when max height is reached
-		if(dJump <= -MAX_HEIGHT)	{
+		if(dJump <= -MAX_HEIGHT || mHittedCeiling)	{
 			mFalling = true;
 			mJumping = false;
 			dJump = 0;
+			mHittedCeiling = false;
 		}
 		else {
 			mDY = -(double)JUMPSPEED*dt;

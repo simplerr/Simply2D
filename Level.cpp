@@ -428,6 +428,10 @@ bool Level::collision(Player *player)
 				// could use a if statement, but not neccessary ( if prev != 1337 )
 				player->setPrevWallJumpID(1337);
 			}
+			else if(mtv.pushY > 0)	{
+				/* hitted a roof */
+				player->hittedCeiling(true);
+			}
 		}	
 
 		

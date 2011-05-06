@@ -60,6 +60,8 @@ public:
 	void testWallJump(int id);
 	void damage(int dmg)	{ mHealth -= dmg;};
 	void lootGun(int ammo, int bulletType);
+
+	void hittedCeiling(bool b) {mHittedCeiling = b;}
 public:
 	// lazyness
 	double mDX;
@@ -76,6 +78,7 @@ private:
 	int mHealth;
 	int mDamage;
 	bool mActivateKey;
+	bool mHittedCeiling;
 
 	const int JUMP_HEIGHT;
 	int MAX_HEIGHT;
