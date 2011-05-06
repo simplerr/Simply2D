@@ -33,6 +33,9 @@ Player::Player(string filename, int width, int height)
 	mFireEffect = false;
 	mFireTime = 0;
 
+	mSpeedY = 0;
+	mMaxJumpSpeed = .8;
+
 	mRightGunTexture = gGraphics->loadObjectTexture((char*)RIGHT_GUN_SOURCE.c_str());
 	mLeftGunTexture = gGraphics->loadObjectTexture((char*)LEFT_GUN_SOURCE.c_str());
 	mBulletFire = gGraphics->loadTexture("misc\\textures\\bullet_fire.bmp");
@@ -62,6 +65,15 @@ bool Player::update(double dt, Level *Level)
 	RECT tmpRect;
 	double tmpX = mX;
 	double tmpY = mY;
+	
+	if(mFalling)	{
+		if(mSpeedY < .8)
+			mSpeedY += .002;
+		else
+			mSpeedY += .00005;
+	}
+	//else
+		//mSpeedY = 0;
 
 	// update frame
 	if(dtsum >= .08)	{
@@ -86,36 +98,31 @@ bool Player::update(double dt, Level *Level)
 	moving = false;
 
 	mDX = 0;
-	mDY = 0;
-
-	// fall
-	mDY = dt*FALLSPEED;
-	
 	if(gDInput->keyPressed(DIK_W))	{
-		if(mOnGround)
-			jump(JUMP_HEIGHT);//jumped = true;
+		if(mOnGround)	{
+			jump(.002, .8);
+			//mSpeedY = -mMaxJumpSpeed;
+		}
 		else if(mWallJumpOk)	{
-			jump(JUMP_HEIGHT);
+			jump(.002, .8);
 			mWallJumpOk = false;
 		}
 	}
 
 	if(mJumping)
 	{
-		// falls when max height is reached
-		if(dJump <= -MAX_HEIGHT || mHittedCeiling)	{
+		/* jumps untill the speed is 0 */
+		if(mSpeedY < 0)	{
+			mSpeedY += mAccel;
+		}
+		
+		if(mSpeedY >= 0 || mHittedCeiling)	{
 			mFalling = true;
 			mJumping = false;
-			dJump = 0;
+			mSpeedY = 0;
 			mHittedCeiling = false;
 		}
-		else {
-			mDY = -(double)JUMPSPEED*dt;
-			dJump += mDY;
-		}		
 	}
-	else
-		dJump = 0;
 
 	/* strafing */
 	if(gDInput->keyDown(DIK_A))	{
@@ -162,12 +169,15 @@ bool Player::update(double dt, Level *Level)
 	}
 	
 	if(mShape.origin.x >= 616)
-		gCameraManager->gameCamera()->addMovement(mDX, 0);
-
-	move(mDX, mDY);
+		gCameraManager->gameCamera()->addMovement(mDX, 0);	
 	
-	if(!mOnGround)
+	if(!mOnGround)	{
 		frame = 4;
+	}
+	//else
+		//mSpeedY = 0;
+
+	move(mDX, mSpeedY);
 
 	return true;//Level->collision(this);
 }
@@ -233,6 +243,10 @@ void Player::drawGui(void)
 	/* draw ammo */
 	sprintf(buffer, "Ammo: %i", mAmmo);
 	gGraphics->drawText(buffer, 1250, 125);
+	
+	/* draw y speed */
+	sprintf(buffer, "YSpeed: %f", mSpeedY);
+	gGraphics->drawText(buffer, 1250, 175);
 }
 
 RECT Player::getRect(void)
@@ -290,10 +304,12 @@ void Player::setXY(float x, float y)
 	mDrawY = mY;
 }
 
-void Player::jump(int height)
+void Player::jump(double accel, double maxSpeed)
 {
 	mJumping = true;
-	MAX_HEIGHT = height;
+	mAccel = accel;
+	mMaxJumpSpeed = maxSpeed;
+	mSpeedY = -mMaxJumpSpeed;
 }
 
 void Player::testWallJump(int id)
@@ -323,4 +339,24 @@ void Player::setActivateKey(bool b)
 void Player::lootGun(int ammo, int bulletType)
 {
 	mAmmo = ammo;
+}
+
+void Player::setSpeedY(double speed)
+{
+	mSpeedY = speed;
+}
+
+void Player::setSpeedX(double speed)
+{
+	// later
+}
+
+void Player::onGround(bool b)
+{
+	mOnGround = b;
+}
+
+void Player::setAccel(double accel)
+{
+	mAccel = accel;
 }

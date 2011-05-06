@@ -422,11 +422,14 @@ bool Level::collision(Player *player)
 			
 			if(mtv.pushY < 0)	{
 				// trampoline?
-				if(mObjectList[i]->getType() != TRAMPOLINE)	
+				if(mObjectList[i]->getType() != TRAMPOLINE)		{
 					onGround = true;
+					player->setSpeedY(0);
+				}
 
 				// could use a if statement, but not neccessary ( if prev != 1337 )
 				player->setPrevWallJumpID(1337);
+				
 			}
 			else if(mtv.pushY > 0)	{
 				/* hitted a roof */

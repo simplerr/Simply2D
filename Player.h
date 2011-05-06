@@ -40,8 +40,8 @@ public:
 	//void setOnGround(bool b) {mOnGround = b;};
 
 	void setFalling(bool b) {mFalling = b;}
-	void onGround(bool b)	{mOnGround = b;}
-	void jump(int height);
+	void onGround(bool b);
+	void jump(double accel, double maxSpeed);
 
 	void setXY(float x, float y);
 	RECT getRect(void);
@@ -62,6 +62,11 @@ public:
 	void lootGun(int ammo, int bulletType);
 
 	void hittedCeiling(bool b) {mHittedCeiling = b;}
+
+	void setSpeedY(double speed);
+	void setSpeedX(double speed);
+
+	void setAccel(double accel);
 public:
 	// lazyness
 	double mDX;
@@ -92,6 +97,10 @@ private:
 	int mAmmo;
 	bool mFireEffect;
 	double mFireTime;
+
+	double mSpeedY;
+	double mAccel;
+	double mMaxJumpSpeed;
  
 	IDirect3DTexture9* playerTexture;
 	IDirect3DTexture9* mLeftGunTexture;

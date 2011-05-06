@@ -36,7 +36,7 @@ void Trampoline::onPlayerCollision(Player *player, MTV mtv)
 	// boost if true
 	if(mtv.pushY < 0)
 	{
-		player->jump(mBoostHeight);
+		player->jump(.002, 2);
 	}
 		
 }
