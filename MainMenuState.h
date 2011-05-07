@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Menu.h"
+#include "C:\Program Files (x86)\irrKlang-1.3.0\include\irrKlang.h"
 
 class MainMenuState : public GameState
 {
@@ -31,7 +32,7 @@ protected:
 private:
 	static MainMenuState mMainMenuState;
 
-	Menu *mStartMenu;	
+	Menu *mStartMenu;
 };
 
 #endif

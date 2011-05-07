@@ -364,6 +364,7 @@ bool Level::updateLevel(double dt)
 		else if(mLevelType == TEST)	{
 			TestState::Instance()->changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(current);
+			EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
 		}
 	}
 
@@ -498,6 +499,7 @@ bool Level::collision(Player *player)
 		else	{
 			TestState::Instance()->changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(current);
+			EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
 		}
 
 		/* ADD TEST TYPE!!! */

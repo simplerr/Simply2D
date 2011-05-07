@@ -1,5 +1,8 @@
 #include "Spike.h"
 #include "Player.h"
+#include "Sound.h"
+
+extern Sound *gSound;
 
 Spike::Spike(float x, float y, int width, int height, char *textureSource, int damage)
 	:Object(x, y, width, height, textureSource, SPIKE, TRIANGLE)
@@ -41,6 +44,8 @@ void Spike::scale(direction side, int dwidth, int dheight)
 void Spike::onPlayerCollision(Player *player, MTV mtv)
 {
 	player->damage(5000);
+	gSound->mEngine->play2D("misc\\sound\\spiked.wav");
+
 }
 
 std::vector<Property> Spike::getProperties(void)

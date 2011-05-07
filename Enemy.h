@@ -41,6 +41,7 @@ private:
 	bool alive;
 	double cooldown;
 	double dtsum;
+	bool playsDeathSound;
 private:
 	int frame;	// maybe local static?
 	direction faceDir;

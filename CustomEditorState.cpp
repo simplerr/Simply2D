@@ -81,6 +81,7 @@ bool CustomEditorState::menuHandler(std::string name)
 		{
 			changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(tmp);
+			EditorState::Instance()->setMusic(getMusic());
 
 			return false;
 		}

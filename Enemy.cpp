@@ -2,7 +2,10 @@
 #include "Player.h"
 #include "Events.h"
 #include "Level.h"
+#include "Sound.h"
 using namespace std;
+
+extern Sound *gSound;
 
 Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed, int health, int dmg)
 	: MovingObject(NORMAL_ENEMY, x, y, width, height, textureSource,  startPos, endPos, moveType, speed)
@@ -17,6 +20,7 @@ Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS s
 	dtsum = 0;
 	cooldown = 0;
 	setResizeable(false);
+	playsDeathSound = false;
 }
 
 Enemy::~Enemy()
@@ -92,11 +96,16 @@ void Enemy::onPlayerCollision(Player *player, MTV mtv)
 	if(mtv.pushY < 0)
 	{
 		this->damage(100);
+		if(!playsDeathSound)	{
+			gSound->mEngine->play2D("misc\\sound\\head_jump.wav");
+			playsDeathSound = true;
+		}
 	}
 	else
 	{
 		player->damage(mDamage);
 		attackReady = false;
+		gSound->mEngine->play2D("misc\\sound\\enemy_dmg.wav");
 	}
 }
 

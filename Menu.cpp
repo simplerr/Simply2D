@@ -1,7 +1,9 @@
 #include "Menu.h"
 #include "Mouse.h"
+#include "Sound.h"
 
 extern Mouse* gMouse;
+extern Sound* gSound;
 
 Menu::Menu(std::string menuName, navigationType a_navigation, bool useFonts, int itemAmount, int a_spacing)
 {
@@ -187,6 +189,7 @@ void Menu::update(POINT mousePos)
 			{
 				i->state = SELECTED;
 				if(gMouse->buttonPressed(LEFTBUTTON) && i->pressable)	{
+					gSound->mEngine->play2D("misc\\sound\\menu_click.wav");
 					if(!callback(i->itemName))
 						break;
 				}		

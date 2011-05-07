@@ -74,8 +74,9 @@ void CampaignLevelState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if( wParam == VK_ESCAPE )
+			if( wParam == VK_ESCAPE )	{
 				changeState(MainMenuState::Instance());
+			}
 		break;
 	}
 }
@@ -150,6 +151,8 @@ bool CampaignLevelState::menuHandler(std::string name)
 	string tmp = "levels\\campaign\\";
 	tmp.append(name);
 	tmp.append(".txt");
+
+	stopMusic();
 
 	changeState(PlayState::Instance());
 	PlayState::Instance()->setLevel(tmp);

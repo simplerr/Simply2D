@@ -1,8 +1,11 @@
 #include "PlayState.h"
 #include "CameraManager.h"
 #include "MainMenuState.h"
+#include "Sound.h"
+
 
 extern CameraManager* gCameraManager;
+extern Sound* gSound;
 
 PlayState PlayState::mPlayState;
 
@@ -19,14 +22,15 @@ void PlayState::init(Game* game)
 		
 	if(!mBkgdTexture)
 		MessageBox(0, "Couldn't background texture", 0, 0);
+
+	setMusic(gSound->mEngine->play2D("misc\\sound\\play_loop.wav", true, false, true));
 }
 
 void PlayState::cleanup()
 {
+	stopMusic();
 	delete mPlayer;
-	mPlayer = NULL;
 	delete mLevel;
-	mLevel = NULL;
 
 	ReleaseCOM(mBkgdTexture);
 }
@@ -46,8 +50,10 @@ void PlayState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if( wParam == VK_ESCAPE )
+			if( wParam == VK_ESCAPE )	{
 				changeState(MainMenuState::Instance());
+				MainMenuState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+			}
 		break;
 	}
 }

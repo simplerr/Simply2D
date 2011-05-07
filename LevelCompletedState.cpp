@@ -3,9 +3,11 @@
 #include "MainMenuState.h"
 #include "TestState.h"
 #include "WindowHandler.h"
+#include "Sound.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse*		  gMouse;
+extern Sound* gSound;
 
 LevelCompletedState LevelCompletedState::mLevelCompletedState;
 
@@ -56,8 +58,10 @@ void LevelCompletedState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch( msg )
 	{
 	case WM_KEYDOWN:			
-		if(wParam == VK_ESCAPE)
+		if(wParam == VK_ESCAPE)	{
 			changeState(MainMenuState::Instance());
+			MainMenuState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+		}
 		break;
 	}
 }
@@ -119,6 +123,7 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 	case BUTTON_MENU:
 		{
 			changeState(MainMenuState::Instance());
+			MainMenuState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
 			return false;
 		}
 	case BUTTON_AGAIN:

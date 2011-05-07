@@ -25,7 +25,7 @@
 #include "LevelCompletedState.h"
 #include "StatsState.h"
 #include "C:\Users\Axel\Documents\Visual Studio 2010\Memory_and_Exception_Trace\Stackwalker.h"
-
+#include "Sound.h"
 
 //#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -36,8 +36,7 @@ using namespace std;
 // couldn't lie in d3dApp.cpp, no reason why not
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
-
-
+extern Sound* gSound;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -74,6 +73,8 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 
 	gGraphics = new Graphics("bulle");
 
+	gSound = new Sound();
+
 	// game and gui cameras!
 	gCameraManager = new CameraManager();
 
@@ -82,18 +83,18 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 	changeState(MainMenuState::Instance());
 	
 	onResetDevice();
-
-	//char *a = new char[200];
 }
 
 Game::~Game()
 {
 	mGameState->cleanup();
+	mGameState->shutdown();
 
 	delete mGfxStats;
 	delete gMouse;
 	delete gGraphics;
 	delete gCameraManager;
+	delete gSound;
 
 	// print the memory leak file
 	DeInitAllocCheck();

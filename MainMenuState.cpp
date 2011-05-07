@@ -6,9 +6,11 @@
 #include "CustomEditorState.h"
 #include "CampaignLevelState.h"
 #include "StatsState.h"
+#include "Sound.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
+extern Sound* gSound;
 
 MainMenuState MainMenuState::mMainMenuState;
 
@@ -30,11 +32,17 @@ void MainMenuState::init(Game* game)
 	
 	mStartMenu->buildMenu2();
 	mStartMenu->connect(&MainMenuState::menuHandler, this);
+
+	if(getMusic() == NULL)	{
+		setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+	}
 }
 
 void MainMenuState::cleanup()
 {
 	delete mStartMenu;
+	//mMusic->stop();
+	//mMusic->drop();
 }
 
 void MainMenuState::pause()
@@ -81,17 +89,19 @@ bool MainMenuState::menuHandler(std::string name)
 	if(name == "Play")
 	{
 		changeState(CampaignLevelState::Instance());
-		//changeState(PlayState::Instance());
+		CampaignLevelState::Instance()->setMusic(getMusic());
 		return false;
 	}
 	else if(name == "Editor")
 	{
 		changeState(CustomEditorState::Instance());
+		CustomEditorState::Instance()->setMusic(getMusic());
 		return false;
 	}	
 	else if(name == "Custom")
 	{
 		changeState(CustomLevelState::Instance());
+		CustomLevelState::Instance()->setMusic(getMusic());
 		return false;
 	}
 	else if(name == "Quit")
@@ -101,6 +111,7 @@ bool MainMenuState::menuHandler(std::string name)
 	else if(name == "Stats")
 	{
 		changeState(StatsState::Instance());
+		StatsState::Instance()->setMusic(getMusic());
 		return false;
 	}
 	

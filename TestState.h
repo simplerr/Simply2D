@@ -3,6 +3,9 @@
 
 #include "PlayState.h"
 #include "EditorState.h"
+#include "Sound.h"
+
+extern Sound* gSound;
 
 class TestState : public PlayState
 {
@@ -16,6 +19,7 @@ public:
 					string levelName = getLevel();
 					changeState(EditorState::Instance());
 					EditorState::Instance()->setLevel(levelName);
+					EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
 				}
 			break;
 		}		

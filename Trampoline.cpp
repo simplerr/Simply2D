@@ -1,5 +1,8 @@
 #include "Trampoline.h"
 #include "Player.h"
+#include "Sound.h"
+
+extern Sound *gSound;
 
 Trampoline::Trampoline(float x, float y, int width, int height, int boostHeight, char *textureSource)
 	:Object(x, y, width, height, textureSource, TRAMPOLINE)
@@ -36,7 +39,8 @@ void Trampoline::onPlayerCollision(Player *player, MTV mtv)
 	// boost if true
 	if(mtv.pushY < 0)
 	{
-		player->jump(.002, 2);
+		player->jump(.002, 1);
+		gSound->mEngine->play2D("misc\\sound\\boing.wav");
 	}
 		
 }

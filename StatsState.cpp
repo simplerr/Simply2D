@@ -36,8 +36,10 @@ void StatsState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if( wParam == VK_ESCAPE )
+			if( wParam == VK_ESCAPE )	{
 				changeState(MainMenuState::Instance());
+				MainMenuState::Instance()->setMusic(getMusic());
+			}
 		break;
 	}
 }
