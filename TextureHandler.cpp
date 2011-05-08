@@ -30,6 +30,7 @@ TextureHandler::TextureHandler()
 	right_gun = NULL;
 	map_gun = NULL;
 	gate = NULL;
+	turret_laser = NULL;
 }
 TextureHandler::~TextureHandler()
 {
@@ -61,6 +62,7 @@ TextureHandler::~TextureHandler()
 	ReleaseCOM(right_gun);
 	ReleaseCOM(map_gun);
 	ReleaseCOM(gate);
+	ReleaseCOM(turret_laser);
 }
 
 IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
@@ -492,6 +494,21 @@ IDirect3DTexture9* TextureHandler::loadTexture(char *fileName)
 				return NULL;
 			 }
 		return gate;
+		}
+	}
+	else if(fileName == TURRET_LASER_SOURCE)
+	{
+		if(turret_laser != NULL)
+			return turret_laser;
+		else
+		{
+			 if (FAILED(D3DXCreateTextureFromFileEx (gd3dDevice, fileName, 0, 0, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 
+				colorkey, &SrcInfo, NULL, &turret_laser)))
+			 {
+				MessageBox(0, "Error loading texture", 0, 0);
+				return NULL;
+			 }
+		return turret_laser;
 		}
 	}
 }

@@ -47,6 +47,7 @@ void EditorState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 		if(wParam == VK_ESCAPE)	{
 			changeState(MainMenuState::Instance());
 			MainMenuState::Instance()->setMusic(getMusic());
+			MainMenuState::Instance()->setMusicVolume(1);
 		}
 		else
 			mEditor->keyPressed(wParam);		// fixit

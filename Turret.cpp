@@ -1,4 +1,7 @@
 #include "Turret.h"
+#include "Sound.h"
+
+extern Sound *gSound;
 
 Turret::Turret(float x, float y, int width, int height, char *textureSource, int health, direction dir, int damage, float speed, int lifelength, float fireRate)
 	:Object(x, y, width, height, textureSource, TURRET) 
@@ -39,7 +42,7 @@ void Turret::update(float dt)
 	mTimeElapsed += dt;
 
 	if(mTimeElapsed >= mFireRate)	{
-		Bullet tmpBullet(getX()-10, getY(), 32, 16, mDirection, mDamage, mBulletSpeed, mBulletLifelength, ENEMIES, (char*)BULLET_SOURCE.c_str());
+		Bullet tmpBullet(getX()-10, getY()+4, 40, 8, mDirection, mDamage, mBulletSpeed, mBulletLifelength, ENEMIES, (char*)TURRET_LASER_SOURCE.c_str());
 
 		if(mDirection == RIGHT)
 			tmpBullet.setXY(getX() + getWidth()-10, tmpBullet.getY());
@@ -48,6 +51,9 @@ void Turret::update(float dt)
 		mTimeElapsed = 0;
 		mFireEffect = true;
 		mFireTime = 0;
+
+		// sound effect
+		gSound->mEngine->play2D("misc\\sound\\turret_laser.wav");
 	}
 
 	/* update bullet list */

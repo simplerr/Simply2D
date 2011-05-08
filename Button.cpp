@@ -3,8 +3,11 @@
 #include "Window.h"
 #include <boost\function.hpp>
 #include <boost\bind.hpp>
+#include "Sound.h"
+#include "C:\Program Files (x86)\irrKlang-1.3.0\include\irrKlang.h"
 
 
+extern Sound* gSound;
 extern Mouse* gMouse;
 
 Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color)
@@ -16,7 +19,7 @@ Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y
 
 	mNormalTexture = NULL;
 	mHooverTexture = NULL;
-	// eh inget att g�ra?:d
+	mSoundSource = "none";
 }
 
 Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, bool b, char* normalTexture, char* hooverTexture, bool font, D3DCOLOR color)
@@ -54,6 +57,9 @@ void Button::update(float dt)
 bool Button::pressed(int mx, int my)
 {
 	if(callback != NULL)	{
+		if(mSoundSource != "none")	
+			gSound->mEngine->play2D(mSoundSource.c_str());
+		
 		if(!callback(getID(), getValue()))
 			return false;
 	}
@@ -95,4 +101,9 @@ void Button::draw(void)
 		
 		overlaped(false);
 	}
+}
+
+void Button::setPressSound(string source)
+{
+	mSoundSource = source;
 }

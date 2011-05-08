@@ -41,6 +41,7 @@ private:
 	IDirect3DTexture9* right_gun;
 	IDirect3DTexture9* map_gun;
 	IDirect3DTexture9* gate;
+	IDirect3DTexture9* turret_laser;
 
 	// angryEnemyTexture
 	// normalEnemyTexture

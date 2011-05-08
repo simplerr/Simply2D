@@ -2,8 +2,11 @@
 #include "Object.h"
 #include "Game.h"
 #include "CameraManager.h"
+#include <time.h>
+#include "Sound.h"
 
 extern CameraManager* gCameraManager;
+extern Sound* gSound;
 
 Player::Player(string filename, int width, int height)
 	:JUMP_HEIGHT(80)
@@ -36,11 +39,14 @@ Player::Player(string filename, int width, int height)
 	mSpeedY = 0;
 	mMaxJumpSpeed = .8;
 
+	mStepTime = .4;	// .5 is the length of the step sound
+
 	mRightGunTexture = gGraphics->loadObjectTexture((char*)RIGHT_GUN_SOURCE.c_str());
 	mLeftGunTexture = gGraphics->loadObjectTexture((char*)LEFT_GUN_SOURCE.c_str());
 	mBulletFire = gGraphics->loadTexture("misc\\textures\\bullet_fire.bmp");
-}
 
+	srand (time(NULL));
+}
 Player::~Player()
 {
 	// dtor
@@ -72,8 +78,6 @@ bool Player::update(double dt, Level *Level)
 		else
 			mSpeedY += .00005;
 	}
-	//else
-		//mSpeedY = 0;
 
 	// update frame
 	if(dtsum >= .08)	{
@@ -151,6 +155,16 @@ bool Player::update(double dt, Level *Level)
 		mAmmo--;
 		mFireEffect = true;
 		mFireTime = 0;
+
+		/* sound effect */
+		int random = rand() % 3;
+		
+		if(random == 0)
+			gSound->mEngine->play2D("misc\\sound\\gun_pistol1.wav");	
+		else if(random == 1)
+			gSound->mEngine->play2D("misc\\sound\\gun_pistol2.wav");
+		else if(random == 2)
+			gSound->mEngine->play2D("misc\\sound\\gun_pistol3.wav");
 	}
 
 	/* update bullet list */
@@ -174,8 +188,24 @@ bool Player::update(double dt, Level *Level)
 	if(!mOnGround)	{
 		frame = 4;
 	}
-	//else
-		//mSpeedY = 0;
+	else if(moving)	{
+		if(mStepTime >= .4)	{
+			int random = rand() % 4;
+
+			if(random == 0)
+				gSound->mEngine->play2D("misc\\sound\\pl_step1.wav");
+			else if(random == 1)
+				gSound->mEngine->play2D("misc\\sound\\pl_step2.wav");
+			else if(random == 2)
+				gSound->mEngine->play2D("misc\\sound\\pl_step3.wav");
+			else if(random == 3)
+				gSound->mEngine->play2D("misc\\sound\\pl_step4.wav");
+
+			mStepTime = 0;
+		}
+		else
+			mStepTime += dt;
+	}
 
 	move(mDX, mSpeedY);
 

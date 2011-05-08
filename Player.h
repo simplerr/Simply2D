@@ -101,6 +101,8 @@ private:
 	double mSpeedY;
 	double mAccel;
 	double mMaxJumpSpeed;
+
+	double mStepTime;
  
 	IDirect3DTexture9* playerTexture;
 	IDirect3DTexture9* mLeftGunTexture;

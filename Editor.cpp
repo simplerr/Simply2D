@@ -14,12 +14,14 @@
 #include "ActivateButton.h"
 #include "Gate.h"
 #include "GunPowerup.h"
+#include "Sound.h"
 
 // Window behöver ingen mus längre
 // Editor ska ha den 
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
+extern Sound* gSound;
 
 Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 {
@@ -106,15 +108,18 @@ void Editor::buildGUI(void)
 
 	createButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 40, 662 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	createButton->connect(&Editor::messageHandler, this);
+	createButton->setPressSound("misc\\sound\\menu_click.wav");
 
 	deleteButton = new Button(mWindowHandler, BUTTON_DELETE, "Delete", 110, 662 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	deleteButton->connect(&Editor::messageHandler, this);
 
 	saveButton = new Button(mWindowHandler, BUTTON_SAVE, "Save", 110, 692 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	saveButton->connect(&Editor::messageHandler, this);
+	saveButton->setPressSound("misc\\sound\\menu_click.wav");
 
 	bTryLevel = new Button(mWindowHandler, BUTTON_TRYLEVEL, "Test", 40, 692 + OFFSET, 60, 20, D3DCOLOR_ARGB(255, 90, 140, 140));
 	bTryLevel->connect(&Editor::messageHandler, this);
+	bTryLevel->setPressSound("misc\\sound\\menu_click.wav");
 
 	textureDropBox = new DropBox(mWindowHandler, DROPBOX_TEXTURE, 76, 632 + OFFSET, 130, 20, 20);
 	textureDropBox->connect(&Editor::messageHandler, this);
@@ -650,7 +655,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 			// listbox item vald
 			string value = listBox->getValue();
 			if(value != "none")
-			{								
+			{		
 					if(value == "Static Platform")
 					{
 						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\dirt_grass.bmp");
@@ -730,6 +735,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 
 				resetInputBoxes();
 				mActiveObject = NULL;
+				gSound->mEngine->play2D("misc\\sound\\delete.wav");
 			}
 			break;
 		}

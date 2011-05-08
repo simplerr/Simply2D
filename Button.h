@@ -20,6 +20,8 @@ public:
 	bool pressed(int mx, int my);
 	void hoover(int mx, int my);
 
+	void setPressSound(string source);
+
 	boost::function<bool(WindowID id, std::string value)> callback;
 
 	template <class T>
@@ -34,6 +36,8 @@ private:
 
 	IDirect3DTexture9* mNormalTexture;
 	IDirect3DTexture9* mHooverTexture;
+
+	string mSoundSource;
 };
 
 #endif

@@ -26,7 +26,7 @@ public:
 	void scale(direction side, int dwidth, int dheight);
 	void onPlayerCollision(Player *player, MTV mtv);
 
-	void damage(int dmg) {mHealth -= dmg;};
+	void damage(int dmg);
 	int getHealth(void) {return mHealth;};
 	bool getAlive(void)	{return alive;};
 

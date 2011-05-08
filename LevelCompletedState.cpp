@@ -35,10 +35,13 @@ void LevelCompletedState::init(Game* game)
 		
 	if(!mBkgdTexture)
 		MessageBox(0, "Couldn't background texture", 0, 0);
+
+	setMusic(gSound->mEngine->play2D("misc\\sound\\level_completed.wav", false, false, true));
 }
 
 void LevelCompletedState::cleanup()
 {
+	stopMusic();
 	ReleaseCOM(mBkgdTexture);
 	delete mWindowHandler;
 }

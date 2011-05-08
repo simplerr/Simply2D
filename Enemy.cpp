@@ -3,6 +3,9 @@
 #include "Events.h"
 #include "Level.h"
 #include "Sound.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 extern Sound *gSound;
@@ -21,6 +24,7 @@ Enemy::Enemy(float x, float y, int width, int height, char *textureSource, POS s
 	cooldown = 0;
 	setResizeable(false);
 	playsDeathSound = false;
+	srand (time(NULL));
 }
 
 Enemy::~Enemy()
@@ -105,7 +109,14 @@ void Enemy::onPlayerCollision(Player *player, MTV mtv)
 	{
 		player->damage(mDamage);
 		attackReady = false;
-		gSound->mEngine->play2D("misc\\sound\\enemy_dmg.wav");
+		int random = rand() % 3;
+
+		if(random == 0)
+			gSound->mEngine->play2D("misc\\sound\\hit1.wav");	
+		else if(random == 1)
+			gSound->mEngine->play2D("misc\\sound\\hit2.wav");
+		else if(random == 2)
+			gSound->mEngine->play2D("misc\\sound\\hit3.wav");
 	}
 }
 
@@ -162,4 +173,9 @@ void Enemy::loadProperties(std::vector<Property> propertyList)
 	if(tmp2 != mHealth)	{
 			mHealth = tmp2;
 	}
+}
+
+void Enemy::damage(int dmg)
+{
+	mHealth -= dmg;
 }

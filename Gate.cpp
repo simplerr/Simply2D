@@ -1,5 +1,8 @@
 #include "Gate.h"
 #include "ActivateButton.h"
+#include "Sound.h"
+
+extern Sound *gSound;
 
 Gate::Gate(float x, float y, int width, int height, char *textureSource, float openTime)
 	: Object(x, y, width, height, textureSource, GATE)
@@ -92,6 +95,7 @@ void Gate::loadProperties(std::vector<Property> propertyList)
 
 void Gate::activate(void)
 {
+	gSound->mEngine->play2D("misc\\sound\\gate_open.wav");
 	if(!mOpen)	{
 		// open the ActivateButton
 		move(0, 2000);	// hack

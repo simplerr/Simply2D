@@ -336,13 +336,16 @@ bool Level::updateLevel(double dt)
 
 	/* update player if he is not dead */
 
-	if(mPlayer->getHealth() > 0)	{
+	if(mPlayer->getHealth() > 0 && mPlayer->getY() <= 1500)	{
 		// should return false if the user completed a map
 		mPlayer->update(dt, this);
 		collision(mPlayer);
 	}
-	else	{
+	else if(mPlayer->getHealth() <= 0 || mPlayer->getY() >= 1500)	{
 		
+		if(mPlayer->getY() >= 1500)
+			gSound->mEngine->play2D("misc\\sound\\die_abyss.wav");
+
 		string current = getLevelName();
 
 		if(mLevelType != TEST)	{

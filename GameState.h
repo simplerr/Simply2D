@@ -30,6 +30,7 @@ public:
 	void setGame(Game* game) {mGame = game;};
 
 	void setMusic(irrklang::ISound *music) { mMusic = music;}
+	void setMusicVolume(float volume) { mMusic->setVolume(volume);}
 	irrklang::ISound* getMusic(void) {return mMusic;}
 	void stopMusic()	{
 		mMusic->stop();

@@ -1,5 +1,8 @@
 #include "GunPowerup.h"
 #include "Player.h"
+#include "Sound.h"
+
+extern Sound *gSound;
 
 GunPowerup::GunPowerup(float x, float y, int width, int height, char *textureSource, int ammo, int bulletType)
 	:Object(x, y, width, height, textureSource, GUNPOWERUP)
@@ -23,6 +26,7 @@ void GunPowerup::saveToFile(std::ofstream *fout)
 void GunPowerup::onPlayerCollision(Player *player, MTV mtv)
 {
 	player->lootGun(mAmmo, mBulletType);
+	gSound->mEngine->play2D("misc\\sound\\gun_pickup.wav");
 	setRemove(true);
 }
 
