@@ -88,7 +88,6 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 Game::~Game()
 {
 	mGameState->cleanup();
-	mGameState->shutdown();
 
 	delete mGfxStats;
 	delete gMouse;

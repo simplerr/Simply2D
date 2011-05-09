@@ -26,7 +26,7 @@ void GunPowerup::saveToFile(std::ofstream *fout)
 void GunPowerup::onPlayerCollision(Player *player, MTV mtv)
 {
 	player->lootGun(mAmmo, mBulletType);
-	gSound->mEngine->play2D("misc\\sound\\gun_pickup.wav");
+	gSound->playEffect("misc\\sound\\gun_pickup.wav");
 	setRemove(true);
 }
 

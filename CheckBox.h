@@ -1,3 +1,6 @@
+#ifndef CHECKBOX_H
+#define CHECKBOX_H
+
 #include "Window.h"
 #include <string>
 #include <boost\function.hpp>
@@ -14,6 +17,7 @@ public:
 
 	void draw(void);
 	bool pressed(int mx, int my);
+	void setValue(string value);
   
 	boost::function<bool(WindowID id, std::string value)> callback;
 
@@ -27,3 +31,5 @@ private:
 	string mDisplayText;
 	D3DCOLOR mCheckedColor;
 };
+
+#endif

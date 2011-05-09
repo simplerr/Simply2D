@@ -36,12 +36,11 @@ void LevelCompletedState::init(Game* game)
 	if(!mBkgdTexture)
 		MessageBox(0, "Couldn't background texture", 0, 0);
 
-	setMusic(gSound->mEngine->play2D("misc\\sound\\level_completed.wav", false, false, true));
+	gSound->playMusic("misc\\sound\\level_completed.wav", false, false);
 }
 
 void LevelCompletedState::cleanup()
 {
-	stopMusic();
 	ReleaseCOM(mBkgdTexture);
 	delete mWindowHandler;
 }
@@ -63,7 +62,7 @@ void LevelCompletedState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:			
 		if(wParam == VK_ESCAPE)	{
 			changeState(MainMenuState::Instance());
-			MainMenuState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+			gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 		}
 		break;
 	}
@@ -126,7 +125,7 @@ bool LevelCompletedState::messageHandler(WindowID id, string data)
 	case BUTTON_MENU:
 		{
 			changeState(MainMenuState::Instance());
-			MainMenuState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+			gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 			return false;
 		}
 	case BUTTON_AGAIN:

@@ -160,11 +160,11 @@ bool Player::update(double dt, Level *Level)
 		int random = rand() % 3;
 		
 		if(random == 0)
-			gSound->mEngine->play2D("misc\\sound\\gun_pistol1.wav");	
+			gSound->playEffect("misc\\sound\\gun_pistol1.wav");	
 		else if(random == 1)
-			gSound->mEngine->play2D("misc\\sound\\gun_pistol2.wav");
+			gSound->playEffect("misc\\sound\\gun_pistol2.wav");
 		else if(random == 2)
-			gSound->mEngine->play2D("misc\\sound\\gun_pistol3.wav");
+			gSound->playEffect("misc\\sound\\gun_pistol3.wav");
 	}
 
 	/* update bullet list */
@@ -193,13 +193,13 @@ bool Player::update(double dt, Level *Level)
 			int random = rand() % 4;
 
 			if(random == 0)
-				gSound->mEngine->play2D("misc\\sound\\pl_step1.wav");
+				gSound->playEffect("misc\\sound\\pl_step1.wav");
 			else if(random == 1)
-				gSound->mEngine->play2D("misc\\sound\\pl_step2.wav");
+				gSound->playEffect("misc\\sound\\pl_step2.wav");
 			else if(random == 2)
-				gSound->mEngine->play2D("misc\\sound\\pl_step3.wav");
+				gSound->playEffect("misc\\sound\\pl_step3.wav");
 			else if(random == 3)
-				gSound->mEngine->play2D("misc\\sound\\pl_step4.wav");
+				gSound->playEffect("misc\\sound\\pl_step4.wav");
 
 			mStepTime = 0;
 		}

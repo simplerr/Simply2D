@@ -30,7 +30,7 @@ void Teleport::onPlayerCollision(Player *player, MTV mtv)
 void Teleport::teleport(Player *player)
 {
 	player->setXY(mDestX, mDestY);
-	gSound->mEngine->play2D("misc\\sound\\teleport.wav");
+	gSound->playEffect("misc\\sound\\teleport.wav");
 }
 
 void Teleport::draw(void)

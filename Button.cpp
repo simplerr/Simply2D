@@ -58,7 +58,7 @@ bool Button::pressed(int mx, int my)
 {
 	if(callback != NULL)	{
 		if(mSoundSource != "none")	
-			gSound->mEngine->play2D(mSoundSource.c_str());
+			gSound->playEffect(mSoundSource.c_str());
 		
 		if(!callback(getID(), getValue()))
 			return false;

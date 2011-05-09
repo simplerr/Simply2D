@@ -735,7 +735,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 
 				resetInputBoxes();
 				mActiveObject = NULL;
-				gSound->mEngine->play2D("misc\\sound\\delete.wav");
+				gSound->playEffect("misc\\sound\\delete.wav");
 			}
 			break;
 		}

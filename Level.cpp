@@ -344,7 +344,7 @@ bool Level::updateLevel(double dt)
 	else if(mPlayer->getHealth() <= 0 || mPlayer->getY() >= 1500)	{
 		
 		if(mPlayer->getY() >= 1500)
-			gSound->mEngine->play2D("misc\\sound\\die_abyss.wav");
+			gSound->playEffect("misc\\sound\\die_abyss.wav");
 
 		string current = getLevelName();
 
@@ -367,7 +367,7 @@ bool Level::updateLevel(double dt)
 		else if(mLevelType == TEST)	{
 			TestState::Instance()->changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(current);
-			EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+			gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 		}
 	}
 
@@ -502,7 +502,7 @@ bool Level::collision(Player *player)
 		else	{
 			TestState::Instance()->changeState(EditorState::Instance());
 			EditorState::Instance()->setLevel(current);
-			EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+			gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 		}
 
 		/* ADD TEST TYPE!!! */

@@ -40,7 +40,7 @@ void Trampoline::onPlayerCollision(Player *player, MTV mtv)
 	if(mtv.pushY < 0)
 	{
 		player->jump(.002, 1);
-		gSound->mEngine->play2D("misc\\sound\\boing.wav");
+		gSound->playEffect("misc\\sound\\boing.wav");
 	}
 		
 }

@@ -19,7 +19,7 @@ public:
 					string levelName = getLevel();
 					changeState(EditorState::Instance());
 					EditorState::Instance()->setLevel(levelName);
-					EditorState::Instance()->setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
+					gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 				}
 			break;
 		}		

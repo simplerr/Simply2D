@@ -95,7 +95,7 @@ void Gate::loadProperties(std::vector<Property> propertyList)
 
 void Gate::activate(void)
 {
-	gSound->mEngine->play2D("misc\\sound\\gate_open.wav");
+	gSound->playEffect("misc\\sound\\gate_open.wav");
 	if(!mOpen)	{
 		// open the ActivateButton
 		move(0, 2000);	// hack

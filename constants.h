@@ -86,6 +86,8 @@ struct POS
 
 enum WindowID
 {
+	MUTE_MUSIC,
+	MUTE_EFFECTS,
 	BUTTON_RETRY,
 	LABEL,
 	LEVEL_NAME, 

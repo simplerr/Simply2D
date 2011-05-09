@@ -69,7 +69,7 @@ public:
 	virtual int wm_keydown(WPARAM wParam)	{return 1;}
 
 	bool isActive(void) { return mActive;}
-	void setValue(string value) {mValue = value;}
+	virtual void setValue(string value) {mValue = value;}
 	void setVisible(bool value) {mVisible = value;}
 	virtual void move(int dx, int dy) {mX += dx; mY += dy;}
 	virtual void setPos(int x, int y) {mX = x; mY = y;}

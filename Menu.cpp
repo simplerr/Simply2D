@@ -189,7 +189,7 @@ void Menu::update(POINT mousePos)
 			{
 				i->state = SELECTED;
 				if(gMouse->buttonPressed(LEFTBUTTON) && i->pressable)	{
-					gSound->mEngine->play2D("misc\\sound\\menu_click.wav");
+					gSound->playEffect("misc\\sound\\menu_click.wav");
 					if(!callback(i->itemName))
 						break;
 				}		

@@ -44,7 +44,7 @@ void Spike::scale(direction side, int dwidth, int dheight)
 void Spike::onPlayerCollision(Player *player, MTV mtv)
 {
 	player->damage(5000);
-	gSound->mEngine->play2D("misc\\sound\\spiked.wav");
+	gSound->playEffect("misc\\sound\\spiked.wav");
 
 }
 

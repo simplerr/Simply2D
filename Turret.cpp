@@ -53,7 +53,7 @@ void Turret::update(float dt)
 		mFireTime = 0;
 
 		// sound effect
-		gSound->mEngine->play2D("misc\\sound\\turret_laser.wav");
+		gSound->playEffect("misc\\sound\\turret_laser.wav");
 	}
 
 	/* update bullet list */

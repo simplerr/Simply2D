@@ -7,6 +7,7 @@
 #include "CampaignLevelState.h"
 #include "StatsState.h"
 #include "Sound.h"
+#include "OptionsState.h"
 
 extern CameraManager* gCameraManager;
 extern Mouse* gMouse;
@@ -27,15 +28,18 @@ void MainMenuState::init(Game* game)
 	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\custom_hoover.bmp");	
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_hoover.bmp");
 	mStartMenu->addMenuItem("Stats", "misc\\textures\\stats.bmp", "misc\\textures\\stats_hoover.bmp");
+	mStartMenu->addMenuItem("Options", "misc\\textures\\dirt_grass.bmp", "misc\\textures\\quit_hoover.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_hoover.bmp");
 	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_hoover.bmp");
 	
 	mStartMenu->buildMenu2();
 	mStartMenu->connect(&MainMenuState::menuHandler, this);
 
-	if(getMusic() == NULL)	{
-		setMusic(gSound->mEngine->play2D("misc\\sound\\menu_loop.wav", true, false, true));
-	}
+	//if(getMusic() == NULL)	{
+	//	setMusic(gSound->playMusic("misc\\sound\\menu_loop.wav", true, true));
+	//}
+
+	gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 }
 
 void MainMenuState::cleanup()
@@ -89,19 +93,16 @@ bool MainMenuState::menuHandler(std::string name)
 	if(name == "Play")
 	{
 		changeState(CampaignLevelState::Instance());
-		CampaignLevelState::Instance()->setMusic(getMusic());
 		return false;
 	}
 	else if(name == "Editor")
 	{
 		changeState(CustomEditorState::Instance());
-		CustomEditorState::Instance()->setMusic(getMusic());
 		return false;
 	}	
 	else if(name == "Custom")
 	{
 		changeState(CustomLevelState::Instance());
-		CustomLevelState::Instance()->setMusic(getMusic());
 		return false;
 	}
 	else if(name == "Quit")
@@ -111,7 +112,11 @@ bool MainMenuState::menuHandler(std::string name)
 	else if(name == "Stats")
 	{
 		changeState(StatsState::Instance());
-		StatsState::Instance()->setMusic(getMusic());
+		return false;
+	}
+	else if(name == "Options")
+	{
+		changeState(OptionsState::Instance());
 		return false;
 	}
 	

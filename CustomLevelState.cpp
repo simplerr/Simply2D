@@ -152,8 +152,6 @@ bool CustomLevelState::menuHandler(std::string name)
 	tmp.append(name);
 	tmp.append(".txt");
 
-	stopMusic();
-
 	changeState(PlayState::Instance());
 	PlayState::Instance()->setLevel(tmp);
 	PlayState::Instance()->setLevelType(CUSTOM);

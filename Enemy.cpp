@@ -101,7 +101,7 @@ void Enemy::onPlayerCollision(Player *player, MTV mtv)
 	{
 		this->damage(100);
 		if(!playsDeathSound)	{
-			gSound->mEngine->play2D("misc\\sound\\head_jump.wav");
+			gSound->playEffect("misc\\sound\\head_jump.wav");
 			playsDeathSound = true;
 		}
 	}
@@ -112,11 +112,11 @@ void Enemy::onPlayerCollision(Player *player, MTV mtv)
 		int random = rand() % 3;
 
 		if(random == 0)
-			gSound->mEngine->play2D("misc\\sound\\hit1.wav");	
+			gSound->playEffect("misc\\sound\\hit1.wav");	
 		else if(random == 1)
-			gSound->mEngine->play2D("misc\\sound\\hit2.wav");
+			gSound->playEffect("misc\\sound\\hit2.wav");
 		else if(random == 2)
-			gSound->mEngine->play2D("misc\\sound\\hit3.wav");
+			gSound->playEffect("misc\\sound\\hit3.wav");
 	}
 }
 

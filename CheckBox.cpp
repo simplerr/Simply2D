@@ -20,12 +20,14 @@ bool CheckBox::pressed(int mx, int my)
 	if(!mChecked)	{
 		mChecked = true;
 		setValue("True");
-		callback(getID(), getValue());
+		if(callback != NULL)
+			callback(getID(), getValue());
 	}
 	else if(mChecked)	{
 		mChecked = false;
 		setValue("False");
-		callback(getID(), getValue());
+		if(callback != NULL)
+			callback(getID(), getValue());
 	}
 
 	// doesn't need to return anything else,
@@ -56,3 +58,12 @@ void CheckBox::draw(void)
 	gGraphics->drawText(buffer, getX() - 100, getY() - getWidth()/2 - 2);
 }
 
+void CheckBox::setValue(string value)
+{
+	Window::setValue(value);
+
+	if(value == "True")
+		mChecked = true;
+	else if(value == "False")
+		mChecked = false;
+}

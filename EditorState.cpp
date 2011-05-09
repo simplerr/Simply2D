@@ -46,8 +46,6 @@ void EditorState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:			
 		if(wParam == VK_ESCAPE)	{
 			changeState(MainMenuState::Instance());
-			MainMenuState::Instance()->setMusic(getMusic());
-			MainMenuState::Instance()->setMusicVolume(1);
 		}
 		else
 			mEditor->keyPressed(wParam);		// fixit
@@ -63,7 +61,6 @@ void EditorState::update(double dt)
 		changeState(TestState::Instance());
 		TestState::Instance()->setLevel(tmp);
 		TestState::Instance()->setLevelType(TEST);
-		stopMusic();
 	}
 	gCameraManager->gameCamera()->move();		// move the camera accordingly
 }

@@ -61,14 +61,14 @@ void Bullet::onObjectCollision(Object *object)
 		Enemy *enemy = dynamic_cast<Enemy*>(object);
 		enemy->damage(mDamage);
 		if(enemy->getHealth() <= 0)	{
-			gSound->mEngine->play2D("misc\\sound\\head_jump.wav");
+			gSound->playEffect("misc\\sound\\head_jump.wav");
 			
 			int random = rand() % 10;
 
 			if(random == 0)
-				gSound->mEngine->play2D("misc\\sound\\nukem1.wav");
+				gSound->playEffect("misc\\sound\\nukem1.wav");
 			else if(random == 1)
-				gSound->mEngine->play2D("misc\\sound\\nukem2.wav");
+				gSound->playEffect("misc\\sound\\nukem2.wav");
 
 		}
 	}
@@ -80,9 +80,9 @@ void Bullet::onPlayerCollision(Player *player, MTV mtv)
 	int random = rand() % 3;
 
 	if(random == 0)
-		gSound->mEngine->play2D("misc\\sound\\hit1.wav");	
+		gSound->playEffect("misc\\sound\\hit1.wav");	
 	else if(random == 1)
-		gSound->mEngine->play2D("misc\\sound\\hit2.wav");
+		gSound->playEffect("misc\\sound\\hit2.wav");
 	else if(random == 2)
-		gSound->mEngine->play2D("misc\\sound\\hit3.wav");
+		gSound->playEffect("misc\\sound\\hit3.wav");
 }
