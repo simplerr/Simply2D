@@ -3,6 +3,7 @@
 #include "WindowHandler.h"
 #include "CheckBox.h"
 #include "Sound.h"
+#include "Settings.h"
 
 extern Sound *gSound;
 OptionsState OptionsState::mOptionsState;
@@ -29,11 +30,15 @@ void OptionsState::init(Game* game)
 		mMuteEffects->setValue("True");
 	else if(!gSound->getEffectsMuted())
 		mMuteEffects->setValue("False");
+
+	// load the settings
+	mSettings = new Settings("config.txt");
 }
 	
 void OptionsState::cleanup()
 {
-
+	delete mWindowHandler;
+	delete mSettings;
 }
 	
 void OptionsState::pause()
@@ -86,20 +91,30 @@ bool OptionsState::messageHandler(WindowID id, string data)
 	{
 	case MUTE_MUSIC:
 		{
-			if(strcmp(buffer, "True") == 0)
+			if(strcmp(buffer, "True") == 0)	{
 				gSound->muteMusic(true);
+				mSettings->muteMusic(true);
+			}
 			else if(strcmp(buffer, "False") == 0)	{
 				gSound->muteMusic(false);
+				mSettings->muteMusic(false);
 				gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 			}
+
+			mSettings->saveSettings();
 			return false;
 		}
 	case MUTE_EFFECTS:
 		{
-			if(strcmp(buffer, "True") == 0)
+			if(strcmp(buffer, "True") == 0)	{
 				gSound->muteEffects(true);
-			else if(strcmp(buffer, "False") == 0)
+				mSettings->muteEffects(true);
+			}
+			else if(strcmp(buffer, "False") == 0)	{
 				gSound->muteEffects(false);
+				mSettings->muteEffects(false);
+			}
+			mSettings->saveSettings();
 			return false;
 		}
 	}

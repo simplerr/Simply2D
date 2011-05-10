@@ -1,4 +1,5 @@
 #include "Sound.h"
+#include "Settings.h"
 
 Sound *gSound = 0;
 
@@ -10,6 +11,19 @@ Sound::Sound()
 	// should read from a text file
 	mMusicMuted = false;
 	mEffectsMuted = false;
+
+	// load the settings
+	mSettings = new Settings("config.txt");
+
+	if(mSettings->musicMuted())
+		mMusicMuted = true;
+	else if(!mSettings->musicMuted())
+		mMusicMuted = false;
+
+	if(mSettings->effectsMuted())
+		mEffectsMuted = true;
+	else if(!mSettings->effectsMuted())
+		mEffectsMuted = false;
 }
 	
 Sound::~Sound()
@@ -20,6 +34,7 @@ Sound::~Sound()
 	}
 	mEngine->removeAllSoundSources();
 	mEngine->drop(); 
+	delete mSettings;
 }
 
 irrklang::ISound* Sound::playMusic(std::string source, bool loop, bool track)

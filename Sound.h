@@ -6,6 +6,8 @@
 
 #pragma comment(lib, "C:\\Program Files (x86)\\irrKlang-1.3.0\\lib\\Win32-visualStudio\\irrKlang.lib") // link with irrKlang.dll
 
+class Settings;
+
 class Sound
 {
 public:
@@ -27,6 +29,7 @@ private:
 	irrklang::ISoundEngine* mEngine;
 	irrklang::ISound* mMusic;
 	std::string mMusicSource;
+	Settings *mSettings;
 };
 
 #endif

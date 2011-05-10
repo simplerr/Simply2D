@@ -2,6 +2,7 @@
 
 class WindowHandler;
 class CheckBox;
+class Settings;
 
 class OptionsState : public GameState
 {
@@ -27,8 +28,10 @@ private:
 	static OptionsState mOptionsState;
 
 	WindowHandler *mWindowHandler;
-	
+	Settings *mSettings;
+
 	/* windows */
 	CheckBox *mMuteMusic;
 	CheckBox *mMuteEffects;
 };
+
