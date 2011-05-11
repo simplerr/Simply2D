@@ -355,7 +355,6 @@ Shape* Player::getShape(void)
 	return &mShape;
 }
 
-
 bool Player::getActivateKey(void)
 {
 	return mActivateKey;

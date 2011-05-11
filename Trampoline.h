@@ -3,7 +3,7 @@
 class Trampoline : public Object
 {
 public:
-	Trampoline(float x, float y, int width, int height, int boostHeight, char *textureSource);
+	Trampoline(float x, float y, int width, int height, double accel, double maxSpeed, char *textureSource);
 	~Trampoline();
 
 	
@@ -16,5 +16,7 @@ public:
 	void loadFromFile(std::ofstream *fout);
 
 private:
-	int mBoostHeight;
+	//int mBoostHeight;
+	double mBoostAccel;
+	double mMaxSpeed;
 };

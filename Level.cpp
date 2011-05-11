@@ -165,10 +165,9 @@ void Level::loadLevel(char* levelFile)
 		}
 		else if(objectType == TRAMPOLINE)
 		{
-			int boostHeight;
-
-			fin >> xpos >> ypos >> width >> height >> boostHeight >> textureSource;
-			loadedObject = new Trampoline(xpos, ypos, width, height, boostHeight, (char*)textureSource.c_str());
+			double maxSpeed, accel;
+			fin >> xpos >> ypos >> width >> height >> accel >> maxSpeed >> textureSource;
+			loadedObject = new Trampoline(xpos, ypos, width, height, accel, maxSpeed, (char*)textureSource.c_str());
 		}
 		else if(objectType == WALLJUMP)
 		{
