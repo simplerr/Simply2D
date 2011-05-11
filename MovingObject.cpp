@@ -285,18 +285,34 @@ void MovingObject::loadProperties(std::vector<Property> propertyList)
 
 	int tmp;
 
-	// these are only neccessary for now!
-	tmp = atoi(propertyList[4].value.c_str());	// endx
-	if(tmp != mEndPos.x)	{
-			mEndPos.x = tmp;
+	if(getResizeable())	{
+		tmp = atoi(propertyList[4].value.c_str());	// endx
+		if(tmp != mEndPos.x)	{
+				mEndPos.x = tmp;
+		}
+
+		float tmp2;
+
+		tmp2 = atof(propertyList[6].value.c_str());	// speed
+		if(tmp2 != mSpeed)	{
+				mSpeed = tmp2;
+		}
+	}
+	else	{
+		tmp = atoi(propertyList[2].value.c_str());	// endx
+		if(tmp != mEndPos.x)	{
+				mEndPos.x = tmp;
+		}
+
+		float tmp2;
+
+		tmp2 = atof(propertyList[4].value.c_str());	// speed
+		if(tmp2 != mSpeed)	{
+				mSpeed = tmp2;
+		}
 	}
 
-	float tmp2;
-
-	tmp2 = atof(propertyList[6].value.c_str());	// speed
-	if(tmp2 != mSpeed)	{
-			mSpeed = tmp2;
-	}
+	mEndPos.y = getY();
 }
 
 void MovingObject::drawEditorFX(void)
