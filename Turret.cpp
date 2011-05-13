@@ -68,7 +68,7 @@ void Turret::update(float dt)
 	
 			MTV mtv = mLevel->polyCollision(i->getShape(), mPlayer->getShape());
 			if(mtv.collision)	{
-				i->onPlayerCollision(mPlayer,mtv);
+				i->onPlayerCollision(mPlayer,mtv, dt);
 				i->erase();
 			}
 			else
@@ -138,7 +138,7 @@ void Turret::scale(direction side, int dwidth, int dheight)
 
 }
 
-void Turret::onPlayerCollision(Player *player, MTV mtv)
+void Turret::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 
 }
@@ -157,7 +157,7 @@ std::vector<Property> Turret::getProperties(void)
 	properties.push_back(tmp);
 
 	tmp.name = "speed";
-	sprintf(buffer, "%.2f", mBulletSpeed);
+	sprintf(buffer, "%.1f", mBulletSpeed);
 	tmp.value = buffer;
 
 	properties.push_back(tmp);

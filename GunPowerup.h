@@ -7,7 +7,7 @@ public:
 	~GunPowerup();
 
 	void saveToFile(std::ofstream *fout);
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 
 	std::vector<Property> getProperties(void);
 	void loadProperties(std::vector<Property> propertyList);

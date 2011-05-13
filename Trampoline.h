@@ -9,7 +9,7 @@ public:
 	
 	void draw(void);
 
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 	std::vector<Property> getProperties(void);
 	void loadProperties(std::vector<Property> propertyList);
 	void saveToFile(std::ofstream *fout);

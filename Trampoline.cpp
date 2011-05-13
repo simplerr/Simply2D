@@ -35,7 +35,7 @@ void Trampoline::loadFromFile(std::ofstream *fout)
 
 }
 
-void Trampoline::onPlayerCollision(Player *player, MTV mtv)
+void Trampoline::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 	// boost if true
 	if(mtv.pushY < 0)
@@ -54,7 +54,7 @@ std::vector<Property> Trampoline::getProperties(void)
 	char buffer[16];
 
 	tmp.name = "accel";
-	sprintf(buffer, "%.3f", mBoostAccel*1000);
+	sprintf(buffer, "%.1f", mBoostAccel);
 	tmp.value = buffer;
 
 	properties.push_back(tmp);
@@ -75,7 +75,7 @@ void Trampoline::loadProperties(std::vector<Property> propertyList)
 	double tmp;
 
 	tmp = atof(propertyList[2].value.c_str());
-	mBoostAccel = tmp/1000;
+	mBoostAccel = tmp;
 
 	tmp = atof(propertyList[3].value.c_str());
 	mMaxSpeed = tmp;

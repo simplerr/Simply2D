@@ -26,6 +26,7 @@ Player::Player(string filename, int width, int height)
 	inair = true;
 	mJumping = false;
 	mOnGround = false;
+	mFalling = true;
 
 	prevWallJumpID = 1337; 
 	mWallJumpOk = false;
@@ -73,10 +74,10 @@ bool Player::update(double dt, Level *Level)
 	double tmpY = mY;
 	
 	if(mFalling)	{
-		if(mSpeedY < .8)
-			mSpeedY += .002;
+		if(mSpeedY < 5)
+			mSpeedY += 100*dt;
 		else
-			mSpeedY += .00005;
+			mSpeedY += 20*dt;
 	}
 
 	// update frame
@@ -104,11 +105,10 @@ bool Player::update(double dt, Level *Level)
 	mDX = 0;
 	if(gDInput->keyPressed(DIK_W))	{
 		if(mOnGround)	{
-			jump(.002, .8);
-			//mSpeedY = -mMaxJumpSpeed;
+			jump(.0001, 5);
 		}
 		else if(mWallJumpOk)	{
-			jump(.002, .8);
+			jump(.1, 20);
 			mWallJumpOk = false;
 		}
 	}
@@ -117,7 +117,7 @@ bool Player::update(double dt, Level *Level)
 	{
 		/* jumps untill the speed is 0 */
 		if(mSpeedY < 0)	{
-			mSpeedY += mAccel;
+			mSpeedY += mAccel*dt;
 		}
 		
 		if(mSpeedY >= 0 || mHittedCeiling)	{
@@ -146,7 +146,7 @@ bool Player::update(double dt, Level *Level)
 	}
 
 	if(gDInput->keyPressed(DIK_SPACE) && mAmmo > 0)	{
-		Bullet tmpBullet(mX-64, mY-5, 32, 16, faceDir, 50, .5, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
+		Bullet tmpBullet(mX-64, mY-5, 32, 16, faceDir, 50, 500, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
 
 		if(faceDir == RIGHT)
 			tmpBullet.move(95, 0);

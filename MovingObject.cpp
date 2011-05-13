@@ -5,17 +5,6 @@
 MovingObject::MovingObject(ObjectType type, float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType, float speed)
 	:Object(x, y, width, height, textureSource, type)
 {
-
-	// if horizontal when vertical gets added
-	/*if(startPos.x > endPos.x)	{
-		mStartPos = endPos;
-		mEndPos = startPos;
-	}
-	else if(startPos.x < endPos.x)	{
-		mStartPos = startPos;
-		mEndPos = endPos;
-	}*/
-
 	setStatic(false);
 
 	mStartPos = startPos;
@@ -49,42 +38,31 @@ void MovingObject::update(float dt)
 				if(mStartPos.x < mEndPos.x)
 				{
 					if(getX() > mStartPos.x)
-						move(-mSpeed, 0);
+						move(-mSpeed*dt, 0);
 					else
 						mMovingDir = RIGHT;
 				}
 				else if(mStartPos.x > mEndPos.x)
 				{
 					if(getX() > mEndPos.x)	{
-						move(-mSpeed, 0);					
+						move(-mSpeed*dt, 0);					
 					}
 					else mMovingDir = RIGHT;
 				}
-
-				// move player
-				/*if(getPlayer() != NULL)	{
-					if(getPlayerCollision())
-						onPlayerCollision();
-				}*/
 			}
 			else if(mMovingDir == RIGHT)
 			{
 				if(mStartPos.x < mEndPos.x)	{
 					if(getX() < mEndPos.x)	
-						move(mSpeed, 0);
+						move(mSpeed*dt, 0);
 					else
 						mMovingDir = LEFT;
 				}
 				else if(mStartPos.x > mEndPos.x)	{
 					if(getX() < mStartPos.x)
-						move(mSpeed, 0);
+						move(mSpeed*dt, 0);
 					else mMovingDir = LEFT;
 				}
-
-				/*if(getPlayer() != NULL)	{
-					if(getPlayerCollision())
-						onPlayerCollision();
-				}*/
 			}
 		}
 }
@@ -221,29 +199,17 @@ void MovingObject::setXY(float x, float y)
 	mEndPos.y = mStartPos.y + mTravelY;
 }
 
-void MovingObject::onPlayerCollision(Player *player, MTV mtv)
+void MovingObject::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 	// if the player stands on platform
 	if(mtv.pushY < 0)
-	{
-		if(player->getDX() == 0)
-		{
-			if(getMoveDir() == LEFT)	{
-				player->move(-mSpeed, 0);			
-			}
-			else if(getMoveDir() == RIGHT)
-				player->move(mSpeed, 0);
+	{	
+		if(getMoveDir() == LEFT)	{
+			player->move(-mSpeed*dt, 0);			
 		}
-		else
-		{
-			if(getMoveDir() == LEFT)	{
-				if(player->getDX() > 0)
-					player->move(mSpeed - player->getDX(), 0);			
-			}
-			else if(getMoveDir() == RIGHT)
-				if(player->getDX() < 0)
-					player->move(-mSpeed - player->getDX(), 0);
-		}
+		else if(getMoveDir() == RIGHT)
+			player->move(mSpeed*dt, 0);
+		
 	}
 }
 

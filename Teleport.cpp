@@ -22,7 +22,7 @@ Teleport::~Teleport()
 	// dtor
 }
 
-void Teleport::onPlayerCollision(Player *player, MTV mtv)
+void Teleport::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 	teleport(player);
 }

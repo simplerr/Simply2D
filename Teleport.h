@@ -11,7 +11,7 @@ public:
 	Teleport(float enterX, float enterY, float destX, float destY, int width, int height, char *enterTextureSource, char *destTextureSource);
 	~Teleport();
 
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 	void teleport(Player *player);
 	void draw(void);
 	void saveToFile(std::ofstream *fout);

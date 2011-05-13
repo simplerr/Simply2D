@@ -54,7 +54,7 @@ void Gate::scale(direction side, int dwidth, int dheight)
 
 }
 	
-void Gate::onPlayerCollision(Player *player, MTV mtv)
+void Gate::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 
 }

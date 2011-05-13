@@ -8,6 +8,6 @@ public:
 
 	void draw(void);
 
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 private:
 };

@@ -12,7 +12,7 @@ WallJump::~WallJump()
 
 }
 
-void WallJump::onPlayerCollision(Player *player, MTV mtv)
+void WallJump::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 	if(mtv.pushX != 0)
 		player->testWallJump(this->getID());

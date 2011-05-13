@@ -32,11 +32,11 @@ void Bullet::update(float dt)
 {
 	/* update position */
 	if(mDir == RIGHT)
-		move(mSpeed, 0);
+		move(mSpeed*dt, 0);
 	else if(mDir == LEFT)
-		move(-mSpeed, 0);
+		move(-mSpeed*dt, 0);
 
-	mTravelled += mSpeed;
+	mTravelled += mSpeed*dt;
 
 	if(mTravelled > mLifeLength)
 		mErase = true;
@@ -74,7 +74,7 @@ void Bullet::onObjectCollision(Object *object)
 	}
 }
 
-void Bullet::onPlayerCollision(Player *player, MTV mtv)	
+void Bullet::onPlayerCollision(Player *player, MTV mtv, float dt)	
 {
 	player->damage(mDamage);
 	int random = rand() % 3;

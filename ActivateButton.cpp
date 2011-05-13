@@ -99,7 +99,7 @@ void ActivateButton::scale(direction side, int dwidth, int dheight)
 
 }
 	
-void ActivateButton::onPlayerCollision(Player *player, MTV mtv)
+void ActivateButton::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 
 }

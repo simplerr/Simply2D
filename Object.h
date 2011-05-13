@@ -70,7 +70,7 @@ public:
 	void setResizeable(bool b)									{resizeable = b;};
 
 	// new 
-	virtual void onPlayerCollision(Player *player, MTV mtv)				{};
+	virtual void onPlayerCollision(Player *player, MTV mtv, float dt)				{};
 
 	bool doUpdate(void) 										{return mUpdates;};
 	void setStatic(bool b)										{mStatic = b;};

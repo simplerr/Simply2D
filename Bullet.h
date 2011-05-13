@@ -18,7 +18,7 @@ public:
 	void update(float dt);
 	void draw(void);
 	void onObjectCollision(Object* object);
-	void onPlayerCollision(Player *player, MTV mtv);	
+	void onPlayerCollision(Player *player, MTV mtv, float dt);	
 	void erase(void) {mErase = true;}
 	bool getErased(void) {return mErase;}
 

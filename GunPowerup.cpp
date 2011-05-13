@@ -23,7 +23,7 @@ void GunPowerup::saveToFile(std::ofstream *fout)
 	*fout << getWidth() << " " << getHeight() << " " << mAmmo << " " << mBulletType << " " << getTextureSource() << std::endl;
 }
 	
-void GunPowerup::onPlayerCollision(Player *player, MTV mtv)
+void GunPowerup::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
 	player->lootGun(mAmmo, mBulletType);
 	gSound->playEffect("misc\\sound\\gun_pickup.wav");

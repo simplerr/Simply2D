@@ -38,9 +38,15 @@ public:
 	bool inside(RECT r);
 	bool insideWindow(RECT r);
 
+	int getDX(void);
+	int getDY(void);
+
 private:
 	POINT mPos;
+	POINT mLastPos;
 	HWND mMainWnd;
+	int mDX;
+	int mDY;
 };
 
 #endif

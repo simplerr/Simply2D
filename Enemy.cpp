@@ -38,7 +38,7 @@ void Enemy::update(float dt)
 	MovingObject::update(dt);
 
 	// update frame
-	if(dtsum >= .08)	{
+	if(dtsum >= .15)	{
 		frame++;
 		dtsum = 0;
 	}
@@ -47,7 +47,7 @@ void Enemy::update(float dt)
 
 	if(!deathAnim && frame > 3)
 		frame = 0;
-	else if(deathAnim && frame > 6)
+	else if(deathAnim && frame > 4)
 		setRemove(true);	// will remove it from the list
 
 	// update attack cooldown
@@ -64,7 +64,7 @@ void Enemy::update(float dt)
 	// checks health, sets deathanim
 	if(mHealth <= 0 && !deathAnim)	{
 		deathAnim = true;
-		frame = 5;
+		frame = 4;
 	}
 }
 void Enemy::draw(void)
@@ -92,9 +92,9 @@ void Enemy::scale(direction side, int dwidth, int dheight)
 	MovingObject::scale(side, dwidth, dheight);
 }
 
-void Enemy::onPlayerCollision(Player *player, MTV mtv)
+void Enemy::onPlayerCollision(Player *player, MTV mtv, float dt)
 {
-	MovingObject::onPlayerCollision(player, mtv);
+	MovingObject::onPlayerCollision(player, mtv, dt);
 
 	/* player jumped on enemy */
 	if(mtv.pushY < 0)

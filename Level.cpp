@@ -338,7 +338,7 @@ bool Level::updateLevel(double dt)
 	if(mPlayer->getHealth() > 0 && mPlayer->getY() <= 1500)	{
 		// should return false if the user completed a map
 		mPlayer->update(dt, this);
-		collision(mPlayer);
+		collision(mPlayer, dt);
 	}
 	else if(mPlayer->getHealth() <= 0 || mPlayer->getY() >= 1500)	{
 		
@@ -400,7 +400,7 @@ void Level::drawGui(void)
 	gGraphics->drawText(buffer, 1250, 150);
 }
 
-bool Level::collision(Player *player)
+bool Level::collision(Player *player, float dt)
 {
 	bool onGround = false;
 	/* loop through each object and test collision against the player */
@@ -417,7 +417,7 @@ bool Level::collision(Player *player)
 				gCameraManager->gameCamera()->addMovement(mtv.pushX, 0);
 
 			// what's gonna happen with the player?
-			mObjectList[i]->onPlayerCollision(player, mtv);	
+			mObjectList[i]->onPlayerCollision(player, mtv, dt);	
 
 			// on ground?
 			if(onGround)

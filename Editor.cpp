@@ -368,6 +368,8 @@ void Editor::moveObject(void)
 {		
 	RECT activeObjectRect = mActiveObject->getRect();
 		// updatera koordinater
+		//float dx = gMouse->getDX();
+		//float dy = gMouse->getDY();
 		float dx = gDInput->mouseDX();
 		float dy = gDInput->mouseDY();
 				
@@ -690,7 +692,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Trampoline")
 					{
-						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 5e-006, 0.8, "misc\\textures\\trampoline.bmp");
+						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 10, 25, "misc\\textures\\trampoline.bmp");
 						mLevel->addObject(trampoline);
 					}
 					else if(value == "Walljump")
@@ -705,7 +707,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Turret")
 					{
-						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, .1, 200, .5);
+						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, 100, 200, .5);
 						mLevel->addObject(turret);
 					}
 					else if(value == "Button")

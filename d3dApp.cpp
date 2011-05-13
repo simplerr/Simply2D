@@ -35,6 +35,8 @@ D3DApp::D3DApp(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, 
 	mAppPaused  = false;
 	ZeroMemory(&md3dPP, sizeof(md3dPP));
 
+	mDeltaSum = 0;
+
 	initMainWindow();
 	initDirect3D();
 }
@@ -195,15 +197,23 @@ int D3DApp::run()
 				QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 				float dt = (currTimeStamp - prevTimeStamp)*secsPerCnt;
 				
-				// Get snapshot of input devices.
-				gDInput->poll();
+				if(mDeltaSum < (float)1/60)	{
+					mDeltaSum += dt;
+				}
+				else	{
+					// Get snapshot of input devices.
+					gDInput->poll();
 
-				/* update the game */
-				updateScene(dt);
+					/* update the game */
+					updateScene(mDeltaSum);
 
-				/* draw the game */
-				drawScene();
+					/* draw the game */
+					drawScene();
 
+					
+
+					mDeltaSum = 0;
+				}	
 				// Prepare for next iteration: The current time stamp becomes
 				// the previous time stamp for the next iteration.
 				prevTimeStamp = currTimeStamp;

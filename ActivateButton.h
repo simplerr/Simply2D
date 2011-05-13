@@ -17,7 +17,7 @@ public:
 	void move(float dx, float dy);
 	void editorMove(float dx, float dy);
 	void scale(direction side, int dwidth, int dheight);
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 
 	std::vector<Property> getProperties(void);
 	void loadProperties(std::vector<Property> propertyList);

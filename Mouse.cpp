@@ -13,6 +13,8 @@ Mouse::Mouse(HWND hwnd)
 	// start position for the mouse
 	GetCursorPos(&mPos);
 
+	mLastPos = mPos;
+
 	RECT windowRect;	
 	GetWindowRect(mMainWnd, &windowRect);
 
@@ -34,23 +36,26 @@ void Mouse::updateMouseWIN(void)
 	GetCursorPos(&tmpPos);
 	GetWindowRect(mMainWnd, &windowRect);
 	
-	// så det inte blir negativa värden
+	// we don't want any negative numbers
 	if(tmpPos.x <= windowRect.left)
 		mPos.x = windowRect.left;
-	//else if(tmpPos.x >= windowRect.right) 
-	//	mPos.x = windowRect.right;
 	else if(tmpPos.y <= windowRect.top)
 		mPos.y = windowRect.top;
 	else if(tmpPos.y >= windowRect.bottom)
 		mPos.y = windowRect.bottom;
 	else	{
-		// jazzy - för att få bra värden!
+		// correctment, the border etc
 		mPos.x = tmpPos.x - windowRect.left;
 		mPos.y = tmpPos.y - windowRect.top;
 
 		mPos.x-=8;
 		mPos.y-=30;		
-	}	
+	}
+
+	mDX = mPos.x - mLastPos.x;
+	mDY = mPos.y - mLastPos.y;
+
+	mLastPos = mPos;
 }
 
 void Mouse::updateMouseDX(void)
@@ -61,7 +66,6 @@ void Mouse::updateMouseDX(void)
 	// right now the position can be negative, if the players moves outside the screen
 	mPos.x += gDInput->mouseDX();
 	mPos.y += gDInput->mouseDY();
-
 }
 
 bool Mouse::buttonDown(MouseButton button)
@@ -161,6 +165,15 @@ bool Mouse::insideWindow(RECT r)
 }
 
 
+int Mouse::getDX(void)
+{
+	return mDX;
+}
+	
+int Mouse::getDY(void)
+{
+	return mDY;
+}
 
 /* DIRECT INPUT STYLISHH
 static int screenWidth = GetSystemMetrics(SM_CXFULLSCREEN);

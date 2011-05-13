@@ -48,7 +48,7 @@ public:
 	void drawEditorLevel(void);
 	void drawGui(void);
 
-	bool collision(Player *player);
+	bool collision(Player *player, float dt);
 	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
 	Object* objectIntersection(Object *activeObject);
 	int getSnapDist(RECT rect, direction checkDir);

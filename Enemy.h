@@ -12,7 +12,7 @@ class MovingObject;
 class Enemy : public MovingObject
 {
 public:
-	Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType = HORIZONTAL, float speed = 0.02f,
+	Enemy(float x, float y, int width, int height, char *textureSource, POS startPos, POS endPos, movingType moveType = HORIZONTAL, float speed = 30.0f,
 		int health = 100, int dmg = 50);
 	~Enemy();
 
@@ -24,7 +24,7 @@ public:
 	void saveToFile(std::ofstream *fout);
 	void move(float dx, float dy);
 	void scale(direction side, int dwidth, int dheight);
-	void onPlayerCollision(Player *player, MTV mtv);
+	void onPlayerCollision(Player *player, MTV mtv, float dt);
 
 	void damage(int dmg);
 	int getHealth(void) {return mHealth;};

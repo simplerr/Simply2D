@@ -58,7 +58,8 @@ protected:
 	HWND                  mhMainWnd;
 	IDirect3D9*           md3dObject;
 	bool                  mAppPaused;
-	D3DPRESENT_PARAMETERS md3dPP;	
+	D3DPRESENT_PARAMETERS md3dPP;
+	float				  mDeltaSum;
 };
 
 // Globals for convenient access.
