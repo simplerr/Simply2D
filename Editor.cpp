@@ -395,7 +395,7 @@ void Editor::moveObject(void)
 					}
 					else	{	// snapped, don't move the object or mouse						
 						snapCount += dx;
-						gDInput->setCursorX(gDInput->getCursorX() + mOffset - dx);	// dont move the mouse
+						gDInput->setCursorX(gDInput->getCursorX() - dx);	// dont move the mouse
 						mActiveObject->editorMove(0, dy);	// allow movement in the oppisite direction (up/down)
 					}	
 				}
@@ -408,7 +408,7 @@ void Editor::moveObject(void)
 					}
 					else	{
 						snapCount += dy;
-						gDInput->setCursorX(gDInput->getCursorX() + mOffset - dx);
+						gDInput->setCursorY(gDInput->getCursorY() - dy);
 						mActiveObject->editorMove(dx, 0);
 					}					
 				}						
@@ -514,7 +514,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				// ta reda på hur långt den ska snappa
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
-				gDInput->setCursorX(gDInput->getCursorX() - dx);
+				gDInput->setCursorX(gDInput->getCursorX() + snapDist - dx);
 				mActiveObject->editorMove(snapDist, 0);
 
 				snapCount = 0;
@@ -534,7 +534,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
-				gDInput->setCursorX(gDInput->getCursorX() - dx);
+				gDInput->setCursorX(gDInput->getCursorX() - snapDist - dx);
 				mActiveObject->editorMove(-snapDist, 0);
 
 				snapCount = 0;
@@ -554,7 +554,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				gDInput->setCursorY(gDInput->getCursorY() - dy);
+				gDInput->setCursorY(gDInput->getCursorY() + snapDist - dy);
 				mActiveObject->editorMove(0, snapDist);
 
 				snapCount = 0;
@@ -574,7 +574,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				gDInput->setCursorY(gDInput->getCursorY() - dy);
+				gDInput->setCursorY(gDInput->getCursorY() - snapDist - dy);
 				mActiveObject->editorMove(0, -snapDist);
 
 				snapCount = 0;
