@@ -10,6 +10,7 @@ Trampoline::Trampoline(float x, float y, int width, int height, double accel, do
 	mMaxSpeed = maxSpeed;
 	mBoostAccel = accel;
 	setResizeable(false);
+	mBoostHeight = 100;
 }
 
 Trampoline::~Trampoline()
@@ -40,7 +41,7 @@ void Trampoline::onPlayerCollision(Player *player, MTV mtv, float dt)
 	// boost if true
 	if(mtv.pushY < 0)
 	{
-		player->jump(mBoostAccel, mMaxSpeed);
+		player->jump(mBoostAccel, mMaxSpeed, mBoostHeight);
 		gSound->playEffect("misc\\sound\\boing.wav");
 	}
 		

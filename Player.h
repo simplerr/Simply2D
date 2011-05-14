@@ -41,7 +41,7 @@ public:
 
 	void setFalling(bool b) {mFalling = b;}
 	void onGround(bool b);
-	void jump(double accel, double maxSpeed);
+	void jump(double accel, double maxSpeed, int height);
 
 	void setXY(float x, float y);
 	RECT getRect(void);
@@ -84,6 +84,7 @@ private:
 	int mDamage;
 	bool mActivateKey;
 	bool mHittedCeiling;
+	int mJumpHeight;
 
 	const int JUMP_HEIGHT;
 	int MAX_HEIGHT;

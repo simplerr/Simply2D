@@ -16,7 +16,7 @@ public:
 	void loadFromFile(std::ofstream *fout);
 
 private:
-	//int mBoostHeight;
+	int mBoostHeight;
 	double mBoostAccel;
 	double mMaxSpeed;
 };

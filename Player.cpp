@@ -9,7 +9,7 @@ extern CameraManager* gCameraManager;
 extern Sound* gSound;
 
 Player::Player(string filename, int width, int height)
-	:JUMP_HEIGHT(80)
+	:JUMP_HEIGHT(50)
 {
 	playerTexture = gGraphics->loadTexture("misc\\textures\\mario.bmp");
 	if(!playerTexture)
@@ -20,6 +20,8 @@ Player::Player(string filename, int width, int height)
 
 	mHealth = HEALTH;
 	mDamage = DAMAGE;
+
+	mJumpHeight = JUMP_HEIGHT;
 
 	faceDir = RIGHT;
 	frame = 0;
@@ -73,11 +75,11 @@ bool Player::update(double dt, Level *Level)
 	double tmpX = mX;
 	double tmpY = mY;
 	
-	if(mFalling)	{
-		if(mSpeedY < 5)
+	if(mFalling && !mJumping)	{
+		if(mSpeedY < 8)
 			mSpeedY += 100*dt;
 		else
-			mSpeedY += 20*dt;
+			mSpeedY += 14*dt;
 	}
 
 	// update frame
@@ -104,27 +106,32 @@ bool Player::update(double dt, Level *Level)
 
 	mDX = 0;
 	if(gDInput->keyPressed(DIK_W))	{
+		mJumpHeight = JUMP_HEIGHT;
 		if(mOnGround)	{
-			jump(.0001, 5);
+			jump(120, 20, mJumpHeight);
+			dJump = 0;
 		}
 		else if(mWallJumpOk)	{
-			jump(.1, 20);
+			jump(120, 20, mJumpHeight);
 			mWallJumpOk = false;
 		}
 	}
 
 	if(mJumping)
 	{
-		/* jumps untill the speed is 0 */
-		if(mSpeedY < 0)	{
-			mSpeedY += mAccel*dt;
+		dJump += -mSpeedY;
+		if(dJump >= mJumpHeight)	{
+			if(mSpeedY < 0)	{
+				mSpeedY += mAccel*dt;
+			}
 		}
 		
-		if(mSpeedY >= 0 || mHittedCeiling)	{
+		if((mSpeedY >= 0 && dJump >= mJumpHeight) || mHittedCeiling)	{
 			mFalling = true;
 			mJumping = false;
 			mSpeedY = 0;
 			mHittedCeiling = false;
+			dJump = 0;
 		}
 	}
 
@@ -335,12 +342,13 @@ void Player::setXY(float x, float y)
 	mDrawY = mY;
 }
 
-void Player::jump(double accel, double maxSpeed)
+void Player::jump(double accel, double maxSpeed, int height)
 {
 	mJumping = true;
 	mAccel = accel;
 	mMaxJumpSpeed = maxSpeed;
 	mSpeedY = -mMaxJumpSpeed;
+	mJumpHeight = height;
 }
 
 void Player::testWallJump(int id)

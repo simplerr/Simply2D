@@ -692,7 +692,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 					}
 					else if(value == "Trampoline")
 					{
-						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 10, 25, "misc\\textures\\trampoline.bmp");
+						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 120, 20, "misc\\textures\\trampoline.bmp");
 						mLevel->addObject(trampoline);
 					}
 					else if(value == "Walljump")
