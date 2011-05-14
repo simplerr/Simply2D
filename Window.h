@@ -10,7 +10,7 @@
 #include <string>
 #include "DirectInput.h"
 #include "constants.h"
-#include "Mouse.h"
+
 #include "Functors.h"
 using namespace std;
 

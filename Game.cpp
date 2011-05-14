@@ -16,7 +16,7 @@
 #include "Window.h"
 #include <Windowsx.h>
 #include <Windows.h>
-#include "Mouse.h"
+
 #include "TextBox.h"
 #include "InputBox.h"
 #include "Enemy.h"

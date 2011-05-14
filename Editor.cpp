@@ -148,10 +148,14 @@ int Editor::updateAll(float dt)
 		return -1;
 
 	mWindowHandler->update(dt);
-	POINT tmpMousePos;
-	tmpMousePos.x = gDInput->getCursorX();
-	tmpMousePos.y = gDInput->getCursorY();
-	mOffset = gCameraManager->gameCamera()->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
+
+	// the delta of the camera from it's orginal position ( center of the screen )
+	mOffset = gCameraManager->gameCamera()->getOffset(); 
+	POINT tmpMousePos = gDInput->getCursorPos();
+
+	// add the camera offset to the mouse x coordinate
+	tmpMousePos.x += mOffset;
+	 
 	
 	MovingPlatform *tmpPlatform;
 
@@ -181,8 +185,8 @@ int Editor::updateAll(float dt)
 		
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
-		// inside game area?
-		if(tmpMousePos.x > gameArea.left && tmpMousePos.x < gameArea.right && tmpMousePos.y > gameArea.top)
+		// inside game area? (- mOffset because this test has to be in screen coordinates)
+		if(tmpMousePos.x - mOffset> gameArea.left && tmpMousePos.x - mOffset < gameArea.right && tmpMousePos.y > gameArea.top)
 		{	
 			Object *tmpObject;
 			tmpObject = NULL;
@@ -345,7 +349,7 @@ int Editor::updateAll(float dt)
 		// shouldn't be able to move outside to the left
 		if(gCameraManager->gameCamera()->getX() > 600 || (gCameraManager->gameCamera()->getX() == 600 && gDInput->mouseDX() < 0))	{
 			gCameraManager->gameCamera()->addMovement(-gDInput->mouseDX(), 0);
-			gDInput->setCursorX(tmpMousePos.x - gDInput->mouseDX());
+			//gDInput->setCursorX(tmpMousePos.x - gDInput->mouseDX());
 		}
 		
 	}
@@ -391,7 +395,7 @@ void Editor::moveObject(void)
 					}
 					else	{	// snapped, don't move the object or mouse						
 						snapCount += dx;
-						gDInput->setCursorX(gDInput->getCursorX() - dx);	// dont move the mouse
+						gDInput->setCursorX(gDInput->getCursorX() + mOffset - dx);	// dont move the mouse
 						mActiveObject->editorMove(0, dy);	// allow movement in the oppisite direction (up/down)
 					}	
 				}
@@ -404,7 +408,7 @@ void Editor::moveObject(void)
 					}
 					else	{
 						snapCount += dy;
-						gDInput->setCursorX(gDInput->getCursorX() - dx);
+						gDInput->setCursorX(gDInput->getCursorX() + mOffset - dx);
 						mActiveObject->editorMove(dx, 0);
 					}					
 				}						

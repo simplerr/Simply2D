@@ -1,5 +1,5 @@
 #include "WindowHandler.h"
-#include "Mouse.h"
+
 #include "CameraManager.h"
 
 extern CameraManager* gCameraManager;

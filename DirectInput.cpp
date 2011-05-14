@@ -5,6 +5,9 @@
 #include "d3dUtil.h"
 #include "DirectInput.h"
 #include "d3dApp.h"
+#include "CameraManager.h"
+
+extern CameraManager* gCameraManager;
 
 DirectInput* gDInput = 0;
 
@@ -23,21 +26,10 @@ DirectInput::DirectInput(HWND hwnd, DWORD keyboardCoopFlags, DWORD mouseCoopFlag
 	HR(mKeyboard->SetCooperativeLevel(gd3dApp->getMainWnd(), keyboardCoopFlags));
 	HR(mKeyboard->Acquire());
 
-	HRESULT hr = HR(mDInput->CreateDevice(GUID_SysMouse, &mMouse, 0));
-	if(FAILED(hr))
-		MessageBox(0, "Failed to create mouse device", 0, 0);
-
-	hr = HR(mMouse->SetDataFormat(&c_dfDIMouse2));
-	if(FAILED(hr))
-		MessageBox(0, "Failed to set mouse data format", 0, 0);
-
-	hr = HR(mMouse->SetCooperativeLevel(gd3dApp->getMainWnd(), mouseCoopFlags));
-	if(FAILED(hr))
-		MessageBox(0, "Failed to set mouse cooperative level", 0, 0);
-
-	hr = HR(mMouse->Acquire());
-	if(FAILED(hr))
-		MessageBox(0, "Failed to set acquire mouse", 0, 0);
+	HR(mDInput->CreateDevice(GUID_SysMouse, &mMouse, 0));
+	HR(mMouse->SetDataFormat(&c_dfDIMouse2));
+	HR(mMouse->SetCooperativeLevel(gd3dApp->getMainWnd(), mouseCoopFlags));
+	HR(mMouse->Acquire());
 
 	POINT mousePos;
 	GetCursorPos(&mousePos);
@@ -215,8 +207,8 @@ float DirectInput::getCursorY(void)
 void DirectInput::drawCursorPos(void)
 {
 	char buffer[256];
-	sprintf(buffer, "Mouse x: %.2f\nMouse y: %.2f \nDx: %.2f \nDy: %.2f", getCursorX(), getCursorY(), mouseDX(), mouseDY());
-	gGraphics->drawText(buffer, GAME_WIDTH + 10	, 700); 
+	sprintf(buffer, "Mouse x: %.2f\nMouse y: %.2f", getCursorX() + gCameraManager->gameCamera()->getOffset(), getCursorY(), mouseDX(), mouseDY());
+	gGraphics->drawText(buffer, GAME_WIDTH + 10	, 800); 
 }
 
 void DirectInput::drawCursor(void)

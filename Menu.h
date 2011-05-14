@@ -5,7 +5,7 @@
 #include <string>
 #include "d3dUtil.h"
 #include "DirectInput.h"
-#include "Mouse.h"
+
 #include <boost\function.hpp>
 #include <boost\bind.hpp>
 
