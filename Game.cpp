@@ -14,6 +14,8 @@
 #include "Graphics.h"
 #include <tchar.h>
 #include "Window.h"
+#include <Windowsx.h>
+#include <Windows.h>
 #include "Mouse.h"
 #include "TextBox.h"
 #include "InputBox.h"
@@ -35,7 +37,6 @@ using namespace std;
 
 // couldn't lie in d3dApp.cpp, no reason why not
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
 extern Sound* gSound;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -51,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	Game app(hInstance, "Simply2D", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	gd3dApp = &app;
 
-	DirectInput di(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
+	DirectInput di(gd3dApp->getMainWnd(), DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
 	gDInput = &di;
 
 	/* this is where the game gets runned */
@@ -69,14 +70,18 @@ Game::Game(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWOR
 
 	mGfxStats = new GfxStats();
 
-	gMouse = new Mouse(mhMainWnd);
-
 	gGraphics = new Graphics("bulle");
 
 	gSound = new Sound();
 
+	ShowCursor(false);
+
+	gd3dDevice->ShowCursor(true);
+
 	// game and gui cameras!
 	gCameraManager = new CameraManager();
+
+	gDInput = NULL;
 
 	mGameState = NULL;
 
@@ -90,7 +95,6 @@ Game::~Game()
 	mGameState->cleanup();
 
 	delete mGfxStats;
-	delete gMouse;
 	delete gGraphics;
 	delete gCameraManager;
 	delete gSound;
@@ -108,7 +112,9 @@ void Game::changeState(GameState* state)
 	mGameState->init(this);
 
 	// restores their positions
-	gMouse->restore();
+	if(gDInput != NULL)
+		gDInput->restoreCursor();
+
 	gCameraManager->gameCamera()->restore();
 }
 
@@ -169,7 +175,7 @@ void Game::onResetDevice()
 void Game::updateScene(float dt)
 {		
 	/* updates the mouse */
-	gMouse->updateMouseDX();
+	//gMouse->updateMouseDX();
 
 	/* update the current state */
 	mGameState->update(dt);
@@ -185,13 +191,16 @@ void Game::drawScene()
 	HR(gd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE));
 
 	// clears the backbuffer and depth buffer
-	gCameraManager->setCamera(GAME_CAMERA);
+	gCameraManager->setCamera(SCREEN_CAMERA);
+	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));	
+
+	/*gCameraManager->setCamera(GAME_CAMERA);
 
 	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));	
 
 	gCameraManager->setCamera(GUI_CAMERA);
 
-	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
+	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));*/
 
 	HR(gd3dDevice->BeginScene());
 
@@ -210,8 +219,12 @@ void Game::drawScene()
 	/* draw the state content in the gui area */
 	mGameState->drawGui();
 
-	gMouse->drawMousePos();
+	gDInput->drawCursorPos();
 	
+	/* draw the cursor */
+	gCameraManager->setCamera(SCREEN_CAMERA);
+	gDInput->drawCursor();
+
 	HR(gd3dDevice->EndScene());
 
 	// Present the backbuffer.
@@ -224,5 +237,31 @@ LRESULT Game::msgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 	mGameState->handleEvents(msg, wParam, lParam);
 
-	return DefWindowProc(mhMainWnd, msg, wParam, lParam);
+	switch(msg)
+	{
+		/*case WM_MOUSEMOVE:
+			gMouse->setVX(GET_X_LPARAM(lParam));
+			gMouse->setVY(GET_Y_LPARAM(lParam));
+		break;
+		case WM_INPUT: 
+		{
+			UINT dwSize = 40;
+			static BYTE lpb[40];
+    
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, 
+							lpb, &dwSize, sizeof(RAWINPUTHEADER));
+    
+			RAWINPUT* raw = (RAWINPUT*)lpb;
+    
+			if (raw->header.dwType == RIM_TYPEMOUSE) 
+			{
+				gMouse->updateCursor(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+				//int xPosRelative = raw->data.mouse.lLastX;
+				//int yPosRelative = raw->data.mouse.lLastY;
+			} 
+		break;
+		}*/
+		default:
+			return DefWindowProc(mhMainWnd, msg, wParam, lParam);
+	}	
 }

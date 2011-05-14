@@ -14,7 +14,7 @@
 class DirectInput
 {
 public:
-	DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags);
+	DirectInput(HWND hwnd, DWORD keyboardCoopFlags, DWORD mouseCoopFlags);
 	~DirectInput();
 
 	void poll();
@@ -30,6 +30,19 @@ public:
 	char ScanToChar(DWORD scanCode) const;
 	char getInput(void);
 
+	void	updateCursor(void);
+	void	drawCursor(void);
+
+	float	getCursorX(void);
+	float	getCursorY(void);
+	POINT	getCursorPos(void);
+	void	setCursorX(float x);
+	void	setCursorY(float y);
+
+	void	restoreCursor(void);
+	void	drawCursorPos(void);
+
+	bool	cursorInsideRect(RECT r);
 private:
 	// Make private to prevent copying of members of this class.
 	DirectInput(const DirectInput& rhs);
@@ -45,6 +58,12 @@ private:
 	IDirectInputDevice8* mMouse;
 	DIMOUSESTATE2        mMouseState;
 	DIMOUSESTATE2        mLastMouseState;
+
+	IDirect3DTexture9*	mCursorTexture;
+
+	float				mCursorX;
+	float				mCursorY;
+	HWND				mHwnd;
 };
 extern DirectInput* gDInput;
 

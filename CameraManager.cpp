@@ -6,12 +6,14 @@ CameraManager::CameraManager()
 {
 	mGameCamera = new Camera(600, 450, 1200, 900);
 	mGuiCamera = new Camera(1300, 450, 200, 900);
+	mScreenCamera = new Camera(700, 450, 1400, 900);
 }
 
 CameraManager::~CameraManager()
 {
 	delete mGameCamera;
 	delete mGuiCamera;
+	delete mScreenCamera;
 }
 
 void CameraManager::setCamera(Cam camera)
@@ -28,6 +30,12 @@ void CameraManager::setCamera(Cam camera)
 			mGameCamera->activate(false);
 		}
 	}
+	else if(camera == SCREEN_CAMERA)	{
+		if(!mScreenCamera->getActive())	{
+			mScreenCamera->activate(true);
+			mScreenCamera->activate(false);
+		}
+	}
 }
 
 Camera* CameraManager::gameCamera(void)
@@ -38,4 +46,9 @@ Camera* CameraManager::gameCamera(void)
 Camera* CameraManager::guiCamera(void)
 {
 	return mGuiCamera;
+}
+
+Camera* CameraManager::screenCamera(void)
+{
+	return mScreenCamera;
 }

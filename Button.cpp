@@ -8,7 +8,6 @@
 
 
 extern Sound* gSound;
-extern Mouse* gMouse;
 
 Button::Button(WindowHandler *handler, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color)
 			:Window(handler, id, x, y, width, height, color)

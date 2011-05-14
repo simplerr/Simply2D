@@ -14,7 +14,6 @@
 class Menu;
 
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
 
 CampaignLevelState CampaignLevelState::mCampaignLevelState;
 
@@ -92,7 +91,7 @@ void CampaignLevelState::update(double dt)
 void CampaignLevelState::updateMenu(void)
 {
 	// consider to combine this with the menuHandler()
-	mCampaignLevelMenu->update(gMouse->getPos());
+	mCampaignLevelMenu->update(gDInput->getCursorX(), gDInput->getCursorY());
 }
 
 void CampaignLevelState::drawMain(void)

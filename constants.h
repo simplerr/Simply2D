@@ -46,6 +46,13 @@ static const int USER_HEIGHT = 36;
 
 class Object;
 
+enum MouseButton
+{
+	LEFTBUTTON,
+    RIGHTBUTTON,
+	MIDDLEBUTTON
+};
+
 enum DragRects
 {
 	L,	// left

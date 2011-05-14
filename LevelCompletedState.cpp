@@ -6,7 +6,6 @@
 #include "Sound.h"
 
 extern CameraManager* gCameraManager;
-extern Mouse*		  gMouse;
 extern Sound* gSound;
 
 LevelCompletedState LevelCompletedState::mLevelCompletedState;

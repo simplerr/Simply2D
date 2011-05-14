@@ -49,6 +49,7 @@ public:
 
 	void draw(void);
 	void update(POINT mousePos);
+	void update(float mx, float my);
 
 	void addMenuItem(MenuItem newItem);
 	void addMenuItem(std::string itemName, char *textureSource);

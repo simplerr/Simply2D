@@ -1,6 +1,6 @@
 #include "ListBox.h"
 
-extern Mouse* gMouse;
+
 
 ListBox::ListBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
 				: Window(handler, id, x, y, width, height, color)
@@ -36,7 +36,7 @@ void ListBox::hoover(int mx, int my)
 
 	for(int i = 0; i < mItems; i++)
 	{
-		if(gMouse->insideWindow(mItemList[i].getRect()))
+		if(gDInput->cursorInsideRect(mItemList[i].getRect()))
 			mHooverRect = mItemList[i].getRect();
 	}
 }

@@ -20,7 +20,6 @@
 // Editor ska ha den 
 
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
 extern Sound* gSound;
 
 Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
@@ -149,7 +148,9 @@ int Editor::updateAll(float dt)
 		return -1;
 
 	mWindowHandler->update(dt);
-	POINT tmpMousePos = gMouse->getPos();
+	POINT tmpMousePos;
+	tmpMousePos.x = gDInput->getCursorX();
+	tmpMousePos.y = gDInput->getCursorY();
 	mOffset = gCameraManager->gameCamera()->getOffset(); // the delta of the camera from it's orginal position ( center of the screen ) 
 	
 	MovingPlatform *tmpPlatform;
@@ -181,7 +182,7 @@ int Editor::updateAll(float dt)
 	// select platform
 	if(gDInput->mouseButtonPressed(LEFTBUTTON))	{
 		// inside game area?
-		if(gMouse->getScreenPos().x > gameArea.left && gMouse->getScreenPos().x < gameArea.right && gMouse->getScreenPos().y > gameArea.top)
+		if(tmpMousePos.x > gameArea.left && tmpMousePos.x < gameArea.right && tmpMousePos.y > gameArea.top)
 		{	
 			Object *tmpObject;
 			tmpObject = NULL;
@@ -344,7 +345,7 @@ int Editor::updateAll(float dt)
 		// shouldn't be able to move outside to the left
 		if(gCameraManager->gameCamera()->getX() > 600 || (gCameraManager->gameCamera()->getX() == 600 && gDInput->mouseDX() < 0))	{
 			gCameraManager->gameCamera()->addMovement(-gDInput->mouseDX(), 0);
-			gMouse->setVX(tmpMousePos.x - gDInput->mouseDX());
+			gDInput->setCursorX(tmpMousePos.x - gDInput->mouseDX());
 		}
 		
 	}
@@ -384,13 +385,13 @@ void Editor::moveObject(void)
 					// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
 					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE )
 					{		
-						gMouse->move(0, -dy);
+						gDInput->setCursorY(gDInput->getCursorY() - dy);
 						mActiveObject->editorMove(dx, dy);
 						snapDir = ALL;
 					}
 					else	{	// snapped, don't move the object or mouse						
 						snapCount += dx;
-						gMouse->move(-dx, 0);	// dont move the mouse
+						gDInput->setCursorX(gDInput->getCursorX() - dx);	// dont move the mouse
 						mActiveObject->editorMove(0, dy);	// allow movement in the oppisite direction (up/down)
 					}	
 				}
@@ -403,7 +404,7 @@ void Editor::moveObject(void)
 					}
 					else	{
 						snapCount += dy;
-						gMouse->move(0, -dy);
+						gDInput->setCursorX(gDInput->getCursorX() - dx);
 						mActiveObject->editorMove(dx, 0);
 					}					
 				}						
@@ -450,7 +451,7 @@ void Editor::resizePlatform(DragRect drag)
 			mActiveObject->scale(LEFT, dx, 0);		
 		}
 		else
-			gMouse->move(-dx, 0);
+			gDInput->setCursorX(gDInput->getCursorX() - dx);
 	}	
 	else if(drag == DRAGRIGHT)
 	{
@@ -459,7 +460,7 @@ void Editor::resizePlatform(DragRect drag)
 			mActiveObject->scale(RIGHT, dx, 0);		// drar man musen åt höger ökar bredden
 		}
 		else
-			gMouse->move(-dx, 0);
+			gDInput->setCursorX(gDInput->getCursorX() - dx);
 	}
 	else if(drag == DRAGUP)
 	{
@@ -468,7 +469,7 @@ void Editor::resizePlatform(DragRect drag)
 			mActiveObject->scale(UP, 0, -dy);
 		}
 		else
-			gMouse->move(0, -dy);
+			gDInput->setCursorY(gDInput->getCursorY() - dy);
 	}
 	else if(drag == DRAGDOWN)
 	{	
@@ -477,7 +478,7 @@ void Editor::resizePlatform(DragRect drag)
 			mActiveObject->scale(DOWN, 0, dy);
 		}
 		else
-			gMouse->move(0, -dy);
+			gDInput->setCursorY(gDInput->getCursorY() - dy);
 	}
 
 	messageHandler(OBJECT_UPDATED);
@@ -487,7 +488,9 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 {
 	Object testObject = *mActiveObject;
 	RECT activeObjectRect = mActiveObject->getRect();
-	POINT tmpMousePos = gMouse->getPos();
+	POINT tmpMousePos;
+	tmpMousePos.x = gDInput->getCursorX();
+	tmpMousePos.y = gDInput->getCursorY();
 	RECT snapObjectRect;
 	bool toReturn = false;
 	int snapDist;
@@ -507,7 +510,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 				// ta reda på hur långt den ska snappa
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.left - activeObjectRect.right;
-				gMouse->move(snapDist - dx, 0);
+				gDInput->setCursorX(gDInput->getCursorX() - dx);
 				mActiveObject->editorMove(snapDist, 0);
 
 				snapCount = 0;
@@ -527,7 +530,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.left - snapObjectRect.right;
-				gMouse->move(-snapDist - dx, 0);
+				gDInput->setCursorX(gDInput->getCursorX() - dx);
 				mActiveObject->editorMove(-snapDist, 0);
 
 				snapCount = 0;
@@ -547,7 +550,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				gMouse->move(0, snapDist - dy);
+				gDInput->setCursorY(gDInput->getCursorY() - dy);
 				mActiveObject->editorMove(0, snapDist);
 
 				snapCount = 0;
@@ -567,7 +570,7 @@ bool Editor::objectSnapping(Object *object, float dx, float dy)
 			{
 				snapObjectRect = snappedObject->getRect();
 				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				gMouse->move(0, -snapDist - dy);
+				gDInput->setCursorY(gDInput->getCursorY() - dy);
 				mActiveObject->editorMove(0, -snapDist);
 
 				snapCount = 0;
@@ -780,7 +783,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 			tmp.append(iLevel->getValue().c_str());
 			tmp.append(".txt");
 
-			gMouse->restore();
+			gDInput->restoreCursor();
 			gCameraManager->gameCamera()->restore();
 			mLevel->saveLevel((char*)tmp.c_str());
 			tryLevel = true;

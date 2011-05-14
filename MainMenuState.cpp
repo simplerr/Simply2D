@@ -10,7 +10,7 @@
 #include "OptionsState.h"
 
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
+
 extern Sound* gSound;
 
 MainMenuState MainMenuState::mMainMenuState;
@@ -72,7 +72,8 @@ void MainMenuState::handleEvents(UINT msg, WPARAM wParam, LPARAM lParam)
 
 void MainMenuState::update(double dt)
 {
-	mStartMenu->update(gMouse->getPos());
+	//mStartMenu->update(gMouse->getPos());
+	mStartMenu->update(gDInput->getCursorX(), gDInput->getCursorY());
 }
 
 void MainMenuState::drawMain(void)

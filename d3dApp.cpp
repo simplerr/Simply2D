@@ -203,6 +203,7 @@ int D3DApp::run()
 				else	{
 					// Get snapshot of input devices.
 					gDInput->poll();
+					gDInput->updateCursor();
 
 					/* update the game */
 					updateScene(mDeltaSum);

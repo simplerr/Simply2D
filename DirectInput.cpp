@@ -8,8 +8,10 @@
 
 DirectInput* gDInput = 0;
 
-DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
+DirectInput::DirectInput(HWND hwnd, DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 {
+	mHwnd = hwnd;
+
 	ZeroMemory(mKeyboardState, sizeof(mKeyboardState));
 	ZeroMemory(&mMouseState, sizeof(mMouseState));
 
@@ -21,10 +23,30 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 	HR(mKeyboard->SetCooperativeLevel(gd3dApp->getMainWnd(), keyboardCoopFlags));
 	HR(mKeyboard->Acquire());
 
-	HR(mDInput->CreateDevice(GUID_SysMouse, &mMouse, 0));
-	HR(mMouse->SetDataFormat(&c_dfDIMouse2));
-	HR(mMouse->SetCooperativeLevel(gd3dApp->getMainWnd(), mouseCoopFlags));
-	HR(mMouse->Acquire());
+	HRESULT hr = HR(mDInput->CreateDevice(GUID_SysMouse, &mMouse, 0));
+	if(FAILED(hr))
+		MessageBox(0, "Failed to create mouse device", 0, 0);
+
+	hr = HR(mMouse->SetDataFormat(&c_dfDIMouse2));
+	if(FAILED(hr))
+		MessageBox(0, "Failed to set mouse data format", 0, 0);
+
+	hr = HR(mMouse->SetCooperativeLevel(gd3dApp->getMainWnd(), mouseCoopFlags));
+	if(FAILED(hr))
+		MessageBox(0, "Failed to set mouse cooperative level", 0, 0);
+
+	hr = HR(mMouse->Acquire());
+	if(FAILED(hr))
+		MessageBox(0, "Failed to set acquire mouse", 0, 0);
+
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	ScreenToClient(mHwnd, &mousePos);
+
+	mCursorX = mousePos.x;
+	mCursorY = mousePos.y;
+
+	mCursorTexture = gGraphics->loadTexture("misc\\textures\\cursor.bmp");
 }
 
 DirectInput::~DirectInput()
@@ -34,6 +56,7 @@ DirectInput::~DirectInput()
 	mMouse->Unacquire();
 	ReleaseCOM(mKeyboard);
 	ReleaseCOM(mMouse);
+	ReleaseCOM(mCursorTexture);
 }
 
 void DirectInput::poll()
@@ -135,4 +158,104 @@ char DirectInput::getInput(void)
 		}
 	}		
 	return 'n';
+}
+
+void DirectInput::updateCursor(void)
+{
+	RECT windowRect;
+	GetWindowRect(mHwnd, &windowRect);
+
+	/* stop updating when outside the screen */
+	if(mCursorX <= -windowRect.left)	{
+		if(mMouseState.lX > 0)
+			mCursorX += mMouseState.lX;
+		else
+			mCursorX = -windowRect.left - 8;
+	}
+	/* this only works on none-dual screens */
+	else if(mCursorX >= GetSystemMetrics(SM_CXSCREEN))	{
+		if(mMouseState.lX < 0)
+			mCursorX += mMouseState.lX;
+		else
+			mCursorX = GetSystemMetrics(SM_CXSCREEN);
+	}
+	else
+		mCursorX += mMouseState.lX;
+
+	if(mCursorY <= -windowRect.top)	{
+		if(mMouseState.lY > 0)
+			mCursorY += mMouseState.lY;
+		else
+			mCursorY = - windowRect.top - 30;
+	}
+	else if(mCursorY >= GetSystemMetrics(SM_CYSCREEN) - windowRect.top - 30)	{
+		if(mMouseState.lY < 0)
+			mCursorY += mMouseState.lY;
+		else
+			mCursorY = GetSystemMetrics(SM_CYSCREEN) - windowRect.top - 30;
+	}
+	else
+		mCursorY += mMouseState.lY;
+
+	/* need to set the cursor position */
+	/* it's invisible but in order to press the close button this is needed*/
+	SetCursorPos(mCursorX + windowRect.left + 8, mCursorY + windowRect.top + 30);
+}
+
+float DirectInput::getCursorX(void)
+{
+	return mCursorX;
+}
+	
+float DirectInput::getCursorY(void)
+{
+	return mCursorY;
+}
+
+void DirectInput::drawCursorPos(void)
+{
+	char buffer[256];
+	sprintf(buffer, "Mouse x: %.2f\nMouse y: %.2f \nDx: %.2f \nDy: %.2f", getCursorX(), getCursorY(), mouseDX(), mouseDY());
+	gGraphics->drawText(buffer, GAME_WIDTH + 10	, 700); 
+}
+
+void DirectInput::drawCursor(void)
+{
+	gGraphics->BlitTexture(mCursorTexture, mCursorX, mCursorY, 32, 32);
+}
+
+void DirectInput::setCursorX(float x)
+{
+	mCursorX = x;
+}
+
+void DirectInput::setCursorY(float y)
+{
+	mCursorY = y;
+}
+
+void DirectInput::restoreCursor(void)
+{
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	ScreenToClient(mHwnd, &mousePos);
+
+	mCursorX = mousePos.x;
+	mCursorY = mousePos.y;
+}
+
+POINT DirectInput::getCursorPos(void)
+{
+	POINT tmpPoint;
+	tmpPoint.x = mCursorX;
+	tmpPoint.y = mCursorY;
+
+	return tmpPoint;
+}
+bool DirectInput::cursorInsideRect(RECT r)
+{
+	if(mCursorX > r.left && mCursorX < r.right && mCursorY > r.top && mCursorY < r.bottom)
+		return true;
+	else
+		return false;
 }

@@ -2,7 +2,7 @@
 #include "Mouse.h"
 #include "Sound.h"
 
-extern Mouse* gMouse;
+
 extern Sound* gSound;
 
 Menu::Menu(std::string menuName, navigationType a_navigation, bool useFonts, int itemAmount, int a_spacing)
@@ -188,7 +188,7 @@ void Menu::update(POINT mousePos)
 			if(mousePos.x < i->itemRect.right && mousePos.x > i->itemRect.left && mousePos.y < i->itemRect.bottom && mousePos.y > i->itemRect.top)
 			{
 				i->state = SELECTED;
-				if(gMouse->buttonPressed(LEFTBUTTON) && i->pressable)	{
+				if(gDInput->mouseButtonPressed(LEFTBUTTON) && i->pressable)	{
 					gSound->playEffect("misc\\sound\\menu_click.wav");
 					if(!callback(i->itemName))
 						break;
@@ -373,4 +373,69 @@ void Menu::removeItem(std::string itemName)
 		}
 		i++;
 	}
+}
+
+void Menu::update(float mx, float my)
+{
+	//updateSelectedItem(mousePos);
+	if(navigation == MOUSE)
+	{
+		std::list<MenuItem>::iterator i = mMenuItemList.begin();
+		while( i != mMenuItemList.end())
+		{
+			// mouse is inside
+			if(mx < i->itemRect.right && mx > i->itemRect.left && my < i->itemRect.bottom && my > i->itemRect.top)
+			{
+				i->state = SELECTED;
+				if(gDInput->mouseButtonPressed(LEFTBUTTON) && i->pressable)	{
+					gSound->playEffect("misc\\sound\\menu_click.wav");
+					if(!callback(i->itemName))
+						break;
+				}		
+			}
+			else
+				i->state = STANDARD;
+
+			i++;
+		}
+	}
+	else if(navigation == ARROWKEYS)
+	{		
+		// updatera idCounter				
+		if(gDInput->keyPressed(DIK_W)){
+			idCounter--;
+		}
+		else if(gDInput->keyPressed(DIK_S))	{
+			idCounter++;
+		}
+	
+		// kolla om man är utanför menyn
+		if(idCounter < 0)
+			idCounter = numbersOfItems-1;	// tänk 0-X
+		else if(idCounter > numbersOfItems-1)
+			idCounter = 0;			
+
+		std::list<MenuItem>::iterator i = mMenuItemList.begin();
+		while( i != mMenuItemList.end())
+		{								
+			if(i->ID == idCounter){				
+				i->state = SELECTED;
+			}
+			else
+				i->state = STANDARD;
+
+			// a item was pressed
+			if(gDInput->keyPressed(DIK_RETURN))
+			{
+				if(i->ID == idCounter && i->pressable)	
+				{
+					if(!callback(i->itemName))
+						break;
+				}					
+			}
+
+			i++;
+		}
+	}
+
 }

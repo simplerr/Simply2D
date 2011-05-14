@@ -1,7 +1,5 @@
 #include "DropBox.h"
 
-extern Mouse* gMouse;
-
 DropBox::DropBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int itemHeight, D3DCOLOR color)
 	: Window(handler, id, x, y, width, height, color)
 {
@@ -28,8 +26,8 @@ void DropBox::update(float dt)
 
 bool DropBox::pressed(int mx, int my)
 {
-	mx = gMouse->getPos().x;
-	my = gMouse->getPos().y;
+	mx = gDInput->getCursorX();
+	my = gDInput->getCursorY();
 	// expanded?
 	if(!mExpanded)
 	{

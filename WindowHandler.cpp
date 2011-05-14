@@ -3,7 +3,7 @@
 #include "CameraManager.h"
 
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
+
 
 WindowHandler::WindowHandler()		
 {
@@ -104,7 +104,7 @@ bool WindowHandler::update(double dt)
 				winRect = mWindowList[i]->getRect();
 
 				/* a window was pressed */
-				if(gMouse->insideWindow(winRect))	
+				if(gDInput->cursorInsideRect(winRect))	
 				{
 					/* there is a active window*/
 					if(mActiveWindow != NULL)
@@ -112,17 +112,17 @@ bool WindowHandler::update(double dt)
 						/* the window that was pressed was the active one, call the press() function */
 						if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID())	{
 							/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
-							if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y))
+							if(!mWindowList[i]->pressed(gDInput->getCursorX(), gDInput->getCursorY()))
 								return false;
 						}
 						/* not the active one and the mouse isn't inside the active window*/
-						else if(!gMouse->insideWindow(mActiveWindow->getRect()))	{
+						else if(!gDInput->cursorInsideRect(mActiveWindow->getRect()))	{
 							mActiveWindow->setActive(false);	// deactivate
 							mActiveWindow = mWindowList[i];		// point at the new active window
 							mActiveWindow->setActive(true);		// activate it
 
 							/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
-							if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y));	// send press
+							if(!mWindowList[i]->pressed(gDInput->getCursorX(), gDInput->getCursorY()));	// send press
 								return false;
 						}
 					}
@@ -133,7 +133,7 @@ bool WindowHandler::update(double dt)
 						mActiveWindow->setActive(true);
 
 						/* returns if the window handle have been destroyed in the callback function, ie a state have changed */
-						if(!mWindowList[i]->pressed(gMouse->getScreenPos().x, gMouse->getScreenPos().y))
+						if(!mWindowList[i]->pressed(gDInput->getCursorX(), gDInput->getCursorY()))
 							return false;
 					}
 				
@@ -165,19 +165,19 @@ bool WindowHandler::update(double dt)
 				if(mActiveWindow != NULL)
 				{
 					/* inside a window but not inside the active one */
-					if(gMouse->insideWindow(winRect) && !gMouse->insideWindow(mActiveWindow->getRect()) && mActiveWindow->getPrimaryID() != mWindowList[i]->getPrimaryID())
-						mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+					if(gDInput->cursorInsideRect(winRect) && !gDInput->cursorInsideRect(mActiveWindow->getRect()) && mActiveWindow->getPrimaryID() != mWindowList[i]->getPrimaryID())
+						mWindowList[i]->hoover(gDInput->getCursorX(), gDInput->getCursorY());
 					/* inside the active window */
-					else if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID() && gMouse->insideWindow(winRect))
-						mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+					else if(mActiveWindow->getPrimaryID() == mWindowList[i]->getPrimaryID() && gDInput->cursorInsideRect(winRect))
+						mWindowList[i]->hoover(gDInput->getCursorX(), gDInput->getCursorY());
 				}
 				/* no active window */
 				else	
 				{
 					/* inside a window */
-					if(gMouse->insideWindow(winRect))	
+					if(gDInput->cursorInsideRect(winRect))	
 					{			
-						mWindowList[i]->hoover(gMouse->getScreenPos().x , gMouse->getScreenPos().y);
+						mWindowList[i]->hoover(gDInput->getCursorX(), gDInput->getCursorY());
 					}
 				}
 			}

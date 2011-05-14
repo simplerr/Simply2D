@@ -15,7 +15,6 @@
 class Menu;
 
 extern CameraManager* gCameraManager;
-extern Mouse* gMouse;
 
 CustomLevelState CustomLevelState::mCustomLevelState;
 CustomEditorState CustomEditorState::mCustomEditorState;
@@ -86,7 +85,8 @@ void CustomLevelState::update(double dt)
 void CustomLevelState::updateMenu(void)
 {
 	// consider to combine this with the menuHandler()
-	mCustomLevelMenu->update(gMouse->getPos());
+	//mCustomLevelMenu->update(gMouse->getPos());
+	mCustomLevelMenu->update(gDInput->getCursorX(), gDInput->getCursorY());
 }
 
 void CustomLevelState::drawMain(void)
