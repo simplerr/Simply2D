@@ -51,6 +51,7 @@ public:
 	bool collision(Player *player, float dt);
 	MTV polyCollision(Shape *ShapeA, Shape *ShapeB);
 	Object* objectIntersection(Object *activeObject);
+	bool rectIntersection(RECT rectA, RECT rectB);
 	int getSnapDist(RECT rect, direction checkDir);
 	POS getSpawn(void)  {return spawnPos;}
 	RECT getSpawnRect(void);

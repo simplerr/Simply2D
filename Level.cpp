@@ -855,22 +855,15 @@ direction Level::snapObject(Object *object, int snapDist)
 		Object tmpObject2(object->getX(), object->getY(), object->getWidth(), object->getHeight(), object->getTextureSource(), STATIC_PLATFORMA);
 		tmpObject = tmpObject2;
 	}
-	//else
-	//	tmpObject = *object;
 
-	tmpObject.scale(ALL, 2*snapDist, 2*snapDist);
+	tmpObject.scale(ALL, snapDist, snapDist);
 
 	float dx = gDInput->mouseDX();
 	float dy = gDInput->mouseDY();
 
 	// ta reda på hur långt den ska snappa
-	RECT snapObjectRect, objectRect; 
+	RECT snapObjectRect, objectRect, testRect; 
 	int realSnapDist;
-
-	/*for (int i = 0;i < mObjectList.size();i++)
-	{
-		if(objectIntersection(object)
-	}*/
 
 	for (int i = 0;i < mObjectList.size();i++)
 	{
@@ -884,28 +877,36 @@ direction Level::snapObject(Object *object, int snapDist)
 			if(mtv.collision)
 			{
 				snapObjectRect = mObjectList[i]->getRect();
-				objectRect = object->getRect();
+				objectRect = testRect = object->getRect();
 
-				if(mtv.pushX < 0 && dx < 0)	{
+				testRect.left -= snapDist;
+				testRect.right += snapDist;
+
+				if(mtv.pushX < 0 && dx < 0 && rectIntersection(testRect, mObjectList[i]->getRect()))	{
 					realSnapDist = objectRect.left - snapObjectRect.right;
 					object->editorMove(-realSnapDist, dy);
 					gDInput->setCursorX(gDInput->getCursorX() - realSnapDist - dx);
 					return LEFT;
 				}
-				else if(mtv.pushX > 0 && dx > 0)	{
+				else if(mtv.pushX > 0 && dx > 0 && rectIntersection(testRect, mObjectList[i]->getRect()))	{
 					realSnapDist = snapObjectRect.left - objectRect.right;
 					object->editorMove(realSnapDist, dy);
 					gDInput->setCursorX(gDInput->getCursorX() + realSnapDist - dx);
 					return RIGHT;
 				}
 
-				if(mtv.pushY < 0 && dy < 0)	{
+				testRect.left += snapDist;
+				testRect.right -= snapDist;
+				testRect.top -= snapDist;
+				testRect.bottom += snapDist;
+
+				if(mtv.pushY < 0 && dy < 0 && rectIntersection(testRect, mObjectList[i]->getRect()))	{
 					realSnapDist = objectRect.top - snapObjectRect.bottom;
 					object->editorMove(dx, -realSnapDist);
 					gDInput->setCursorY(gDInput->getCursorY() - realSnapDist - dy);
 					return UP;
 				}
-				else if(mtv.pushY > 0 && dy > 0)	{
+				else if(mtv.pushY > 0 && dy > 0 && rectIntersection(testRect, mObjectList[i]->getRect()))	{
 					realSnapDist = snapObjectRect.top - objectRect.bottom;
 					object->editorMove(dx, realSnapDist);
 					gDInput->setCursorY(gDInput->getCursorY() + realSnapDist - dy);
@@ -917,4 +918,12 @@ direction Level::snapObject(Object *object, int snapDist)
 
 	// shouldn't be ALL, but NONE is taken :/
 	return ALL;
+}
+
+bool Level::rectIntersection(RECT rectA, RECT rectB)
+{
+	if(rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom > rectB.top)
+		return true;
+	else
+		return false;
 }
