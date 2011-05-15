@@ -199,17 +199,20 @@ ObjectArea Object::getAreaAt(double mx, double my)
 	RECT *dragRects = getDragRects();
 
 	// first check the dragRects
-	for(int i = 0; i < 4; i++)	
+	if(getResizeable())
 	{
-		if(mx > dragRects[i].left && mx < dragRects[i].right && my > dragRects[i].top && my < dragRects[i].bottom)	{
-			if(i == L)
-				return DRAG_LEFT;
-			else if(i == R)
-				return DRAG_RIGHT;
-			else if(i == TO)
-				return DRAG_UP;
-			else if(i == B)
-				return DRAG_DOWN;
+		for(int i = 0; i < 4; i++)	
+		{
+			if(mx > dragRects[i].left && mx < dragRects[i].right && my > dragRects[i].top && my < dragRects[i].bottom)	{
+				if(i == L)
+					return DRAG_LEFT;
+				else if(i == R)
+					return DRAG_RIGHT;
+				else if(i == TO)
+					return DRAG_UP;
+				else if(i == B)
+					return DRAG_DOWN;
+			}
 		}
 	}
 

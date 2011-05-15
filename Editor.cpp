@@ -349,7 +349,6 @@ int Editor::updateAll(float dt)
 		// shouldn't be able to move outside to the left
 		if(gCameraManager->gameCamera()->getX() > 600 || (gCameraManager->gameCamera()->getX() == 600 && gDInput->mouseDX() < 0))	{
 			gCameraManager->gameCamera()->addMovement(-gDInput->mouseDX(), 0);
-			//gDInput->setCursorX(tmpMousePos.x - gDInput->mouseDX());
 		}
 		
 	}
