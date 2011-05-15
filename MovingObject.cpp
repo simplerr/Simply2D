@@ -182,7 +182,6 @@ void MovingObject::editorMove(float dx, float dy)
 {
 	Object::move(dx, dy);
 
-	// start pos ska inte följa med ..
 	mStartPos.x += dx;
 	mStartPos.y += dy;
 	mEndPos.x += dx;

@@ -7,6 +7,7 @@ Object::Object(float x, float y, int width, int height, char *textureSource, Obj
 {
 	mShape.origin.x = x;
 	mShape.origin.y = y;
+	mShapeType = shape;
 
 	if(shape == QUAD)
 	{

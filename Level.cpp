@@ -850,6 +850,14 @@ direction Level::snapObject(Object *object, int snapDist)
 {
 	MTV mtv;
 	Object tmpObject = *object;
+
+	if(tmpObject.getShapeType() != QUAD)	{
+		Object tmpObject2(object->getX(), object->getY(), object->getWidth(), object->getHeight(), object->getTextureSource(), STATIC_PLATFORMA);
+		tmpObject = tmpObject2;
+	}
+	//else
+	//	tmpObject = *object;
+
 	tmpObject.scale(ALL, 2*snapDist, 2*snapDist);
 
 	float dx = gDInput->mouseDX();
@@ -880,26 +888,26 @@ direction Level::snapObject(Object *object, int snapDist)
 
 				if(mtv.pushX < 0 && dx < 0)	{
 					realSnapDist = objectRect.left - snapObjectRect.right;
-					object->move(-realSnapDist, dy);
+					object->editorMove(-realSnapDist, dy);
 					gDInput->setCursorX(gDInput->getCursorX() - realSnapDist - dx);
 					return LEFT;
 				}
 				else if(mtv.pushX > 0 && dx > 0)	{
 					realSnapDist = snapObjectRect.left - objectRect.right;
-					object->move(realSnapDist, dy);
+					object->editorMove(realSnapDist, dy);
 					gDInput->setCursorX(gDInput->getCursorX() + realSnapDist - dx);
 					return RIGHT;
 				}
 
 				if(mtv.pushY < 0 && dy < 0)	{
 					realSnapDist = objectRect.top - snapObjectRect.bottom;
-					object->move(dx, -realSnapDist);
+					object->editorMove(dx, -realSnapDist);
 					gDInput->setCursorY(gDInput->getCursorY() - realSnapDist - dy);
 					return UP;
 				}
 				else if(mtv.pushY > 0 && dy > 0)	{
 					realSnapDist = snapObjectRect.top - objectRect.bottom;
-					object->move(dx, realSnapDist);
+					object->editorMove(dx, realSnapDist);
 					gDInput->setCursorY(gDInput->getCursorY() + realSnapDist - dy);
 					return DOWN;
 				}
@@ -910,4 +918,3 @@ direction Level::snapObject(Object *object, int snapDist)
 	// shouldn't be ALL, but NONE is taken :/
 	return ALL;
 }
-

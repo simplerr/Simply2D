@@ -86,12 +86,15 @@ public:
 	virtual std::vector<Property> getProperties(void);
 	virtual void loadProperties(std::vector<Property> propertyList);
 
+	ShapeType getShapeType(void) {return mShapeType;}
+
 private:
 	IDirect3DTexture9* mTexture;
 	char mTextureSource[256];
 
 	Shape mShape;
 
+	ShapeType mShapeType;
 	float mX;
 	float mY;
 	int mWidth;
