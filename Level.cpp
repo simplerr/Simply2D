@@ -846,3 +846,68 @@ void Level::connectGate(ActivateButton* button, int id)
 	}
 }
 
+direction Level::snapObject(Object *object, int snapDist)
+{
+	MTV mtv;
+	Object tmpObject = *object;
+	tmpObject.scale(ALL, 2*snapDist, 2*snapDist);
+
+	float dx = gDInput->mouseDX();
+	float dy = gDInput->mouseDY();
+
+	// ta reda på hur långt den ska snappa
+	RECT snapObjectRect, objectRect; 
+	int realSnapDist;
+
+	/*for (int i = 0;i < mObjectList.size();i++)
+	{
+		if(objectIntersection(object)
+	}*/
+
+	for (int i = 0;i < mObjectList.size();i++)
+	{
+		if(tmpObject.getID() != mObjectList[i]->getID())	{
+			/* make sure the object isn't inside anything */
+			if(polyCollision(object->getShape(), mObjectList[i]->getShape()).collision)
+				return ALL;	// hack - should be NONE
+
+			/* check which side to snap to */
+			mtv = polyCollision(tmpObject.getShape(), mObjectList[i]->getShape());
+			if(mtv.collision)
+			{
+				snapObjectRect = mObjectList[i]->getRect();
+				objectRect = object->getRect();
+
+				if(mtv.pushX < 0 && dx < 0)	{
+					realSnapDist = objectRect.left - snapObjectRect.right;
+					object->move(-realSnapDist, dy);
+					gDInput->setCursorX(gDInput->getCursorX() - realSnapDist - dx);
+					return LEFT;
+				}
+				else if(mtv.pushX > 0 && dx > 0)	{
+					realSnapDist = snapObjectRect.left - objectRect.right;
+					object->move(realSnapDist, dy);
+					gDInput->setCursorX(gDInput->getCursorX() + realSnapDist - dx);
+					return RIGHT;
+				}
+
+				if(mtv.pushY < 0 && dy < 0)	{
+					realSnapDist = objectRect.top - snapObjectRect.bottom;
+					object->move(dx, -realSnapDist);
+					gDInput->setCursorY(gDInput->getCursorY() - realSnapDist - dy);
+					return UP;
+				}
+				else if(mtv.pushY > 0 && dy > 0)	{
+					realSnapDist = snapObjectRect.top - objectRect.bottom;
+					object->move(dx, realSnapDist);
+					gDInput->setCursorY(gDInput->getCursorY() + realSnapDist - dy);
+					return DOWN;
+				}
+			}
+		}
+	}
+
+	// shouldn't be ALL, but NONE is taken :/
+	return ALL;
+}
+

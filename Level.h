@@ -63,6 +63,8 @@ public:
 
 	void connectGate(ActivateButton* button, int id);
 
+	direction snapObject(Object *object, int snapDist);
+
 private:
 	std::vector<Object*> mObjectList;		// platforms, ladders, trampolines, teleporters, walljumps etc.. ALL
 

@@ -22,7 +22,7 @@
 extern CameraManager* gCameraManager;
 extern Sound* gSound;
 
-Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
+Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(20)
 {
 	mWindowHandler = new WindowHandler(1300, 450, 200, 900);
 	mLevel = new Level(NULL);
@@ -42,6 +42,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(10)
 	movingSpawnPos = false;
 	movingWarp = false;
 	showPaths = false;
+	mObjectSnapped = false;
 	tryLevel = false;
 	currentAction = IDLE;
 
@@ -216,6 +217,7 @@ int Editor::updateAll(float dt)
 				mActiveObject = tmpObject;
 				tmpObject = NULL;
 				messageHandler(OBJECT_SELECTED);
+				mObjectSnapped = false;
 			}
 			// clicked in space
 			else if(tmpObject == NULL && !sameObjectSelected)	{
@@ -223,6 +225,7 @@ int Editor::updateAll(float dt)
 				if(mActiveObject != NULL)	{
 					if(mActiveObject->getAreaAt(tmpMousePos.x, tmpMousePos.y) != END_RECT)	{
 						mActiveObject = NULL;
+						mObjectSnapped = false;
 					}
 				}						
 			}
@@ -231,6 +234,7 @@ int Editor::updateAll(float dt)
 			{
 				movingSpawnPos = false;
 				snapDir = ALL;
+				mObjectSnapped = false;
 				snapCount = SNAP_SENSE;
 				messageHandler(OBJECT_SELECTED);	
 			}		
@@ -371,49 +375,78 @@ int Editor::updateAll(float dt)
 void Editor::moveObject(void)
 {		
 	RECT activeObjectRect = mActiveObject->getRect();
-		// updatera koordinater
-		//float dx = gMouse->getDX();
-		//float dy = gMouse->getDY();
-		float dx = gDInput->mouseDX();
-		float dy = gDInput->mouseDY();
-				
-			if(!objectSnapping(mActiveObject, dx, dy))
-			{
-				if(snapDir == ALL)
-				{
-					mActiveObject->editorMove(dx, dy);						
-				}
-				else if(snapDir == LEFT || snapDir == RIGHT)
-				{
-					// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
-					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE )
-					{		
-						gDInput->setCursorY(gDInput->getCursorY() - dy);
-						mActiveObject->editorMove(dx, dy);
-						snapDir = ALL;
-					}
-					else	{	// snapped, don't move the object or mouse						
-						snapCount += dx;
-						gDInput->setCursorX(gDInput->getCursorX() - dx);	// dont move the mouse
-						mActiveObject->editorMove(0, dy);	// allow movement in the oppisite direction (up/down)
-					}	
-				}
-				else if(snapDir == UP || snapDir == DOWN)
-				{
-					if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE)
-					{
-						mActiveObject->editorMove(dx, dy);
-						snapDir = ALL;
-					}
-					else	{
-						snapCount += dy;
-						gDInput->setCursorY(gDInput->getCursorY() - dy);
-						mActiveObject->editorMove(dx, 0);
-					}					
-				}						
-		}
 
-		messageHandler(OBJECT_UPDATED);
+	// updatera koordinater
+	//float dx = gMouse->getDX();
+	//float dy = gMouse->getDY();
+	float dx = gDInput->mouseDX();
+	float dy = gDInput->mouseDY();
+				
+			
+	// om det inte är någon snapping	-> kolla snapping
+	// är det snapping					-> snap + förhindra movement
+	// är det inte snapping				-> flytta normalt
+	if(!mObjectSnapped)
+	{
+		mObjectSnapped = objectSnapping(mActiveObject, dx, dy);
+		if(!mObjectSnapped) // can change in objectSnapping()
+			mActiveObject->editorMove(dx, dy);
+	}
+	else
+	{
+		if(snapDir == LEFT || snapDir == RIGHT)
+		{
+			// dx kan vara båda + att om den inte är nära snapped ska den röra sig fritt
+			if(snapCount > SNAP_SENSE || snapCount < -SNAP_SENSE )
+			{				
+				mActiveObject->editorMove(dx, dy);
+
+				snapDir = ALL;
+				mObjectSnapped = false;
+				snapCount = 0;
+			}
+			else	{	// snapped, don't move the object or mouse						
+				snapCount += dx;
+				gDInput->setCursorX(gDInput->getCursorX() - dx);	// dont move the mouse
+				mActiveObject->editorMove(0, dy);	// allow movement in the oppisite direction (up/down)
+			}
+		}
+		else if(snapDir == UP || snapDir == DOWN)
+		{
+			if(snapCount >= SNAP_SENSE || snapCount <= -SNAP_SENSE)
+			{		
+				mActiveObject->editorMove(dx, dy);
+
+				snapDir = ALL;
+				mObjectSnapped = false;
+				snapCount = 0;
+			}
+			else	{
+				snapCount += dy;
+				gDInput->setCursorY(gDInput->getCursorY() - dy);
+				mActiveObject->editorMove(dx, 0);
+				
+			}					
+		}			
+	}
+
+	messageHandler(OBJECT_UPDATED);
+}
+
+bool Editor::objectSnapping(Object *object, float dx, float dy)
+{
+	if(mLevel->objectIntersection(mActiveObject) == NULL)	{
+		
+		snapDir = mLevel->snapObject(object, SNAP_DIST);
+		
+		if(snapDir != ALL)	
+		{	
+			snapCount = 0;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // just renders the GUI to the right
@@ -485,105 +518,6 @@ void Editor::resizePlatform(DragRect drag)
 	}
 
 	messageHandler(OBJECT_UPDATED);
-}
-
-bool Editor::objectSnapping(Object *object, float dx, float dy)
-{
-	Object testObject = *mActiveObject;
-	RECT activeObjectRect = mActiveObject->getRect();
-	POINT tmpMousePos;
-	tmpMousePos.x = gDInput->getCursorX();
-	tmpMousePos.y = gDInput->getCursorY();
-	RECT snapObjectRect;
-	bool toReturn = false;
-	int snapDist;
-
-	// om aktiv plattform inte är i någon annan plattform
-	if(mLevel->objectIntersection(mActiveObject) == NULL)
-	{	
-		// till höger
-		//testPlatform.rect.right += SNAP_DIST;
-		testObject.move(SNAP_DIST, 0);
-		snappedObject = mLevel->objectIntersection(&testObject);
-		if(snappedObject != NULL)
-		{
-			// snap
-			if(dx > 0)
-			{				
-				// ta reda på hur långt den ska snappa
-				snapObjectRect = snappedObject->getRect();
-				snapDist = snapObjectRect.left - activeObjectRect.right;
-				gDInput->setCursorX(gDInput->getCursorX() + snapDist - dx);
-				mActiveObject->editorMove(snapDist, 0);
-
-				snapCount = 0;
-				snapDir = LEFT;
-				return true;
-			}
-		}
-
-		// till vänster
-		testObject = *mActiveObject;
-		testObject.move(-SNAP_DIST, 0);
-		snappedObject = mLevel->objectIntersection(&testObject);
-		if(snappedObject != NULL)
-		{
-			// snap
-			if(dx < 0)
-			{
-				snapObjectRect = snappedObject->getRect();
-				snapDist = activeObjectRect.left - snapObjectRect.right;
-				gDInput->setCursorX(gDInput->getCursorX() - snapDist - dx);
-				mActiveObject->editorMove(-snapDist, 0);
-
-				snapCount = 0;
-				snapDir = RIGHT;
-				return true;
-			}
-		}
-
-		// under
-		testObject = *mActiveObject;
-		testObject.move(0, SNAP_DIST);
-		snappedObject = mLevel->objectIntersection(&testObject);
-		if(snappedObject != NULL)
-		{
-			// snap
-			if(dy > 0)
-			{
-				snapObjectRect = snappedObject->getRect();
-				snapDist = snapObjectRect.top - activeObjectRect.bottom;
-				gDInput->setCursorY(gDInput->getCursorY() + snapDist - dy);
-				mActiveObject->editorMove(0, snapDist);
-
-				snapCount = 0;
-				snapDir = DOWN;
-				return true;
-			}
-		}
-
-		// över
-		testObject = *mActiveObject;
-		testObject.move(0, -SNAP_DIST);
-		snappedObject = mLevel->objectIntersection(&testObject);
-		if(mLevel->objectIntersection(&testObject))
-		{
-			// snap
-			if(dy < 0)
-			{
-				snapObjectRect = snappedObject->getRect();
-				snapDist = activeObjectRect.top - snapObjectRect.bottom;
-				gDInput->setCursorY(gDInput->getCursorY() - snapDist - dy);
-				mActiveObject->editorMove(0, -snapDist);
-
-				snapCount = 0;
-				snapDir = UP;
-				return true;
-			}
-		}
-	}
-	
-	return false;
 }
 
 bool Editor::stillSnapped(void)

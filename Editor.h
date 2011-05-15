@@ -103,6 +103,7 @@ private:
 	string		changeTexture;
 	RECT		dragLeft, dragTop, dragBottom, dragRight;
 	int			snapCount;
+	bool		mObjectSnapped;
 	direction	snapDir;
 	ObjectType	mPrevActiveObjectType;
 	int			createObjectTextPos;
