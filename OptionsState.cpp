@@ -83,7 +83,7 @@ void OptionsState::drawGui(void)
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }
 
-bool OptionsState::messageHandler(WindowID id)
+bool OptionsState::messageHandler(WindowID id, WindowMessage msg)
 {
 	switch(id)
 	{

@@ -18,11 +18,11 @@ public:
 	void draw(void);
 	bool pressed(int mx, int my);
   
-	boost::function<bool(WindowID id)> callback;
+	boost::function<bool(WindowID id, WindowMessage msg)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack?
-		callback = boost::bind(_callback, _object, _1);
+	void connect(bool(T::*_callback)(WindowID id, WindowMessage msg), T* _object)	{
+		callback = boost::bind(_callback, _object, _1, _2);
 	}
 
 	bool getChecked(void);

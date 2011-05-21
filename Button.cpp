@@ -47,7 +47,7 @@ bool Button::pressed(int mx, int my)
 			gSound->playEffect(mSoundSource.c_str());
 		
 		//if(!callback(getID(), getValue()))
-		if(!callback(getID()))
+		if(!callback(getID(), WindowMessage(true)))
 			return false;
 	}
 	return true;

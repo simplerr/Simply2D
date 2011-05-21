@@ -96,7 +96,7 @@ bool CustomEditorState::menuHandler(std::string name)
 	return true;
 }
 
-bool CustomEditorState::messageHandler(WindowID id)
+bool CustomEditorState::messageHandler(WindowID id, WindowMessage msg)
 {
 	// create a new level!
 	if(id == BUTTON_CREATE)

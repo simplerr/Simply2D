@@ -23,11 +23,11 @@ public:
 	void setPressSound(string source);
 
 	//boost::function<bool(WindowID id, bool value)> callback;
-	boost::function<bool(WindowID id)> callback;
+	boost::function<bool(WindowID id, WindowMessage msg)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack?
-		callback = boost::bind(_callback, _object, _1);
+	void connect(bool(T::*_callback)(WindowID id, WindowMessage msg), T* _object)	{	// hack?
+		callback = boost::bind(_callback, _object, _1, _2);
 	}
 
 	/*template <class T>

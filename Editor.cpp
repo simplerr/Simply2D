@@ -534,11 +534,11 @@ bool Editor::stillSnapped(void)
 	return false;
 }
 
-bool Editor::messageHandler(WindowID sender)
+bool Editor::messageHandler(WindowID id, WindowMessage msg)
 {
 	char temp[256];
 
-	switch(sender)
+	switch(id)
 	{
 	case OBJECT_INFO:
 		{
@@ -563,18 +563,14 @@ bool Editor::messageHandler(WindowID sender)
 	case INPUT_SPAWNX:
 		{
 			POS spawn = mLevel->getSpawn();
-
-			spawn.x = iSpawnX->getInt();
-
+			spawn.x = msg.getInt();
 			mLevel->setSpawn(spawn);
 			break;
 		}
 	case INPUT_SPAWNY:
 		{
 			POS spawn = mLevel->getSpawn();
-
-			spawn.y = iSpawnY->getInt();
-
+			spawn.y =msg.getInt();
 			mLevel->setSpawn(spawn);
 			break;
 		}
@@ -758,7 +754,7 @@ bool Editor::messageHandler(WindowID sender)
 		}
 	case CHECKBOX_SHOWPATH:
 		{
-			showPaths = pathCheckBox->getChecked();
+			showPaths = msg.getBool();//getChecked();
 			break;
 		}
 	case MOVE_SPAWNPOS:

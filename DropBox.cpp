@@ -58,7 +58,7 @@ bool DropBox::pressed(int mx, int my)
 				setValue(mItemList[i].itemName);	
 
 				// do what's needed
-				callback(getID());
+				callback(getID(), WindowMessage(getValue()));
 			}
 		}
 		

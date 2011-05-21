@@ -63,7 +63,7 @@ int InputBox::wm_keydown(WPARAM wParam)
 		// enter
 		case '\r':		{
 							if(callback != NULL)
-								callback(getID());
+								callback(getID(), WindowMessage(getString()));
 							break;
 						}
 		// backspace

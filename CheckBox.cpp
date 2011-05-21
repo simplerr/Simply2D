@@ -18,12 +18,12 @@ bool CheckBox::pressed(int mx, int my)
 	if(!getChecked())	{
 		setChecked(true);
 		if(callback != NULL)
-			callback(getID());
+			callback(getID(), WindowMessage(getChecked()));
 	}
 	else if(getChecked())	{
 		setChecked(false);
 		if(callback != NULL)
-			callback(getID());
+			callback(getID(), WindowMessage(getChecked()));
 	}
 
 	// doesn't need to return anything else,

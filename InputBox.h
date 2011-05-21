@@ -23,12 +23,13 @@ public:
 	int wm_lbuttondown(int x, int y); 
 	int wm_keydown(WPARAM wParam);
   
-	boost::function<bool(WindowID id)> callback;
+	boost::function<bool(WindowID id, WindowMessage msg)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack? - dun' think so bro
-		callback = boost::bind(_callback, _object, _1);
+	void connect(bool(T::*_callback)(WindowID id, WindowMessage msg), T* _object)	{
+		callback = boost::bind(_callback, _object, _1, _2);
 	}
+
 
 	void setValue(string value);
 	void setValue(int value);
