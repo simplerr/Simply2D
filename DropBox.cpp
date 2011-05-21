@@ -55,10 +55,10 @@ bool DropBox::pressed(int mx, int my)
 				mY = mActivationRect.top + (mActivationRect.bottom - mActivationRect.top)/2;
 				mHeight -= (mItems * mItemHeight) ;
 				mExpanded = false;
-				mValue = mItemList[i].itemName;	
+				setValue(mItemList[i].itemName);	
 
 				// do what's needed
-				callback(getID(), getValue());		
+				callback(getID());
 			}
 		}
 		
@@ -79,8 +79,7 @@ void DropBox::draw(void)
 	gGraphics->drawText("V", mActivationRect.right + 4, mActivationRect.top + 2);
 
 	gGraphics->BlitRect(mActivationRect, D3DCOLOR_ARGB(255, 255, 255, 0));
-	string tmpValue = getValue();
-	strcpy(buffer, tmpValue.c_str());
+	strcpy(buffer, getValue().c_str());
 	gGraphics->drawText(buffer, mActivationRect.left, mActivationRect.top);
 	
 	if(mExpanded)
@@ -149,22 +148,13 @@ void DropBox::setActive(bool b)
 		}
 	}
 }
-/*void DropBox::fixSize(void)
+
+void DropBox::setValue(string value)
 {
-	mPosition.left = mPosition.x-(mPosition.width/2);
-	mPosition.right = mPosition.x+(mPosition.width/2) + mSignSide;
-	mPosition.top = mPosition.y-(mPosition.height/2);
-	mPosition.bottom = mPosition.y+(mPosition.height/2);
-	//mPosition.width
-	//mPosition.x += mSignSide;
-
-	mActivationRect.left = mPosition.left;
-	mActivationRect.right = mPosition.right - mSignSide;//+ mSignSide;
-	mActivationRect.top = mPosition.top;
-	mActivationRect.bottom = mPosition.bottom;
-
-	mRightSign.left = mActivationRect.right;
-	mRightSign.right = mActivationRect.right;// + mSignSide;
-	mRightSign.top = mActivationRect.top;
-	mRightSign.bottom = mActivationRect.bottom;
-}*/
+	mValue = value;
+}
+	
+string DropBox::getValue(void)
+{
+	return mValue;
+}

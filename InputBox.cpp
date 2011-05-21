@@ -1,15 +1,19 @@
 #include "InputBox.h"
+#include <sstream>
+#include "boost\lexical_cast.hpp"
 
-InputBox::InputBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int maxlen,  D3DCOLOR color)
+InputBox::InputBox(WindowHandler* handler, WindowID id, DataType dataType, int x, int y, int width, int height, int maxlen, D3DCOLOR color)
 		: Window(handler, id, x, y, width, height, color)
 {
-	showCaret = false;
-	maxLength = maxlen;
+	mShowCaret = false;
+	mMaxLength = maxlen;
+	mDataType = dataType;
+	setValue(" ");
 }
 
 InputBox::~InputBox()
 {
-	// nada
+	// dtor
 }
 
 void InputBox::update(double dt)
@@ -18,11 +22,11 @@ void InputBox::update(double dt)
 	dtsum +=dt;
 
 	if(dtsum >= .6)	{
-		showCaret = true;
+		mShowCaret = true;
 	}
 	if(dtsum >= 1.2)	{
 		dtsum = 0;
-		showCaret = false;
+		mShowCaret = false;
 	}
 }
 
@@ -30,24 +34,21 @@ void InputBox::draw()
 {
 	if(mVisible)
 	{
-		//static char tmp [256];
-		strcpy(buffer, mValue.c_str());
-
 		gGraphics->BlitFullRectBordered(mX, mY, mWidth, mHeight, mColor);
 		gGraphics->drawText(">", mX-mWidth/2+5, mY-mHeight/2, D3DCOLOR_ARGB(255,255,165,0));
-		gGraphics->drawText(buffer, mX-mWidth/2+15, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
+		gGraphics->drawText((char*)getString().c_str(), mX-mWidth/2+15, mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));
 
 		if(mActive)
 		{
-			if(showCaret)
-				gGraphics->drawText("|", mX-mWidth/2+(12+caretPos*8), mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));		
+			if(mShowCaret)
+				gGraphics->drawText("|", mX-mWidth/2+(12+mCaretPos*8), mY-mHeight/2, D3DCOLOR_ARGB(255,0,0,0));		
 		}
 	}
 }
 
 bool InputBox::pressed(int mx, int my)
 {
-	caretPos = mValue.size();
+	mCaretPos = getString().size();
 	return true;
 }
 
@@ -62,59 +63,61 @@ int InputBox::wm_keydown(WPARAM wParam)
 		// enter
 		case '\r':		{
 							if(callback != NULL)
-								callback(getID(), getValue());
+								callback(getID());
 							break;
 						}
 		// backspace
 		case '\b':		{
-							if(caretPos > 0)	
+							if(mCaretPos > 0)	
 							{
-								mValue.erase(caretPos-1, 1);
-								caretPos -=1;
+								// erase letter
+								mValue.erase(mCaretPos-1, 1);
+								mCaretPos -=1;
 							}
 							break;
 						
 						}
 		// left
 		case VK_LEFT:	{
-							if(caretPos > 0)
-								caretPos -= 1;
+							if(mCaretPos > 0)
+								mCaretPos -= 1;
 							break;
 						}
 		// right
 		case VK_RIGHT:	{
-							if(caretPos < mValue.size())
-								caretPos +=1;
+							if(mCaretPos < getString().size())
+								mCaretPos +=1;
 							break;
 						}
 		// delete
 		case VK_DELETE:	{
-							if(caretPos < mValue.size())
+							if(mCaretPos < getString().size())
 							{
-								mValue.erase(caretPos, 1);
+								// erase letter
+								mValue.erase(mCaretPos, 1);
 							}
 
 							break;
 						}
 		// input
 		default:		{
-							if(mValue.size() < maxLength)
+							if(getString().size() < mMaxLength)
 							{
 								// just for git
 								string strInput = string(1,input);	
 
 								if(strInput == "¾")
-									mValue.insert(caretPos, ".");
+									mValue.insert(mCaretPos, ".");
 								else if((int)input > 0)	{
-									if(isdigit(input) || isalpha(input))
-										mValue.insert(caretPos, strInput);
+									if(isdigit(input) || isalpha(input))	
+										mValue.insert(mCaretPos, strInput);
 									else
 										return 1;
 								}						
 								else
 									return 1;
 
-								caretPos +=1;
+								mCaretPos +=1;
 							}						
 						}
 		}
@@ -126,8 +129,50 @@ void InputBox::setActive(bool b)
 {
 	Window::setActive(b);
 
-	if(b)
-		showCaret = true;
+	mShowCaret = b;
+}
+
+void InputBox::setValue(string value)
+{
+	mValue = value;
+}
+
+void InputBox::setValue(int value)
+{
+	mValue = boost::lexical_cast<string>(value);
+}
+
+void InputBox::setValue(float value)
+{
+	mValue = boost::lexical_cast<string>(value);
+}
+
+/*template<class T>
+T InputBox::getValue(void)
+{
+	if(mDataType == TYPE_INT)	{
+		int returnInt = boost::lexical_cast<int>(mValue);
+		return returnInt;
+	}
+	else if(mDataType == TYPE_TEXT)
+		return mValue;
+	else if(mDataType == TYPE_FLOAT)
+		return boost::lexical_cast<float>(mValue);
 	else
-		showCaret = false;
+		return false;
+}*/
+
+int InputBox::getInt(void)
+{
+	return boost::lexical_cast<int>(mValue);
+}
+
+float InputBox::getFloat(void)
+{
+	return boost::lexical_cast<float>(mValue);
+}
+
+string InputBox::getString(void)
+{
+	return mValue;
 }

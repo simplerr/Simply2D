@@ -46,6 +46,14 @@ static const int USER_HEIGHT = 36;
 
 class Object;
 
+enum DataType
+{
+	TYPE_TEXT,
+	TYPE_INT,
+	TYPE_FLOAT,
+	TYPE_BOOLEAN
+};
+
 enum MouseButton
 {
 	LEFTBUTTON,

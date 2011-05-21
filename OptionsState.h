@@ -13,7 +13,7 @@ public:
 	void pause();
 	void resume();
 
-	bool messageHandler(WindowID id, string data);
+	bool messageHandler(WindowID id);
 	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
 	void update(double dt);
 	void drawMain(void);

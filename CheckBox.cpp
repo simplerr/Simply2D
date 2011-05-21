@@ -5,9 +5,7 @@ CheckBox::CheckBox(WindowHandler* handler, WindowID id, string display, int x, i
 {
 	mDisplayText = display;
 	mCheckedColor = checkedColor;
-
 	mChecked = false;
-	setValue("False");
 }
 
 CheckBox::~CheckBox()
@@ -17,17 +15,15 @@ CheckBox::~CheckBox()
 
 bool CheckBox::pressed(int mx, int my)
 {
-	if(!mChecked)	{
-		mChecked = true;
-		setValue("True");
+	if(!getChecked())	{
+		setChecked(true);
 		if(callback != NULL)
-			callback(getID(), getValue());
+			callback(getID());
 	}
-	else if(mChecked)	{
-		mChecked = false;
-		setValue("False");
+	else if(getChecked())	{
+		setChecked(false);
 		if(callback != NULL)
-			callback(getID(), getValue());
+			callback(getID());
 	}
 
 	// doesn't need to return anything else,
@@ -48,9 +44,9 @@ void CheckBox::draw(void)
 	tmpRect.top += 2;
 	tmpRect.bottom -= 2;
 
-	if(mChecked)
+	if(getChecked())
 		gGraphics->BlitRect(tmpRect, mCheckedColor);
-	else if(!mChecked)
+	else if(!getChecked())
 		gGraphics->BlitRect(tmpRect, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// draw the text in front of the checkbox
@@ -58,12 +54,12 @@ void CheckBox::draw(void)
 	gGraphics->drawText(buffer, getX() - 100, getY() - getWidth()/2 - 2);
 }
 
-void CheckBox::setValue(string value)
+bool CheckBox::getChecked(void)
 {
-	Window::setValue(value);
+	return mChecked;
+}
 
-	if(value == "True")
-		mChecked = true;
-	else if(value == "False")
-		mChecked = false;
+void CheckBox::setChecked(bool checked)
+{
+	mChecked = checked;
 }

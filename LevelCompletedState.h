@@ -15,7 +15,7 @@ public:
 	void pause();
 	void resume();
 
-	bool messageHandler(WindowID id, string data);	// returns false if the state needs to change and the window loop needs to break
+	bool messageHandler(WindowID id);	// returns false if the state needs to change and the window loop needs to break
 	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
 	void update(double dt);
 	void drawMain(void);

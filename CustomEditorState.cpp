@@ -11,7 +11,7 @@ void CustomEditorState::init(Game* game)
 	mWindowHandler->setVisible(false);
 
 	mLabel = new TextBox(mWindowHandler, LABEL, "Name:", 50, 70, 50, 24);
-	mLevelName = new InputBox(mWindowHandler, LEVEL_NAME, 200, 70, 60, 20, 12);
+	mLevelName = new InputBox(mWindowHandler, LEVEL_NAME, TYPE_TEXT, 200, 70, 60, 20, 12);
 	mCreateButton = new Button(mWindowHandler, BUTTON_CREATE, "Create", 130, 105, 60, 30, true);
 	mCreateButton->connect(&CustomEditorState::messageHandler, this);
 
@@ -96,14 +96,14 @@ bool CustomEditorState::menuHandler(std::string name)
 	return true;
 }
 
-bool CustomEditorState::messageHandler(WindowID id, std::string value)
+bool CustomEditorState::messageHandler(WindowID id)
 {
 	// create a new level!
 	if(id == BUTTON_CREATE)
 	{
 		/*add levels\\ and .txt */
 		string tmp = "levels\\";
-		tmp.append(mLevelName->getValue());
+		tmp.append(mLevelName->getString());
 		tmp.append(".txt");
 
 		ofstream fout(tmp);

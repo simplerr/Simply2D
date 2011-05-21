@@ -40,30 +40,19 @@ Button::~Button()
 	callback = NULL;
 }
 
-void Button::update(float dt)
-{
-	// cursor inside? then show hoover fx
-	/*int mx = gMouse->getScreenPos().x;
-	int my = gMouse->getScreenPos().y;
-	RECT bRect = getRect();
-
-	if(mx > bRect.left && mx < bRect.right && my > bRect.top && mx < bRect.bottom)
-		mMouseOver = true;
-	else
-		mMouseOver = false;*/
-}
-
 bool Button::pressed(int mx, int my)
 {
 	if(callback != NULL)	{
 		if(mSoundSource != "none")	
 			gSound->playEffect(mSoundSource.c_str());
 		
-		if(!callback(getID(), getValue()))
+		//if(!callback(getID(), getValue()))
+		if(!callback(getID()))
 			return false;
 	}
 	return true;
 }
+
 void Button::hoover(int mx, int my)
 {
 	mMouseOver = true;
@@ -106,3 +95,13 @@ void Button::setPressSound(string source)
 {
 	mSoundSource = source;
 }
+
+/*void Button::setValue(bool value)
+{
+	mValue = value;
+}
+	
+bool Button::getValue(void)
+{
+	return mValue;
+}*/

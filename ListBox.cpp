@@ -1,12 +1,11 @@
 #include "ListBox.h"
 
-
-
 ListBox::ListBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, D3DCOLOR color)
 				: Window(handler, id, x, y, width, height, color)
 {
 	mItems = 0;
 	mMouseOver = false;
+	mValue = " ";
 }
 
 ListBox::~ListBox()
@@ -20,11 +19,11 @@ bool ListBox::pressed(int mx, int my)
 	{
 		if(mx > mItemList[i].getRect().left && mx < mItemList[i].getRect().right && my > mItemList[i].getRect().top && my < mItemList[i].getRect().bottom)
 		{		
-			mValue = mItemList[i].itemName;			// buttons uses this information!
+			setValue(mItemList[i].itemName);			// buttons uses this information!
 			break;
 		}
 		else
-			mValue = "none";	// innanför boxen, men inte på ett item
+			setValue("none");	// innanför boxen, men inte på ett item
 	}
 
 	return true;
@@ -43,18 +42,10 @@ void ListBox::hoover(int mx, int my)
 
 void ListBox::draw(void)
 {
-	// borde egentligen inta ligga här
-	// men update körs bara om det är det aktiva, ska det verkligen vara så?:S Ja - tror det
-	//if(!mActive)
-	//	mValue = "none";
-
-	// draw the bkgd, unnessessary!
-	//gGraphics->BlitRect(mX, mY, mWidth, mHeight, D3DCOLOR_ARGB (255, 30, 200, 150));
-	
 	// draw items
 	for(int i = 0; i<mItemList.size();i++)
 	{
-		if(mItemList[i].itemName == mValue && mActive)
+		if(mItemList[i].itemName == getValue() && mActive)
 			gGraphics->BlitRect(mItemList[i].x, mItemList[i].y, mItemList[i].width, mItemList[i].height, D3DCOLOR_ARGB(255, 255, 166, 0));
 		else
 		{ 
@@ -69,6 +60,7 @@ void ListBox::draw(void)
 
 	mMouseOver = false;
 }
+
 void ListBox::addItem(string name, int height, D3DCOLOR color)
 {
 	ListItem tmpItem;
@@ -98,4 +90,14 @@ void ListBox::move(int dx, int dy)
 		mItemList[i].x += dx;
 		mItemList[i].y += dy;
 	}
+}
+
+void ListBox::setValue(string value)
+{
+	mValue = value;
+}
+	
+string ListBox::getValue(void)
+{
+	return mValue;
 }

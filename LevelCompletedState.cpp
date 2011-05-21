@@ -108,7 +108,7 @@ void LevelCompletedState::drawBkgd()
 	HR(gd3dDevice->SetTransform(D3DTS_TEXTURE0, &texScaling));
 }
 
-bool LevelCompletedState::messageHandler(WindowID id, string data)
+bool LevelCompletedState::messageHandler(WindowID id)
 {
 	switch(id)
 	{

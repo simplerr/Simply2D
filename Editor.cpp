@@ -63,7 +63,7 @@ void Editor::addPropertyPair(Property prop)
 	int y = 178 + 30 * mPropertyPairs.size();
 
 	tmpPair.name = new TextBox(mWindowHandler, OBJECT_INFO, prop.name, 40, y, 60, 20);
-	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, 110, y, 60, 20, 5);
+	tmpPair.value = new InputBox(mWindowHandler, OBJECT_INFO, TYPE_FLOAT, 110, y, 60, 20, 5);
 	tmpPair.value->setValue(prop.value);
 	tmpPair.value->connect(&Editor::messageHandler, this);
 
@@ -78,22 +78,22 @@ void Editor::buildGUI(void)
 
 	// should only allow input of 11 characters
 	tLevel = new TextBox(mWindowHandler, TEXT_LEVEL, "Level:", 40, 22, 60, 20);
-	iLevel = new InputBox(mWindowHandler, INPUT_LEVEL, 125, 22, 90, 20, 15);
+	iLevel = new InputBox(mWindowHandler, INPUT_LEVEL, TYPE_TEXT, 125, 22, 90, 20, 15);
 	iLevel->connect(&Editor::messageHandler, this);
 	iLevel->setValue("");
 
 	tNextLevel = new TextBox(mWindowHandler, TEXT_NEXT, "Next:", 40, 50, 60, 20);
-	iNextLevel = new InputBox(mWindowHandler, INPUT_NEXT, 125, 50, 90, 20, 15);
+	iNextLevel = new InputBox(mWindowHandler, INPUT_NEXT, TYPE_TEXT, 125, 50, 90, 20, 15);
 	iNextLevel->connect(&Editor::messageHandler, this);
 	iNextLevel->setValue("");
 
 	tSpawnX = new TextBox(mWindowHandler, TEXT_SPAWNX, "X:", 40, 95, 60, 20);
 	tSpawnY = new TextBox(mWindowHandler, TEXT_SPAWNY, "Y:", 40, 125, 60, 20);
 
-	iSpawnX = new InputBox(mWindowHandler, INPUT_SPAWNX, 110, 95, 60, 20, 4);
+	iSpawnX = new InputBox(mWindowHandler, INPUT_SPAWNX, TYPE_FLOAT, 110, 95, 60, 20, 4);
 	iSpawnX->connect(&Editor::messageHandler, this);
 
-	iSpawnY = new InputBox(mWindowHandler, INPUT_SPAWNY, 110, 125, 60, 20, 4);
+	iSpawnY = new InputBox(mWindowHandler, INPUT_SPAWNY, TYPE_FLOAT, 110, 125, 60, 20, 4);
 	iSpawnY->connect(&Editor::messageHandler, this);
 
 	// sets the values to the spawnPos!
@@ -534,7 +534,7 @@ bool Editor::stillSnapped(void)
 	return false;
 }
 
-bool Editor::messageHandler(WindowID sender, string data)
+bool Editor::messageHandler(WindowID sender)
 {
 	char temp[256];
 
@@ -552,7 +552,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 				Property tmpProperty;
 				for(int i = 0; i < mPropertyPairs.size(); i++)	{
 					tmpProperty.name = mPropertyPairs[i].name->getValue();
-					tmpProperty.value = mPropertyPairs[i].value->getValue();
+					tmpProperty.value = mPropertyPairs[i].value->getString();
 					propertyList.push_back(tmpProperty);
 				}
 				mActiveObject->loadProperties(propertyList);
@@ -564,8 +564,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 		{
 			POS spawn = mLevel->getSpawn();
 
-			sprintf(temp, "%s", data.c_str());
-			spawn.x = atoi(temp);
+			spawn.x = iSpawnX->getInt();
 
 			mLevel->setSpawn(spawn);
 			break;
@@ -574,8 +573,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 		{
 			POS spawn = mLevel->getSpawn();
 
-			sprintf(temp, "%s", data.c_str());
-			spawn.y = atoi(temp);
+			spawn.y = iSpawnY->getInt();
 
 			mLevel->setSpawn(spawn);
 			break;
@@ -584,10 +582,9 @@ bool Editor::messageHandler(WindowID sender, string data)
 		{
 			if(mActiveObject != NULL)
 			{
-				strcpy(buffer, data.c_str());
-				if(strcmp(buffer, "grass_platform") == 0)
+				if(textureDropBox->getValue() == "grass_platform")
 					mActiveObject->setTextureSource("misc\\textures\\grass_platform.bmp");
-				if(strcmp(buffer, "brick_platform") == 0)
+				if(textureDropBox->getValue() ==  "brick_platform")
 					mActiveObject->setTextureSource("misc\\textures\\dirt_grass.bmp");
 			}
 			break;
@@ -595,7 +592,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_CREATE:
 		{
 			// listbox item vald
-			string value = listBox->getValue();
+			string value = listBox->getValue(); // hack - call when listbox pressed?
 			if(value != "none")
 			{		
 					if(value == "Static Platform")
@@ -684,23 +681,23 @@ bool Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_SAVE:
 		{
 			// levels save function does the work
-			strcpy(buffer, iLevel->getValue().c_str());
+			strcpy(buffer, iLevel->getString().c_str());
 
 			// set the levels next level
 			string tmp = "levels\\";
-			tmp.append(iNextLevel->getValue());
+			tmp.append(iNextLevel->getString());
 			tmp.append(".txt");
 			mLevel->setNextLevel(tmp);
 
 			// rename the filename and the level name if the name has changed
 			string compareString = "levels\\";
-			compareString.append(iLevel->getValue());
+			compareString.append(iLevel->getString());
 			compareString.append(".txt");
 			if(mOldLevelName != compareString)	{
 				mLevel->setLevelName(compareString);
 
 				string newName = "levels\\";
-				newName.append(iLevel->getValue());
+				newName.append(iLevel->getString());
 				newName.append(".txt");
 
 				if(rename(mOldLevelName.c_str(), newName.c_str()) != 0)
@@ -717,7 +714,7 @@ bool Editor::messageHandler(WindowID sender, string data)
 	case BUTTON_TRYLEVEL:
 		{
 			string tmp = "levels\\";
-			tmp.append(iLevel->getValue().c_str());
+			tmp.append(iLevel->getString().c_str());
 			tmp.append(".txt");
 
 			gDInput->restoreCursor();
@@ -761,21 +758,14 @@ bool Editor::messageHandler(WindowID sender, string data)
 		}
 	case CHECKBOX_SHOWPATH:
 		{
-			strcpy(buffer, data.c_str());
-			if(strcmp(buffer, "True") == 0)
-				showPaths = true;
-			else if(strcmp(buffer, "False") == 0)
-				showPaths = false;
+			showPaths = pathCheckBox->getChecked();
 			break;
 		}
 	case MOVE_SPAWNPOS:
 		{
 			// spawnPos 
-			POS spawnPos = mLevel->getSpawn();
-			sprintf(buffer, "%i", (int)mLevel->getSpawn().x);
-			iSpawnX->setValue(buffer);
-			sprintf(buffer, "%i", (int)mLevel->getSpawn().y);
-			iSpawnY->setValue(buffer);
+			iSpawnX->setValue((int)mLevel->getSpawn().x);
+			iSpawnY->setValue((int)mLevel->getSpawn().y);
 			break;
 		}
 

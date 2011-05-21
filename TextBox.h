@@ -13,13 +13,15 @@
 class TextBox : public Window
 {
 public:
-	TextBox(WindowHandler* handler, WindowID id, string display, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
+	TextBox(WindowHandler* handler, WindowID id, string displayText, int x, int y, int width, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));	
 	~TextBox();
 
     void draw(void);
+	void setDisplayText(string text);
+	string getValue(void);
 private:
-	string mDisplayText;
-	//string mValue;
+	string			mDisplayText;
+	// string mValue;
 	// font color
 	// background color
 	// border size

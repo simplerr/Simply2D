@@ -23,6 +23,7 @@ struct PropertyPair
 {
 	//Property prop;
 	TextBox *name;
+
 	InputBox *value;
 };
 
@@ -69,7 +70,7 @@ public:
 	bool objectSnapping(Object *object, float dx, float dy);
 	bool stillSnapped(void);
 
-	bool messageHandler(WindowID sender, string data = "nothing");
+	bool messageHandler(WindowID sender);
 	void resetActive(void) {mActiveObject = NULL;};
 
 	void loadLevel(char *source);
@@ -94,8 +95,8 @@ private:
 	Level*					mLevel;
 	Object*					mActiveObject;
 	int						mPropertyCount;		// remove?!
-	vector<PropertyPair>	mPropertyPairs;
 	
+	vector<PropertyPair>	mPropertyPairs;
 
 	RECT		gameArea;
 	

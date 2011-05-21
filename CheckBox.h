@@ -17,19 +17,21 @@ public:
 
 	void draw(void);
 	bool pressed(int mx, int my);
-	void setValue(string value);
   
-	boost::function<bool(WindowID id, std::string value)> callback;
+	boost::function<bool(WindowID id)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id, std::string value), T* _object)	{
-		callback = boost::bind(_callback, _object, _1, _2);
+	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack?
+		callback = boost::bind(_callback, _object, _1);
 	}
 
+	bool getChecked(void);
+	void setChecked(bool checked);
+
 private:
-	bool mChecked;
-	string mDisplayText;
-	D3DCOLOR mCheckedColor;
+	bool		mChecked;
+	string		mDisplayText;
+	D3DCOLOR	mCheckedColor;
 };
 
 #endif

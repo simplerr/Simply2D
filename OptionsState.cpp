@@ -22,14 +22,14 @@ void OptionsState::init(Game* game)
 	mMuteEffects->connect(&OptionsState::messageHandler, this);
 
 	if(gSound->getMusicMuted())
-		mMuteMusic->setValue("True");
+		mMuteMusic->setChecked(true);
 	else if(!gSound->getMusicMuted())
-		mMuteMusic->setValue("False");
+		mMuteMusic->setChecked(false);
 
 	if(gSound->getEffectsMuted())
-		mMuteEffects->setValue("True");
+		mMuteEffects->setChecked(true);
 	else if(!gSound->getEffectsMuted())
-		mMuteEffects->setValue("False");
+		mMuteEffects->setChecked(false);
 
 	// load the settings
 	mSettings = new Settings("config.txt");
@@ -83,19 +83,17 @@ void OptionsState::drawGui(void)
 	gGraphics->BlitRect(1300, 450, 200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 }
 
-bool OptionsState::messageHandler(WindowID id, string data)
+bool OptionsState::messageHandler(WindowID id)
 {
-	strcpy(buffer, data.c_str());
-
 	switch(id)
 	{
 	case MUTE_MUSIC:
 		{
-			if(strcmp(buffer, "True") == 0)	{
+			if(mMuteMusic->getChecked())	{
 				gSound->muteMusic(true);
 				mSettings->muteMusic(true);
 			}
-			else if(strcmp(buffer, "False") == 0)	{
+			else if(!mMuteMusic->getChecked())	{
 				gSound->muteMusic(false);
 				mSettings->muteMusic(false);
 				gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
@@ -106,11 +104,11 @@ bool OptionsState::messageHandler(WindowID id, string data)
 		}
 	case MUTE_EFFECTS:
 		{
-			if(strcmp(buffer, "True") == 0)	{
+			if(mMuteEffects->getChecked())	{
 				gSound->muteEffects(true);
 				mSettings->muteEffects(true);
 			}
-			else if(strcmp(buffer, "False") == 0)	{
+			else if(!mMuteEffects->getChecked())	{
 				gSound->muteEffects(false);
 				mSettings->muteEffects(false);
 			}

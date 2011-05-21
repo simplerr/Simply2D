@@ -12,30 +12,43 @@
 class InputBox : public Window
 {
 public:
-	InputBox(WindowHandler* handler, WindowID id, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	InputBox(WindowHandler* handler, WindowID id, DataType dataType, int x, int y, int width, int height, int maxlen, D3DCOLOR color = D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	~InputBox();
 
 	void update(double dt);
 	void draw(void);
 	bool pressed(int mx, int my);
-	//void hoover(int mx, int my);
 
 	void setActive(bool b);
 	int wm_lbuttondown(int x, int y); 
 	int wm_keydown(WPARAM wParam);
   
-	boost::function<bool(WindowID id, std::string value)> callback;
+	boost::function<bool(WindowID id)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id, std::string value), T* _object)	{
-		callback = boost::bind(_callback, _object, _1, _2);
+	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack? - dun' think so bro
+		callback = boost::bind(_callback, _object, _1);
 	}
 
+	void setValue(string value);
+	void setValue(int value);
+	void setValue(float value);
+
+	int getInt(void);
+	float getFloat(void);
+	string getString(void);
+
+	/*template<class T>
+	T getValue(void);*/
+
 private:
-	int maxLength;
-	int caretPos;
-	int caretTick;
-	bool showCaret, handled;
+	int			mMaxLength;
+	int			mCaretPos;
+	int			mCaretTick;
+	bool		mShowCaret;
+	bool		mHandled;
+	string		mValue;
+	DataType	mDataType;
 };
 
 #endif

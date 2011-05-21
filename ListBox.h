@@ -25,20 +25,24 @@ public:
 
 	void addItem(string name, int height, D3DCOLOR color = D3DCOLOR_ARGB( 255, 170, 230, 230 ));		// ska få autokordinater!
 
-	boost::function<bool(WindowID id, std::string value)> callback;
+	boost::function<bool(WindowID id)> callback;
 
 	template <class T>
-	void connect(bool(T::*_callback)(WindowID id, std::string value), T* _object)	{
-		callback = boost::bind(_callback, _object, _1, _2);
+	void connect(bool(T::*_callback)(WindowID id), T* _object)	{	// hack?
+		callback = boost::bind(_callback, _object, _1);
 	}
+	
+	void setValue(string value);
+	string getValue(void);
 
 private:
-	vector<ListItem> mItemList;
-	int mItems;
-	bool mMouseOver;
-	bool mMarked;
-	RECT mHooverRect;
-	RECT mMarkedRect;
+	string				mValue;
+	vector<ListItem>	mItemList;
+	int					mItems;
+	bool				mMouseOver;
+	bool				mMarked;
+	RECT				mHooverRect;
+	RECT				mMarkedRect;
 };
 
 #endif

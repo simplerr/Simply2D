@@ -14,7 +14,8 @@ public:
 	void update(double dt);
 	void drawMain(void);
 	bool menuHandler(std::string name);
-	bool messageHandler(WindowID id, std::string value);
+
+	bool messageHandler(WindowID id);
 	void handleEvents(UINT msg, WPARAM wParam, LPARAM lParam);
 
 	static CustomEditorState* Instance() {
