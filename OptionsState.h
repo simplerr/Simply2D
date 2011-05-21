@@ -3,6 +3,7 @@
 class WindowHandler;
 class CheckBox;
 class Settings;
+class Slidebar;
 
 class OptionsState : public GameState
 {
@@ -33,5 +34,6 @@ private:
 	/* windows */
 	CheckBox *mMuteMusic;
 	CheckBox *mMuteEffects;
+	Slidebar *mSlidebar;
 };
 

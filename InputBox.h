@@ -30,6 +30,9 @@ public:
 		callback = boost::bind(_callback, _object, _1, _2);
 	}
 
+	void connect(boost::function<bool(WindowID id, WindowMessage msg)> function)	{
+		callback = function;
+	}
 
 	void setValue(string value);
 	void setValue(int value);

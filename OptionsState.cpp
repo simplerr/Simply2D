@@ -4,6 +4,7 @@
 #include "CheckBox.h"
 #include "Sound.h"
 #include "Settings.h"
+#include "Slidebar.h"
 
 extern Sound *gSound;
 OptionsState OptionsState::mOptionsState;
@@ -20,6 +21,9 @@ void OptionsState::init(Game* game)
 	mMuteMusic->connect(&OptionsState::messageHandler, this);
 	mMuteEffects = new CheckBox(mWindowHandler, MUTE_EFFECTS, "Effects: ", 145, 80);
 	mMuteEffects->connect(&OptionsState::messageHandler, this);
+
+	mSlidebar = new Slidebar(mWindowHandler, SOUND_SLIDER, "sound:", 100, 200, 300, 20, 0, 0, 10);
+	mSlidebar->connect(&OptionsState::messageHandler, this);
 
 	if(gSound->getMusicMuted())
 		mMuteMusic->setChecked(true);
