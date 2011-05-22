@@ -11,6 +11,7 @@ Slidebar::Slidebar(WindowHandler* handler, WindowID id, string display, int x, i
 	mMovingSlider = false;
 	mSliderWidth = 40;
 	
+	// no invalid values
 	if(value > mMaxValue)
 		mValue = mMaxValue;
 	else if(value < mMinValue)
@@ -18,36 +19,32 @@ Slidebar::Slidebar(WindowHandler* handler, WindowID id, string display, int x, i
 	else
 		mValue = value;
 
-
+	// coordinates of the slider background
 	mSlideBackground.left = getX() - 80;
 	mSlideBackground.right = getX() + 80;
 	mSlideBackground.top = getY() - 10;
 	mSlideBackground.bottom = getY() + 10;
 
+	// window controls
 	mTextName = new TextBox(handler, SLIDER_TEXT, display, mSlideBackground.left - 50 - handler->getRect().left,
 		getY()- handler->getRect().top, 80, 20);
 	mInputBox = new InputBox(handler, SLIDER_INPUT, TYPE_TEXT, mSlideBackground.right + 35 - handler->getRect().left,
 		getY()- handler->getRect().top, 50, 20, 4);
 
-	mSliderPos = mValue / (maxValue - minValue) * (mSlideBackground.right - mSlideBackground.left);
+	// sliders position, X% of the span * slidewidth + offset
+	mSliderPos = float((mValue / (maxValue - minValue)) * (mSlideBackground.right - mSlideBackground.left - mSliderWidth) + mSliderWidth/2);
 
+	// substract the minValue, 100-200 range is 0-100 on the slidebar
+	mSliderPos -= (minValue / (maxValue - minValue)) * (mSlideBackground.right - mSlideBackground.left - mSliderWidth);
+
+	// sliderects coordinates
 	mSlider.left = mSlideBackground.left + mSliderPos - mSliderWidth/2;
 	mSlider.right = mSlideBackground.left + mSliderPos + mSliderWidth/2;
-
-	if(mSlider.left < mSlideBackground.left)	{
-		mSlider.left = mSlideBackground.left;
-		mSlider.right = mSlider.left + mSliderWidth;
-	}
-
-	if(mSlider.right > mSlideBackground.right)	{
-		mSlider.right = mSlider.right;
-		mSlider.left = mSlider.right - mSliderWidth;
-	}
-	
 	mSlider.top = getY() - 10;
 	mSlider.bottom = getY()  + 10;
 
-	mInputBox->setValue(value);
+	// the inputbox value, ie the sliders real value
+	mInputBox->setValue(mValue);
 }
 	
 Slidebar::~Slidebar()
@@ -57,8 +54,10 @@ Slidebar::~Slidebar()
 
 void Slidebar::draw(void)
 {
+	// background of the slider
 	gGraphics->BlitRect(mSlideBackground, D3DCOLOR_ARGB(255, 255, 0, 0));
 
+	// the slider
 	gGraphics->BlitRect(mSlider, D3DCOLOR_ARGB(255, 0, 255, 0));
 }
 
@@ -70,51 +69,43 @@ void Slidebar::update(double dt)
 		{
 			if(gDInput->mouseDX() < 0)
 			{
-				if(mSlider.left > mSlideBackground.left)	{
-					mSlider.left += gDInput->mouseDX();
-					mSlider.right += gDInput->mouseDX();
-					mSliderPos += gDInput->mouseDX();
-					mValue =  mMaxValue*((mSliderPos - mSliderWidth/2) / (mSlideBackground.right - mSlideBackground.left));
+				// slider has a valid position
+				if(mSliderPos > 0 + mSliderWidth/2)	{
+					moveSlider(gDInput->mouseDX());
 
-					if(mSlider.left <= mSlideBackground.left)	{
-						mSliderPos = 0;
-						mValue = 0;
-						gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX()/2);
+					// set the value, dx in 0-1 range * value span
+					mValue +=  (mMaxValue - mMinValue)*((gDInput->mouseDX()) / (mSlideBackground.right - mSlideBackground.left - mSliderWidth)); //  - mSliderWidth på vänster sidan?:O
+
+					// stop invalid movement
+					if(mSliderPos <= 0 + mSliderWidth/2)	{
+						stopSlider(LEFT);
 					}
 					mInputBox->setValue(mValue);
 				}
 				else	{
-					mSlider.left = mSlideBackground.left;
-					mSlider.right = mSlideBackground.left + mSliderWidth;
-					gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX());
-					mSliderPos = 0;
-					mValue = 0;
+					stopSlider(LEFT);
 				}
 			}
 			else if(gDInput->mouseDX() > 0)
 			{
-				if(mSlider.right < mSlideBackground.right)	{
-					mSlider.left += gDInput->mouseDX();
-					mSlider.right += gDInput->mouseDX();
-					mSliderPos += gDInput->mouseDX();
-					mValue =  mMaxValue*((mSliderPos + mSliderWidth/2) / (mSlideBackground.right - mSlideBackground.left));
+				if(mSliderPos < (mSlideBackground.right - mSlideBackground.left - mSliderWidth/2))	{
+					moveSlider(gDInput->mouseDX());
 
-					if(mSlider.right >= mSlideBackground.right)	{
-						mSliderPos = mSlideBackground.right - mSlideBackground.left;
-						mValue = mMaxValue;
-						gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX()/2);
+					// set the value, dx in 0-1 range * value span
+					mValue +=  (mMaxValue - mMinValue)*((gDInput->mouseDX()) / (mSlideBackground.right - mSlideBackground.left - mSliderWidth));
+
+					// stop invalid movement
+					if(mSliderPos >= (mSlideBackground.right - mSlideBackground.left - mSliderWidth/2))	{
+						stopSlider(RIGHT);
 					}
 					mInputBox->setValue(mValue);
 				}
 				else	{
-					mSlider.left = mSlideBackground.right - mSliderWidth;
-					mSlider.right = mSlideBackground.right;
-					gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX());
-					mSliderPos = mSlideBackground.right - mSlideBackground.left;
-					mValue = mMaxValue;
+					stopSlider(RIGHT);
 				}
 			}
 
+			// dont allow Y movement while sliding
 			gDInput->setCursorY(gDInput->getCursorY() - gDInput->mouseDY());
 		}
 	}
@@ -123,10 +114,38 @@ void Slidebar::update(double dt)
 		mMovingSlider = false;
 }
 
+// hack - needed?
 bool Slidebar::pressed(int mx, int my)
 {
 	if(gDInput->cursorInsideRect(mSlider))
 		mMovingSlider = true;
 
 	return true;
+}
+
+void Slidebar::moveSlider(float dx)
+{
+	mSlider.left += dx;
+	mSlider.right += dx;
+	mSliderPos += dx;
+}
+
+void Slidebar::stopSlider(direction dir)
+{
+	if(dir == LEFT)
+	{
+		mSlider.left = mSlideBackground.left;
+		mSlider.right = mSlideBackground.left + mSliderWidth;
+		gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX());
+		mSliderPos = mSliderWidth/2;
+		mValue = mMinValue;
+	}
+	else if(dir == RIGHT)
+	{
+		mSlider.left = mSlideBackground.right - mSliderWidth;
+		mSlider.right = mSlideBackground.right;
+		gDInput->setCursorX(gDInput->getCursorX() - gDInput->mouseDX());
+		mSliderPos = mSlideBackground.right - mSlideBackground.left - mSliderWidth/2;
+		mValue = mMaxValue;
+	}
 }

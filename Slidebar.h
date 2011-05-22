@@ -24,6 +24,8 @@ public:
 	void update(double dt);
 	void draw(void);
 	bool pressed(int mx, int my);
+	void moveSlider(float dx);
+	void stopSlider(direction dir);
 
 private:
 	float		mValue;

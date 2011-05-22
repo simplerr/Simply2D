@@ -22,7 +22,7 @@ void OptionsState::init(Game* game)
 	mMuteEffects = new CheckBox(mWindowHandler, MUTE_EFFECTS, "Effects: ", 145, 80);
 	mMuteEffects->connect(&OptionsState::messageHandler, this);
 
-	mSlidebar = new Slidebar(mWindowHandler, SOUND_SLIDER, "sound:", 100, 200, 300, 20, 0, 0, 10);
+	mSlidebar = new Slidebar(mWindowHandler, SOUND_SLIDER, "sound:", 100, 200, 300, 20, 0, -250, 250);
 	mSlidebar->connect(&OptionsState::messageHandler, this);
 
 	if(gSound->getMusicMuted())
