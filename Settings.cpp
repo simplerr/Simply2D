@@ -19,7 +19,7 @@ void Settings::loadSettings(void)
 	
 	// tmp is the rubric of a setting (ex. "music_muted")
 	std::string tmp, musicMuted, effectsMuted;
-	fin >> tmp >> musicMuted >> tmp >> effectsMuted;
+	fin >> tmp >> musicMuted >> tmp >> effectsMuted >> tmp >> mMusicVolume;
 
 	if(musicMuted == "1")
 		mMusicMuted = true;
@@ -30,7 +30,7 @@ void Settings::loadSettings(void)
 		mEffectsMuted = true;
 	else if(effectsMuted == "0")
 		mEffectsMuted = false;
-		
+
 	fin.close();
 }
 	
@@ -41,6 +41,7 @@ void Settings::saveSettings(void)
 
 	fout << "music_muted " << mMusicMuted << std::endl;
 	fout << "effects_muted " << mEffectsMuted << std::endl;
+	fout << "music_volume " << mMusicVolume << std::endl;
 
 	fout.close();
 }
@@ -63,4 +64,14 @@ void Settings::muteMusic(bool b)
 void Settings::muteEffects(bool b)
 {
 	mEffectsMuted = b;
+}
+
+void Settings::setMusicVolume(float volume)
+{
+	mMusicVolume = volume;
+}
+
+float Settings::musicVolume(void)
+{
+	return mMusicVolume;
 }

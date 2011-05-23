@@ -14,13 +14,17 @@ public:
 
 	bool musicMuted(void);
 	bool effectsMuted(void);
+	float musicVolume(void);
+
 
 	void muteMusic(bool b);
 	void muteEffects(bool b);
+	void setMusicVolume(float volume);
 private:
-	std::string mSource;
-	bool mMusicMuted;
-	bool mEffectsMuted;
+	std::string		mSource;
+	bool			mMusicMuted;
+	bool			mEffectsMuted;
+	float			mMusicVolume;
 };
 
 #endif

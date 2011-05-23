@@ -26,8 +26,8 @@ Slidebar::Slidebar(WindowHandler* handler, WindowID id, string display, int x, i
 	mSlideBackground.bottom = getY() + 10;
 
 	// window controls
-	mTextName = new TextBox(handler, SLIDER_TEXT, display, mSlideBackground.left - 50 - handler->getRect().left,
-		getY()- handler->getRect().top, 80, 20);
+	mTextName = new TextBox(handler, SLIDER_TEXT, display, mSlideBackground.left + 60 - handler->getRect().left,
+		getY()- handler->getRect().top-25, 120, 20);
 	mInputBox = new InputBox(handler, SLIDER_INPUT, TYPE_TEXT, mSlideBackground.right + 35 - handler->getRect().left,
 		getY()- handler->getRect().top, 50, 20, 4);
 
@@ -63,6 +63,7 @@ void Slidebar::draw(void)
 
 void Slidebar::update(double dt)
 {
+	static char temp[10]; // ugly hack
 	if(gDInput->mouseButtonDown(LEFTBUTTON))
 	{
 		if(gDInput->cursorInsideRect(mSlider) || mMovingSlider)
@@ -75,12 +76,17 @@ void Slidebar::update(double dt)
 
 					// set the value, dx in 0-1 range * value span
 					mValue +=  (mMaxValue - mMinValue)*((gDInput->mouseDX()) / (mSlideBackground.right - mSlideBackground.left - mSliderWidth)); //  - mSliderWidth på vänster sidan?:O
+					callback(getID(), WindowMessage(mValue));
+
 
 					// stop invalid movement
 					if(mSliderPos <= 0 + mSliderWidth/2)	{
 						stopSlider(LEFT);
 					}
-					mInputBox->setValue(mValue);
+					
+					sprintf(temp, "%.2f", mValue);	// hack >_>
+					string temp2 = string(temp);
+					mInputBox->setValue(temp2);
 				}
 				else	{
 					stopSlider(LEFT);
@@ -93,12 +99,15 @@ void Slidebar::update(double dt)
 
 					// set the value, dx in 0-1 range * value span
 					mValue +=  (mMaxValue - mMinValue)*((gDInput->mouseDX()) / (mSlideBackground.right - mSlideBackground.left - mSliderWidth));
+					callback(getID(), WindowMessage(mValue));
 
 					// stop invalid movement
 					if(mSliderPos >= (mSlideBackground.right - mSlideBackground.left - mSliderWidth/2))	{
 						stopSlider(RIGHT);
 					}
-					mInputBox->setValue(mValue);
+					sprintf(temp, "%.2f", mValue);	// hack >_>
+					string temp2 = string(temp);
+					mInputBox->setValue(temp2);
 				}
 				else	{
 					stopSlider(RIGHT);
@@ -148,4 +157,25 @@ void Slidebar::stopSlider(direction dir)
 		mSliderPos = mSlideBackground.right - mSlideBackground.left - mSliderWidth/2;
 		mValue = mMaxValue;
 	}
+}
+
+void Slidebar::setValue(float value)
+{
+	char temp[10];
+
+	mValue = value;
+
+	sprintf(temp, "%.2f", mValue);	// hack >_>
+	string temp2 = string(temp);
+	mInputBox->setValue(temp2);
+
+	// sliders position, X% of the span * slidewidth + offset
+	mSliderPos = float((mValue / (mMaxValue - mMinValue)) * (mSlideBackground.right - mSlideBackground.left - mSliderWidth) + mSliderWidth/2);
+
+	// substract the minValue, 100-200 range is 0-100 on the slidebar
+	mSliderPos -= (mMinValue / (mMaxValue - mMinValue)) * (mSlideBackground.right - mSlideBackground.left - mSliderWidth);
+	
+	// sliderects coordinates
+	mSlider.left = mSlideBackground.left + mSliderPos - mSliderWidth/2;
+	mSlider.right = mSlideBackground.left + mSliderPos + mSliderWidth/2;
 }

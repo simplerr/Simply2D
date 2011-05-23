@@ -23,9 +23,13 @@ public:
 
 	bool getMusicMuted(void);
 	bool getEffectsMuted(void);
+
+	void setVolume(float volume);
 private:
 	bool mMusicMuted;
 	bool mEffectsMuted;
+	float mVolume;
+
 	irrklang::ISoundEngine* mEngine;
 	irrklang::ISound* mMusic;
 	std::string mMusicSource;

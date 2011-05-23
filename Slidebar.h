@@ -26,6 +26,7 @@ public:
 	bool pressed(int mx, int my);
 	void moveSlider(float dx);
 	void stopSlider(direction dir);
+	void setValue(float value);
 
 private:
 	float		mValue;

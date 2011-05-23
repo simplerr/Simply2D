@@ -14,7 +14,7 @@ void OptionsState::init(Game* game)
 	// important!
 	setGame(game);
 
-	mWindowHandler = new WindowHandler(700, 500, 200, 400);
+	mWindowHandler = new WindowHandler(700, 500, 300, 400);
 	mWindowHandler->setBackground("misc\\textures\\menu_bkgd.bmp");
 
 	mMuteMusic = new CheckBox(mWindowHandler, MUTE_MUSIC, "Music:", 145, 50);
@@ -22,7 +22,7 @@ void OptionsState::init(Game* game)
 	mMuteEffects = new CheckBox(mWindowHandler, MUTE_EFFECTS, "Effects: ", 145, 80);
 	mMuteEffects->connect(&OptionsState::messageHandler, this);
 
-	mSlidebar = new Slidebar(mWindowHandler, SOUND_SLIDER, "sound:", 100, 200, 300, 20, 0, -250, 250);
+	mSlidebar = new Slidebar(mWindowHandler, SOUND_SLIDER, "Music volume:", 125, 140, 300, 20, 1, 0, 1);
 	mSlidebar->connect(&OptionsState::messageHandler, this);
 
 	if(gSound->getMusicMuted())
@@ -37,6 +37,8 @@ void OptionsState::init(Game* game)
 
 	// load the settings
 	mSettings = new Settings("config.txt");
+
+	mSlidebar->setValue(mSettings->musicVolume());
 }
 	
 void OptionsState::cleanup()
@@ -119,7 +121,15 @@ bool OptionsState::messageHandler(WindowID id, WindowMessage msg)
 			mSettings->saveSettings();
 			return false;
 		}
+	case SOUND_SLIDER:
+		{
+			gSound->setVolume(msg.getFloat());
+			mSettings->setMusicVolume(msg.getFloat());
+			mSettings->saveSettings();
+			return false;
+		}
 	}
+	
 
 	return true;
 }

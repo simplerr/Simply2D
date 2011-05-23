@@ -24,6 +24,8 @@ Sound::Sound()
 		mEffectsMuted = true;
 	else if(!mSettings->effectsMuted())
 		mEffectsMuted = false;
+
+	mVolume = mSettings->musicVolume();
 }
 	
 Sound::~Sound()
@@ -51,7 +53,8 @@ irrklang::ISound* Sound::playMusic(std::string source, bool loop, bool track)
 			}
 
 			mMusicSource = source;
-			mMusic = mEngine->play2D(mMusicSource.c_str(), loop, false, track);
+			mMusic = mEngine->play2D(mMusicSource.c_str(), loop, false, true);
+			mMusic->setVolume(mVolume);
 		}
 	}
 
@@ -62,7 +65,7 @@ irrklang::ISound* Sound::playEffect(std::string source)
 {
 	//irrklang::ISound *effect;
 	if(!mEffectsMuted)	{
-		mEngine->play2D(source.c_str());
+		irrklang::ISound* soundEffect = mEngine->play2D(source.c_str(), false, false, true);
 	}
 
 	return NULL;
@@ -99,4 +102,11 @@ void Sound::stopMusic(bool stop)
 {
 	if(stop)
 		mMusic->stop();
+}
+
+void Sound::setVolume(float volume)
+{
+	mVolume = volume;
+	if(mMusic != NULL)
+		mMusic->setVolume(mVolume);
 }
