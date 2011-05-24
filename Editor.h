@@ -19,6 +19,12 @@ static const int ADD = 150;
 
 class WindowHandler;
 
+enum CreateMethod
+{
+	METHOD_MOUSE,
+	METHOD_BUTTON
+};
+
 struct PropertyPair
 {
 	//Property prop;
@@ -87,6 +93,8 @@ public:
 	void updatePropertyWidgets(void);
 
 	void keyPressed(WPARAM wParam);
+
+	void createObject(CreateMethod method);
 
 	
 private:

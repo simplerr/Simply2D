@@ -31,7 +31,7 @@ int CampaignProgress::loadProgress(std::string source)
 	fin.close();
 	fin.open(source);
 
-	static LevelProgress progress;
+	LevelProgress progress;
 	mProgressList.clear();
 	for(int i = 0; i < levels; i++)
 	{

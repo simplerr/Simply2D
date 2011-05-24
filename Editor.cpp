@@ -363,11 +363,7 @@ int Editor::updateAll(float dt)
 			currentAction = IDLE;
 	}
 
-	// check keyboard inputs
-	if(gDInput->keyPressed(DIK_P))
-		messageHandler(BUTTON_DELETE);
-	else if(gDInput->keyPressed(DIK_C))
-		messageHandler(BUTTON_CREATE);
+	
 
 	return 1;
 }
@@ -587,80 +583,12 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 		}
 	case BUTTON_CREATE:
 		{
-			// listbox item vald
-			string value = listBox->getValue(); // hack - call when listbox pressed?
-			if(value != "none")
-			{		
-					if(value == "Static Platform")
-					{
-						StaticPlatform *platform = new StaticPlatform(500, 300, 100, 100, "misc\\textures\\dirt_grass.bmp");
-						mLevel->addObject(platform);
-					}
-					else if(value == "Moving Platform")
-					{				
-						POS start;
-						POS end;
-						start.x = 200;
-						start.y = 300;
-						end.x = 600;
-						end.y = 300;
-						MovingPlatform *platform = new MovingPlatform(200, 300, 100, 100, "misc\\textures\\grass_platform.bmp", start, end);
-						mLevel->addObject(platform);
-					}
-					else if(value == "Enemy")
-					{
-						POS start;
-						POS end;
-						start.x = 200;
-						start.y = 500;
-						end.x = 600;
-						end.y = 500;
-						Enemy *enemy = new Enemy(200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
-						mLevel->addObject(enemy);
-					}
-					else if(value == "Teleport")
-					{
-						Teleport *teleport = new Teleport(200, 500, 600, 300, 50, 50, (char*)TP_ENTER.c_str(), (char*)TP_DEST.c_str());
-						mLevel->addObject(teleport);
-					}
-					else if(value == "Trampoline")
-					{
-						Trampoline *trampoline = new Trampoline(300, 300, 40, 32, 120, 20, "misc\\textures\\trampoline.bmp");
-						mLevel->addObject(trampoline);
-					}
-					else if(value == "Walljump")
-					{
-						WallJump *walljump = new WallJump(300, 300, 60, 60, "misc\\textures\\walljump.bmp");
-						mLevel->addObject(walljump);
-					}
-					else if(value == "Spike")
-					{
-						Spike *spike = new Spike(300, 300, 50, 50, "misc\\textures\\spike.bmp", 100);
-						mLevel->addObject(spike);
-					}
-					else if(value == "Turret")
-					{
-						Turret *turret = new Turret(300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, 100, 200, .5);
-						mLevel->addObject(turret);
-					}
-					else if(value == "Button")
-					{
-						ActivateButton *button = new ActivateButton(300, 300, 30, 60, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
-						button->setLevel(mLevel);
-						mLevel->addObject(button);
-					}
-					else if(value == "Gate")
-					{
-						Gate *gate = new Gate(300, 300, 40, 60, (char*)GATE_SOURCE.c_str(), 3);
-						mLevel->addObject(gate);
-					}
-					else if(value == "Gun Powerup")
-					{
-						GunPowerup *powerup = new GunPowerup(300, 300, 40, 40, (char*)MAP_GUN_SOURCE.c_str(), 5);
-						mLevel->addObject(powerup);
-					}
-					// aktiv plattform = den nya?
-			}
+			createObject(METHOD_BUTTON);
+			break;
+		}
+	case KEY_CREATE:
+		{
+			createObject(METHOD_MOUSE);
 			break;
 		}
 	case BUTTON_DELETE:
@@ -875,6 +803,144 @@ string Editor::getTestLevel(void)
 
 void Editor::keyPressed(WPARAM wParam)
 {
-	mWindowHandler->keyPressed(wParam);
+	// hack - levels can't have X in their names
+	if(wParam == 'X')
+		messageHandler(BUTTON_DELETE);
+	else	{
+		if(wParam == VK_DELETE)
+			messageHandler(BUTTON_DELETE);
+		else if(wParam == 'C')
+			messageHandler(KEY_CREATE);
+
+		mWindowHandler->keyPressed(wParam);	
+	}
+	
 }
 
+void Editor::createObject(CreateMethod method)
+{
+	// this basicly creates the object which is marked in the object listbox
+	// the most of the cluttering in here is to find out the right coordinates
+	// there is two ways; fixed position or mouse position
+	string value = listBox->getValue(); 
+	if(value != "none")
+	{		
+		if(value == "Static Platform")
+		{			
+			StaticPlatform *platform;
+			if(method == METHOD_BUTTON)
+				platform = new StaticPlatform(gCameraManager->gameCamera()->getOffset() + 600, 400, 100, 100, "misc\\textures\\dirt_grass.bmp");
+			else
+				platform = new StaticPlatform(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 50, gDInput->getCursorY() - 50, 100, 100, "misc\\textures\\dirt_grass.bmp");
+			mLevel->addObject(platform);
+		}
+		else if(value == "Moving Platform")
+		{		
+			MovingPlatform *platform;
+			if(method == METHOD_BUTTON)	{
+				POS start(gCameraManager->gameCamera()->getOffset() + 200, 300);
+				POS end(gCameraManager->gameCamera()->getOffset() + 600, 300);
+				platform = new MovingPlatform(gCameraManager->gameCamera()->getOffset() + 200, 300, 100, 100, "misc\\textures\\grass_platform.bmp", start, end);
+				
+			}
+			else	{
+				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX(), gDInput->getCursorY());
+				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200, gDInput->getCursorY()-50);
+				platform = new MovingPlatform(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 50, gDInput->getCursorY() - 50, 100, 100, "misc\\textures\\grass_platform.bmp", start, end);
+			}
+					
+			mLevel->addObject(platform);
+		}
+		else if(value == "Enemy")
+		{
+			Enemy *enemy;
+			
+			if(method == METHOD_BUTTON)	{
+				POS start(gCameraManager->gameCamera()->getOffset() + 200, 300);
+				POS end(gCameraManager->gameCamera()->getOffset() + 600, 300);
+				enemy = new Enemy(gCameraManager->gameCamera()->getOffset() + 200, 500, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
+				
+			}
+			else	{
+				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX(), gDInput->getCursorY());
+				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200, gDInput->getCursorY()-18);
+				enemy = new Enemy(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 18, gDInput->getCursorY() - 18, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
+			}
+			mLevel->addObject(enemy);
+		}
+		else if(value == "Teleport")
+		{
+			Teleport *teleport;
+			if(method == METHOD_BUTTON)
+				teleport = new Teleport(gCameraManager->gameCamera()->getOffset() + 200, 500, 600, 300, 50, 50, (char*)TP_ENTER.c_str(), (char*)TP_DEST.c_str());
+			else 
+				teleport = new Teleport(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 25, gDInput->getCursorY() - 25, 600, 300, 50, 50, (char*)TP_ENTER.c_str(), (char*)TP_DEST.c_str());
+			mLevel->addObject(teleport);
+		}
+		else if(value == "Trampoline")
+		{
+			Trampoline *trampoline;
+			if(method == METHOD_BUTTON)
+				trampoline = new Trampoline(gCameraManager->gameCamera()->getOffset() + 300, 300, 40, 32, 120, 20, "misc\\textures\\trampoline.bmp");
+			else
+				trampoline = new Trampoline(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 40, gDInput->getCursorY() - 18, 40, 32, 120, 20, "misc\\textures\\trampoline.bmp");
+			mLevel->addObject(trampoline);
+		}
+		else if(value == "Walljump")
+		{
+			WallJump *walljump;
+			if(method == METHOD_BUTTON)
+				walljump = new WallJump(gCameraManager->gameCamera()->getOffset() + 300, 300, 60, 60, "misc\\textures\\walljump.bmp");
+			else
+				walljump = new WallJump(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 30, gDInput->getCursorY() - 30, 60, 60, "misc\\textures\\walljump.bmp");
+			mLevel->addObject(walljump);
+		}
+		else if(value == "Spike")
+		{
+			Spike *spike;
+			if(method == METHOD_BUTTON)
+				spike = new Spike(gCameraManager->gameCamera()->getOffset() + 300, 300, 50, 50, "misc\\textures\\spike.bmp", 100);
+			else
+				spike = new Spike(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 25, gDInput->getCursorY() - 25, 50, 50, "misc\\textures\\spike.bmp", 100);
+			mLevel->addObject(spike);
+		}
+		else if(value == "Turret")
+		{
+			Turret *turret;
+			if(method == METHOD_BUTTON)
+				turret = new Turret(gCameraManager->gameCamera()->getOffset() + 300, 300, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, 100, 200, .5);
+			else
+				turret = new Turret(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 20, gDInput->getCursorY() - 20, 40, 40, (char*)TURRET_SOURCE.c_str(), 100, LEFT, 50, 100, 200, .5);
+			mLevel->addObject(turret);
+		}
+		else if(value == "Button")
+		{
+			ActivateButton *button;
+			if(method == METHOD_BUTTON)
+				button = new ActivateButton(gCameraManager->gameCamera()->getOffset() + 300, 300, 30, 60, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
+			else
+				button = new ActivateButton(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 15, gDInput->getCursorY() - 30, 30, 60, (char*)ACTIVATEBUTTON_UNPRESSED_SOURCE.c_str());
+			button->setLevel(mLevel);
+			mLevel->addObject(button);
+		}
+		else if(value == "Gate")
+		{
+			Gate *gate;
+			if(method == METHOD_BUTTON)
+				gate = new Gate(gCameraManager->gameCamera()->getOffset() + 300, 300, 40, 60, (char*)GATE_SOURCE.c_str(), 3);
+			else
+				gate = new Gate(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 20, gDInput->getCursorY() - 30, 40, 60, (char*)GATE_SOURCE.c_str(), 3);
+			mLevel->addObject(gate);
+		}
+		else if(value == "Gun Powerup")
+		{
+			GunPowerup *powerup;
+			if(method == METHOD_BUTTON)
+				powerup = new GunPowerup(gCameraManager->gameCamera()->getOffset() + 300, 300, 40, 40, (char*)MAP_GUN_SOURCE.c_str(), 5);
+			else
+				powerup = new GunPowerup(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 20, gDInput->getCursorY() - 20, 40, 40, (char*)MAP_GUN_SOURCE.c_str(), 5);
+			mLevel->addObject(powerup);
+		}
+	}
+		// aktiv plattform = den nya?
+}

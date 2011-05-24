@@ -95,6 +95,11 @@ enum movingType
 
 struct POS
 {
+	POS() {}
+	POS(float a_x, float a_y)	{
+		x = a_x;
+		y = a_y;
+	}
 	float x;
 	float y;
 };
@@ -155,7 +160,8 @@ enum WindowID
 	SOUND_SLIDER,
 	MOUSE_SLIDER,
 	SLIDER_TEXT,
-	SLIDER_INPUT
+	SLIDER_INPUT,
+	KEY_CREATE
 };
 
 /*struct CollisionStruct
