@@ -36,6 +36,7 @@ D3DApp::D3DApp(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, 
 	ZeroMemory(&md3dPP, sizeof(md3dPP));
 
 	mDeltaSum = 0;
+	mDeviceLost = false;
 
 	initMainWindow();
 	initDirect3D();
@@ -191,7 +192,7 @@ int D3DApp::run()
 				continue;
 			}
 
-			if( !isDeviceLost() )
+			if( !mDeviceLost )
 			{
 				__int64 currTimeStamp = 0;
 				QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
@@ -212,7 +213,8 @@ int D3DApp::run()
 					/* draw the game */
 					drawScene();
 
-					
+					/* get device state */
+					mDeviceLost = isDeviceLost();
 
 					mDeltaSum = 0;
 				}	

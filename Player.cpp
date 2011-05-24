@@ -152,6 +152,7 @@ bool Player::update(double dt, Level *Level)
 		mActivateKey = true;
 	}
 
+	/* shooting */
 	if(gDInput->keyPressed(DIK_SPACE) && mAmmo > 0)	{
 		Bullet tmpBullet(mX-64, mY-5, 32, 16, faceDir, 50, 500, 200, PLAYER, (char*)BULLET_SOURCE.c_str());
 

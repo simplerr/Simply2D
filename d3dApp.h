@@ -54,12 +54,13 @@ protected:
 	DWORD       mRequestedVP;
 	
 	// Application, Windows, and Direct3D data members.
-	HINSTANCE             mhAppInst;
-	HWND                  mhMainWnd;
-	IDirect3D9*           md3dObject;
-	bool                  mAppPaused;
-	D3DPRESENT_PARAMETERS md3dPP;
-	float				  mDeltaSum;
+	HINSTANCE				mhAppInst;
+	HWND					mhMainWnd;
+	IDirect3D9*				md3dObject;
+	bool					mAppPaused;
+	D3DPRESENT_PARAMETERS	md3dPP;
+	float					mDeltaSum;
+	bool					mDeviceLost;
 };
 
 // Globals for convenient access.
