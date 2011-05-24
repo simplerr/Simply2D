@@ -21,6 +21,8 @@ void CustomEditorState::init(Game* game)
 	mCustomLevelMenu->connect(&CustomEditorState::menuHandler, this);
 
 	mDeletePressed = false;
+
+	mBackgroundTexture = gGraphics->loadTexture("misc\\textures\\epic_bkgd.bmp");
 }
 
 void CustomEditorState::cleanup()
@@ -28,6 +30,7 @@ void CustomEditorState::cleanup()
 	CustomLevelState::cleanup();
 	delete mWindowHandler;
 	mWindowHandler = NULL;
+	ReleaseCOM(mBackgroundTexture);
 }
 
 void CustomEditorState::update(double dt)

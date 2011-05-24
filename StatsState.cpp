@@ -14,11 +14,14 @@ void StatsState::init(Game* game)
 
 	mTableX = 600;
 	mTableY = 300;
+
+	mBackgroundTexture = gGraphics->loadTexture("misc\\textures\\epic_bkgd.bmp");
 }
 
 void StatsState::cleanup()
 {
 	ReleaseCOM(mBackground);
+	ReleaseCOM(mBackgroundTexture);
 }
 
 void StatsState::pause()
@@ -50,7 +53,8 @@ void StatsState::update(double dt)
 	
 void StatsState::drawMain(void)
 {
-	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	gGraphics->BlitTexture(mBackgroundTexture, 0, 0, 1200, 900);
+	//gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
 
 	/* white background */
 	gGraphics->BlitTexture(mBackground, 525, 185, 356, 380);

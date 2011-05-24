@@ -31,4 +31,5 @@ private:
 	static CampaignLevelState mCampaignLevelState;
 	Menu *mCampaignLevelMenu;
 	CampaignProgress mProgress;
+	IDirect3DTexture9 *mBackgroundTexture;
 };

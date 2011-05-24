@@ -206,7 +206,8 @@ int D3DApp::run()
 					gDInput->updateCursor();
 
 					/* update the game */
-					updateScene(mDeltaSum);
+					if(mDeltaSum < .25)
+						updateScene(mDeltaSum);
 
 					/* draw the game */
 					drawScene();

@@ -31,6 +31,7 @@ protected:
 	MainMenuState() {};
 private:
 	static MainMenuState mMainMenuState;
+	IDirect3DTexture9 *mBackgroundTexture;
 
 	Menu *mStartMenu;
 };

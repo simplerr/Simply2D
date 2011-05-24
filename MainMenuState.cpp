@@ -23,21 +23,19 @@ void MainMenuState::init(Game* game)
 	// create the menu
 	mStartMenu = new Menu("MainMenu", MOUSE, VER, 1, false, 4, 4);
 
-	mStartMenu->setMenuBackground("misc\\textures\\menu_bkgd.bmp", 700, 450, 128, 350);
+	mStartMenu->setMenuBackground("none", 700, 450, 128, 350);
 	mStartMenu->addMenuItem("Play", "misc\\textures\\play.bmp", "misc\\textures\\play_hoover.bmp");
 	mStartMenu->addMenuItem("Custom", "misc\\textures\\custom.bmp", "misc\\textures\\custom_hoover.bmp");	
 	mStartMenu->addMenuItem("Editor", "misc\\textures\\editor.bmp", "misc\\textures\\editor_hoover.bmp");
 	mStartMenu->addMenuItem("Stats", "misc\\textures\\stats.bmp", "misc\\textures\\stats_hoover.bmp");
-	mStartMenu->addMenuItem("Options", "misc\\textures\\dirt_grass.bmp", "misc\\textures\\quit_hoover.bmp");
+	mStartMenu->addMenuItem("Options", "misc\\textures\\options_normal.bmp", "misc\\textures\\options_hoover.bmp");
 	mStartMenu->addMenuItem("Credits", "misc\\textures\\credits.bmp", "misc\\textures\\credits_hoover.bmp");
 	mStartMenu->addMenuItem("Quit", "misc\\textures\\quit.bmp", "misc\\textures\\quit_hoover.bmp");
 	
 	mStartMenu->buildMenu2();
 	mStartMenu->connect(&MainMenuState::menuHandler, this);
 
-	//if(getMusic() == NULL)	{
-	//	setMusic(gSound->playMusic("misc\\sound\\menu_loop.wav", true, true));
-	//}
+	mBackgroundTexture = gGraphics->loadTexture("misc\\textures\\epic_bkgd.bmp");
 
 	gSound->playMusic("misc\\sound\\menu_loop.wav", true, true);
 }
@@ -45,6 +43,7 @@ void MainMenuState::init(Game* game)
 void MainMenuState::cleanup()
 {
 	delete mStartMenu;
+	ReleaseCOM(mBackgroundTexture);
 	//mMusic->stop();
 	//mMusic->drop();
 }
@@ -78,7 +77,7 @@ void MainMenuState::update(double dt)
 
 void MainMenuState::drawMain(void)
 {
-	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	gGraphics->BlitTexture(mBackgroundTexture, 0, 0, 1200, 900);
 	mStartMenu->draw();	
 }
 

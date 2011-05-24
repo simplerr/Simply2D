@@ -35,6 +35,7 @@ protected:
 	Menu *mCustomLevelMenu;
 private:
 	static CustomLevelState mCustomLevelState;
+	IDirect3DTexture9 *mBackgroundTexture;
 };
 
 #endif

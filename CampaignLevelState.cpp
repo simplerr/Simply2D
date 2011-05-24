@@ -25,7 +25,7 @@ void CampaignLevelState::init(Game* game)
 	// create the menu
 	//mCampaignLevelMenu = new Menu("CustemLevelMenu", MOUSE, true, 4, 4);
 	mCampaignLevelMenu = new Menu("CustemLevelMenu", MOUSE, VER, 2, true, 4, 4);
-	mCampaignLevelMenu->setMenuBackground("misc\\textures\\menu_bkgd.bmp", 700, 450, 256, 350);
+	mCampaignLevelMenu->setMenuBackground("none", 700, 450, 256, 350);		// mCampaignLevelMenu->setMenuBackground("misc\\textures\\menu_bkgd.bmp", 700, 450, 256, 350);
 
 	// get the files in the map folder
 	std::vector<string> levelList = getLevels();
@@ -51,11 +51,14 @@ void CampaignLevelState::init(Game* game)
 	// build the menu
 	mCampaignLevelMenu->buildMenu2();
 	mCampaignLevelMenu->connect(&CampaignLevelState::menuHandler, this);
+
+	mBackgroundTexture = gGraphics->loadTexture("misc\\textures\\epic_bkgd.bmp");
 }
 
 void CampaignLevelState::cleanup()
 {
 	delete mCampaignLevelMenu;
+	ReleaseCOM(mBackgroundTexture);
 }
 
 void CampaignLevelState::pause()
@@ -96,7 +99,7 @@ void CampaignLevelState::updateMenu(void)
 
 void CampaignLevelState::drawMain(void)
 {
-	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	gGraphics->BlitTexture(mBackgroundTexture, 0, 0, 1200, 900);
 	mCampaignLevelMenu->draw();
 }
 

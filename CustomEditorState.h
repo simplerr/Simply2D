@@ -28,6 +28,8 @@ private:
 
 	bool mDeletePressed;
 
+	IDirect3DTexture9 *mBackgroundTexture;
+
 	WindowHandler *mWindowHandler;
 	Button* mCreateButton;
 	InputBox* mLevelName;

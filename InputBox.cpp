@@ -8,7 +8,7 @@ InputBox::InputBox(WindowHandler* handler, WindowID id, DataType dataType, int x
 	mShowCaret = false;
 	mMaxLength = maxlen;
 	mDataType = dataType;
-	setValue(" ");
+	setValue("");
 }
 
 InputBox::~InputBox()

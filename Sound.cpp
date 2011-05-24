@@ -65,7 +65,7 @@ irrklang::ISound* Sound::playEffect(std::string source)
 {
 	//irrklang::ISound *effect;
 	if(!mEffectsMuted)	{
-		irrklang::ISound* soundEffect = mEngine->play2D(source.c_str(), false, false, true);
+		irrklang::ISound* soundEffect = mEngine->play2D(source.c_str(), false, false, false);
 	}
 
 	return NULL;

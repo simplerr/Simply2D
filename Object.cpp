@@ -197,36 +197,8 @@ void Object::drawEditorFX(void)
 ObjectArea Object::getAreaAt(double mx, double my)
 {
 	RECT rect = getRect();
-	RECT *dragRects = getDragRects();
-
-	// first check the dragRects
-	if(getResizeable())
-	{
-		for(int i = 0; i < 4; i++)	
-		{
-			if(mx > dragRects[i].left && mx < dragRects[i].right && my > dragRects[i].top && my < dragRects[i].bottom)	{
-				if(i == L)
-					return DRAG_LEFT;
-				else if(i == R)
-					return DRAG_RIGHT;
-				else if(i == TO)
-					return DRAG_UP;
-				else if(i == B)
-					return DRAG_DOWN;
-			}
-		}
-	}
-
-	if(mx > rect.left && mx < rect.right && my > rect.top && my < rect.bottom)
-		return BODY;
-
-	return OUTSIDE;
-}
-
-RECT* Object::getDragRects(void)
-{
 	RECT rects[4];
-	RECT rect = getRect();	
+	// hack - should use getDragRects()
 
 	// left drag rect
 	rects[L].left = rect.left;
@@ -252,7 +224,60 @@ RECT* Object::getDragRects(void)
 	rects[B].left = rect.left + 20;
 	rects[B].right = rect.right - 20;
 
-	return rects;
+	// first check the dragRects
+	if(getResizeable())
+	{
+		for(int i = 0; i < 4; i++)	
+		{
+			if(mx > rects[i].left && mx < rects[i].right && my > rects[i].top && my < rects[i].bottom)	{
+				if(i == L)
+					return DRAG_LEFT;
+				else if(i == R)
+					return DRAG_RIGHT;
+				else if(i == TO)
+					return DRAG_UP;
+				else if(i == B)
+					return DRAG_DOWN;
+			}
+		}
+	}
+
+	if(mx > rect.left && mx < rect.right && my > rect.top && my < rect.bottom)
+		return BODY;
+
+	return OUTSIDE;
+}
+
+RECT* Object::getDragRects(void)
+{
+	
+	RECT rect = getRect();	
+
+	/*// left drag rect
+	rects[L].left = rect.left;
+	rects[L].right = rects[L].left + 20;
+	rects[L].top = rect.top + 20;
+	rects[L].bottom = rect.bottom - 20;
+
+	// right drag rect
+	rects[R].right = rect.right;
+	rects[R].left = rects[R].right - 20;
+	rects[R].top = rect.top + 20;
+	rects[R].bottom = rect.bottom - 20;
+
+	// top drag rect
+	rects[TO].top = rect.top;
+	rects[TO].bottom = rects[TO].top + 20;
+	rects[TO].left = rect.left + 20;
+	rects[TO].right = rect.right - 20;
+
+	// bottom drag rect
+	rects[B].bottom = rect.bottom;
+	rects[B].top = rects[B].bottom - 20;
+	rects[B].left = rect.left + 20;
+	rects[B].right = rect.right - 20;*/
+
+	return NULL;
 }
 
 Shape* Object::getShape(void)							

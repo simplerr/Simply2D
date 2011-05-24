@@ -30,6 +30,7 @@ private:
 	CampaignProgress mProgress;
 
 	IDirect3DTexture9* mBackground;
+	IDirect3DTexture9 *mBackgroundTexture;
 
 	int mTableX;
 	int mTableY;

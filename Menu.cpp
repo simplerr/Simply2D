@@ -44,7 +44,10 @@ Menu::~Menu()
 
 void Menu::setMenuBackground(char *textureSource, int x, int y, int width, int height)
 {
-	backgroundTexture = gGraphics->loadTexture(textureSource);
+	if(textureSource != "none")
+		backgroundTexture = gGraphics->loadTexture(textureSource);
+	else
+		backgroundTexture = NULL;
 
 	backgroundRect.left = x-(width/2);
 	backgroundRect.right = x+(width/2);
@@ -160,7 +163,8 @@ void Menu::buildMenu(int itemWidth, int itemHeight)
 
 void Menu::draw(void)
 {	
-	gGraphics->BlitTexture(backgroundTexture, backgroundRect, 0xFFFFFFFF, 0);
+	if(backgroundTexture != NULL)
+		gGraphics->BlitTexture(backgroundTexture, backgroundRect, 0xFFFFFFFF, 0);
 
 	std::list<MenuItem>::iterator i = mMenuItemList.begin();
 	while( i != mMenuItemList.end())

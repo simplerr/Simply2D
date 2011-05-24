@@ -14,7 +14,7 @@ void OptionsState::init(Game* game)
 	// important!
 	setGame(game);
 
-	mWindowHandler = new WindowHandler(700, 500, 300, 400);
+	mWindowHandler = new WindowHandler(700, 250, 300, 200);
 	mWindowHandler->setBackground("misc\\textures\\menu_bkgd.bmp");
 
 	mMuteMusic = new CheckBox(mWindowHandler, MUTE_MUSIC, "Music:", 145, 50);
@@ -39,12 +39,15 @@ void OptionsState::init(Game* game)
 	mSettings = new Settings("config.txt");
 
 	mSlidebar->setValue(mSettings->musicVolume());
+
+	mBackgroundTexture = gGraphics->loadTexture("misc\\textures\\epic_bkgd.bmp");
 }
 	
 void OptionsState::cleanup()
 {
 	delete mWindowHandler;
 	delete mSettings;
+	ReleaseCOM(mBackgroundTexture);
 }
 	
 void OptionsState::pause()
@@ -77,7 +80,7 @@ void OptionsState::update(double dt)
 void OptionsState::drawMain(void)
 {
 	// green bkgd
-	gGraphics->BlitRect(600, 450, 1200, 900, D3DCOLOR_ARGB( 155, 155, 200, 000));
+	gGraphics->BlitTexture(mBackgroundTexture, 0, 0, 1200, 900);
 	
 	// windows
 	mWindowHandler->draw();

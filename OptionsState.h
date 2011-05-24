@@ -29,6 +29,7 @@ private:
 	static OptionsState mOptionsState;
 
 	WindowHandler *mWindowHandler;
+	IDirect3DTexture9 *mBackgroundTexture;
 	Settings *mSettings;
 
 	/* windows */
