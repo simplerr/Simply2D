@@ -45,6 +45,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(20)
 	mObjectSnapped = false;
 	tryLevel = false;
 	currentAction = IDLE;
+	mCtrlDown = false;
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -52,6 +53,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(20)
 Editor::~Editor()
 {
 	//mLevel->saveLevel("level_1.txt")
+	mLevel->saveLevel((char*)mLevel->getLevelName().c_str());
 	delete mLevel;
 	delete mWindowHandler;
 }
@@ -697,6 +699,91 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 		{
 			// update the input boxes with the new information!
 			updatePropertyWidgets();
+			break;
+		}
+	case COPY_OBJECT:
+		{
+			if(mActiveObject == NULL)
+				break;
+
+	
+			if(mActiveObject->getType()  == STATIC_PLATFORMA)
+			{			
+				StaticPlatform *tmpObject = new StaticPlatform(*dynamic_cast<StaticPlatform*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == MOVING_PLATFORM)
+			{			
+				MovingPlatform *tmpObject = new MovingPlatform(*dynamic_cast<MovingPlatform*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == NORMAL_ENEMY)
+			{			
+				Enemy *tmpObject = new Enemy(*dynamic_cast<Enemy*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == TELEPORT)
+			{			
+				Teleport *tmpObject = new Teleport(*dynamic_cast<Teleport*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == TRAMPOLINE)
+			{			
+				Trampoline *tmpObject = new Trampoline(*dynamic_cast<Trampoline*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == WALLJUMP)
+			{			
+				WallJump *tmpObject = new WallJump(*dynamic_cast<WallJump*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == SPIKE)
+			{			
+				Spike *tmpObject = new Spike(*dynamic_cast<Spike*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == TURRET)
+			{			
+				Turret *tmpObject = new Turret(*dynamic_cast<Turret*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == ACTIVATE_BUTTON)
+			{			
+				ActivateButton *tmpObject = new ActivateButton(*dynamic_cast<ActivateButton*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == GATE)
+			{			
+				Gate *tmpObject = new Gate(*dynamic_cast<Gate*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
+			else if(mActiveObject->getType()  == GUNPOWERUP)
+			{			
+				GunPowerup *tmpObject = new GunPowerup(*dynamic_cast<GunPowerup*>(mActiveObject));//Object* tmpObject = new Object(*mActiveObject);;
+
+				tmpObject->setXY(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - tmpObject->getWidth()/2, gDInput->getCursorY() - tmpObject->getHeight()/2);
+				mLevel->addObject(tmpObject);
+			}
 		}
 	}
 	
@@ -809,8 +896,12 @@ void Editor::keyPressed(WPARAM wParam)
 	else	{
 		if(wParam == VK_DELETE)
 			messageHandler(BUTTON_DELETE);
-		else if(wParam == 'C')
+		else if(wParam == 'C' && !mCtrlDown)
 			messageHandler(KEY_CREATE);
+		else if(wParam == 'C' && mCtrlDown)
+			messageHandler(COPY_OBJECT);
+		else if(wParam == VK_CONTROL)
+			ctrlDown(true);
 
 		mWindowHandler->keyPressed(wParam);	
 	}
@@ -844,8 +935,8 @@ void Editor::createObject(CreateMethod method)
 				
 			}
 			else	{
-				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX(), gDInput->getCursorY());
-				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200, gDInput->getCursorY()-50);
+				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 50, gDInput->getCursorY() - 50);
+				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200 - 50, gDInput->getCursorY() - 50);
 				platform = new MovingPlatform(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 50, gDInput->getCursorY() - 50, 100, 100, "misc\\textures\\grass_platform.bmp", start, end);
 			}
 					
@@ -862,8 +953,8 @@ void Editor::createObject(CreateMethod method)
 				
 			}
 			else	{
-				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX(), gDInput->getCursorY());
-				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200, gDInput->getCursorY()-18);
+				POS start(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 18, gDInput->getCursorY() - 18);
+				POS end(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() + 200 - 18, gDInput->getCursorY()-18);
 				enemy = new Enemy(gCameraManager->gameCamera()->getOffset() + gDInput->getCursorX() - 18, gDInput->getCursorY() - 18, 36, 36, "misc\\textures\\bad_mario.bmp", start, end);
 			}
 			mLevel->addObject(enemy);
@@ -943,4 +1034,9 @@ void Editor::createObject(CreateMethod method)
 		}
 	}
 		// aktiv plattform = den nya?
+}
+
+void Editor::ctrlDown(bool down)
+{
+	mCtrlDown = down;
 }

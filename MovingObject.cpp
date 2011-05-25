@@ -9,6 +9,7 @@ MovingObject::MovingObject(ObjectType type, float x, float y, int width, int hei
 
 	mStartPos = startPos;
 	mEndPos = endPos;
+	mEndPos.y = startPos.y;
 
 	if(mStartPos.x < mEndPos.x)
 		mMovingDir = RIGHT;

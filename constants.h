@@ -161,7 +161,8 @@ enum WindowID
 	MOUSE_SLIDER,
 	SLIDER_TEXT,
 	SLIDER_INPUT,
-	KEY_CREATE
+	KEY_CREATE,
+	COPY_OBJECT
 };
 
 /*struct CollisionStruct

@@ -96,6 +96,8 @@ public:
 
 	void createObject(CreateMethod method);
 
+	void ctrlDown(bool down);
+
 	
 private:
 
@@ -130,6 +132,8 @@ private:
 	int			mOffset;
 	CurrentAction currentAction;
 	string mOldLevelName;
+
+	bool		mCtrlDown;
 private:
 	TextBox *tLevel;
 	TextBox *tSpawnX;
