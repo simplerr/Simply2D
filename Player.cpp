@@ -324,9 +324,7 @@ double Player::getY(void)
 
 void Player::setXY(float x, float y)
 {
-	// find out how much to move the camera
-	if(x > 600);
-		gCameraManager->gameCamera()->addMovement(x - 600, 0);
+	gCameraManager->gameCamera()->addMovement(x - getX(), 0);
 
 	mX = x;
 	mY = y;
