@@ -30,7 +30,7 @@ void LevelCompletedState::init(Game* game)
 	mMenuButton->connect(&LevelCompletedState::messageHandler, this);
 
 	// load the background
-	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\city_bkgd_yellow.bmp"); 
+	mBkgdTexture = gGraphics->loadTexture("misc\\textures\\cloud_bkgd.bmp"); 
 		
 	if(!mBkgdTexture)
 		MessageBox(0, "Couldn't background texture", 0, 0);

@@ -53,8 +53,9 @@ irrklang::ISound* Sound::playMusic(std::string source, bool loop, bool track)
 			}
 
 			mMusicSource = source;
-			mMusic = mEngine->play2D(mMusicSource.c_str(), loop, false, true);
+			mMusic = mEngine->play2D(mMusicSource.c_str(), loop, true, true);
 			mMusic->setVolume(mVolume);
+			mMusic->setIsPaused(false);
 		}
 	}
 
