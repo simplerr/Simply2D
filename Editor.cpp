@@ -46,6 +46,7 @@ Editor::Editor() : SNAP_SENSE(30), SNAP_DIST(20)
 	tryLevel = false;
 	currentAction = IDLE;
 	mCtrlDown = false;
+	mSnapping = true;
 
 	createObjectTextPos = 290;
 	mPrevActiveObjectType = NO_OBJECT;
@@ -128,6 +129,10 @@ void Editor::buildGUI(void)
 
 	pathCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SHOWPATH, "Show paths: ", 110, 717 + OFFSET, 16, 16);
 	pathCheckBox->connect(&Editor::messageHandler, this);
+
+	mSnappingCheckBox = new CheckBox(mWindowHandler, CHECKBOX_SNAPPING, "Snapping ", 110, 737 + OFFSET, 16, 16);
+	mSnappingCheckBox->setChecked(true);
+	mSnappingCheckBox->connect(&Editor::messageHandler, this);
 
 	listBox->addItem("Static Platform", 22, D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 	listBox->addItem("Moving Platform", 22, D3DCOLOR_ARGB( 255, 200, 200, 200 ));
@@ -433,14 +438,17 @@ void Editor::moveObject(void)
 
 bool Editor::objectSnapping(Object *object, float dx, float dy)
 {
-	if(mLevel->objectIntersection(mActiveObject) == NULL)	{
+	if(mSnapping)
+	{
+		if(mLevel->objectIntersection(mActiveObject) == NULL)	{
 		
-		snapDir = mLevel->snapObject(object, SNAP_DIST);
+			snapDir = mLevel->snapObject(object, SNAP_DIST);
 		
-		if(snapDir != ALL)	
-		{	
-			snapCount = 0;
-			return true;
+			if(snapDir != ALL)	
+			{	
+				snapCount = 0;
+				return true;
+			}
 		}
 	}
 
@@ -687,6 +695,11 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 			showPaths = msg.getBool();//getChecked();
 			break;
 		}
+	case CHECKBOX_SNAPPING:
+		{
+			mSnapping = msg.getBool();
+			break;
+		}
 	case MOVE_SPAWNPOS:
 		{
 			// spawnPos 
@@ -694,7 +707,6 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 			iSpawnY->setValue((int)mLevel->getSpawn().y);
 			break;
 		}
-
 	case OBJECT_UPDATED:
 		{
 			// update the input boxes with the new information!
@@ -900,6 +912,10 @@ void Editor::keyPressed(WPARAM wParam)
 			messageHandler(KEY_CREATE);
 		else if(wParam == 'C' && mCtrlDown)
 			messageHandler(COPY_OBJECT);
+		else if(wParam == 'T' && mCtrlDown)
+			messageHandler(BUTTON_TRYLEVEL);
+		else if(wParam == 'S' && mCtrlDown)
+			messageHandler(BUTTON_SAVE);
 		else if(wParam == VK_CONTROL)
 			ctrlDown(true);
 

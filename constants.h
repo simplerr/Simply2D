@@ -162,7 +162,8 @@ enum WindowID
 	SLIDER_TEXT,
 	SLIDER_INPUT,
 	KEY_CREATE,
-	COPY_OBJECT
+	COPY_OBJECT,
+	CHECKBOX_SNAPPING
 };
 
 /*struct CollisionStruct

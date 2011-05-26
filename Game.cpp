@@ -219,7 +219,7 @@ void Game::drawScene()
 	/* draw the state content in the gui area */
 	mGameState->drawGui();
 
-	gDInput->drawCursorPos();
+	//gDInput->drawCursorPos();
 	
 	/* draw the cursor */
 	gCameraManager->setCamera(SCREEN_CAMERA);

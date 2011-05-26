@@ -107,7 +107,7 @@ private:
 	int						mPropertyCount;		// remove?!
 	
 	vector<PropertyPair>	mPropertyPairs;
-
+	
 	RECT		gameArea;
 	
 	Object*		snappedObject;
@@ -126,6 +126,7 @@ private:
 	bool		tryLevel;
 	const int	SNAP_SENSE;
 	const int	SNAP_DIST;
+	bool		mSnapping;
 
 	char*		test;
 
@@ -156,6 +157,7 @@ private:
 	DropBox *textureDropBox;
 	
 	CheckBox *pathCheckBox;
+	CheckBox *mSnappingCheckBox;
 };
 
 #endif
