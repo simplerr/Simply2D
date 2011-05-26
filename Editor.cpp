@@ -146,8 +146,8 @@ void Editor::buildGUI(void)
 	listBox->addItem("Gate", 22, D3DCOLOR_ARGB( 255, 200, 200, 200));
 	listBox->addItem("Gun Powerup", 22, D3DCOLOR_ARGB( 255, 230, 230, 230));
 
-	textureDropBox->addItem("grass_platform", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
-	textureDropBox->addItem("brick_platform", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
+	textureDropBox->addItem("Dirt grass", D3DCOLOR_ARGB( 255, 200, 200, 200 ));
+	textureDropBox->addItem("Dark grass", D3DCOLOR_ARGB( 255, 230, 230, 230 ));
 }
 
 int Editor::updateAll(float dt)
@@ -584,10 +584,12 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 		{
 			if(mActiveObject != NULL)
 			{
-				if(textureDropBox->getValue() == "grass_platform")
-					mActiveObject->setTextureSource("misc\\textures\\grass_platform.bmp");
-				if(textureDropBox->getValue() ==  "brick_platform")
-					mActiveObject->setTextureSource("misc\\textures\\dirt_grass.bmp");
+				if(mActiveObject->getType() == STATIC_PLATFORMA || mActiveObject->getType() == MOVING_PLATFORM)	{
+					if(textureDropBox->getValue() == "Dark grass")
+						mActiveObject->setTextureSource("misc\\textures\\grass_platform.bmp");
+					if(textureDropBox->getValue() ==  "Dirt grass")
+						mActiveObject->setTextureSource("misc\\textures\\dirt_grass.bmp");
+				}
 			}
 			break;
 		}
@@ -678,6 +680,14 @@ bool Editor::messageHandler(WindowID id, WindowMessage msg)
 				for(int i = 0; i < properties.size(); i++)
 				{
 					addPropertyPair(properties[i]);			
+				}
+
+				// set the texture dropbox value
+				if(mActiveObject->getType() == STATIC_PLATFORMA || mActiveObject->getType() == MOVING_PLATFORM)	{
+					if(strcmp(mActiveObject->getTextureSource(), "misc\\textures\\dirt_grass.bmp") == 0)
+						textureDropBox->setValue("Dirt grass");
+					else if(strcmp(mActiveObject->getTextureSource(), "misc\\textures\\grass_platform.bmp") == 0)
+						textureDropBox->setValue("Dark grass");
 				}
 			}
 			
