@@ -220,7 +220,7 @@ void Game::drawScene()
 	mGameState->drawGui();
 
 	//gDInput->drawCursorPos();
-	
+
 	/* draw the cursor */
 	gCameraManager->setCamera(SCREEN_CAMERA);
 	gDInput->drawCursor();

@@ -67,6 +67,7 @@ public:
 	void setSpeedX(double speed);
 
 	void setAccel(double accel);
+	void setJumping(bool jumping)	{ mJumping = jumping;}	
 public:
 	// lazyness
 	double mDX;

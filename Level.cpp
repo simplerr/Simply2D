@@ -427,6 +427,7 @@ bool Level::collision(Player *player, float dt)
 				// trampoline?
 				if(mObjectList[i]->getType() != TRAMPOLINE)		{
 					onGround = true;
+					player->setJumping(false);
 					player->setSpeedY(0);
 				}
 

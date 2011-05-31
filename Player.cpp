@@ -324,7 +324,12 @@ double Player::getY(void)
 
 void Player::setXY(float x, float y)
 {
-	gCameraManager->gameCamera()->addMovement(x - getX(), 0);
+	if(getX() > 600)
+		gCameraManager->gameCamera()->addMovement(x - getX()  , 0); // gCameraManager->gameCamera()->addMovement(x - getX() - gCameraManager->gameCamera()->getOffset() , 0);
+	else
+		gCameraManager->gameCamera()->addMovement(x - 600 , 0); 
+
+
 
 	mX = x;
 	mY = y;

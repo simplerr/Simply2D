@@ -8,12 +8,14 @@
 #include "StatsState.h"
 #include "Sound.h"
 #include "OptionsState.h"
+#include "CreditsState.h"
 
 extern CameraManager* gCameraManager;
 
 extern Sound* gSound;
 
 MainMenuState MainMenuState::mMainMenuState;
+CreditsState CreditsState::mCreditsState;
 
 void MainMenuState::init(Game* game)
 {
@@ -107,7 +109,8 @@ bool MainMenuState::menuHandler(std::string name)
 	}
 	else if(name == "Quit")
 	{
-		// quit!
+		DestroyWindow(gd3dApp->getMainWnd());
+		return false;
 	}
 	else if(name == "Stats")
 	{
@@ -117,6 +120,11 @@ bool MainMenuState::menuHandler(std::string name)
 	else if(name == "Options")
 	{
 		changeState(OptionsState::Instance());
+		return false;
+	}
+	else if(name == "Credits")
+	{
+		changeState(CreditsState::Instance());
 		return false;
 	}
 	
